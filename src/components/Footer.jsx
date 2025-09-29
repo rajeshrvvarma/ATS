@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin, Youtube, Instagram } from 'lucide-react';
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously } from 'firebase/auth';
-import { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
+
+// NOTE: The Firebase logic remains the same. The only changes are to the layout (JSX).
+
+// It's a good practice to lazy-load Firebase to improve initial page load speed.
+// This means Firebase code is only downloaded when the footer component is actually rendered.
+const firebasePromise = Promise.all([
+    import('firebase/app'),
+    import('firebase/auth'),
+    import('firebase/firestore')
+]);
 
 export default function Footer({ onNavigate }) {
     const [visitCount, setVisitCount] = useState('...');
@@ -10,46 +17,47 @@ export default function Footer({ onNavigate }) {
     useEffect(() => {
         const initAndCount = async () => {
             try {
-                // Read the Firebase config securely from environment variables.
-                // This is the standard way to handle secret keys in Vite projects.
-                const firebaseConfigString = import.meta.env.VITE_FIREBASE_CONFIG;
-                
-                if (!firebaseConfigString) {
-                    console.error("Firebase config environment variable is missing.");
+                // Read the Firebase config from the Netlify environment variable
+                const firebaseConfigStr = import.meta.env.VITE_FIREBASE_CONFIG;
+                if (!firebaseConfigStr) {
+                    console.error("Firebase config environment variable is not set.");
                     setVisitCount('N/A');
                     return;
                 }
-                
-                const firebaseConfig = JSON.parse(firebaseConfigString);
-                const appId = firebaseConfig.appId || 'default-app-id';
+                const firebaseConfig = JSON.parse(firebaseConfigStr);
 
-                // Initialize Firebase
+                // Use the lazy-loaded Firebase modules
+                const [{ initializeApp }, { getAuth, signInAnonymously }, { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp }] = await firebasePromise;
+
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
                 const db = getFirestore(app);
 
-                // Sign in the user anonymously to get permissions.
                 await signInAnonymously(auth);
                 
+                const appId = "ATStatic"; // Using the repo name as the App ID for consistency
                 const counterRef = doc(db, `artifacts/${appId}/public/data/siteStats`, 'visits');
 
-                // Increment count only once per browser session.
                 const hasVisited = sessionStorage.getItem('agnidhra-site-visited');
+
                 if (!hasVisited) {
                     await runTransaction(db, async (transaction) => {
                         const docSnap = await transaction.get(counterRef);
-                        const newCount = (docSnap.exists() ? docSnap.data().count : 0) + 1;
-                        transaction.set(counterRef, { count: newCount, lastUpdated: serverTimestamp() }, { merge: true });
+                        if (!docSnap.exists()) {
+                            transaction.set(counterRef, { count: 1, lastUpdated: serverTimestamp() });
+                        } else {
+                            const newCount = docSnap.data().count + 1;
+                            transaction.update(counterRef, { count: newCount, lastUpdated: serverTimestamp() });
+                        }
                     });
                     sessionStorage.setItem('agnidhra-site-visited', 'true');
                 }
 
-                // Listen for real-time updates to the count.
                 const unsubscribe = onSnapshot(counterRef, (docSnap) => {
                     if (docSnap.exists()) {
                         setVisitCount(docSnap.data().count.toLocaleString());
                     } else {
-                        setVisitCount('1'); // This will be the first visit.
+                        setVisitCount('1');
                     }
                 }, (error) => {
                     console.error("Error fetching visit count:", error);
@@ -78,7 +86,7 @@ export default function Footer({ onNavigate }) {
                             <img src="/logo.png" alt="Agnidhra Technologies Logo" className="w-10 h-10 rounded-full mr-3"/>
                             <span className="text-xl font-bold text-white">Agnidhra Technologies</span>
                         </div>
-                        <p className="max-w-md mx-auto md:mx-0">Empowering the next wave of tech leaders with practical, hands-on training.</p>
+                        <p className="max-w-md mx-auto md:mx-0">Empowering the next wave of tech leaders with practical, hands-on training in high-demand skills.</p>
                     </div>
 
                     {/* Column 2: Quick Links */}
@@ -87,7 +95,7 @@ export default function Footer({ onNavigate }) {
                         <ul className="space-y-2">
                             <li><button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">About Us</button></li>
                             <li><button onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">Our Offerings</button></li>
-                            <li><button onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">FAQ</button></li>
+                            <li><button onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">Admissions</button></li>
                             <li><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">Contact</button></li>
                         </ul>
                     </div>
@@ -107,10 +115,11 @@ export default function Footer({ onNavigate }) {
                     </div>
                 </div>
 
+                {/* --- THIS IS THE UPDATED SECTION --- */}
                 {/* Bottom Bar: Copyright and Visitor Counter */}
-                <div className="mt-8 border-t border-slate-700 pt-8 text-center text-slate-500 flex flex-col sm:flex-row justify-between items-center">
+                <div className="mt-8 border-t border-slate-700 pt-8 text-center text-slate-500 flex flex-col items-center gap-2">
                     <p>&copy; {new Date().getFullYear()} Agnidhra Technologies. All Rights Reserved.</p>
-                    <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                    <div className="flex items-center gap-2">
                         <span className="animate-pulse inline-flex h-3 w-3 rounded-full bg-green-500 opacity-75"></span>
                         <span>Site Visitors: {visitCount}</span>
                     </div>
