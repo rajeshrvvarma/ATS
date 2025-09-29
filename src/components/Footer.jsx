@@ -1,83 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin, Youtube, Instagram } from 'lucide-react';
-
-// Import Firebase modules. These are required for the site counter.
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
+import { getAuth, signInAnonymously } from 'firebase/auth';
 import { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp } from 'firebase/firestore';
 
 export default function Footer({ onNavigate }) {
-    // State to hold the visit count. Initialize with a loading indicator.
     const [visitCount, setVisitCount] = useState('...');
 
     useEffect(() => {
-        // This effect runs once when the component mounts to initialize the counter.
         const initAndCount = async () => {
             try {
-                // These global variables are provided by the hosting environment.
-                const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-                const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-                if (!firebaseConfig.apiKey) {
-                    console.error("Firebase config is missing.");
+                // Read the Firebase config securely from environment variables.
+                // This is the standard way to handle secret keys in Vite projects.
+                const firebaseConfigString = import.meta.env.VITE_FIREBASE_CONFIG;
+                
+                if (!firebaseConfigString) {
+                    console.error("Firebase config environment variable is missing.");
                     setVisitCount('N/A');
                     return;
                 }
+                
+                const firebaseConfig = JSON.parse(firebaseConfigString);
+                const appId = firebaseConfig.appId || 'default-app-id';
 
                 // Initialize Firebase
                 const app = initializeApp(firebaseConfig);
                 const auth = getAuth(app);
                 const db = getFirestore(app);
 
-                // Sign in the user anonymously or with a custom token
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Sign in the user anonymously to get permissions.
+                await signInAnonymously(auth);
                 
-                // Define the path to the counter document in Firestore
                 const counterRef = doc(db, `artifacts/${appId}/public/data/siteStats`, 'visits');
 
-                // --- Increment Logic ---
-                // We use sessionStorage to count a user only once per browser session.
+                // Increment count only once per browser session.
                 const hasVisited = sessionStorage.getItem('agnidhra-site-visited');
-
                 if (!hasVisited) {
-                    // Use a transaction to safely create or update the counter.
                     await runTransaction(db, async (transaction) => {
                         const docSnap = await transaction.get(counterRef);
-                        if (!docSnap.exists()) {
-                            // If the document doesn't exist, create it.
-                            transaction.set(counterRef, { count: 1, lastUpdated: serverTimestamp() });
-                        } else {
-                            // Otherwise, increment the count.
-                            const newCount = docSnap.data().count + 1;
-                            transaction.update(counterRef, { count: newCount, lastUpdated: serverTimestamp() });
-                        }
+                        const newCount = (docSnap.exists() ? docSnap.data().count : 0) + 1;
+                        transaction.set(counterRef, { count: newCount, lastUpdated: serverTimestamp() }, { merge: true });
                     });
-                    // Mark this session as counted.
                     sessionStorage.setItem('agnidhra-site-visited', 'true');
                 }
 
-                // --- Real-time Listener ---
-                // This listens for changes to the counter and updates the UI instantly.
+                // Listen for real-time updates to the count.
                 const unsubscribe = onSnapshot(counterRef, (docSnap) => {
                     if (docSnap.exists()) {
-                        // Format the number with commas for better readability
                         setVisitCount(docSnap.data().count.toLocaleString());
                     } else {
-                        // If the doc doesn't exist yet, we are visitor #1
-                        setVisitCount('1');
+                        setVisitCount('1'); // This will be the first visit.
                     }
                 }, (error) => {
                     console.error("Error fetching visit count:", error);
                     setVisitCount('N/A');
                 });
 
-                // The returned function will be called when the component unmounts,
-                // cleaning up the listener to prevent memory leaks.
                 return () => unsubscribe();
 
             } catch (error) {
@@ -88,7 +66,7 @@ export default function Footer({ onNavigate }) {
 
         initAndCount();
 
-    }, []); // The empty array ensures this effect runs only once.
+    }, []);
 
     return (
         <footer className="bg-slate-900 text-slate-400 py-12">
@@ -100,7 +78,7 @@ export default function Footer({ onNavigate }) {
                             <img src="/logo.png" alt="Agnidhra Technologies Logo" className="w-10 h-10 rounded-full mr-3"/>
                             <span className="text-xl font-bold text-white">Agnidhra Technologies</span>
                         </div>
-                        <p className="max-w-md mx-auto md:mx-0">Empowering the next wave of tech leaders with practical, hands-on training in high-demand skills.</p>
+                        <p className="max-w-md mx-auto md:mx-0">Empowering the next wave of tech leaders with practical, hands-on training.</p>
                     </div>
 
                     {/* Column 2: Quick Links */}
