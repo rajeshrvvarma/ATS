@@ -1,16 +1,15 @@
-// src/api/gemini.js
+// This function handles all calls to the Gemini API.
 
-/**
- * Handles API calls to the Gemini model with exponential backoff for retries.
- * @param {string} prompt - The user's prompt to send to the model.
- * @param {string} systemInstruction - The system instruction to guide the model's behavior.
- * @returns {Promise<string>} - The generated text response from the model.
- */
+// It reads the secret API key from the Netlify environment variables.
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
 export const callGeminiAPI = async (prompt, systemInstruction) => {
-    // The API key is handled by the execution environment (e.g., Canvas).
-    // In a real-world deployment, you would use environment variables.
-    const apiKey = "";
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+    // If the API key is missing, return a clear error message.
+    if (!apiKey) {
+        console.error("VITE_GEMINI_API_KEY is not configured in Netlify.");
+        return "The AI service is not configured correctly. The API key is missing.";
+    }
 
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -19,13 +18,12 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
         },
     };
 
-    let response;
     let retries = 3;
     let delay = 1000;
 
     while (retries > 0) {
         try {
-            response = await fetch(apiUrl, {
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -33,20 +31,28 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
 
             if (response.ok) {
                 const result = await response.json();
-                // Safely access the text from the response
-                return result.candidates?.[0]?.content?.parts?.[0]?.text || "Sorry, I couldn't generate a response right now.";
+                // Check for a valid response, otherwise provide a helpful message.
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    return text;
+                } else {
+                    return "The AI generated an empty response. Please try rephrasing your question.";
+                }
+            } else {
+                 console.error("API Error:", response.status, await response.text());
             }
         } catch (error) {
-            console.error("API call failed:", error);
-            // Don't log retries as user-facing errors
+            console.error("Fetch call failed:", error);
         }
 
         retries--;
         if (retries > 0) {
-             await new Promise(resolve => setTimeout(resolve, delay));
-             delay *= 2; // Exponential backoff
+            await new Promise(resolve => setTimeout(resolve, delay));
+            delay *= 2; // Exponential backoff
         }
     }
 
+    // This is the fallback error message the user was seeing.
     return "Sorry, the AI service is currently unavailable. Please try again later.";
 };
+
