@@ -3,23 +3,25 @@ import { X, Menu } from 'lucide-react';
 
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
-    // Updated the navLinks array to include the new sections
-    const navLinks = ["About", "Why Us", "Admissions", "Offerings", "Trainers", "Testimonials", "FAQ", "Contact"];
+    // Updated navigation links to match the sections on the home page
+    const navLinks = ["About", "Offerings", "Why Us", "Admissions", "Trainers", "Testimonials", "Contact"];
 
     const scrollToSection = (id) => {
-        // Standardize the section ID for scrolling (e.g., "Why Us" becomes "whyus")
-        const sectionId = id.toLowerCase().replace(/\s+/g, '');
-
+        // Create a URL-friendly ID (e.g., "Why Us" becomes "why-us")
+        const targetId = id.toLowerCase().replace(/\s+/g, '-');
+        
+        // If we are not on the home page, navigate there first, then scroll
         if (currentPage !== 'home') {
             onNavigate('home');
-            // Wait for the home page to render before attempting to scroll
+            // Use a short timeout to allow the home page to render before scrolling
             setTimeout(() => {
-                 document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+                 document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         } else {
-            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+            // If we are already on the home page, just scroll
+            document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
         }
-        setIsOpen(false);
+        setIsOpen(false); // Close the mobile menu after clicking a link
     };
 
     return (
@@ -29,6 +31,8 @@ export default function Header({ onNavigate, currentPage }) {
                     <img src="/logo.png" alt="Agnidhra Technologies Logo" className="w-9 h-9 rounded-full" />
                     <span className="text-xl md:text-2xl font-bold text-white">Agnidhra Technologies</span>
                 </button>
+                
+                {/* Desktop Navigation */}
                 <div className="hidden md:flex items-center space-x-6">
                     {navLinks.map(link => (
                         <button key={link} onClick={() => scrollToSection(link)} className="text-slate-300 font-medium pb-1 transition-colors duration-300 hover:text-sky-400">
@@ -36,10 +40,14 @@ export default function Header({ onNavigate, currentPage }) {
                         </button>
                     ))}
                 </div>
+                
+                {/* Mobile Menu Button */}
                 <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-slate-300 focus:outline-none">
                     {isOpen ? <X size={24} /> : <Menu size={24} />}
                 </button>
             </nav>
+
+            {/* Mobile Menu */}
             {isOpen && (
                 <div className="md:hidden bg-slate-900">
                     <ul className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
