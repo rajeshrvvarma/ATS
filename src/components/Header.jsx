@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { X, Menu } from 'lucide-react';
 
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
-    const navLinks = ["About", "Offerings", "Trainers", "Testimonials", "FAQ", "Contact"];
+    // Updated the navLinks array to include the new sections
+    const navLinks = ["About", "Why Us", "Admissions", "Offerings", "Trainers", "Testimonials", "FAQ", "Contact"];
 
     const scrollToSection = (id) => {
+        // Standardize the section ID for scrolling (e.g., "Why Us" becomes "whyus")
+        const sectionId = id.toLowerCase().replace(/\s+/g, '');
+
         if (currentPage !== 'home') {
             onNavigate('home');
+            // Wait for the home page to render before attempting to scroll
             setTimeout(() => {
-                 document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+                 document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         } else {
-            document.getElementById(id.toLowerCase())?.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
         }
         setIsOpen(false);
     };
