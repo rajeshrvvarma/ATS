@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import logo from '../logo.png';
 
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -18,10 +19,8 @@ export default function Header({ onNavigate, currentPage }) {
     return (
         <header className="bg-slate-900/80 backdrop-blur-md shadow-lg shadow-black/20 sticky top-0 z-50">
             <nav className="container mx-auto px-6 py-4 flex justify-between items-center">
-                <button onClick={() => scrollToSection('home')} className="flex items-center space-x-3 text-left">
-                    <img src="https://i.imgur.com/8f2KqVv.png" alt="Agnidhra Technologies Logo" className="w-9 h-9 rounded-full" />
-                    <span className="text-xl md:text-2xl font-bold text-white">Agnidhra Technologies</span>
-                </button>
+                <img src="/logo.png" alt="Agnidhra Technologies Logo" className="w-9 h-9 rounded-full" />
+                <span className="text-xl md:text-2xl font-bold text-white">Agnidhra Technologies</span>
                 <div className="hidden md:flex items-center space-x-6">
                     {navLinks.map(link => (
                         <button key={link} onClick={() => scrollToSection(link)} className="text-slate-300 font-medium pb-1 transition-colors duration-300 hover:text-sky-400">{link}</button>
@@ -32,7 +31,11 @@ export default function Header({ onNavigate, currentPage }) {
             {isOpen && (
                 <div className="md:hidden bg-slate-900">
                     <ul className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                        {navLinks.map(link => ( <li key={link}><button onClick={() => scrollToSection(link)} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-sky-500 hover:bg-slate-800">{link}</button></li>))}
+                        {navLinks.map(link => (
+                            <li key={link}>
+                                <button onClick={() => scrollToSection(link)} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-slate-300 hover:text-sky-500 hover:bg-slate-800">{link}</button>
+                            </li>
+                        ))}
                     </ul>
                 </div>
             )}
