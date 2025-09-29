@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Shield, Users, Target, Code, Sparkles, X, Bot, Briefcase, Award, MessageCircle } from 'lucide-react';
+import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle } from 'lucide-react';
 import SectionTitle from '@/components/SectionTitle.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import { callGeminiAPI } from '@/api/gemini.js';
 
-// --- Sub-components for HomePage ---
+// --- Sub-components specific to HomePage ---
 
 const Hero = () => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
@@ -173,18 +173,77 @@ const Admissions = () => (
 const SyllabusWeek = ({ week, accentColor }) => {
     const [explanation, setExplanation] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const handleExplain = async () => { setIsLoading(true); setExplanation(''); const systemPrompt = "You are an expert cybersecurity instructor. Explain the following topic to a complete beginner in a simple, concise, and encouraging way. Focus on why this skill is important for their future job. Keep the explanation to 2-3 sentences."; const userPrompt = `Explain the topic "${week.title}" which is described as: "${week.desc}"`; const result = await callGeminiAPI(userPrompt, systemPrompt); setExplanation(result); setIsLoading(false); };
-    return ( <div className="relative"><div className={`absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-${accentColor}-500`}></div><h4 className="font-bold text-white">{week.title}</h4><p className="text-slate-400">{week.desc}</p><button onClick={handleExplain} disabled={isLoading} className={`mt-2 text-sm text-${accentColor}-400 hover:text-${accentColor}-300 flex items-center gap-1 disabled:text-slate-500`}><Sparkles size={14} />{isLoading ? 'Explaining...' : '✨ Explain Topic'}</button>{explanation && (<div className="mt-2 text-sm bg-slate-900/50 p-3 rounded-md border border-slate-700"><p className="text-slate-200">{explanation}</p></div>)}</div>);
+
+    const handleExplain = async () => {
+        // If an explanation is already visible, clicking again will hide it.
+        if (explanation) {
+            setExplanation('');
+            return;
+        }
+
+        setIsLoading(true);
+        const systemPrompt = "You are an expert cybersecurity instructor. Explain the following topic to a complete beginner in a simple, concise, and encouraging way. Focus on why this skill is important for their future job. Keep the explanation to 2-3 sentences.";
+        const userPrompt = `Explain the topic "${week.title}" which is described as: "${week.desc}"`;
+        
+        const result = await callGeminiAPI(userPrompt, systemPrompt);
+        setExplanation(result);
+        setIsLoading(false);
+    };
+
+    return (
+        <div className="relative">
+            <div className={`absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-${accentColor}-500`}></div>
+            <h4 className="font-bold text-white">{week.title}</h4>
+            <p className="text-slate-400">{week.desc}</p>
+            {/* The button text and icon now change dynamically */}
+            <button 
+                onClick={handleExplain} 
+                disabled={isLoading} 
+                className={`mt-2 text-sm text-${accentColor}-400 hover:text-${accentColor}-300 flex items-center gap-1 disabled:text-slate-500`}
+            >
+                {explanation ? <X size={14} /> : <Sparkles size={14} />}
+                {isLoading ? 'Explaining...' : (explanation ? 'Hide Explanation' : '✨ Explain Topic')}
+            </button>
+            {explanation && (
+                <div className="mt-2 text-sm bg-slate-900/50 p-3 rounded-md border border-slate-700 animate-fade-in">
+                    <p className="text-slate-200">{explanation}</p>
+                </div>
+            )}
+        </div>
+    );
 };
+
 const Syllabus = ({ visibleSyllabus, setVisibleSyllabus }) => {
     const socSyllabus = { title: "SOC Analyst Program Syllabus", month1: { title: "Month 1: Cybersecurity Fundamentals & Tooling", weeks: [{ title: "Week 1: Security, Networking & OS Hardening", desc: "Combine core security principles (CIA Triad), networking (TCP/IP), and hands-on system hardening for both Windows and Linux." }, { title: "Week 2: The Attacker's Mindset & Threat Intel", desc: "Understand the Cyber Kill Chain and use the MITRE ATT&CK framework to analyze attacker TTPs." }, { title: "Week 3: SIEM & Log Analysis", desc: "A deep dive into SIEM tools. Learn to write queries and create correlation rules to detect threats." }, { title: "Week 4: EDR & Vulnerability Management", desc: "Explore EDR for monitoring devices and use scanners to find and prioritize system vulnerabilities." }] }, month2: { title: "Month 2: Incident Response & Career Readiness", weeks: [{ title: "Week 5: Phishing & Malware Analysis", desc: "Deconstruct phishing emails and use sandboxing tools to safely inspect suspicious attachments." }, { title: "Week 6: Introduction to Digital Forensics", desc: "Learn the principles of digital evidence collection and use tools like Autopsy to analyze a disk image." }, { title: "Week 7: Capstone Project: SOC Analyst Simulation", desc: "Apply your skills in a real-world simulation, investigating security alerts and recommending remediation." }, { title: "Week 8: Career Prep & Final Review", desc: "Focus on resume building, LinkedIn optimization, and mock interviews for SOC Analyst roles." }] } };
     const ethicalHackingSyllabus = { title: "Ethical Hacking Program Syllabus", month1: { title: "Month 1: Foundations of Offensive Security", weeks: [{ title: "Week 1: Intro to Hacking & Kali Linux", desc: "Explore the phases of pentesting, legal frameworks, and set up your own virtual hacking lab with Kali Linux." }, { title: "Week 2: Reconnaissance & Scanning", desc: "Master passive and active reconnaissance techniques. Perform a deep dive into network scanning with Nmap." }, { title: "Week 3: Gaining Access & Enumeration", desc: "Learn system hacking, password cracking techniques, and detailed vulnerability analysis to find entry points." }, { title: "Week 4: Exploitation Fundamentals", desc: "Get hands-on with the Metasploit Framework, learn to customize payloads, and exploit common vulnerabilities." }] }, month2: { title: "Month 2: Advanced Attacks & Reporting", weeks: [{ title: "Week 5: Web Application Hacking", desc: "Exploit the OWASP Top 10 vulnerabilities, including SQL Injection, Cross-Site Scripting (XSS), and more." }, { title: "Week 6: Network Hacking & Sniffing", desc: "Dive into network-level attacks like ARP spoofing, DNS poisoning, and session hijacking." }, { title: "Week 7: Capstone Project: Live Pentest", desc: "Conduct a full penetration test from start to finish against a vulnerable lab environment." }, { title: "Week 8: Reporting & Career Prep", desc: "Learn to write professional penetration testing reports and prepare for certifications and interviews." }] } };
-    const syllabusData = visibleSyllabus === 'soc' ? socSyllabus : ethicalHackingSyllabus; const accentColor = visibleSyllabus === 'soc' ? 'sky' : 'red'; if (!visibleSyllabus) { return <div id="syllabus"></div>; }
-    return ( <section id="syllabus" className="py-20 bg-slate-800"><div className="container mx-auto px-6 relative"><button onClick={() => setVisibleSyllabus(null)} className="absolute top-0 right-6 text-slate-400 hover:text-white transition-colors z-10"><X size={32} /></button><SectionTitle>{syllabusData.title}</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12"><div><h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month1.title}</h3><div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month1.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div></div><div><h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month2.title}</h3><div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month2.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div></div></div><div className="text-center mt-12"><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className={`bg-${accentColor}-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-${accentColor}-700 transition-colors duration-300 transform hover:scale-105`}>Enroll in 2-Month Program</button></div></div></section>);
+    const syllabusData = visibleSyllabus === 'soc' ? socSyllabus : ethicalHackingSyllabus;
+    const accentColor = visibleSyllabus === 'soc' ? 'sky' : 'red';
+    if (!visibleSyllabus) { return <div id="syllabus"></div>; }
+    return (
+        <section id="syllabus" className="py-20 bg-slate-800">
+            <div className="container mx-auto px-6 relative">
+                <button onClick={() => setVisibleSyllabus(null)} className="absolute top-0 right-6 text-slate-400 hover:text-white transition-colors z-10"><X size={32} /></button>
+                <SectionTitle>{syllabusData.title}</SectionTitle>
+                <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month1.title}</h3>
+                        <div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month1.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div>
+                    </div>
+                    <div>
+                        <h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month2.title}</h3>
+                        <div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month2.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div>
+                    </div>
+                </div>
+                <div className="text-center mt-12"><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className={`bg-${accentColor}-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-${accentColor}-700 transition-colors duration-300 transform hover:scale-105`}>Enroll in 2-Month Program</button></div>
+            </div>
+        </section>
+    );
 };
+
 const Trainers = () => ( <section id="trainers" className="py-20 bg-slate-900"><div className="container mx-auto px-6"><SectionTitle>Meet Your Trainers</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8"><div className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center"><img src="/logo.png" alt="Santosh Kumar" className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" /><h3 className="text-2xl font-bold text-white">Santosh Kumar</h3><p className="text-sky-400 font-semibold mb-3">Lead Trainer & Founder</p><p className="text-slate-300">With 8 years of experience across the full software lifecycle, Santosh provides a practical, end-to-end understanding of the tech landscape.</p></div><div className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center"><img src="/logo.png" alt="Jeevan Kumar" className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" /><h3 className="text-2xl font-bold text-white">Jeevan Kumar</h3><p className="text-sky-400 font-semibold mb-3">Co-Trainer | SOC Certified</p><p className="text-slate-300">With 6 years of experience defending systems against real-world threats, Jeevan brings rich practical exposure to the security landscape.</p></div></div></div></section>);
 const Testimonials = () => ( <section id="testimonials" className="py-20 bg-slate-800"><div className="container mx-auto px-6"><SectionTitle>What Our Students Say</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8"><div className="bg-slate-900 p-8 rounded-lg border border-slate-700"><p className="text-slate-300 italic mb-6">"The project-based approach was a game-changer. I landed a job as a SOC Analyst within two months of finishing the course!"</p><div className="flex items-center"><img src="https://placehold.co/50x50/0F172A/38BDF8?text=R" alt="Rohan S." className="w-12 h-12 rounded-full mr-4"/><div><h4 className="font-bold text-white">Rohan S.</h4><p className="text-sm text-slate-400">Cyber Security Graduate</p></div></div></div><div className="bg-slate-900 p-8 rounded-lg border border-slate-700"><p className="text-slate-300 italic mb-6">"The focus on real-world scenarios and hands-on labs prepared me for the technical interviews. Highly recommended!"</p><div className="flex items-center"><img src="https://placehold.co/50x50/0F172A/38BDF8?text=A" alt="Anjali P." className="w-12 h-12 rounded-full mr-4"/><div><h4 className="font-bold text-white">Anjali P.</h4><p className="text-sm text-slate-400">Cyber Security Graduate</p></div></div></div></div></div></section>);
-const Contact = () => ( <section id="contact" className="py-20 bg-slate-800"><div className="container mx-auto px-6"><SectionTitle>Get In Touch</SectionTitle><div className="max-w-3xl mx-auto text-center"><p className="text-lg text-slate-300 mb-8">Have a question or ready to enroll? Send us a message!</p><form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="bg-slate-900 p-8 text-left space-y-6 rounded-lg border border-slate-700"><input type="hidden" name="_next" value="https://www.agnidhra-technologies.com/thank-you.html" /><input type="hidden" name="_subject" value="New Cyber Security Inquiry!" /><div className="grid md:grid-cols-2 gap-6"><div><label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label><input type="text" id="name" name="name" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div><div><label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" id="email" name="email" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div></div><div><label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">Message</label><textarea id="message" name="message" rows="4" required placeholder="Tell us which program you're interested in!" className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"></textarea></div><div className="text-right"><button type="submit" className="inline-block bg-sky-500 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-sky-600 transition-colors duration-300">Send Message</button></div></form></div></div></section>);
+const Contact = () => ( <section id="contact" className="py-20 bg-slate-800"><div className="container mx-auto px-6"><SectionTitle>Get In Touch</SectionTitle><div className="max-w-3xl mx-auto text-center"><p className="text-lg text-slate-300 mb-8">Have a question or ready to enroll? Send us a message!</p><form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="bg-slate-900 p-8 text-left space-y-6 rounded-lg border border-slate-700"><input type="hidden" name="_next" value="https://atstatic.netlify.app/thank-you" /><input type="hidden" name="_subject" value="New Cyber Security Inquiry!" /><div className="grid md:grid-cols-2 gap-6"><div><label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label><input type="text" id="name" name="name" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div><div><label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" id="email" name="email" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div></div><div><label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">Message</label><textarea id="message" name="message" rows="4" required placeholder="Tell us which program you're interested in!" className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"></textarea></div><div className="text-right"><button type="submit" className="inline-block bg-sky-500 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-sky-600 transition-colors duration-300">Send Message</button></div></form></div></div></section>);
+
 
 // --- Main HomePage Component ---
 export default function HomePage({ onNavigate }) {

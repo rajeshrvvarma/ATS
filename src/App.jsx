@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-// Import all the page and layout components
+// Import all the page and layout components using the '@' alias
+// This pathing is configured in vite.config.js and jsconfig.json
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import HomePage from '@/pages/HomePage.jsx';

@@ -1,15 +1,13 @@
 // This function handles all calls to the Gemini API.
 
-// It reads the secret API key from the Netlify environment variables.
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
 export const callGeminiAPI = async (prompt, systemInstruction) => {
-    // If the API key is missing, return a clear error message.
+    // It reads the secret API key from the Netlify environment variables.
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
         console.error("VITE_GEMINI_API_KEY is not configured in Netlify.");
         return "The AI service is not configured correctly. The API key is missing.";
     }
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
     const payload = {
         contents: [{ parts: [{ text: prompt }] }],
@@ -19,7 +17,7 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
     };
 
     let retries = 3;
-    let delay = 1000;
+    let delay = 1500; // Increased initial delay for better stability
 
     while (retries > 0) {
         try {
@@ -31,11 +29,11 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
 
             if (response.ok) {
                 const result = await response.json();
-                // Check for a valid response, otherwise provide a helpful message.
                 const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
                 if (text) {
                     return text;
                 } else {
+                    // This handles cases where the API returns a success status but an empty response
                     return "The AI generated an empty response. Please try rephrasing your question.";
                 }
             } else {
@@ -52,7 +50,7 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
         }
     }
 
-    // This is the fallback error message the user was seeing.
-    return "Sorry, the AI service is currently unavailable. Please try again later.";
+    // This is the fallback error message.
+    return "Sorry, the AI service is currently unavailable. Please check your connection and try again later.";
 };
 
