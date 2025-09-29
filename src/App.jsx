@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Header from './components/Header.jsx';
-import Footer from './components/Footer.jsx';
-import HomePage from './pages/HomePage.jsx';
-import FreeWorkshopPage from './pages/WorkshopPage.jsx';
-import BootcampPage from './pages/BootcampPage.jsx';
-import TermsPage from './pages/TermsPage.jsx';
-import DisclaimerPage from './pages/DisclaimerPage.jsx';
+import Header from '/src/components/Header.jsx';
+import Footer from '/src/components/Footer.jsx';
+import HomePage from '/src/pages/HomePage.jsx';
+import FreeWorkshopPage from '/src/pages/WorkshopPage.jsx';
+import BootcampPage from '/src/pages/BootcampPage.jsx';
+import TermsPage from '/src/pages/TermsPage.jsx';
+import DisclaimerPage from '/src/pages/DisclaimerPage.jsx';
 
 export default function App() {
     const [currentPage, setCurrentPage] = useState('home');
