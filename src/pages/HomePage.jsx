@@ -128,7 +128,7 @@ const Admissions = () => (
                 <div className="grid md:grid-cols-2 gap-16">
 
                     {/* ITEM 1: Reduced padding to md:pr-8 */}
-                    <div className="text-center md:text-right relative md:pr-3">
+                    <div className="text-center md:text-right relative">
                         {/* Centered the circle by adding md:translate-x-1/2 */}
                         <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] md:translate-x-1/2 top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">1</div>
                         <h3 className="text-xl font-bold text-white mb-2">Submit an Inquiry</h3>
