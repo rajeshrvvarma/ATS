@@ -198,9 +198,9 @@ export default function HomePage({ onNavigate }) {
             <Hero />
             <About />
             <CourseOfferings setVisibleSyllabus={setVisibleSyllabus} onNavigate={onNavigate} />
-            <WhyUs />
-            <Admissions />
             <SpecializedTrainings onTrainingSelect={setSelectedTraining} />
+            <WhyUs />
+            <Admissions />            
             <Syllabus visibleSyllabus={visibleSyllabus} setVisibleSyllabus={setVisibleSyllabus} />
             <Trainers />
             <Testimonials />
