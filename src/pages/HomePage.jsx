@@ -126,11 +126,31 @@ const Admissions = () => (
             <div className="relative max-w-4xl mx-auto">
                 <div className="absolute left-1/2 top-8 h-full w-0.5 bg-slate-700 hidden md:block"></div>
                 <div className="grid md:grid-cols-2 gap-16">
-                    <div className="text-center md:text-right relative"><div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">1</div><h3 className="text-xl font-bold text-white mb-2">Submit an Inquiry</h3><p className="text-slate-400">Fill out our contact form with your details and the course you're interested in.</p></div>
+
+                    {/* ITEM 1: Added md:pr-12 for padding on the right */}
+                    <div className="text-center md:text-right relative md:pr-12">
+                        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">1</div>
+                        <h3 className="text-xl font-bold text-white mb-2">Submit an Inquiry</h3>
+                        <p className="text-slate-400">Fill out our contact form with your details and the course you're interested in.</p>
+                    </div>
+                    
                     <div></div>
                     <div></div>
-                    <div className="text-center md:text-left relative"><div className="absolute left-1/2 -translate-x-1/2 md:left-[-2rem] top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">2</div><h3 className="text-xl font-bold text-white mb-2">Free Demo Session</h3><p className="text-slate-400">We'll contact you to schedule a free one-on-one demo and consultation.</p></div>
-                    <div className="text-center md:text-right relative"><div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">3</div><h3 className="text-xl font-bold text-white mb-2">Enroll & Learn</h3><p className="text-slate-400">Complete the enrollment process and start your journey to becoming a tech pro.</p></div>
+                    
+                    {/* ITEM 2: Added md:pl-12 for padding on the left */}
+                    <div className="text-center md:text-left relative md:pl-12">
+                        <div className="absolute left-1/2 -translate-x-1/2 md:left-[-2rem] top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">2</div>
+                        <h3 className="text-xl font-bold text-white mb-2">Free Demo Session</h3>
+                        <p className="text-slate-400">We'll contact you to schedule a free one-on-one demo and consultation.</p>
+                    </div>
+
+                    {/* ITEM 3: Added md:pr-12 for padding on the right */}
+                    <div className="text-center md:text-right relative md:pr-12">
+                        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">3</div>
+                        <h3 className="text-xl font-bold text-white mb-2">Enroll & Learn</h3>
+                        <p className="text-slate-400">Complete the enrollment process and start your journey to becoming a tech pro.</p>
+                    </div>
+
                 </div>
             </div>
         </div>
