@@ -4,7 +4,7 @@ import { X, Menu } from 'lucide-react';
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     // Updated navigation links to match the sections on the home page
-    const navLinks = ["About", "Offerings", "Why Us", "Admissions", "Trainers", "Testimonials", "Contact"];
+    const navLinks = ["About", "Offerings", "Specialized Trainings","Why Us", "Admissions", "Trainers", "Testimonials", "Contact"];
 
     const scrollToSection = (id) => {
         // Create a URL-friendly ID (e.g., "Why Us" becomes "why-us")
