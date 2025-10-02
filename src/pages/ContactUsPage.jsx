@@ -31,21 +31,21 @@ export default function ContactUsPage({ onNavigate }) {
         {
             icon: Phone,
             title: "Phone Support",
-            primary: "+91-9876543210",
+            primary: "+91-9160813700",
             secondary: "Mon-Fri, 9 AM - 6 PM IST",
             description: "Immediate assistance for urgent queries"
         },
         {
             icon: Mail,
             title: "Email Support",
-            primary: "support@agnidhra.com",
+            primary: "santosh.m@agnidhra-technologies.com",
             secondary: "Response within 24 hours",
             description: "Detailed queries and documentation"
         },
         {
             icon: MessageSquare,
             title: "WhatsApp",
-            primary: "+91-9876543210",
+            primary: "+91-9160813700",
             secondary: "Quick responses available",
             description: "Instant messaging for quick questions"
         }
@@ -54,26 +54,26 @@ export default function ContactUsPage({ onNavigate }) {
     const departments = [
         {
             department: "Admissions",
-            email: "admissions@agnidhra.com",
-            phone: "+91-9876543210",
+            email: "santosh.m@agnidhra-technologies.com",
+            phone: "+91-9160813700",
             description: "Course enrollment, pricing, and schedules"
         },
         {
             department: "Technical Support",
-            email: "tech@agnidhra.com",
-            phone: "+91-9876543211",
+            email: "santosh.m@agnidhra-technologies.com",
+            phone: "+91-9160813700",
             description: "Platform access, lab issues, and technical problems"
         },
         {
             department: "Payments & Billing",
-            email: "payments@agnidhra.com",
-            phone: "+91-9876543212",
+            email: "santosh.m@agnidhra-technologies.com",
+            phone: "+91-9160813700",
             description: "Payment issues, refunds, and invoices"
         },
         {
             department: "Career Services",
-            email: "careers@agnidhra.com",
-            phone: "+91-9876543213",
+            email: "santosh.m@agnidhra-technologies.com",
+            phone: "+91-9160813700",
             description: "Job placement, resume help, and interview prep"
         }
     ];
