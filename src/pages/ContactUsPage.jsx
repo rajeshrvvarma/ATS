@@ -53,47 +53,47 @@ export default function ContactUsPage({ onNavigate }) {
 
     const departments = [
         {
-            department: "Admissions",
-            email: "santosh.m@agnidhra-technologies.com",
-            phone: "+91-9160813700",
-            description: "Course enrollment, pricing, and schedules"
-        },
-        {
             department: "Technical Support",
-            email: "santosh.m@agnidhra-technologies.com",
+            email: "support@agnidhra-technologies.com",
             phone: "+91-9160813700",
             description: "Platform access, lab issues, and technical problems"
         },
         {
             department: "Payments & Billing",
-            email: "santosh.m@agnidhra-technologies.com",
+            email: "payments@agnidhra-technologies.com",
             phone: "+91-9160813700",
             description: "Payment issues, refunds, and invoices"
         },
         {
-            department: "Career Services",
-            email: "santosh.m@agnidhra-technologies.com",
+            department: "Privacy & Data Protection",
+            email: "privacy@agnidhra-technologies.com",
             phone: "+91-9160813700",
-            description: "Job placement, resume help, and interview prep"
+            description: "Data protection, privacy policies, and GDPR requests"
+        },
+        {
+            department: "Business Partnerships",
+            email: "partnerships@agnidhra-technologies.com",
+            phone: "+91-9160813700",
+            description: "Corporate training, partnerships, and collaborations"
         }
     ];
 
     const faqs = [
         {
-            question: "How do I access my course after payment?",
-            answer: "You'll receive login credentials within 24 hours of payment confirmation via email."
+            question: "How do I report a payment issue?",
+            answer: "Contact our payments team immediately at payments@agnidhra-technologies.com with your transaction ID and order details."
         },
         {
-            question: "Can I get a refund if I'm not satisfied?",
-            answer: "Yes, we offer refunds based on our cancellation policy. Full details are available on our refund page."
+            question: "How can I request a refund?",
+            answer: "Visit our Refund Policy page for detailed information and submit a request via email with your order details."
         },
         {
-            question: "Are there any prerequisites for the courses?",
-            answer: "Basic computer knowledge is helpful, but our courses are designed for beginners to advanced learners."
+            question: "How do you protect my personal data?",
+            answer: "We follow strict data protection protocols. View our Privacy Policy for complete details on how we secure your information."
         },
         {
-            question: "Do you provide job placement assistance?",
-            answer: "Yes, we have dedicated career services including resume review, interview prep, and job placement assistance."
+            question: "Who do I contact for technical issues?",
+            answer: "Our technical support team is available via support@agnidhra-technologies.com or call +91-9160813700 for immediate assistance."
         }
     ];
 
@@ -108,9 +108,9 @@ export default function ContactUsPage({ onNavigate }) {
                     Back to Home
                 </button>
 
-                <SectionTitle>Contact Us</SectionTitle>
+                <SectionTitle>Support & Help Center</SectionTitle>
                 <p className="text-center text-xl text-slate-300 -mt-8 mb-12">
-                    Get in touch with our team for any questions or support
+                    Get support for payments, technical issues, and policy inquiries
                 </p>
 
                 <div className="max-w-6xl mx-auto space-y-12">
@@ -147,7 +147,10 @@ export default function ContactUsPage({ onNavigate }) {
                                 </div>
                             )}
 
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form action="https://formsubmit.co/support@agnidhra-technologies.com" method="POST" className="space-y-4">
+                                <input type="hidden" name="_subject" value="Support Request from Website" />
+                                <input type="hidden" name="_next" value="https://yourdomain.com/support-success" />
+                                <input type="hidden" name="_captcha" value="false" />
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">
@@ -204,12 +207,13 @@ export default function ContactUsPage({ onNavigate }) {
                                             onChange={handleInputChange}
                                             className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
                                         >
-                                            <option value="general">General Inquiry</option>
-                                            <option value="admissions">Course Admissions</option>
+                                            <option value="general">General Support</option>
                                             <option value="technical">Technical Support</option>
-                                            <option value="payments">Payment Issues</option>
-                                            <option value="careers">Career Services</option>
-                                            <option value="partnerships">Partnerships</option>
+                                            <option value="payments">Payment & Billing Issues</option>
+                                            <option value="refunds">Refund & Cancellation</option>
+                                            <option value="privacy">Privacy & Data Concerns</option>
+                                            <option value="partnerships">Business Partnerships</option>
+                                            <option value="feedback">Feedback & Suggestions</option>
                                         </select>
                                     </div>
                                 </div>

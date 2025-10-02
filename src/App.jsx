@@ -16,6 +16,7 @@ import CancellationRefundPage from '@/pages/CancellationRefundPage.jsx';
 import ShippingPage from '@/pages/ShippingPage.jsx';
 import PrivacyPage from '@/pages/PrivacyPage.jsx';
 import ContactUsPage from '@/pages/ContactUsPage.jsx';
+import EnrollUsPage from '@/pages/EnrollUsPage.jsx';
 
 /**
  * App.jsx is the root component of the application.
@@ -63,6 +64,8 @@ export default function App() {
                 return <PrivacyPage onNavigate={setCurrentPage} />;
             case 'contact':
                 return <ContactUsPage onNavigate={setCurrentPage} />;
+            case 'enroll':
+                return <EnrollUsPage onNavigate={setCurrentPage} />;
             case 'home':
             default:
                 return <HomePage onNavigate={setCurrentPage} />;
