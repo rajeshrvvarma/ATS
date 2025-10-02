@@ -289,12 +289,12 @@ export default function ContactUsPage({ onNavigate }) {
                                 
                                 <div className="space-y-4">
                                     <div>
-                                        <h3 className="font-semibold text-white mb-2">Agnidhra Technologies Pvt Ltd</h3>
+                                        <h3 className="font-semibold text-white mb-2">Agnidhra Technologies</h3>
                                         <p className="text-slate-300 text-sm">
-                                            123 Cyber Security Hub<br />
-                                            Tech City, Electronic City<br />
-                                            Bangalore - 560100<br />
-                                            Karnataka, India
+                                            Ratnam Plaza Hub<br />
+                                            Opp RTC Bus Stand<br />
+                                            Vizianagaram - 535001<br />
+                                            Andhra Pradesh, India
                                         </p>
                                     </div>
                                     
