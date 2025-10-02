@@ -108,8 +108,13 @@ export default function Footer({ onNavigate }) {
                             <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-sky-400 transition-colors"><Youtube size={24} /></a>
                             <a href="https://www.instagram.com/agnidhra_technologies/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-sky-400 transition-colors"><Instagram size={24} /></a>
                         </div>
+                        <h4 className="font-bold text-lg text-white mb-4 mt-6">Legal & Policies</h4>
                         <ul className="space-y-2">
                            <li><button onClick={() => onNavigate('terms')} className="hover:text-sky-400 transition-colors">Terms & Conditions</button></li>
+                           <li><button onClick={() => onNavigate('privacy')} className="hover:text-sky-400 transition-colors">Privacy Policy</button></li>
+                           <li><button onClick={() => onNavigate('cancellationRefund')} className="hover:text-sky-400 transition-colors">Refund Policy</button></li>
+                           <li><button onClick={() => onNavigate('shipping')} className="hover:text-sky-400 transition-colors">Shipping Policy</button></li>
+                           <li><button onClick={() => onNavigate('contact')} className="hover:text-sky-400 transition-colors">Contact Us</button></li>
                            <li><button onClick={() => onNavigate('disclaimer')} className="hover:text-sky-400 transition-colors">Disclaimer</button></li>
                         </ul>
                     </div>

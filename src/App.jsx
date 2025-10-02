@@ -9,6 +9,13 @@ import FreeWorkshopPage from '@/pages/WorkshopPage.jsx';
 import BootcampPage from '@/pages/BootcampPage.jsx';
 import TermsPage from '@/pages/TermsPage.jsx';
 import DisclaimerPage from '@/pages/DisclaimerPage.jsx';
+import AccountActivationPage from '@/pages/AccountActivationPage.jsx';
+import PaymentSuccessPage from '@/pages/PaymentSuccessPage.jsx';
+import PaymentFailedPage from '@/pages/PaymentFailedPage.jsx';
+import CancellationRefundPage from '@/pages/CancellationRefundPage.jsx';
+import ShippingPage from '@/pages/ShippingPage.jsx';
+import PrivacyPage from '@/pages/PrivacyPage.jsx';
+import ContactUsPage from '@/pages/ContactUsPage.jsx';
 
 /**
  * App.jsx is the root component of the application.
@@ -38,6 +45,24 @@ export default function App() {
                 return <TermsPage onNavigate={setCurrentPage} />;
             case 'disclaimer':
                 return <DisclaimerPage onNavigate={setCurrentPage} />;
+            case 'accountActivation-defensive':
+                return <AccountActivationPage onNavigate={setCurrentPage} planType="defensiveBootcamp" />;
+            case 'accountActivation-offensive':
+                return <AccountActivationPage onNavigate={setCurrentPage} planType="offensiveBootcamp" />;
+            case 'accountActivation':
+                return <AccountActivationPage onNavigate={setCurrentPage} planType="defensiveBootcamp" />;
+            case 'paymentSuccess':
+                return <PaymentSuccessPage onNavigate={setCurrentPage} />;
+            case 'paymentFailed':
+                return <PaymentFailedPage onNavigate={setCurrentPage} />;
+            case 'cancellationRefund':
+                return <CancellationRefundPage onNavigate={setCurrentPage} />;
+            case 'shipping':
+                return <ShippingPage onNavigate={setCurrentPage} />;
+            case 'privacy':
+                return <PrivacyPage onNavigate={setCurrentPage} />;
+            case 'contact':
+                return <ContactUsPage onNavigate={setCurrentPage} />;
             case 'home':
             default:
                 return <HomePage onNavigate={setCurrentPage} />;
