@@ -4,11 +4,18 @@ import { X, Menu } from 'lucide-react';
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     // Updated navigation links to match the sections on the home page
-    const navLinks = ["About", "Offerings", "Specialized Trainings","Why Us", "Admissions", "Trainers", "Testimonials", "Contact"];
+    const navLinks = ["About", "Offerings", "Specialized Trainings","Why Us", "Admissions", "Trainers", "Testimonials", "Inquiry", "Contact Us"];
 
     const scrollToSection = (id) => {
-        // Create a URL-friendly ID (e.g., "Why Us" becomes "why-us")
-        const targetId = id.toLowerCase().replace(/\s+/g, '-');
+        // Handle "Contact Us" - navigate to support page
+        if (id === "Contact Us") {
+            onNavigate('contact');
+            setIsOpen(false);
+            return;
+        }
+        
+        // Handle "Inquiry" - scroll to contact section on homepage
+        const targetId = id === "Inquiry" ? "contact" : id.toLowerCase().replace(/\s+/g, '-');
         
         // If we are not on the home page, navigate there first, then scroll
         if (currentPage !== 'home') {
