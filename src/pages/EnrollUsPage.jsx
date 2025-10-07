@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCap, Target } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import { createOrder, processPayment, verifyPayment } from '@/services/razorpay.js';
 
 export default function EnrollUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -15,6 +16,8 @@ export default function EnrollUsPage({ onNavigate }) {
         source: 'website'
     });
     const [submitted, setSubmitted] = useState(false);
+    const [paymentLoading, setPaymentLoading] = useState(false);
+    const [paymentMsg, setPaymentMsg] = useState('');
 
     const handleInputChange = (e) => {
         setFormData({
@@ -52,6 +55,37 @@ export default function EnrollUsPage({ onNavigate }) {
         'Industry mentor assignment',
         'Job placement assistance'
     ];
+
+    const handleTestPayment = async () => {
+        try {
+            setPaymentLoading(true);
+            setPaymentMsg('');
+
+            const order = await createOrder({ amount: 499, currency: 'INR' });
+
+            const paymentResult = await processPayment({
+                amount: order.amount,
+                currency: order.currency,
+                description: 'Demo Payment (Workshop Premium) ',
+                orderId: order.id,
+                customerName: formData.name || 'Demo User',
+                customerEmail: formData.email || 'demo@example.com',
+                customerPhone: formData.phone || '9999999999'
+            });
+
+            const valid = await verifyPayment({
+                orderId: paymentResult.orderId,
+                paymentId: paymentResult.paymentId,
+                signature: paymentResult.signature
+            });
+
+            setPaymentMsg(valid ? 'Payment successful and verified.' : 'Payment completed but verification failed.');
+        } catch (e) {
+            setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
+        } finally {
+            setPaymentLoading(false);
+        }
+    };
 
     return (
         <div className="bg-slate-900 text-white min-h-screen">
@@ -262,13 +296,26 @@ export default function EnrollUsPage({ onNavigate }) {
                                     </div>
                                 </div>
 
-                                <button
-                                    type="submit"
-                                    className="btn-primary w-full py-4 shadow-lg flex items-center justify-center"
-                                >
-                                    <Send size={20} className="mr-2" />
-                                    Submit Enrollment Request
-                                </button>
+                                <div className="grid sm:grid-cols-2 gap-3">
+                                    <button
+                                        type="submit"
+                                        className="btn-primary w-full py-4 shadow-lg flex items-center justify-center"
+                                    >
+                                        <Send size={20} className="mr-2" />
+                                        Submit Enrollment Request
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handleTestPayment}
+                                        disabled={paymentLoading}
+                                        className="btn-secondary w-full py-4 shadow-lg"
+                                    >
+                                        {paymentLoading ? 'Processing…' : 'Test Payment (₹499)'}
+                                    </button>
+                                </div>
+                                {paymentMsg && (
+                                    <p className="text-sm text-slate-300 text-center mt-3">{paymentMsg}</p>
+                                )}
 
                                 <p className="text-xs text-slate-400 text-center">
                                     By submitting this form, you agree to be contacted by our admissions team via phone, email, or WhatsApp.
