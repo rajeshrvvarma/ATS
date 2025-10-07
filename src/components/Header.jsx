@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Sun, Moon, Home } from 'lucide-react';
+import { X, Menu, ChevronDown, Sun, Moon, Home, Shield, Sword, Sparkles } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext.jsx';
 import { useSettings } from '@/context/SettingsContext.jsx';
 
@@ -10,6 +11,20 @@ export default function Header({ onNavigate, currentPage }) {
     const [activeLink, setActiveLink] = useState('');
     const [isProgramsOpen, setIsProgramsOpen] = useState(false);
     const [showMega, setShowMega] = useState(false);
+
+    // Global shortcut: press "s" to open Settings
+    React.useEffect(() => {
+        const onKey = (e) => {
+            const tag = e.target?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable) return;
+            if (e.key.toLowerCase() === 's') {
+                e.preventDefault();
+                toggleOpen();
+            }
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [toggleOpen]);
     // Slim navigation
     const navLinks = ["Programs", "Video Learning", "Admissions", "Contact Us", "Account"];
 
@@ -104,32 +119,34 @@ export default function Header({ onNavigate, currentPage }) {
                         >
                           <Home size={20} />
                         </button>
+                        <AnimatePresence>
                         {showMega && (
-                          <div onMouseEnter={()=>setShowMega(true)} onMouseLeave={()=>setShowMega(false)} className="absolute left-1/2 -translate-x-1/2 mt-4 w-[680px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 grid grid-cols-2 gap-6">
+                          <motion.div initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.18 }} onMouseEnter={()=>setShowMega(true)} onMouseLeave={()=>setShowMega(false)} className="absolute left-1/2 -translate-x-1/2 mt-4 w-[680px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 grid grid-cols-2 gap-6">
                             <div>
-                              <div className="text-slate-400 text-xs uppercase mb-2">Defensive (Left)</div>
+                              <div className="text-slate-400 text-xs uppercase mb-2 flex items-center gap-2"><Shield className="w-4 h-4"/> Defensive</div>
                               <div className="space-y-2">
                                 <button onClick={() => { setShowMega(false); onNavigate('defensiveBootcamp'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">7‑Day Bootcamp</button>
                                 <button onClick={() => { setShowMega(false); window.location.hash = ''; scrollToSection('Offerings'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">2‑Month Program</button>
                               </div>
                             </div>
                             <div>
-                              <div className="text-slate-400 text-xs uppercase mb-2">Offensive (Right)</div>
+                              <div className="text-slate-400 text-xs uppercase mb-2 flex items-center gap-2"><Sword className="w-4 h-4"/> Offensive</div>
                               <div className="space-y-2">
                                 <button onClick={() => { setShowMega(false); onNavigate('offensiveBootcamp'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">7‑Day Bootcamp</button>
                                 <button onClick={() => { setShowMega(false); scrollToSection('Offerings'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">2‑Month Program</button>
                               </div>
                             </div>
                             <div className="col-span-2 border-t border-slate-700 pt-4">
-                              <div className="text-slate-400 text-xs uppercase mb-2">Specialized Courses</div>
+                              <div className="text-slate-400 text-xs uppercase mb-2 flex items-center gap-2"><Sparkles className="w-4 h-4"/> Specialized Courses</div>
                               <div className="grid grid-cols-3 gap-2">
                                 <button onClick={() => { setShowMega(false); onNavigate('workshop'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Free Intro Workshop</button>
                                 <button onClick={() => { setShowMega(false); onNavigate('video-learning'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Video Learning</button>
                                 <button onClick={() => { setShowMega(false); onNavigate('enroll'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Admissions</button>
                               </div>
                             </div>
-                          </div>
+                          </motion.div>
                         )}
+                        </AnimatePresence>
                     </div>
                     <div className="flex-1 flex justify-start">
                         <button onClick={() => onNavigate('offensiveBootcamp')} className="text-slate-300 hover:text-blue-400">Offensive</button>
