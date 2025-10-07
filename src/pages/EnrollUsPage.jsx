@@ -310,9 +310,9 @@ export default function EnrollUsPage({ onNavigate }) {
                                         type="button"
                                         onClick={handleTestPayment}
                                         disabled={paymentLoading}
-                                        className="btn-secondary w-full py-4 shadow-lg"
+                                        className="btn-primary w-full py-4 shadow-lg"
                                     >
-                                        {paymentLoading ? 'Processing…' : 'Test Payment (₹499)'}
+                                        {paymentLoading ? 'Processing…' : 'Pay via UPI (₹499)'}
                                     </button>
                                 </div>
                                 {paymentMsg && (
@@ -395,12 +395,12 @@ export default function EnrollUsPage({ onNavigate }) {
                             </div>
 
                             {/* Debug/Test Info (only visible in test mode keys) */}
-                            {import.meta.env.VITE_RAZORPAY_KEY_ID?.startsWith('rzp_test_') && (
+                            {import.meta.env.VITE_RAZORPAY_KEY_ID && (
                                 <div className="bg-slate-900/60 p-4 rounded-lg border border-slate-700 text-left">
-                                    <div className="text-sm text-slate-300"><span className="font-semibold text-blue-300">Test Mode:</span> Using key {import.meta.env.VITE_RAZORPAY_KEY_ID}</div>
+                                    <div className="text-sm text-slate-300"><span className="font-semibold text-blue-300">Checkout Mode:</span> Using key {import.meta.env.VITE_RAZORPAY_KEY_ID}</div>
                                     {lastOrderId && <div className="text-sm text-slate-300 mt-1">Last order_id: {lastOrderId}</div>}
                                     {paymentMsg && <div className="text-sm text-slate-300 mt-1">Status: {paymentMsg}</div>}
-                                    <div className="text-xs text-slate-400 mt-2">Tip: You can also try UPI handle <span className="font-mono">success@razorpay</span> for an instant success in Test Mode.</div>
+                                    <div className="text-xs text-slate-400 mt-2">Tip: UPI is preferred. In Test Mode, you can use <span className="font-mono">success@razorpay</span> for instant success.</div>
                                 </div>
                             )}
                         </div>

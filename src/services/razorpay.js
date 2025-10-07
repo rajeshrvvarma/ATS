@@ -80,6 +80,20 @@ export const processPayment = async (paymentData) => {
                 email: paymentData.customerEmail,
                 contact: paymentData.customerPhone
             },
+            config: {
+                display: {
+                    blocks: {
+                        upi: {
+                            name: 'UPI',
+                            instruments: [{ method: 'upi' }]
+                        }
+                    },
+                    sequence: ['upi'],
+                    preferences: {
+                        show_default_blocks: false
+                    }
+                }
+            },
             theme: {
                 color: '#2563eb' // Blue 600 to match the new theme
             },
