@@ -81,9 +81,34 @@ export default function EnrollUsPage({ onNavigate }) {
                 signature: paymentResult.signature
             });
 
-            setPaymentMsg(valid ? 'Payment successful and verified.' : 'Payment completed but verification failed.');
+            if (valid) {
+                const details = {
+                    paymentId: paymentResult.paymentId,
+                    orderId: paymentResult.orderId,
+                    planName: 'Premium Workshop Bundle',
+                    customerName: formData.name || 'Demo User',
+                    customerEmail: formData.email || 'demo@example.com'
+                };
+                localStorage.setItem('paymentDetails', JSON.stringify(details));
+                setPaymentMsg('Payment successful and verified. Redirecting...');
+                setTimeout(() => onNavigate('paymentSuccess'), 600);
+            } else {
+                const err = {
+                    planName: 'Premium Workshop Bundle',
+                    message: 'Signature verification failed'
+                };
+                localStorage.setItem('paymentError', JSON.stringify(err));
+                setPaymentMsg('Verification failed. Redirecting...');
+                setTimeout(() => onNavigate('paymentFailed'), 600);
+            }
         } catch (e) {
             setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
+            const err = {
+                planName: 'Premium Workshop Bundle',
+                message: e?.message || 'Payment cancelled or failed'
+            };
+            localStorage.setItem('paymentError', JSON.stringify(err));
+            setTimeout(() => onNavigate('paymentFailed'), 600);
         } finally {
             setPaymentLoading(false);
         }

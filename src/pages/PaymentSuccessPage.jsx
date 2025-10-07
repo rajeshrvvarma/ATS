@@ -68,7 +68,7 @@ Agnidhra Technologies Pvt Ltd
                     <h2 className="text-2xl font-bold text-slate-300 mb-4">No Payment Information Found</h2>
                     <button
                         onClick={() => onNavigate('home')}
-                        className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors"
+                        className="btn-primary px-6 py-3"
                     >
                         Go to Home
                     </button>
