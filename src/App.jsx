@@ -5,6 +5,8 @@ import { AuthProvider } from '@/context/AuthContext.jsx';
 import { ToastProvider } from '@/context/ToastContext.jsx';
 import ToastContainer from '@/components/ToastContainer.jsx';
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
+import { SettingsProvider } from '@/context/SettingsContext.jsx';
+import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 
 // Layout
@@ -94,6 +96,7 @@ export default function App() {
     return (
         <AuthProvider>
         <ThemeProvider>
+        <SettingsProvider>
         <ToastProvider>
         <div className="bg-slate-900 antialiased">
                 <Header onNavigate={go} currentPage={currentPage} />
@@ -130,8 +133,10 @@ export default function App() {
             </main>
                 <Footer onNavigate={go} />
                 <ToastContainer />
+                <SettingsDrawer />
         </div>
         </ToastProvider>
+        </SettingsProvider>
         </ThemeProvider>
         </AuthProvider>
     );

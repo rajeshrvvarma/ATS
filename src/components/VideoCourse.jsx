@@ -5,6 +5,7 @@ import { Award } from 'lucide-react';
 import { awardCourseCertificate } from '@/services/certificateService';
 import { createOrder, processPayment, verifyPayment } from '@/services/razorpay';
 import { useToast } from '@/context/ToastContext.jsx';
+import { useSettings } from '@/context/SettingsContext.jsx';
 
 /**
  * VideoCourse Component - Course structure with video lessons
@@ -16,7 +17,8 @@ export default function VideoCourse({ course, onCourseComplete }) {
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
-  const [compact, setCompact] = useState(false);
+  const { compactLessons } = useSettings();
+  const [compact, setCompact] = useState(compactLessons);
   const { notify } = useToast();
 
   // Load course progress from localStorage

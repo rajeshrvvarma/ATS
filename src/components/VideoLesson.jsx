@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useSettings } from '@/context/SettingsContext.jsx';
 import { Play, Pause, Volume2, VolumeX, Maximize, Bookmark, Clock, CheckCircle } from 'lucide-react';
 
 export default function VideoLesson({ 
@@ -16,6 +17,7 @@ export default function VideoLesson({
   const [progress, setProgress] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
   const videoRef = useRef(null);
+  const { enableShortcuts } = useSettings();
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -80,7 +82,7 @@ export default function VideoLesson({
 
   // Keyboard shortcuts for direct video type
   useEffect(() => {
-    if (lesson.type !== 'direct') return;
+    if (lesson.type !== 'direct' || !enableShortcuts) return;
     const el = videoRef.current;
     if (!el) return;
 
@@ -104,7 +106,7 @@ export default function VideoLesson({
 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [lesson.type]);
+  }, [lesson.type, enableShortcuts]);
 
   // Render different video types
   const renderVideoPlayer = () => {

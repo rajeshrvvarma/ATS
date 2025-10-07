@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Sun, Moon } from 'lucide-react';
+import { X, Menu, ChevronDown, Sun, Moon, Home } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext.jsx';
+import { useSettings } from '@/context/SettingsContext.jsx';
 
 export default function Header({ onNavigate, currentPage }) {
     const { theme, toggleTheme } = useTheme();
+    const { toggleOpen } = useSettings();
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     const [isProgramsOpen, setIsProgramsOpen] = useState(false);
+    const [showMega, setShowMega] = useState(false);
     // Slim navigation
     const navLinks = ["Programs", "Video Learning", "Admissions", "Contact Us", "Account"];
 
@@ -86,39 +89,56 @@ export default function Header({ onNavigate, currentPage }) {
                     <span className="text-xl md:text-2xl font-bold text-white">Agnidhra Technologies</span>
                 </button>
                 
-                {/* Desktop Navigation */}
+                {/* Desktop Navigation with center mega menu */}
                 <div className="hidden md:flex items-center space-x-6">
-                    {/* Programs dropdown */}
+                    <div className="flex-1 flex justify-end">
+                        <button onClick={() => onNavigate('defensiveBootcamp')} className="text-slate-300 hover:text-blue-400">Defensive</button>
+                    </div>
                     <div className="relative">
                         <button
-                            onClick={() => setIsProgramsOpen(!isProgramsOpen)}
-                            onMouseEnter={() => setIsProgramsOpen(true)}
-                            onMouseLeave={() => setIsProgramsOpen(false)}
-                            className={`font-medium pb-1 transition-colors duration-300 ${isProgramsOpen ? 'text-blue-400' : 'text-slate-300 hover:text-blue-400'}`}
+                          onMouseEnter={() => setShowMega(true)}
+                          onMouseLeave={() => setShowMega(false)}
+                          onClick={() => setShowMega(v=>!v)}
+                          className="w-12 h-12 rounded-full bg-slate-800 border border-slate-700 text-white flex items-center justify-center hover:bg-slate-700"
+                          title="Home & Programs"
                         >
-                            <span className="inline-flex items-center gap-1">Programs <ChevronDown size={16} /></span>
+                          <Home size={20} />
                         </button>
-                        {isProgramsOpen && (
-                            <div onMouseEnter={() => setIsProgramsOpen(true)} onMouseLeave={() => setIsProgramsOpen(false)} className="absolute left-0 mt-3 w-[360px] bg-slate-900 border border-slate-700 rounded-lg shadow-xl p-3 grid grid-cols-1 gap-1">
-                                <div className="px-3 py-2 text-slate-400 text-xs uppercase">Defensive (SOC)</div>
-                                <button onClick={() => { setIsProgramsOpen(false); onNavigate('defensiveBootcamp'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">7‑Day Bootcamp</button>
-                                <button onClick={() => { setIsProgramsOpen(false); window.location.hash = ''; scrollToSection('Offerings'); setTimeout(()=>document.getElementById('offerings')?.scrollIntoView({behavior:'smooth'}),50); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">2‑Month Program</button>
-                                <div className="px-3 py-2 text-slate-400 text-xs uppercase mt-1">Offensive (Ethical Hacking)</div>
-                                <button onClick={() => { setIsProgramsOpen(false); onNavigate('offensiveBootcamp'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">7‑Day Bootcamp</button>
-                                <button onClick={() => { setIsProgramsOpen(false); scrollToSection('Offerings'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">2‑Month Program</button>
-                                <div className="border-t border-slate-700 mt-2"></div>
-                                <button onClick={() => { setIsProgramsOpen(false); onNavigate('workshop'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Free Intro Workshop</button>
+                        {showMega && (
+                          <div onMouseEnter={()=>setShowMega(true)} onMouseLeave={()=>setShowMega(false)} className="absolute left-1/2 -translate-x-1/2 mt-4 w-[680px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-6 grid grid-cols-2 gap-6">
+                            <div>
+                              <div className="text-slate-400 text-xs uppercase mb-2">Defensive (Left)</div>
+                              <div className="space-y-2">
+                                <button onClick={() => { setShowMega(false); onNavigate('defensiveBootcamp'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">7‑Day Bootcamp</button>
+                                <button onClick={() => { setShowMega(false); window.location.hash = ''; scrollToSection('Offerings'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">2‑Month Program</button>
+                              </div>
                             </div>
+                            <div>
+                              <div className="text-slate-400 text-xs uppercase mb-2">Offensive (Right)</div>
+                              <div className="space-y-2">
+                                <button onClick={() => { setShowMega(false); onNavigate('offensiveBootcamp'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">7‑Day Bootcamp</button>
+                                <button onClick={() => { setShowMega(false); scrollToSection('Offerings'); }} className="w-full text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">2‑Month Program</button>
+                              </div>
+                            </div>
+                            <div className="col-span-2 border-t border-slate-700 pt-4">
+                              <div className="text-slate-400 text-xs uppercase mb-2">Specialized Courses</div>
+                              <div className="grid grid-cols-3 gap-2">
+                                <button onClick={() => { setShowMega(false); onNavigate('workshop'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Free Intro Workshop</button>
+                                <button onClick={() => { setShowMega(false); onNavigate('video-learning'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Video Learning</button>
+                                <button onClick={() => { setShowMega(false); onNavigate('enroll'); }} className="text-left px-3 py-2 rounded-md hover:bg-slate-800 text-slate-200">Admissions</button>
+                              </div>
+                            </div>
+                          </div>
                         )}
                     </div>
-                    <button onClick={() => scrollToSection('Video Learning')} className={`font-medium pb-1 transition-colors ${isLinkActive('Video Learning') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Video Learning</button>
-                    <button onClick={() => scrollToSection('Admissions')} className={`font-medium pb-1 transition-colors ${isLinkActive('Admissions') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Admissions</button>
-                    <button onClick={() => scrollToSection('Contact Us')} className={`font-medium pb-1 transition-colors ${isLinkActive('Contact Us') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Contact</button>
-                    <button onClick={() => scrollToSection('Account')} className={`font-medium pb-1 transition-colors ${isLinkActive('Account') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Account</button>
+                    <div className="flex-1 flex justify-start">
+                        <button onClick={() => onNavigate('offensiveBootcamp')} className="text-slate-300 hover:text-blue-400">Offensive</button>
+                    </div>
                     <button onClick={() => onNavigate('enroll')} className="btn-primary px-4 py-2">Enroll</button>
                     <button onClick={toggleTheme} className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700" title="Toggle theme">
                         {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                     </button>
+                    <button onClick={toggleOpen} className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700" title="Settings">⚙</button>
                 </div>
                 
                 {/* Mobile Menu Button */}
