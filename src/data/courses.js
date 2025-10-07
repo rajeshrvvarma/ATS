@@ -27,7 +27,7 @@ export const courses = [
         description: 'Understanding the cybersecurity landscape and career opportunities',
         duration: '15:30',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_1', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Beginner',
         resources: [
           { name: 'Course Syllabus PDF', url: '#' },
@@ -40,7 +40,7 @@ export const courses = [
         description: 'Essential networking concepts for security professionals',
         duration: '22:45',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_2', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Beginner',
         resources: [
           { name: 'Network Diagram', url: '#' },
@@ -79,7 +79,7 @@ export const courses = [
         description: 'Step-by-step guide to handling security incidents',
         duration: '32:20',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_3', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Advanced',
         resources: [
           { name: 'Incident Response Playbook', url: '#' },
@@ -104,7 +104,7 @@ export const courses = [
         description: 'Understanding the legal and ethical aspects of ethical hacking',
         duration: '18:45',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_4', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Beginner',
         resources: [
           { name: 'Legal Guidelines', url: '#' },
@@ -143,7 +143,7 @@ export const courses = [
         description: 'Basic exploitation techniques and tools',
         duration: '35:20',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_5', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Advanced',
         resources: [
           { name: 'Exploit Database', url: '#' },
@@ -168,7 +168,7 @@ export const courses = [
         description: 'Introduction to the world of cybersecurity',
         duration: '12:30',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_6', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Beginner',
         resources: [
           { name: 'Workshop Slides', url: '#' },
@@ -181,7 +181,7 @@ export const courses = [
         description: 'Explore different career opportunities in cybersecurity',
         duration: '18:15',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_7', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Beginner',
         resources: [
           { name: 'Career Guide PDF', url: '#' },
@@ -194,7 +194,7 @@ export const courses = [
         description: 'Practical steps to begin your cybersecurity journey',
         duration: '15:45',
         type: 'youtube',
-        videoId: 'YOUR_YOUTUBE_VIDEO_ID_8', // Replace with your actual YouTube video ID
+        videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
         difficulty: 'Beginner',
         resources: [
           { name: 'Learning Roadmap', url: '#' },
