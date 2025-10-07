@@ -4,7 +4,7 @@ import { X, Menu } from 'lucide-react';
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     // Updated navigation links to match the sections on the home page
-    const navLinks = ["About", "Offerings", "Specialized Trainings","Why Us", "Admissions", "Trainers", "Testimonials", "Inquiry", "Contact Us"];
+    const navLinks = ["About", "Offerings", "Video Learning", "Specialized Trainings", "Why Us", "Admissions", "Trainers", "Testimonials", "Inquiry", "Contact Us"];
 
     const scrollToSection = (id) => {
         // Handle "Contact Us" - navigate to support page
@@ -14,6 +14,13 @@ export default function Header({ onNavigate, currentPage }) {
             return;
         }
         
+        // Handle "Video Learning" - navigate to video learning page
+        if (id === "Video Learning") {
+            onNavigate('video-learning');
+            setIsOpen(false);
+            return;
+        }
+
         // Handle "Inquiry" - scroll to contact section on homepage
         const targetId = id === "Inquiry" ? "contact" : id.toLowerCase().replace(/\s+/g, '-');
         
