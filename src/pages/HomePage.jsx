@@ -64,40 +64,57 @@ const CourseOfferings = ({ setVisibleSyllabus, onNavigate }) => {
     const defensivePath = { title: "Defensive Security Path (SOC Analyst)", icon: Shield, courses: [{ title: "7-Day Bootcamp", description: "An intensive week of learning core defensive skills.", features: ["OS Hardening Labs", "Intro to SIEM", "Vulnerability Scanning"], cta: "Enroll in Bootcamp", page: "defensiveBootcamp" }, { title: "2-Month Intensive Program", description: "The complete SOC Analyst training, from fundamentals to advanced incident response.", features: ["Entire 8-week syllabus", "Capstone Project", "Interview Preparation"], cta: "Learn More", syllabus: "soc" }] };
     const offensivePath = { title: "Offensive Security Path (Ethical Hacking)", icon: Code, courses: [{ title: "7-Day Bootcamp", description: "A fast-paced introduction to the attacker's mindset.", features: ["Kali Linux Setup", "Scanning with Nmap", "Basic Exploitation"], cta: "Enroll in Bootcamp", page: "offensiveBootcamp" }, { title: "2-Month Intensive Program", description: "Become a job-ready Ethical Hacker by mastering offensive techniques.", features: ["Advanced Exploitation", "Web & Network Hacking", "Reporting & Remediation"], cta: "Learn More", syllabus: "ethicalHacking" }]};
     const handleSyllabusClick = (syllabus) => { setVisibleSyllabus(syllabus); setTimeout(() => { document.getElementById('syllabus')?.scrollIntoView({ behavior: 'smooth' }); }, 100); };
+    const [activeTab, setActiveTab] = useState('defensive');
     return (
         <section id="offerings" className="py-20 bg-slate-900">
             <div className="container mx-auto px-6">
-                <SectionTitle>Choose Your Cyber Security Path</SectionTitle>
-                <div className="max-w-xl mx-auto mb-16">
-                    <div className="card card-hover p-8 flex flex-col text-center items-center hover:border-slate-500">
-                        <freeWorkshop.icon size={32} className="mb-4 text-sky-400" />
+                <SectionTitle>Programs</SectionTitle>
+                <div className="max-w-4xl mx-auto text-center mb-10">
+                    <div className="inline-flex bg-slate-800 border border-slate-700 rounded-lg p-1">
+                        <button onClick={() => setActiveTab('defensive')} className={`px-4 py-2 rounded-md text-sm font-semibold ${activeTab==='defensive' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'}`}>Defensive (SOC)</button>
+                        <button onClick={() => setActiveTab('offensive')} className={`px-4 py-2 rounded-md text-sm font-semibold ${activeTab==='offensive' ? 'bg-red-600 text-white' : 'text-slate-300 hover:text-white'}`}>Offensive (Ethical Hacking)</button>
+                    </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    {(activeTab==='defensive' ? defensivePath.courses : offensivePath.courses).map((course, index) => (
+                        <div key={index} className={`card card-hover p-6 flex flex-col ${activeTab==='defensive' ? 'hover:border-blue-500' : 'hover:border-red-500'}`}>
+                            <h4 className="text-xl font-bold text-white mb-1">{course.title}</h4>
+                            <p className="text-slate-400 mb-4">{course.description}</p>
+                            <ul className="space-y-2 mb-6 text-slate-300">{course.features.map((feature, i) => <li key={i} className="flex items-center"><Target size={16} className={`${activeTab==='defensive' ? 'text-blue-400' : 'text-red-400'} mr-3 flex-shrink-0`} /><span>{feature}</span></li>)}</ul>
+                            <div className="mt-auto flex items-center gap-3">
+                                <button onClick={() => course.syllabus ? handleSyllabusClick(course.syllabus) : onNavigate(course.page)} className={`${activeTab==='defensive' ? 'btn-primary' : 'btn-danger'} px-5 py-2`}>{course.cta}</button>
+                                {course.syllabus && (<button onClick={() => handleSyllabusClick(course.syllabus)} className="btn-secondary px-4 py-2">View syllabus</button>)}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="max-w-5xl mx-auto mt-12 text-slate-300">
+                    <div className="overflow-x-auto rounded-lg border border-slate-700">
+                        <table className="min-w-full text-sm">
+                            <thead className="bg-slate-800 text-slate-200">
+                                <tr>
+                                    <th className="px-4 py-3 text-left">Feature</th>
+                                    <th className="px-4 py-3 text-left">7‑Day Bootcamp</th>
+                                    <th className="px-4 py-3 text-left">2‑Month Program</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr className="border-t border-slate-700"><td className="px-4 py-3">Duration</td><td className="px-4 py-3">7 days</td><td className="px-4 py-3">8 weeks</td></tr>
+                                <tr className="border-t border-slate-700"><td className="px-4 py-3">Projects</td><td className="px-4 py-3">Mini labs</td><td className="px-4 py-3">Capstone + labs</td></tr>
+                                <tr className="border-t border-slate-700"><td className="px-4 py-3">Career Prep</td><td className="px-4 py-3">Basics</td><td className="px-4 py-3">Mock interviews</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div className="max-w-xl mx-auto mt-12">
+                    <div className="card card-hover p-8 flex flex-col text-center items-center">
+                        <freeWorkshop.icon size={32} className="mb-4 text-blue-400" />
                         <h3 className="text-2xl font-bold text-white mb-3">{freeWorkshop.title}</h3>
                         <p className="text-slate-400 mb-6">{freeWorkshop.description}</p>
                         <button onClick={() => onNavigate(freeWorkshop.page)} className="btn-primary w-full max-w-xs mt-auto py-3">{freeWorkshop.cta}</button>
-                    </div>
-                </div>
-                <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                    <div className="flex flex-col space-y-8">
-                        <div className="flex items-center gap-4"><defensivePath.icon size={40} className="text-blue-400" /><h3 className="text-3xl font-bold text-white">{defensivePath.title}</h3></div>
-                        {defensivePath.courses.map((course, index) => (
-                            <div key={index} className="card card-hover p-6 flex flex-col hover:border-blue-500 h-full">
-                                <h4 className="text-2xl font-bold text-white mb-3">{course.title}</h4>
-                                <p className="text-slate-400 mb-6 flex-grow">{course.description}</p>
-                                <ul className="space-y-2 mb-8 text-slate-300">{course.features.map((feature, i) => <li key={i} className="flex items-center"><Target size={16} className="text-blue-400 mr-3 flex-shrink-0" /><span>{feature}</span></li>)}</ul>
-                                <button onClick={() => course.syllabus ? handleSyllabusClick(course.syllabus) : onNavigate(course.page)} className="btn-primary w-full mt-auto py-3">{course.cta}</button>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex flex-col space-y-8">
-                        <div className="flex items-center gap-4"><offensivePath.icon size={40} className="text-red-400" /><h3 className="text-3xl font-bold text-white">{offensivePath.title}</h3></div>
-                        {offensivePath.courses.map((course, index) => (
-                            <div key={index} className="card card-hover p-6 flex flex-col hover:border-red-500 h-full">
-                                <h4 className="text-2xl font-bold text-white mb-3">{course.title}</h4>
-                                <p className="text-slate-400 mb-6 flex-grow">{course.description}</p>
-                                <ul className="space-y-2 mb-8 text-slate-300">{course.features.map((feature, i) => <li key={i} className="flex items-center"><Target size={16} className="text-red-400 mr-3 flex-shrink-0" /><span>{feature}</span></li>)}</ul>
-                                <button onClick={() => course.syllabus ? handleSyllabusClick(course.syllabus) : onNavigate(course.page)} className="btn-danger w-full mt-auto py-3">{course.cta}</button>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </div>
@@ -109,11 +126,10 @@ const WhyUs = () => (
     <section id="why-us" className="py-20 bg-slate-800">
         <div className="container mx-auto px-6">
             <SectionTitle>Why Train With Us?</SectionTitle>
-            <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div className="text-center"><div className="text-sky-400 mb-4"><Briefcase className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Project-Based Learning</h3><p className="text-slate-400">Build a portfolio of real-world projects that showcases your skills to employers.</p></div>
-                <div className="text-center"><div className="text-sky-400 mb-4"><Users className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Expert Mentorship</h3><p className="text-slate-400">Receive personalized guidance from industry veterans with multi-domain experience.</p></div>
-                <div className="text-center"><div className="text-sky-400 mb-4"><Award className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Career-Focused</h3><p className="text-slate-400">Our curriculum is aligned with the latest industry trends and employer demands.</p></div>
-                <div className="text-center"><div className="text-sky-400 mb-4"><Sparkles className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Modern Online Learning</h3><p className="text-slate-400">Learn from anywhere with our live, interactive online classes and AI-powered tools.</p></div>
+            <div className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8">
+                <div className="text-center"><div className="text-blue-400 mb-4"><Briefcase className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Project‑Based</h3><p className="text-slate-400">Hands‑on labs and real projects build a hireable portfolio.</p></div>
+                <div className="text-center"><div className="text-blue-400 mb-4"><Users className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Mentorship</h3><p className="text-slate-400">Weekly guidance, code reviews, and interview prep.</p></div>
+                <div className="text-center"><div className="text-blue-400 mb-4"><Award className="w-12 h-12 mx-auto" /></div><h3 className="text-xl font-bold text-white mb-2">Career‑Focused</h3><p className="text-slate-400">Resume, LinkedIn, and mock interviews included.</p></div>
             </div>
         </div>
     </section>
@@ -207,7 +223,44 @@ const Syllabus = ({ visibleSyllabus, setVisibleSyllabus }) => {
 };
 
 const Trainers = () => ( <section id="trainers" className="py-20 bg-slate-900"><div className="container mx-auto px-6"><SectionTitle>Meet Your Trainers</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8"><div className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center"><img src="/logo.png" alt="Santosh Kumar" className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" /><h3 className="text-2xl font-bold text-white">Santosh Kumar</h3><p className="text-sky-400 font-semibold mb-3">Lead Trainer & Founder</p><p className="text-slate-300">With 8 years of experience, Santosh provides a practical, end-to-end understanding of the tech landscape.</p></div><div className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center"><img src="/logo.png" alt="Jeevan Kumar" className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" /><h3 className="text-2xl font-bold text-white">Jeevan Kumar</h3><p className="text-sky-400 font-semibold mb-3">Co-Trainer | SOC Certified</p><p className="text-slate-300">With 6 years of experience, Jeevan brings rich practical exposure to the security landscape.</p></div></div></div></section>);
-const Testimonials = () => ( <section id="testimonials" className="py-20 bg-slate-800"><div className="container mx-auto px-6"><SectionTitle>What Our Students Say</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8"><div className="bg-slate-900 p-8 rounded-lg border border-slate-700"><p className="text-slate-300 italic mb-6">"The project-based approach was a game-changer. I landed a job as a SOC Analyst within two months of finishing the course!"</p><div className="flex items-center"><img src="https://placehold.co/50x50/0F172A/38BDF8?text=R" alt="Rohan S." className="w-12 h-12 rounded-full mr-4"/><div><h4 className="font-bold text-white">Rohan S.</h4><p className="text-sm text-slate-400">Cyber Security Graduate</p></div></div></div><div className="bg-slate-900 p-8 rounded-lg border border-slate-700"><p className="text-slate-300 italic mb-6">"The focus on real-world scenarios and hands-on labs prepared me for the technical interviews. Highly recommended!"</p><div className="flex items-center"><img src="https://placehold.co/50x50/0F172A/38BDF8?text=A" alt="Anjali P." className="w-12 h-12 rounded-full mr-4"/><div><h4 className="font-bold text-white">Anjali P.</h4><p className="text-sm text-slate-400">Cyber Security Graduate</p></div></div></div></div></div></section>);
+const Testimonials = () => {
+    const items = [
+        { quote: "The project-based approach was a game-changer. I landed a job as a SOC Analyst within two months!", name: "Rohan S.", role: "SOC Analyst", img: "https://placehold.co/50x50/0F172A/38BDF8?text=R" },
+        { quote: "Hands-on labs prepared me for technical interviews. Highly recommended!", name: "Anjali P.", role: "Cyber Security Graduate", img: "https://placehold.co/50x50/0F172A/38BDF8?text=A" },
+        { quote: "Mentors were amazing and kept me accountable throughout.", name: "Kartik V.", role: "Security Engineer", img: "https://placehold.co/50x50/0F172A/38BDF8?text=K" }
+    ];
+    const [index, setIndex] = React.useState(0);
+    React.useEffect(() => {
+        const id = setInterval(() => setIndex((i) => (i + 1) % items.length), 5000);
+        return () => clearInterval(id);
+    }, [items.length]);
+
+    const current = items[index];
+    return (
+        <section id="testimonials" className="py-20 bg-slate-800">
+            <div className="container mx-auto px-6">
+                <SectionTitle>What Our Students Say</SectionTitle>
+                <div className="max-w-3xl mx-auto">
+                    <div className="bg-slate-900 p-8 rounded-lg border border-slate-700 relative">
+                        <p className="text-slate-300 italic mb-6">“{current.quote}”</p>
+                        <div className="flex items-center">
+                            <img src={current.img} alt={current.name} className="w-12 h-12 rounded-full mr-4"/>
+                            <div>
+                                <h4 className="font-bold text-white">{current.name}</h4>
+                                <p className="text-sm text-slate-400">{current.role}</p>
+                            </div>
+                        </div>
+                        <div className="absolute right-4 top-4 flex gap-2">
+                            {items.map((_, i) => (
+                                <button key={i} onClick={() => setIndex(i)} className={`w-2.5 h-2.5 rounded-full ${i===index ? 'bg-blue-500' : 'bg-slate-600'}`}></button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
 const Contact = ({ onNavigate }) => ( <section id="contact" className="py-20 bg-slate-800"><div className="container mx-auto px-6"><SectionTitle>Get In Touch</SectionTitle><div className="max-w-3xl mx-auto text-center"><p className="text-lg text-slate-300 mb-8">Have a question about our programs? Send us a message!</p><div className="grid md:grid-cols-2 gap-8"><div className="bg-slate-900 p-8 text-left space-y-6 rounded-lg border border-slate-700"><h3 className="text-xl font-bold text-white mb-4 text-center">General Inquiry</h3><form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="space-y-6"><input type="hidden" name="_next" value="https://atstatic.netlify.app/thank-you" /><input type="hidden" name="_subject" value="New Cyber Security Inquiry!" /><div><label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label><input type="text" id="name" name="name" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500" /></div><div><label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" id="email" name="email" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500" /></div><div><label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">Message</label><textarea id="message" name="message" rows="4" required placeholder="Ask us about our programs, schedules, or anything else!" className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"></textarea></div><button type="submit" className="w-full bg-slate-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-700 transition-colors duration-300">Send Message</button></form></div><div className="bg-gradient-to-r from-blue-600 to-blue-700 p-8 rounded-lg text-center"><h3 className="text-2xl font-bold text-white mb-4">Ready to Enroll?</h3><p className="text-blue-100 mb-6">Start your cybersecurity journey with personalized guidance and career counseling.</p><button onClick={() => onNavigate('enroll')} className="bg-white text-blue-600 font-bold py-4 px-8 rounded-lg shadow-lg hover:bg-blue-50 transition-colors duration-300 transform hover:scale-105 mb-4">Start Enrollment Process</button><div className="space-y-2 text-sm text-blue-200"><div>✓ Free career counseling</div><div>✓ Personalized learning path</div><div>✓ Flexible payment options</div></div></div></div></div></div></section>);
 
 // --- Main HomePage Component ---
@@ -260,4 +313,5 @@ export default function HomePage({ onNavigate }) {
         </>
     );
 }
+
 

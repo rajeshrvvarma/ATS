@@ -79,7 +79,7 @@ export default function Footer({ onNavigate }) {
     return (
         <footer className="bg-slate-900 text-slate-400 py-12">
             <div className="container mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Column 1: Logo and Brand */}
                     <div className="col-span-1 md:col-span-2 text-center md:text-left">
                         <div className="flex items-center justify-center md:justify-start mb-4">
@@ -89,26 +89,20 @@ export default function Footer({ onNavigate }) {
                         <p className="max-w-md mx-auto md:mx-0">Empowering the next wave of tech leaders with practical, hands-on training in high-demand skills.</p>
                     </div>
 
-                    {/* Column 2: Quick Links */}
+                    {/* Column 2: Programs */}
                     <div>
-                        <h4 className="font-bold text-lg text-white mb-4">Quick Links</h4>
+                        <h4 className="font-bold text-lg text-white mb-4">Programs</h4>
                         <ul className="space-y-2">
-                            <li><button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">About Us</button></li>
-                            <li><button onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Our Offerings</button></li>
-                            <li><button onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Admissions</button></li>
-                            <li><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Contact</button></li>
+                            <li><button onClick={() => onNavigate('defensiveBootcamp')} className="hover:text-blue-400 transition-colors">Defensive Bootcamp</button></li>
+                            <li><button onClick={() => onNavigate('offensiveBootcamp')} className="hover:text-blue-400 transition-colors">Offensive Bootcamp</button></li>
+                            <li><button onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">2‑Month Programs</button></li>
+                            <li><button onClick={() => onNavigate('workshop')} className="hover:text-blue-400 transition-colors">Free Workshop</button></li>
                         </ul>
                     </div>
                     
-                    {/* Column 3: Connect and Legal */}
+                    {/* Column 3: Legal */}
                     <div>
-                        <h4 className="font-bold text-lg text-white mb-4">Connect</h4>
-                        <div className="flex justify-center md:justify-start space-x-4 mb-6">
-                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-blue-400 transition-colors"><Linkedin size={24} /></a>
-                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-blue-400 transition-colors"><Youtube size={24} /></a>
-                            <a href="https://www.instagram.com/agnidhra_technologies/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-blue-400 transition-colors"><Instagram size={24} /></a>
-                        </div>
-                        <h4 className="font-bold text-lg text-white mb-4 mt-6">Legal & Policies</h4>
+                        <h4 className="font-bold text-lg text-white mb-4">Legal & Policies</h4>
                         <ul className="space-y-2">
                            <li><button onClick={() => onNavigate('terms')} className="hover:text-blue-400 transition-colors">Terms & Conditions</button></li>
                            <li><button onClick={() => onNavigate('privacy')} className="hover:text-blue-400 transition-colors">Privacy Policy</button></li>
@@ -118,6 +112,13 @@ export default function Footer({ onNavigate }) {
                            <li><button onClick={() => onNavigate('disclaimer')} className="hover:text-blue-400 transition-colors">Disclaimer</button></li>
                         </ul>
                     </div>
+                </div>
+
+                {/* Social Row */}
+                <div className="mt-8 flex items-center justify-center gap-6 text-slate-300">
+                    <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-blue-400 transition-colors"><Linkedin size={22} /></a>
+                    <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-blue-400 transition-colors"><Youtube size={22} /></a>
+                    <a href="https://www.instagram.com/agnidhra_technologies/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-blue-400 transition-colors"><Instagram size={22} /></a>
                 </div>
 
                 {/* --- THIS IS THE UPDATED SECTION --- */}
