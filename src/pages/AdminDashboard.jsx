@@ -28,6 +28,7 @@ export default function AdminDashboard({ onNavigate }) {
   const [students, setStudents] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [certificates, setCertificates] = useState([]);
+  const [receipts, setReceipts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [showCourseModal, setShowCourseModal] = useState(false);
@@ -77,6 +78,9 @@ export default function AdminDashboard({ onNavigate }) {
     // Load certificates
     const savedCertificates = JSON.parse(localStorage.getItem('certificates') || '[]');
     setCertificates(savedCertificates);
+    // Load receipts
+    const savedReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
+    setReceipts(savedReceipts.sort((a,b)=> b.ts - a.ts));
   };
 
   // Calculate statistics
@@ -250,6 +254,24 @@ export default function AdminDashboard({ onNavigate }) {
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+              <div className="bg-slate-800 rounded-lg p-6 lg:col-span-2">
+                <h3 className="text-lg font-semibold text-white mb-4">Recent Payment Receipts</h3>
+                <div className="space-y-3">
+                  {receipts.length === 0 ? (
+                    <p className="text-slate-400 text-sm">No receipts yet</p>
+                  ) : (
+                    receipts.slice(0, 8).map((r, idx) => (
+                      <div key={idx} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+                        <div>
+                          <p className="text-white text-sm font-medium">{r.courseId}</p>
+                          <p className="text-slate-400 text-xs">Order: <span className="font-mono">{r.orderId}</span> • Payment: <span className="font-mono">{r.paymentId}</span></p>
+                        </div>
+                        <div className="text-right text-slate-400 text-xs">{new Date(r.ts).toLocaleString()}</div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

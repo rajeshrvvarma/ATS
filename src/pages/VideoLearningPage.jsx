@@ -70,6 +70,7 @@ export default function VideoLearningPage({ onNavigate }) {
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {list.map((course) => {
             const isCompleted = completedCourses.has(course.id);
+            const isEnrolled = localStorage.getItem(`enrollment_${course.id}`) === 'true';
             
             return (
               <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition-all duration-300 transform hover:-translate-y-1">
@@ -84,6 +85,11 @@ export default function VideoLearningPage({ onNavigate }) {
                     <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
                       <Trophy className="w-4 h-4" />
                       Completed
+                    </div>
+                  )}
+                  {isEnrolled && !isCompleted && (
+                    <div className="absolute top-4 left-4 bg-sky-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                      Enrolled
                     </div>
                   )}
                   <div className="absolute bottom-4 left-4 bg-sky-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -114,10 +120,12 @@ export default function VideoLearningPage({ onNavigate }) {
                     className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
                       isCompleted
                         ? 'bg-green-600 text-white hover:bg-green-700'
-                        : 'bg-sky-600 text-white hover:bg-sky-700'
+                        : isEnrolled
+                          ? 'bg-slate-700 text-white hover:bg-slate-600'
+                          : 'bg-sky-600 text-white hover:bg-sky-700'
                     }`}
                   >
-                    {isCompleted ? 'Review Course' : 'Start Learning'}
+                    {isCompleted ? 'Review Course' : isEnrolled ? 'Continue Learning' : 'Start Learning'}
                   </button>
                 </div>
               </div>

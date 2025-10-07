@@ -11,9 +11,11 @@ import {
   BarChart3,
   Target,
   Star,
-  CheckCircle
+  CheckCircle,
+  Play
 } from 'lucide-react';
 import { loadCourses } from '@/services/courseService.js';
+import { downloadCertificate } from '@/services/certificateService.js';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -34,6 +36,8 @@ export default function StudentDashboard({ onNavigate }) {
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
   const [certificates, setCertificates] = useState([]);
+  const [receipts, setReceipts] = useState([]);
+  const [lastCourseId, setLastCourseId] = useState(null);
 
   // Load student data from localStorage
   useEffect(() => {
@@ -49,17 +53,24 @@ export default function StudentDashboard({ onNavigate }) {
       const enrollment = localStorage.getItem(`enrollment_${course.id}`);
       if (enrollment === 'true') {
         const progress = localStorage.getItem(`course_progress_${course.id}`);
-        const progressData = progress ? JSON.parse(progress) : { courseProgress: 0, completedLessons: [] };
+        const progressData = progress ? JSON.parse(progress) : { courseProgress: 0, completedLessons: [], lastUpdated: 0 };
         
         enrolled.push({
           ...course,
           progress: progressData.courseProgress,
           completedLessons: progressData.completedLessons || [],
-          isCompleted: progressData.courseProgress >= 100
+          isCompleted: progressData.courseProgress >= 100,
+          lastUpdated: progressData.lastUpdated || 0
         });
       }
     });
     setEnrolledCourses(enrolled);
+
+    // Determine last course by most recent progress update
+    if (enrolled.length > 0) {
+      const sorted = [...enrolled].sort((a,b) => (b.lastUpdated||0) - (a.lastUpdated||0));
+      setLastCourseId(sorted[0]?.id || null);
+    }
 
     // Load certificates
     const savedCertificates = localStorage.getItem('certificates');
@@ -72,6 +83,10 @@ export default function StudentDashboard({ onNavigate }) {
     if (savedActivity) {
       setRecentActivity(JSON.parse(savedActivity));
     }
+
+    // Load payment receipts
+    const savedReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
+    setReceipts(savedReceipts.sort((a,b)=> b.ts - a.ts));
   }, []);
 
   // Calculate statistics
@@ -123,6 +138,15 @@ export default function StudentDashboard({ onNavigate }) {
               </p>
             </div>
             <div className="flex items-center gap-4">
+              {lastCourseId && (
+                <button
+                  onClick={() => onNavigate('video-learning') || (window.location.href = `/video-learning?course=${lastCourseId}`)}
+                  className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                >
+                  <Play className="w-5 h-5" />
+                  Continue last course
+                </button>
+              )}
               <button
                 onClick={() => onNavigate('video-learning')}
                 className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2"
@@ -279,19 +303,26 @@ export default function StudentDashboard({ onNavigate }) {
 
             {/* Certificates */}
             <div className="bg-slate-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Recent Certificates</h3>
-              <div className="space-y-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">My Certificates</h3>
+                <span className="text-slate-400 text-sm">{certificates.length} total</span>
+              </div>
+              <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
                 {certificates.length === 0 ? (
                   <p className="text-slate-400 text-sm">No certificates yet</p>
                 ) : (
-                  certificates.slice(0, 3).map((cert, index) => (
+                  certificates.map((cert, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 bg-slate-700 rounded-lg">
                       <Award className="w-5 h-5 text-yellow-400 flex-shrink-0" />
                       <div className="flex-1 min-w-0">
                         <p className="text-white text-sm font-medium truncate">{cert.courseName}</p>
-                        <p className="text-slate-400 text-xs">{cert.earnedDate}</p>
+                        <p className="text-slate-400 text-xs">{new Date(cert.earnedDate).toLocaleDateString()} • ID: <span className="font-mono">{cert.certificateId}</span></p>
                       </div>
-                      <button className="text-sky-400 hover:text-sky-300">
+                      <button
+                        onClick={() => { try { downloadCertificate(cert.certificateId); } catch (e) { alert('Download failed'); } }}
+                        className="text-sky-400 hover:text-sky-300"
+                        title="Download PDF"
+                      >
                         <Download className="w-4 h-4" />
                       </button>
                     </div>
@@ -322,6 +353,26 @@ export default function StudentDashboard({ onNavigate }) {
               </div>
             </div>
           </div>
+
+            {/* Payment Receipts */}
+            <div className="bg-slate-800 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Payment Receipts</h3>
+              <div className="space-y-3">
+                {receipts.length === 0 ? (
+                  <p className="text-slate-400 text-sm">No receipts yet</p>
+                ) : (
+                  receipts.slice(0, 5).map((r, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+                      <div>
+                        <p className="text-white text-sm font-medium">{r.courseId}</p>
+                        <p className="text-slate-400 text-xs">Order: <span className="font-mono">{r.orderId}</span> • Payment: <span className="font-mono">{r.paymentId}</span></p>
+                      </div>
+                      <div className="text-right text-slate-400 text-xs">{new Date(r.ts).toLocaleString()}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
         </div>
       </div>
     </div>

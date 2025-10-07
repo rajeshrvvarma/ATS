@@ -110,7 +110,7 @@ export default function App() {
                             <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
                             <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
-                            <Route path="/video-learning" element={<VideoLearningPage onNavigate={go} />} />
+                            <Route path="/video-learning" element={<ProtectedRoute roles={['student','admin','instructor']}><VideoLearningPage onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/dashboard" element={<ProtectedRoute roles={['student','admin','instructor']}><StudentDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />

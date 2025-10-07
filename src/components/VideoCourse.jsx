@@ -3,6 +3,7 @@ import { Play, Lock, CheckCircle, Clock, Download, BookOpen } from 'lucide-react
 import VideoLesson from './VideoLesson';
 import { Award } from 'lucide-react';
 import { awardCourseCertificate } from '@/services/certificateService';
+import { createOrder, processPayment, verifyPayment } from '@/services/razorpay';
 
 /**
  * VideoCourse Component - Course structure with video lessons
@@ -13,14 +14,21 @@ export default function VideoCourse({ course, onCourseComplete }) {
   const [courseProgress, setCourseProgress] = useState(0);
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrolling, setEnrolling] = useState(false);
 
   // Load course progress from localStorage
   useEffect(() => {
     const savedProgress = localStorage.getItem(`course_progress_${course.id}`);
     if (savedProgress) {
       const { completedLessons: saved, courseProgress: progress } = JSON.parse(savedProgress);
-      setCompletedLessons(new Set(saved));
+      const savedSet = new Set(saved);
+      setCompletedLessons(savedSet);
       setCourseProgress(progress);
+      // Resume at next incomplete lesson
+      const nextIndex = course.lessons.findIndex(lsn => !savedSet.has(lsn.id));
+      if (nextIndex > 0) {
+        setCurrentLesson(nextIndex);
+      }
     }
     
     // Check enrollment status
@@ -93,6 +101,65 @@ const handleLessonComplete = async (lesson) => {
     return total + (minutes * 60) + seconds;
   }, 0);
 
+  const handleEnrollClick = async () => {
+    try {
+      setEnrolling(true);
+      const priceLabel = course.price || 'Free';
+      const isFree = typeof priceLabel === 'string' && priceLabel.toLowerCase() === 'free';
+
+      if (isFree) {
+        setIsEnrolled(true);
+        localStorage.setItem(`enrollment_${course.id}`, 'true');
+        return;
+      }
+
+      // Parse price if numeric string like "₹2999" or "2999"
+      const numeric = Number(String(priceLabel).replace(/[^0-9.]/g, '')) || 0;
+      if (numeric <= 0) {
+        setIsEnrolled(true);
+        localStorage.setItem(`enrollment_${course.id}`, 'true');
+        return;
+      }
+
+      // Create order on serverless function (amount in INR)
+      const order = await createOrder({ amount: numeric, currency: 'INR', receipt: `${course.id}-${Date.now()}` });
+
+      // Open Razorpay checkout
+      const paymentResult = await processPayment({
+        amount: order.amount,
+        currency: order.currency,
+        orderId: order.id,
+        description: course.title,
+        customerName: 'Student',
+        customerEmail: 'student@example.com',
+        customerPhone: '9999999999'
+      });
+
+      // Verify payment signature via serverless function
+      const valid = await verifyPayment({
+        orderId: paymentResult.orderId,
+        paymentId: paymentResult.paymentId,
+        signature: paymentResult.signature
+      });
+
+      if (!valid) throw new Error('Payment verification failed');
+
+      // Persist enrollment
+      setIsEnrolled(true);
+      localStorage.setItem(`enrollment_${course.id}`, 'true');
+      // Optionally store receipt for audit
+      const receipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
+      receipts.push({ courseId: course.id, orderId: paymentResult.orderId, paymentId: paymentResult.paymentId, ts: Date.now() });
+      localStorage.setItem('enrollment_receipts', JSON.stringify(receipts));
+      alert('Enrollment successful!');
+    } catch (err) {
+      console.error('Enrollment failed:', err);
+      alert(err.message || 'Enrollment failed. Please try again.');
+    } finally {
+      setEnrolling(false);
+    }
+  };
+
   if (!isEnrolled) {
     return (
       <div className="bg-slate-800 rounded-lg p-8 text-center">
@@ -112,13 +179,11 @@ const handleLessonComplete = async (lesson) => {
           </div>
         </div>
         <button
-          onClick={() => {
-            setIsEnrolled(true);
-            localStorage.setItem(`enrollment_${course.id}`, 'true');
-          }}
-          className="bg-sky-600 text-white font-semibold px-8 py-3 rounded-lg hover:bg-sky-700 transition-colors duration-300"
+          onClick={handleEnrollClick}
+          disabled={enrolling}
+          className={`bg-sky-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-300 ${enrolling ? 'opacity-70 cursor-not-allowed' : 'hover:bg-sky-700'}`}
         >
-          Enroll in Course
+          {enrolling ? 'Processing...' : 'Enroll in Course'}
         </button>
       </div>
     );
