@@ -93,10 +93,10 @@ export default function Footer({ onNavigate }) {
                     <div>
                         <h4 className="font-bold text-lg text-white mb-4">Quick Links</h4>
                         <ul className="space-y-2">
-                            <li><button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">About Us</button></li>
-                            <li><button onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">Our Offerings</button></li>
-                            <li><button onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">Admissions</button></li>
-                            <li><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-sky-400 transition-colors">Contact</button></li>
+                            <li><button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">About Us</button></li>
+                            <li><button onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Our Offerings</button></li>
+                            <li><button onClick={() => document.getElementById('admissions')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Admissions</button></li>
+                            <li><button onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-blue-400 transition-colors">Contact</button></li>
                         </ul>
                     </div>
                     
@@ -104,18 +104,18 @@ export default function Footer({ onNavigate }) {
                     <div>
                         <h4 className="font-bold text-lg text-white mb-4">Connect</h4>
                         <div className="flex justify-center md:justify-start space-x-4 mb-6">
-                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-sky-400 transition-colors"><Linkedin size={24} /></a>
-                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-sky-400 transition-colors"><Youtube size={24} /></a>
-                            <a href="https://www.instagram.com/agnidhra_technologies/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-sky-400 transition-colors"><Instagram size={24} /></a>
+                            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:text-blue-400 transition-colors"><Linkedin size={24} /></a>
+                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="hover:text-blue-400 transition-colors"><Youtube size={24} /></a>
+                            <a href="https://www.instagram.com/agnidhra_technologies/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:text-blue-400 transition-colors"><Instagram size={24} /></a>
                         </div>
                         <h4 className="font-bold text-lg text-white mb-4 mt-6">Legal & Policies</h4>
                         <ul className="space-y-2">
-                           <li><button onClick={() => onNavigate('terms')} className="hover:text-sky-400 transition-colors">Terms & Conditions</button></li>
-                           <li><button onClick={() => onNavigate('privacy')} className="hover:text-sky-400 transition-colors">Privacy Policy</button></li>
-                           <li><button onClick={() => onNavigate('cancellationRefund')} className="hover:text-sky-400 transition-colors">Refund Policy</button></li>
-                           <li><button onClick={() => onNavigate('shipping')} className="hover:text-sky-400 transition-colors">Shipping Policy</button></li>
-                           <li><button onClick={() => onNavigate('contact')} className="hover:text-sky-400 transition-colors">Contact Us</button></li>
-                           <li><button onClick={() => onNavigate('disclaimer')} className="hover:text-sky-400 transition-colors">Disclaimer</button></li>
+                           <li><button onClick={() => onNavigate('terms')} className="hover:text-blue-400 transition-colors">Terms & Conditions</button></li>
+                           <li><button onClick={() => onNavigate('privacy')} className="hover:text-blue-400 transition-colors">Privacy Policy</button></li>
+                           <li><button onClick={() => onNavigate('cancellationRefund')} className="hover:text-blue-400 transition-colors">Refund Policy</button></li>
+                           <li><button onClick={() => onNavigate('shipping')} className="hover:text-blue-400 transition-colors">Shipping Policy</button></li>
+                           <li><button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors">Contact Us</button></li>
+                           <li><button onClick={() => onNavigate('disclaimer')} className="hover:text-blue-400 transition-colors">Disclaimer</button></li>
                         </ul>
                     </div>
                 </div>

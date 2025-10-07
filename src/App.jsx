@@ -1,98 +1,121 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useMemo } from 'react';
+import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 
-// Import all the page and layout components using the '@' alias
-// This pathing is configured in vite.config.js and jsconfig.json
+// Layout
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
-import HomePage from '@/pages/HomePage.jsx';
-import FreeWorkshopPage from '@/pages/WorkshopPage.jsx';
-import BootcampPage from '@/pages/BootcampPage.jsx';
-import TermsPage from '@/pages/TermsPage.jsx';
-import DisclaimerPage from '@/pages/DisclaimerPage.jsx';
-import AccountActivationPage from '@/pages/AccountActivationPage.jsx';
-import PaymentSuccessPage from '@/pages/PaymentSuccessPage.jsx';
-import PaymentFailedPage from '@/pages/PaymentFailedPage.jsx';
-import CancellationRefundPage from '@/pages/CancellationRefundPage.jsx';
-import ShippingPage from '@/pages/ShippingPage.jsx';
-import PrivacyPage from '@/pages/PrivacyPage.jsx';
-import ContactUsPage from '@/pages/ContactUsPage.jsx';
-import EnrollUsPage from '@/pages/EnrollUsPage.jsx';
-import VideoLearningPage from '@/pages/VideoLearningPage.jsx';
-import StudentDashboard from '@/pages/StudentDashboard.jsx';
-import AdminDashboard from '@/pages/AdminDashboard.jsx';
-import LoginPage from '@/pages/LoginPage.jsx';
+
+// Lazy-loaded pages
+const HomePage = React.lazy(() => import('@/pages/HomePage.jsx'));
+const FreeWorkshopPage = React.lazy(() => import('@/pages/WorkshopPage.jsx'));
+const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
+const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
+const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
+const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
+const PaymentSuccessPage = React.lazy(() => import('@/pages/PaymentSuccessPage.jsx'));
+const PaymentFailedPage = React.lazy(() => import('@/pages/PaymentFailedPage.jsx'));
+const CancellationRefundPage = React.lazy(() => import('@/pages/CancellationRefundPage.jsx'));
+const ShippingPage = React.lazy(() => import('@/pages/ShippingPage.jsx'));
+const PrivacyPage = React.lazy(() => import('@/pages/PrivacyPage.jsx'));
+const ContactUsPage = React.lazy(() => import('@/pages/ContactUsPage.jsx'));
+const EnrollUsPage = React.lazy(() => import('@/pages/EnrollUsPage.jsx'));
+const VideoLearningPage = React.lazy(() => import('@/pages/VideoLearningPage.jsx'));
+const StudentDashboard = React.lazy(() => import('@/pages/StudentDashboard.jsx'));
+const AdminDashboard = React.lazy(() => import('@/pages/AdminDashboard.jsx'));
+const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
 
 /**
  * App.jsx is the root component of the application.
  * It acts as a simple router to manage which "page" is currently visible.
  */
 export default function App() {
-    // 'currentPage' state determines which component to render. 'home' is the default.
-    const [currentPage, setCurrentPage] = useState('home');
-    const [currentUser, setCurrentUser] = useState(null);
+    const navigate = useNavigate();
+    const location = useLocation();
 
-    // This effect runs whenever the currentPage changes, ensuring the user
-    // is scrolled to the top of the new page they navigate to.
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [currentPage]);
+    const pageToPath = useMemo(() => ({
+        home: '/',
+        workshop: '/workshop',
+        defensiveBootcamp: '/bootcamp/defensive',
+        offensiveBootcamp: '/bootcamp/offensive',
+        terms: '/terms',
+        disclaimer: '/disclaimer',
+        'accountActivation-defensive': '/activate/defensive',
+        'accountActivation-offensive': '/activate/offensive',
+        accountActivation: '/activate',
+        paymentSuccess: '/payment/success',
+        paymentFailed: '/payment/failed',
+        cancellationRefund: '/cancellation-refund',
+        shipping: '/shipping',
+        privacy: '/privacy',
+        contact: '/contact',
+        enroll: '/enroll',
+        'video-learning': '/video-learning',
+        dashboard: '/dashboard',
+        admin: '/admin',
+        login: '/login',
+    }), []);
 
-    // This function acts as a router. Based on the 'currentPage' state,
-    // it returns the correct page component to be displayed.
-    const renderPage = () => {
-        switch (currentPage) {
-            case 'workshop':
-                return <FreeWorkshopPage onNavigate={setCurrentPage} />;
-            case 'defensiveBootcamp':
-                return <BootcampPage onNavigate={setCurrentPage} type="defensive" />;
-            case 'offensiveBootcamp':
-                return <BootcampPage onNavigate={setCurrentPage} type="offensive" />;
-            case 'terms':
-                return <TermsPage onNavigate={setCurrentPage} />;
-            case 'disclaimer':
-                return <DisclaimerPage onNavigate={setCurrentPage} />;
-            case 'accountActivation-defensive':
-                return <AccountActivationPage onNavigate={setCurrentPage} planType="defensiveBootcamp" />;
-            case 'accountActivation-offensive':
-                return <AccountActivationPage onNavigate={setCurrentPage} planType="offensiveBootcamp" />;
-            case 'accountActivation':
-                return <AccountActivationPage onNavigate={setCurrentPage} planType="defensiveBootcamp" />;
-            case 'paymentSuccess':
-                return <PaymentSuccessPage onNavigate={setCurrentPage} />;
-            case 'paymentFailed':
-                return <PaymentFailedPage onNavigate={setCurrentPage} />;
-            case 'cancellationRefund':
-                return <CancellationRefundPage onNavigate={setCurrentPage} />;
-            case 'shipping':
-                return <ShippingPage onNavigate={setCurrentPage} />;
-            case 'privacy':
-                return <PrivacyPage onNavigate={setCurrentPage} />;
-            case 'contact':
-                return <ContactUsPage onNavigate={setCurrentPage} />;
-            case 'enroll':
-                return <EnrollUsPage onNavigate={setCurrentPage} />;
-            case 'video-learning':
-                return <VideoLearningPage onNavigate={setCurrentPage} />;
-            case 'dashboard':
-                return <StudentDashboard onNavigate={setCurrentPage} />;
-            case 'admin':
-                return <AdminDashboard onNavigate={setCurrentPage} />;
-            case 'login':
-                return <LoginPage onNavigate={setCurrentPage} onLogin={(user) => setCurrentUser(user)} />;
-            case 'home':
-            default:
-                return <HomePage onNavigate={setCurrentPage} />;
-        }
+    const pathToPage = useMemo(() => ({
+        '/': 'home',
+        '/workshop': 'workshop',
+        '/bootcamp/defensive': 'defensiveBootcamp',
+        '/bootcamp/offensive': 'offensiveBootcamp',
+        '/terms': 'terms',
+        '/disclaimer': 'disclaimer',
+        '/activate/defensive': 'accountActivation-defensive',
+        '/activate/offensive': 'accountActivation-offensive',
+        '/activate': 'accountActivation',
+        '/payment/success': 'paymentSuccess',
+        '/payment/failed': 'paymentFailed',
+        '/cancellation-refund': 'cancellationRefund',
+        '/shipping': 'shipping',
+        '/privacy': 'privacy',
+        '/contact': 'contact',
+        '/enroll': 'enroll',
+        '/video-learning': 'video-learning',
+        '/dashboard': 'dashboard',
+        '/admin': 'admin',
+        '/login': 'login',
+    }), []);
+
+    const currentPage = pathToPage[location.pathname] || 'home';
+
+    const go = (pageKey) => {
+        const path = pageToPath[pageKey] || '/';
+        navigate(path);
     };
 
     return (
         <div className="bg-slate-900 antialiased">
-            {/* The Header and Footer wrap the currently active page. */}
-            <Header onNavigate={setCurrentPage} currentPage={currentPage} />
+            <Header onNavigate={go} currentPage={currentPage} />
             <main>
-                {renderPage()}
+                <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>
+                    <Routes>
+                        <Route path="/" element={<HomePage onNavigate={go} />} />
+                        <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
+                        <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
+                        <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
+                        <Route path="/terms" element={<TermsPage onNavigate={go} />} />
+                        <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
+                        <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
+                        <Route path="/activate/offensive" element={<AccountActivationPage onNavigate={go} planType="offensiveBootcamp" />} />
+                        <Route path="/activate" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
+                        <Route path="/payment/success" element={<PaymentSuccessPage onNavigate={go} />} />
+                        <Route path="/payment/failed" element={<PaymentFailedPage onNavigate={go} />} />
+                        <Route path="/cancellation-refund" element={<CancellationRefundPage onNavigate={go} />} />
+                        <Route path="/shipping" element={<ShippingPage onNavigate={go} />} />
+                        <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
+                        <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
+                        <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
+                        <Route path="/video-learning" element={<VideoLearningPage onNavigate={go} />} />
+                        <Route path="/dashboard" element={<StudentDashboard onNavigate={go} />} />
+                        <Route path="/admin" element={<AdminDashboard onNavigate={go} />} />
+                        <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                </Suspense>
             </main>
-            <Footer onNavigate={setCurrentPage} />
+            <Footer onNavigate={go} />
         </div>
     );
 }

@@ -58,7 +58,7 @@ export default function EnrollUsPage({ onNavigate }) {
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
-                    className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
+                    className="flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home
@@ -84,7 +84,7 @@ export default function EnrollUsPage({ onNavigate }) {
                         {/* Enrollment Form */}
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-                                <GraduationCap size={24} className="mr-3 text-sky-400" />
+                                <GraduationCap size={24} className="mr-3 text-blue-400" />
                                 Enrollment Form
                             </h2>
 
@@ -106,7 +106,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             required
                                             value={formData.name}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="Enter your full name"
                                         />
                                     </div>
@@ -121,7 +121,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             required
                                             value={formData.email}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="your@email.com"
                                         />
                                     </div>
@@ -139,7 +139,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             required
                                             value={formData.phone}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                             placeholder="+91-9876543210"
                                         />
                                     </div>
@@ -153,7 +153,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             required
                                             value={formData.course}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             <option value="">Select a course</option>
                                             {courses.map(course => (
@@ -172,14 +172,14 @@ export default function EnrollUsPage({ onNavigate }) {
                                     </label>
                                     <div className="grid md:grid-cols-2 gap-3">
                                         {experienceLevels.map(level => (
-                                            <label key={level.id} className="flex items-start p-3 bg-slate-900 border border-slate-600 rounded-lg cursor-pointer hover:border-sky-500 transition-colors">
+                                            <label key={level.id} className="flex items-start p-3 bg-slate-900 border border-slate-600 rounded-lg cursor-pointer hover:border-blue-500 transition-colors">
                                                 <input
                                                     type="radio"
                                                     name="experience"
                                                     value={level.id}
                                                     checked={formData.experience === level.id}
                                                     onChange={handleInputChange}
-                                                    className="mt-1 text-sky-600 focus:ring-sky-500"
+                                                    className="mt-1 text-blue-600 focus:ring-blue-500"
                                                 />
                                                 <div className="ml-3">
                                                     <div className="text-white font-medium">{level.name}</div>
@@ -233,7 +233,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             name="startDate"
                                             value={formData.startDate}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                        className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             <option value="">Select timeline</option>
                                             <option value="immediate">Immediately (Next batch)</option>
@@ -251,7 +251,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             name="source"
                                             value={formData.source}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             <option value="website">Website</option>
                                             <option value="social">Social Media</option>
@@ -264,7 +264,7 @@ export default function EnrollUsPage({ onNavigate }) {
 
                                 <button
                                     type="submit"
-                                    className="w-full bg-sky-600 text-white font-semibold py-4 rounded-lg shadow-lg hover:bg-sky-700 transition-colors duration-300 flex items-center justify-center"
+                                    className="btn-primary w-full py-4 shadow-lg flex items-center justify-center"
                                 >
                                     <Send size={20} className="mr-2" />
                                     Submit Enrollment Request
@@ -287,7 +287,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                 
                                 <div className="space-y-4">
                                     <div className="flex items-start">
-                                        <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">1</div>
+                                        <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">1</div>
                                         <div>
                                             <h4 className="font-semibold text-white mb-1">Personal Consultation</h4>
                                             <p className="text-slate-300 text-sm">Our admissions counselor will call you within 24 hours to understand your goals and recommend the best program.</p>
@@ -295,7 +295,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                     </div>
                                     
                                     <div className="flex items-start">
-                                        <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">2</div>
+                                        <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">2</div>
                                         <div>
                                             <h4 className="font-semibold text-white mb-1">Customized Learning Path</h4>
                                             <p className="text-slate-300 text-sm">We'll create a personalized curriculum based on your experience level and career objectives.</p>
@@ -303,7 +303,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                     </div>
                                     
                                     <div className="flex items-start">
-                                        <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">3</div>
+                                        <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">3</div>
                                         <div>
                                             <h4 className="font-semibold text-white mb-1">Enrollment & Payment</h4>
                                             <p className="text-slate-300 text-sm">Secure your spot with flexible payment options and get immediate access to pre-course materials.</p>
@@ -327,7 +327,7 @@ export default function EnrollUsPage({ onNavigate }) {
                             </div>
 
                             {/* Contact for Questions */}
-                            <div className="bg-gradient-to-r from-sky-600 to-blue-600 p-6 rounded-lg text-center">
+                            <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 rounded-lg text-center">
                                 <h3 className="text-xl font-bold mb-4">Have Questions?</h3>
                                 <p className="text-sky-100 mb-4">
                                     Speak directly with our admissions team for personalized guidance.
@@ -336,11 +336,11 @@ export default function EnrollUsPage({ onNavigate }) {
                                 <div className="space-y-3">
                                     <div className="bg-white/10 p-3 rounded-lg">
                                         <div className="font-semibold">Admissions Hotline</div>
-                                        <div className="text-sm text-sky-200">+91-9160813700</div>
+                                        <div className="text-sm text-blue-200">+91-9160813700</div>
                                     </div>
                                     <div className="bg-white/10 p-3 rounded-lg">
                                         <div className="font-semibold">Email</div>
-                                        <div className="text-sm text-sky-200">santosh.m@agnidhra-technologies.com</div>
+                                        <div className="text-sm text-blue-200">santosh.m@agnidhra-technologies.com</div>
                                     </div>
                                 </div>
                             </div>

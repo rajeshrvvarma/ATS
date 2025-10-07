@@ -32,17 +32,15 @@ const loadRazorpayScript = () => {
  */
 export const createOrder = async (orderData) => {
     try {
-        // In a real application, you would call your backend API here
-        // For now, we'll simulate an order creation
-        const mockOrder = {
-            id: 'order_' + Date.now(),
-            amount: orderData.amount * 100, // Convert to paise
-            currency: 'INR',
-            receipt: 'receipt_' + Date.now(),
-            status: 'created'
-        };
-        
-        return mockOrder;
+        const res = await fetch('/.netlify/functions/razorpay-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: orderData.amount * 100, currency: orderData.currency || 'INR', receipt: orderData.receipt })
+        });
+        if (!res.ok) {
+            throw new Error(`Order creation failed: ${res.status}`);
+        }
+        return await res.json();
     } catch (error) {
         console.error('Error creating order:', error);
         throw error;
@@ -83,7 +81,7 @@ export const processPayment = async (paymentData) => {
                 contact: paymentData.customerPhone
             },
             theme: {
-                color: '#0ea5e9' // Sky blue to match your theme
+                color: '#2563eb' // Blue 600 to match the new theme
             },
             modal: {
                 ondismiss: function() {
@@ -104,14 +102,18 @@ export const processPayment = async (paymentData) => {
  */
 export const verifyPayment = async (paymentDetails) => {
     try {
-        // In a real application, you would verify the signature on your backend
-        // For now, we'll simulate a successful verification
-        console.log('Verifying payment:', paymentDetails);
-        
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        return true;
+        const res = await fetch('/.netlify/functions/razorpay-verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                orderId: paymentDetails.orderId,
+                paymentId: paymentDetails.paymentId,
+                signature: paymentDetails.signature,
+            })
+        });
+        if (!res.ok) return false;
+        const data = await res.json();
+        return !!data.valid;
     } catch (error) {
         console.error('Error verifying payment:', error);
         return false;
