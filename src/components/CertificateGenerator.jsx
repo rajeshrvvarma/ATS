@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Download, Share, CheckCircle, Calendar, Award, User, BookOpen } from 'lucide-react';
 import { downloadCertificate, verifyCertificate } from '@/services/certificateService';
+import { useToast } from '@/context/ToastContext.jsx';
 
 /**
  * CertificateGenerator - PDF certificate generation and display
@@ -8,6 +9,7 @@ import { downloadCertificate, verifyCertificate } from '@/services/certificateSe
 export default function CertificateGenerator({ certificate, onClose }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const { notify } = useToast();
 
   const handleDownload = async () => {
     if (!certificate) return;
@@ -15,9 +17,10 @@ export default function CertificateGenerator({ certificate, onClose }) {
     setIsDownloading(true);
     try {
       await downloadCertificate(certificate.certificateId);
+      notify('Certificate downloaded.', 'success');
     } catch (error) {
       console.error('Download failed:', error);
-      alert('Download failed. Please try again.');
+      notify('Download failed. Please try again.', 'error');
     } finally {
       setIsDownloading(false);
     }
@@ -33,15 +36,15 @@ export default function CertificateGenerator({ certificate, onClose }) {
     } else {
       // Fallback: copy to clipboard
       navigator.clipboard.writeText(`${certificate.courseName} Certificate - ${certificate.certificateId}`);
-      alert('Certificate link copied to clipboard!');
+      notify('Certificate link copied to clipboard!', 'success');
     }
   };
 
   if (!certificate) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-slate-900 dark:border dark:border-slate-700 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-sky-600 to-blue-600 text-white p-6 rounded-t-lg">
           <div className="flex items-center justify-between">
@@ -64,14 +67,14 @@ export default function CertificateGenerator({ certificate, onClose }) {
         {/* Certificate Content */}
         <div className="p-8">
           {/* Certificate Design */}
-          <div className="border-4 border-sky-600 rounded-lg p-8 text-center bg-gradient-to-b from-slate-50 to-white">
+          <div className="border-4 border-sky-600 rounded-lg p-8 text-center bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-800">
             {/* Logo/Header */}
             <div className="mb-8">
               <div className="w-20 h-20 bg-sky-600 rounded-full mx-auto mb-4 flex items-center justify-center">
                 <Award className="w-10 h-10 text-white" />
               </div>
-              <h1 className="text-3xl font-bold text-slate-800 mb-2">Certificate of Completion</h1>
-              <p className="text-slate-600">This is to certify that</p>
+              <h1 className="text-3xl font-bold text-slate-800 dark:text-slate-100 mb-2">Certificate of Completion</h1>
+              <p className="text-slate-600 dark:text-slate-300">This is to certify that</p>
             </div>
 
             {/* Student Name */}
@@ -79,33 +82,33 @@ export default function CertificateGenerator({ certificate, onClose }) {
               <h2 className="text-4xl font-bold text-sky-600 mb-2 border-b-4 border-sky-600 pb-4">
                 {certificate.studentName}
               </h2>
-              <p className="text-slate-600">has successfully completed</p>
+              <p className="text-slate-600 dark:text-slate-300">has successfully completed</p>
             </div>
 
             {/* Course Name */}
             <div className="mb-8">
-              <h3 className="text-2xl font-semibold text-slate-800 mb-2">
+              <h3 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-2">
                 {certificate.courseName}
               </h3>
-              <p className="text-slate-600">on {new Date(certificate.completionDate).toLocaleDateString()}</p>
+              <p className="text-slate-600 dark:text-slate-300">on {new Date(certificate.completionDate).toLocaleDateString()}</p>
             </div>
 
             {/* Certificate ID */}
             <div className="mb-8">
-              <p className="text-sm text-slate-500">Certificate ID: {certificate.certificateId}</p>
+              <p className="text-sm text-slate-500 dark:text-slate-300">Certificate ID: {certificate.certificateId}</p>
             </div>
 
             {/* Signatures */}
             <div className="flex justify-between items-end mt-12">
               <div className="text-center">
                 <div className="border-t-2 border-slate-400 w-32 mx-auto mb-2"></div>
-                <p className="text-sm text-slate-600">Instructor</p>
-                <p className="font-semibold text-slate-800">{certificate.instructorName}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Instructor</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-100">{certificate.instructorName}</p>
               </div>
               <div className="text-center">
                 <div className="border-t-2 border-slate-400 w-32 mx-auto mb-2"></div>
-                <p className="text-sm text-slate-600">Date</p>
-                <p className="font-semibold text-slate-800">{new Date(certificate.completionDate).toLocaleDateString()}</p>
+                <p className="text-sm text-slate-600 dark:text-slate-300">Date</p>
+                <p className="font-semibold text-slate-800 dark:text-slate-100">{new Date(certificate.completionDate).toLocaleDateString()}</p>
               </div>
             </div>
           </div>
@@ -131,13 +134,13 @@ export default function CertificateGenerator({ certificate, onClose }) {
           </div>
 
           {/* Verification Info */}
-          <div className="mt-6 p-4 bg-slate-100 rounded-lg">
+          <div className="mt-6 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="w-5 h-5 text-green-500" />
-              <span className="font-semibold text-slate-800">Verified Certificate</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100">Verified Certificate</span>
             </div>
-            <p className="text-sm text-slate-600">
-              This certificate can be verified using the Certificate ID: <code className="bg-slate-200 px-2 py-1 rounded">{certificate.certificateId}</code>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              This certificate can be verified using the Certificate ID: <code className="bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded">{certificate.certificateId}</code>
             </p>
           </div>
         </div>

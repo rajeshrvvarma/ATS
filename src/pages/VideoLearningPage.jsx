@@ -78,11 +78,15 @@ export default function VideoLearningPage({ onNavigate }) {
               <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden hover:bg-slate-750 transition-all duration-300 transform hover:-translate-y-1">
                 {/* Course Thumbnail */}
                 <div className="relative">
-                  <img 
-                    src={course.thumbnail} 
-                    alt={course.title}
-                    className="w-full h-48 object-cover"
-                  />
+                  {course.thumbnail ? (
+                    <img 
+                      src={course.thumbnail} 
+                      alt={course.title}
+                      className="w-full h-48 object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-48 bg-slate-700 animate-pulse" />
+                  )}
                   {isCompleted && (
                     <div className="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
                       <Trophy className="w-4 h-4" />

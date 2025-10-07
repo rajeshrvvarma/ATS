@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Play, Pause, Volume2, VolumeX, Maximize, Bookmark, Clock, CheckCircle } from 'lucide-react';
 
 export default function VideoLesson({ 
@@ -15,6 +15,7 @@ export default function VideoLesson({
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [progress, setProgress] = useState(0);
   const [isCompleted, setIsCompleted] = useState(false);
+  const videoRef = useRef(null);
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -77,6 +78,34 @@ export default function VideoLesson({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Keyboard shortcuts for direct video type
+  useEffect(() => {
+    if (lesson.type !== 'direct') return;
+    const el = videoRef.current;
+    if (!el) return;
+
+    const onKey = (e) => {
+      // avoid interfering with inputs
+      const target = e.target;
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)) return;
+
+      if (e.code === 'Space' || e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        if (el.paused) { el.play(); } else { el.pause(); }
+      } else if (e.key.toLowerCase() === 'j') {
+        el.currentTime = Math.max(0, el.currentTime - 10);
+      } else if (e.key.toLowerCase() === 'l') {
+        el.currentTime = Math.min(el.duration || el.currentTime + 10, el.currentTime + 10);
+      } else if (e.key.toLowerCase() === 'm') {
+        el.muted = !el.muted;
+        setIsMuted(el.muted);
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lesson.type]);
+
   // Render different video types
   const renderVideoPlayer = () => {
     switch (lesson.type) {
@@ -84,7 +113,7 @@ export default function VideoLesson({
         return (
           <iframe
             src={`https://www.youtube.com/embed/${lesson.videoId}?enablejsapi=1&origin=${window.location.origin}`}
-            className="w-full aspect-video rounded-lg"
+            className="w-full aspect-video rounded-lg bg-slate-700"
             allowFullScreen
             title={lesson.title}
           />
@@ -94,7 +123,7 @@ export default function VideoLesson({
         return (
           <iframe
             src={`https://player.vimeo.com/video/${lesson.videoId}?title=0&byline=0&portrait=0`}
-            className="w-full aspect-video rounded-lg"
+            className="w-full aspect-video rounded-lg bg-slate-700"
             allowFullScreen
             title={lesson.title}
           />
@@ -111,6 +140,7 @@ export default function VideoLesson({
             onEnded={handleVideoEnd}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
+            ref={videoRef}
           >
             <source src={lesson.videoUrl} type="video/mp4" />
             <source src={lesson.videoUrl} type="video/webm" />
@@ -121,10 +151,23 @@ export default function VideoLesson({
   };
 
   return (
-    <div className="bg-slate-800 rounded-lg overflow-hidden">
+    <div className="bg-slate-800 rounded-lg overflow-hidden group">
       {/* Video Player */}
       <div className="relative">
         {renderVideoPlayer()}
+        {/* Hover mini-controls for direct video */}
+        {lesson.type === 'direct' && (
+          <div className="absolute inset-x-0 bottom-3 px-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="mx-auto max-w-[90%] bg-black/50 backdrop-blur rounded-lg px-3 py-2 flex items-center gap-3 text-white">
+              <button onClick={() => { const v = videoRef.current; if (!v) return; if (v.paused) v.play(); else v.pause(); }} className="hover:text-sky-300">
+                {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              </button>
+              <button onClick={() => { const v = videoRef.current; if (!v) return; v.currentTime = Math.max(0, v.currentTime - 10); }} className="text-xs px-2 py-1 bg-white/10 rounded hover:bg-white/20">-10s</button>
+              <button onClick={() => { const v = videoRef.current; if (!v) return; v.currentTime = Math.min(v.duration || v.currentTime + 10, v.currentTime + 10); }} className="text-xs px-2 py-1 bg-white/10 rounded hover:bg-white/20">+10s</button>
+              <div className="ml-auto text-xs text-slate-200">{formatTime(currentTime)} / {formatTime(duration)}</div>
+            </div>
+          </div>
+        )}
         
         {/* Progress Overlay for YouTube/Vimeo */}
         {(lesson.type === 'youtube' || lesson.type === 'vimeo') && (

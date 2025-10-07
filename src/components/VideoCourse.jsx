@@ -16,6 +16,7 @@ export default function VideoCourse({ course, onCourseComplete }) {
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
+  const [compact, setCompact] = useState(false);
   const { notify } = useToast();
 
   // Load course progress from localStorage
@@ -219,7 +220,10 @@ const handleLessonComplete = async (lesson) => {
         {/* Lesson List */}
         <div className="lg:col-span-1">
           <div className="bg-slate-800 rounded-lg p-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Lessons</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Lessons</h3>
+              <button onClick={()=>setCompact(v=>!v)} className="text-xs px-2 py-1 rounded bg-slate-700 text-slate-200 hover:bg-slate-600">{compact ? 'Comfortable' : 'Compact'}</button>
+            </div>
             <div className="space-y-2">
               {course.lessons.map((lesson, index) => {
                 const isUnlocked = isLessonUnlocked(index);
@@ -231,7 +235,7 @@ const handleLessonComplete = async (lesson) => {
                     key={lesson.id}
                     onClick={() => isUnlocked && setCurrentLesson(index)}
                     disabled={!isUnlocked}
-                    className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
+                    className={`w-full text-left ${compact ? 'p-2 text-sm' : 'p-3'} rounded-lg transition-all duration-200 ${
                       isCurrent 
                         ? 'bg-sky-600 text-white' 
                         : isUnlocked 
@@ -250,7 +254,7 @@ const handleLessonComplete = async (lesson) => {
                       
                       <div className="flex-1 min-w-0">
                         <div className="font-medium truncate">{lesson.title}</div>
-                        <div className="text-xs opacity-75">{lesson.duration}</div>
+                        {!compact && <div className="text-xs opacity-75">{lesson.duration}</div>}
                       </div>
                     </div>
                   </button>

@@ -1,8 +1,10 @@
 import React, { Suspense, useMemo } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider } from '@/context/AuthContext.jsx';
 import { ToastProvider } from '@/context/ToastContext.jsx';
 import ToastContainer from '@/components/ToastContainer.jsx';
+import { ThemeProvider } from '@/context/ThemeContext.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 
 // Layout
@@ -91,11 +93,14 @@ export default function App() {
 
     return (
         <AuthProvider>
+        <ThemeProvider>
         <ToastProvider>
         <div className="bg-slate-900 antialiased">
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>
                     <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>
+                        <AnimatePresence mode="wait">
+                        <motion.div key={location.pathname} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.18 }}>
                         <Routes>
                             <Route path="/" element={<HomePage onNavigate={go} />} />
                             <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
@@ -119,12 +124,15 @@ export default function App() {
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
+                        </motion.div>
+                        </AnimatePresence>
                     </Suspense>
             </main>
                 <Footer onNavigate={go} />
                 <ToastContainer />
         </div>
         </ToastProvider>
+        </ThemeProvider>
         </AuthProvider>
     );
 }

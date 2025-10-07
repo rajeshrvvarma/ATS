@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown } from 'lucide-react';
+import { X, Menu, ChevronDown, Sun, Moon } from 'lucide-react';
+import { useTheme } from '@/context/ThemeContext.jsx';
 
 export default function Header({ onNavigate, currentPage }) {
+    const { theme, toggleTheme } = useTheme();
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     const [isProgramsOpen, setIsProgramsOpen] = useState(false);
@@ -114,6 +116,9 @@ export default function Header({ onNavigate, currentPage }) {
                     <button onClick={() => scrollToSection('Contact Us')} className={`font-medium pb-1 transition-colors ${isLinkActive('Contact Us') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Contact</button>
                     <button onClick={() => scrollToSection('Account')} className={`font-medium pb-1 transition-colors ${isLinkActive('Account') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Account</button>
                     <button onClick={() => onNavigate('enroll')} className="btn-primary px-4 py-2">Enroll</button>
+                    <button onClick={toggleTheme} className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700" title="Toggle theme">
+                        {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                    </button>
                 </div>
                 
                 {/* Mobile Menu Button */}
