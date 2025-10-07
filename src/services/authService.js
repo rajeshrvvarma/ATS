@@ -84,6 +84,21 @@ export const login = async (email, password) => {
 };
 
 /**
+ * Google OAuth (mock)
+ * In production, integrate Firebase/Auth0; here we simulate success
+ */
+export const loginWithGoogle = async () => {
+  await new Promise(resolve => setTimeout(resolve, 600));
+  const mockGoogleUser = { id: 4, email: 'google.user@example.com', role: ROLES.STUDENT, name: 'Google User', twoFactorEnabled: false };
+  sessionToken = generateSessionToken();
+  currentUser = mockGoogleUser;
+  localStorage.setItem('authToken', sessionToken);
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  logSecurityEvent('LOGIN_OAUTH', `User ${mockGoogleUser.email} logged in via Google`);
+  return { success: true, user: currentUser, token: sessionToken };
+};
+
+/**
  * Logout user
  */
 export const logout = () => {

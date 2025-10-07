@@ -13,7 +13,7 @@ import {
   Star,
   CheckCircle
 } from 'lucide-react';
-import { courses } from '@/data/courses';
+import { loadCourses } from '@/services/courseService.js';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -44,6 +44,7 @@ export default function StudentDashboard({ onNavigate }) {
 
     // Load enrolled courses
     const enrolled = [];
+    const courses = loadCourses();
     courses.forEach(course => {
       const enrollment = localStorage.getItem(`enrollment_${course.id}`);
       if (enrollment === 'true') {

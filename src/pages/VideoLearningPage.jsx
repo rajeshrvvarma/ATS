@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ArrowLeft, Trophy, Award, Download, Play } from 'lucide-react';
 import VideoCourse from '@/components/VideoCourse';
-import { courses } from '@/data/courses';
+import { loadCourses } from '@/services/courseService.js';
 
 /**
  * VideoLearningPage - Main page for video-based learning
@@ -11,6 +11,7 @@ import { courses } from '@/data/courses';
 export default function VideoLearningPage({ onNavigate }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [completedCourses, setCompletedCourses] = useState(new Set());
+  const [list, setList] = useState(loadCourses());
   const location = useLocation();
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function VideoLearningPage({ onNavigate }) {
 
   // If a course is selected, show the course view
   if (selectedCourse) {
-    const course = courses.find(c => c.id === selectedCourse);
+    const course = list.find(c => c.id === selectedCourse);
     return (
       <div className="min-h-screen bg-slate-900 py-8">
         <div className="container mx-auto px-6">
@@ -67,7 +68,7 @@ export default function VideoLearningPage({ onNavigate }) {
 
         {/* Course Grid */}
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {courses.map((course) => {
+          {list.map((course) => {
             const isCompleted = completedCourses.has(course.id);
             
             return (

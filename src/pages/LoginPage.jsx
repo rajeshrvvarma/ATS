@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Shield, User, Lock, AlertCircle } from 'lucide-react';
-import { login } from '@/services/authService';
+import { login, loginWithGoogle } from '@/services/authService';
 import TwoFactorAuth from '@/components/TwoFactorAuth';
 
 /**
@@ -44,6 +44,21 @@ export default function LoginPage({ onNavigate, onLogin }) {
           onLogin?.(result.user);
           onNavigate('dashboard');
         }
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    try {
+      setIsLoading(true);
+      const result = await loginWithGoogle();
+      if (result.success) {
+        onLogin?.(result.user);
+        onNavigate('dashboard');
       }
     } catch (err) {
       setError(err.message);
@@ -158,6 +173,19 @@ export default function LoginPage({ onNavigate, onLogin }) {
               )}
             </button>
           </div>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center" aria-hidden="true">
+              <div className="w-full border-t border-slate-700" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="bg-slate-900 px-2 text-slate-400">or</span>
+            </div>
+          </div>
+
+          <button type="button" onClick={handleGoogle} disabled={isLoading} className="w-full py-3 rounded-lg bg-white text-slate-800 font-semibold hover:bg-slate-100 transition-colors">
+            Continue with Google
+          </button>
 
           {/* Demo Credentials */}
           <div className="mt-6 p-4 bg-slate-800 rounded-lg">
