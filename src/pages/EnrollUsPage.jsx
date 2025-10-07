@@ -18,6 +18,7 @@ export default function EnrollUsPage({ onNavigate }) {
     const [submitted, setSubmitted] = useState(false);
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [paymentMsg, setPaymentMsg] = useState('');
+    const [lastOrderId, setLastOrderId] = useState('');
 
     const handleInputChange = (e) => {
         setFormData({
@@ -62,6 +63,7 @@ export default function EnrollUsPage({ onNavigate }) {
             setPaymentMsg('');
 
             const order = await createOrder({ amount: 499, currency: 'INR' });
+            setLastOrderId(order.id);
 
             const paymentResult = await processPayment({
                 amount: order.amount,
@@ -391,6 +393,16 @@ export default function EnrollUsPage({ onNavigate }) {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Debug/Test Info (only visible in test mode keys) */}
+                            {import.meta.env.VITE_RAZORPAY_KEY_ID?.startsWith('rzp_test_') && (
+                                <div className="bg-slate-900/60 p-4 rounded-lg border border-slate-700 text-left">
+                                    <div className="text-sm text-slate-300"><span className="font-semibold text-blue-300">Test Mode:</span> Using key {import.meta.env.VITE_RAZORPAY_KEY_ID}</div>
+                                    {lastOrderId && <div className="text-sm text-slate-300 mt-1">Last order_id: {lastOrderId}</div>}
+                                    {paymentMsg && <div className="text-sm text-slate-300 mt-1">Status: {paymentMsg}</div>}
+                                    <div className="text-xs text-slate-400 mt-2">Tip: You can also try UPI handle <span className="font-mono">success@razorpay</span> for an instant success in Test Mode.</div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
