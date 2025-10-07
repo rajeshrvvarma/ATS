@@ -18,6 +18,9 @@ import PrivacyPage from '@/pages/PrivacyPage.jsx';
 import ContactUsPage from '@/pages/ContactUsPage.jsx';
 import EnrollUsPage from '@/pages/EnrollUsPage.jsx';
 import VideoLearningPage from '@/pages/VideoLearningPage.jsx';
+import StudentDashboard from '@/pages/StudentDashboard.jsx';
+import AdminDashboard from '@/pages/AdminDashboard.jsx';
+import LoginPage from '@/pages/LoginPage.jsx';
 
 /**
  * App.jsx is the root component of the application.
@@ -26,6 +29,7 @@ import VideoLearningPage from '@/pages/VideoLearningPage.jsx';
 export default function App() {
     // 'currentPage' state determines which component to render. 'home' is the default.
     const [currentPage, setCurrentPage] = useState('home');
+    const [currentUser, setCurrentUser] = useState(null);
 
     // This effect runs whenever the currentPage changes, ensuring the user
     // is scrolled to the top of the new page they navigate to.
@@ -69,6 +73,12 @@ export default function App() {
                 return <EnrollUsPage onNavigate={setCurrentPage} />;
             case 'video-learning':
                 return <VideoLearningPage onNavigate={setCurrentPage} />;
+            case 'dashboard':
+                return <StudentDashboard onNavigate={setCurrentPage} />;
+            case 'admin':
+                return <AdminDashboard onNavigate={setCurrentPage} />;
+            case 'login':
+                return <LoginPage onNavigate={setCurrentPage} onLogin={(user) => setCurrentUser(user)} />;
             case 'home':
             default:
                 return <HomePage onNavigate={setCurrentPage} />;

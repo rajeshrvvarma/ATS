@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Lock, CheckCircle, Clock, Download, BookOpen } from 'lucide-react';
 import VideoLesson from './VideoLesson';
+import { Award } from 'lucide-react';
+import { awardCourseCertificate } from '@/services/certificateService';
 
 /**
  * VideoCourse Component - Course structure with video lessons
@@ -37,20 +39,31 @@ export default function VideoCourse({ course, onCourseComplete }) {
   };
 
   // Handle lesson completion
-  const handleLessonComplete = (lesson) => {
-    const newCompleted = new Set([...completedLessons, lesson.id]);
-    setCompletedLessons(newCompleted);
-    
-    const progress = (newCompleted.size / course.lessons.length) * 100;
-    setCourseProgress(progress);
-    
-    saveCourseProgress(newCompleted, progress);
-    
-    // Check if course is completed
-    if (progress >= 100) {
-      onCourseComplete?.(course);
+const handleLessonComplete = async (lesson) => {
+  const newCompleted = new Set([...completedLessons, lesson.id]);
+  setCompletedLessons(newCompleted);
+  
+  const progress = (newCompleted.size / course.lessons.length) * 100;
+  setCourseProgress(progress);
+  
+  saveCourseProgress(newCompleted, progress);
+  
+  // Check if course is completed
+  if (progress >= 100) {
+    try {
+      // Award certificate
+      const certificate = await awardCourseCertificate(course.id, 'Student Name');
+      console.log('Certificate awarded:', certificate);
+      
+      // Show success message
+      alert(`Congratulations! You've completed ${course.title} and earned a certificate!`);
+    } catch (error) {
+      console.error('Error awarding certificate:', error);
     }
-  };
+    
+    onCourseComplete?.(course);
+  }
+};
 
   // Handle lesson progress
   const handleLessonProgress = (progress) => {
