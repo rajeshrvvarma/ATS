@@ -26,4 +26,16 @@ body {
   .card-hover {
     @apply transition-all duration-300 hover:-translate-y-1;
   }
+  .section {
+    @apply py-20;
+  }
+  .h1 {
+    @apply text-4xl md:text-6xl font-bold leading-tight;
+  }
+  .h2 {
+    @apply text-3xl font-bold;
+  }
+  .p-lg {
+    @apply text-lg md:text-xl text-slate-300;
+  }
 }

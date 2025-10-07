@@ -1,5 +1,7 @@
 import React, { Suspense, useMemo } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { AuthProvider } from '@/context/AuthContext.jsx';
+import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 
 // Layout
 import Header from '@/components/Header.jsx';
@@ -86,37 +88,39 @@ export default function App() {
     };
 
     return (
+        <AuthProvider>
         <div className="bg-slate-900 antialiased">
-            <Header onNavigate={go} currentPage={currentPage} />
+                <Header onNavigate={go} currentPage={currentPage} />
             <main>
-                <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>
-                    <Routes>
-                        <Route path="/" element={<HomePage onNavigate={go} />} />
-                        <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
-                        <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
-                        <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
-                        <Route path="/terms" element={<TermsPage onNavigate={go} />} />
-                        <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
-                        <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
-                        <Route path="/activate/offensive" element={<AccountActivationPage onNavigate={go} planType="offensiveBootcamp" />} />
-                        <Route path="/activate" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
-                        <Route path="/payment/success" element={<PaymentSuccessPage onNavigate={go} />} />
-                        <Route path="/payment/failed" element={<PaymentFailedPage onNavigate={go} />} />
-                        <Route path="/cancellation-refund" element={<CancellationRefundPage onNavigate={go} />} />
-                        <Route path="/shipping" element={<ShippingPage onNavigate={go} />} />
-                        <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
-                        <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
-                        <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
-                        <Route path="/video-learning" element={<VideoLearningPage onNavigate={go} />} />
-                        <Route path="/dashboard" element={<StudentDashboard onNavigate={go} />} />
-                        <Route path="/admin" element={<AdminDashboard onNavigate={go} />} />
-                        <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
-                        <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                </Suspense>
+                    <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>
+                        <Routes>
+                            <Route path="/" element={<HomePage onNavigate={go} />} />
+                            <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
+                            <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
+                            <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
+                            <Route path="/terms" element={<TermsPage onNavigate={go} />} />
+                            <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
+                            <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
+                            <Route path="/activate/offensive" element={<AccountActivationPage onNavigate={go} planType="offensiveBootcamp" />} />
+                            <Route path="/activate" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
+                            <Route path="/payment/success" element={<PaymentSuccessPage onNavigate={go} />} />
+                            <Route path="/payment/failed" element={<PaymentFailedPage onNavigate={go} />} />
+                            <Route path="/cancellation-refund" element={<CancellationRefundPage onNavigate={go} />} />
+                            <Route path="/shipping" element={<ShippingPage onNavigate={go} />} />
+                            <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
+                            <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
+                            <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
+                            <Route path="/video-learning" element={<VideoLearningPage onNavigate={go} />} />
+                            <Route path="/dashboard" element={<ProtectedRoute roles={['student','admin','instructor']}><StudentDashboard onNavigate={go} /></ProtectedRoute>} />
+                            <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
+                            <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </Suspense>
             </main>
-            <Footer onNavigate={go} />
+                <Footer onNavigate={go} />
         </div>
+        </AuthProvider>
     );
 }
 

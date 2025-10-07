@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ArrowLeft, Trophy, Award, Download, Play } from 'lucide-react';
 import VideoCourse from '@/components/VideoCourse';
 import { courses } from '@/data/courses';
@@ -10,6 +11,15 @@ import { courses } from '@/data/courses';
 export default function VideoLearningPage({ onNavigate }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [completedCourses, setCompletedCourses] = useState(new Set());
+  const location = useLocation();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const courseId = params.get('course');
+    if (courseId) {
+      setSelectedCourse(courseId);
+    }
+  }, [location.search]);
 
   // Handle course completion
   const handleCourseComplete = (course) => {

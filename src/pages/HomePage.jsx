@@ -26,7 +26,7 @@ const Hero = () => {
                     Master in-demand skills with our expert-led, hands-on training programs designed to make you a job-ready SOC Analyst or Ethical Hacker.
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                    <button
+                     <button
                         onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })}
                         className="btn-primary px-8 py-3 shadow-lg transform hover:scale-105"
                     >
@@ -86,8 +86,8 @@ const CourseOfferings = ({ setVisibleSyllabus, onNavigate }) => {
                                 <button onClick={() => course.syllabus ? handleSyllabusClick(course.syllabus) : onNavigate(course.page)} className={`${activeTab==='defensive' ? 'btn-primary' : 'btn-danger'} px-5 py-2`}>{course.cta}</button>
                                 {course.syllabus && (<button onClick={() => handleSyllabusClick(course.syllabus)} className="btn-secondary px-4 py-2">View syllabus</button>)}
                             </div>
-                        </div>
-                    ))}
+                            </div>
+                        ))}
                 </div>
 
                 <div className="max-w-5xl mx-auto mt-12 text-slate-300">
@@ -107,7 +107,7 @@ const CourseOfferings = ({ setVisibleSyllabus, onNavigate }) => {
                             </tbody>
                         </table>
                     </div>
-                </div>
+                            </div>
 
                 <div className="max-w-xl mx-auto mt-12">
                     <div className="card card-hover p-8 flex flex-col text-center items-center">
@@ -138,38 +138,22 @@ const WhyUs = () => (
 const Admissions = () => (
     <section id="admissions" className="py-20 bg-slate-900">
         <div className="container mx-auto px-6">
-            <SectionTitle>Admissions Process</SectionTitle>
-            <div className="relative max-w-4xl mx-auto">
-                <div className="absolute left-1/2 top-8 h-full w-0.5 bg-slate-700 hidden md:block"></div>
-                <div className="grid md:grid-cols-2 gap-16">
-
-                    {/* ITEM 1: Reduced padding to md:pr-8 */}
-                    <div className="text-center md:text-right relative">
-                        {/* Centered the circle by adding md:translate-x-1/2 */}
-                        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] md:translate-x-1/2 top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">1</div>
-                        <h3 className="text-xl font-bold text-white mb-2">Submit an Inquiry</h3>
-                        <p className="text-slate-400">Fill out our contact form with your details and the course you're interested in.</p>
+            <SectionTitle>Admissions</SectionTitle>
+            <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
+                <div className="card p-6 text-center">
+                    <div className="mx-auto w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-3">1</div>
+                    <h3 className="text-lg font-bold text-white mb-1">Apply</h3>
+                    <p className="text-slate-400 text-sm">Tell us your goals and pick a program.</p>
                     </div>
-                    
-                    <div></div>
-                    <div></div>
-                    
-                    {/* ITEM 2: Reduced padding to md:pl-8 */}
-                    <div className="text-center md:text-left relative">
-                        {/* Centered the circle by adding md:-translate-x-1/2 */}
-                        <div className="absolute left-1/2 -translate-x-1/2 md:left-[-2rem] md:-translate-x-1/2 top-0 w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">2</div>
-                        <h3 className="text-xl font-bold text-white mb-2">Free Demo Session</h3>
-                        <p className="text-slate-400">We'll contact you to schedule a free one-on-one demo and consultation.</p>
+                <div className="card p-6 text-center">
+                    <div className="mx-auto w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-3">2</div>
+                    <h3 className="text-lg font-bold text-white mb-1">Free Demo</h3>
+                    <p className="text-slate-400 text-sm">Experience a live session and get your roadmap.</p>
                     </div>
-
-                    {/* ITEM 3: Reduced padding to md:pr-8 */}
-                    <div className="text-center md:text-right relative">
-                         {/* Centered the circle by adding md:translate-x-1/2 */}
-                        <div className="absolute left-1/2 -translate-x-1/2 md:left-auto md:right-[-2rem] md:translate-x-1/2 top-0 w-8 h-8 rounded-full bg-sky-500 flex items-center justify-center font-bold text-white ring-8 ring-slate-900">3</div>
-                        <h3 className="text-xl font-bold text-white mb-2">Enroll & Learn</h3>
-                        <p className="text-slate-400">Complete the enrollment process and start your journey to becoming a tech pro.</p>
-                    </div>
-
+                <div className="card p-6 text-center">
+                    <div className="mx-auto w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-3">3</div>
+                    <h3 className="text-lg font-bold text-white mb-1">Enroll</h3>
+                    <p className="text-slate-400 text-sm">Secure your seat and start learning.</p>
                 </div>
             </div>
         </div>
@@ -222,7 +206,48 @@ const Syllabus = ({ visibleSyllabus, setVisibleSyllabus }) => {
     return ( <section id="syllabus" className="py-20 bg-slate-800"><div className="container mx-auto px-6 relative"><button onClick={() => setVisibleSyllabus(null)} className="absolute top-0 right-6 text-slate-400 hover:text-white transition-colors z-10"><X size={32} /></button><SectionTitle>{syllabusData.title}</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12"><div><h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month1.title}</h3><div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month1.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div></div><div><h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month2.title}</h3><div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month2.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div></div></div><div className="text-center mt-12"><button onClick={() => onNavigate('enroll')} className={`bg-${accentColor}-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-${accentColor}-700 transition-colors duration-300 transform hover:scale-105`}>Enroll in 2-Month Program</button></div></div></section>);
 };
 
-const Trainers = () => ( <section id="trainers" className="py-20 bg-slate-900"><div className="container mx-auto px-6"><SectionTitle>Meet Your Trainers</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8"><div className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center"><img src="/logo.png" alt="Santosh Kumar" className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" /><h3 className="text-2xl font-bold text-white">Santosh Kumar</h3><p className="text-sky-400 font-semibold mb-3">Lead Trainer & Founder</p><p className="text-slate-300">With 8 years of experience, Santosh provides a practical, end-to-end understanding of the tech landscape.</p></div><div className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center"><img src="/logo.png" alt="Jeevan Kumar" className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" /><h3 className="text-2xl font-bold text-white">Jeevan Kumar</h3><p className="text-sky-400 font-semibold mb-3">Co-Trainer | SOC Certified</p><p className="text-slate-300">With 6 years of experience, Jeevan brings rich practical exposure to the security landscape.</p></div></div></div></section>);
+const Trainers = () => {
+    const [bio, setBio] = useState(null);
+    const trainers = [
+        { name: 'Santosh Kumar', role: 'Lead Trainer & Founder', img: '/logo.png', bio: '8+ years across SOC, EDR, and threat hunting. Built multiple hands‑on labs and capstones.' },
+        { name: 'Jeevan Kumar', role: 'Co‑Trainer | SOC Certified', img: '/logo.png', bio: '6+ years in blue team operations and incident response with enterprise experience.' }
+    ];
+    return (
+        <section id="trainers" className="py-20 bg-slate-900">
+            <div className="container mx-auto px-6">
+                <SectionTitle>Meet Your Trainers</SectionTitle>
+                <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                    {trainers.map((t) => (
+                        <div key={t.name} className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center">
+                            <img src={t.img} alt={t.name} className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" />
+                            <h3 className="text-2xl font-bold text-white">{t.name}</h3>
+                            <p className="text-blue-400 font-semibold mb-3">{t.role}</p>
+                            <button onClick={() => setBio(t)} className="btn-secondary px-4 py-2">Read bio</button>
+                        </div>
+                    ))}
+                </div>
+
+                {bio && (
+                    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setBio(null)}>
+                        <div className="bg-slate-900 border border-slate-700 rounded-lg max-w-lg w-full p-6" onClick={(e)=>e.stopPropagation()}>
+                            <div className="flex items-center gap-4 mb-4">
+                                <img src={bio.img} alt={bio.name} className="w-16 h-16 rounded-full border-2 border-slate-600" />
+                                <div>
+                                    <h3 className="text-xl font-bold text-white">{bio.name}</h3>
+                                    <p className="text-slate-300 text-sm">{bio.role}</p>
+                                </div>
+                            </div>
+                            <p className="text-slate-300 mb-6">{bio.bio}</p>
+                            <div className="text-right">
+                                <button onClick={() => setBio(null)} className="btn-primary px-4 py-2">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </section>
+    );
+};
 const Testimonials = () => {
     const items = [
         { quote: "The project-based approach was a game-changer. I landed a job as a SOC Analyst within two months!", name: "Rohan S.", role: "SOC Analyst", img: "https://placehold.co/50x50/0F172A/38BDF8?text=R" },

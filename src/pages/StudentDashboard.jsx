@@ -241,6 +241,14 @@ export default function StudentDashboard({ onNavigate }) {
                         <span>{course.lessons.length} lessons</span>
                         <span>{course.duration}</span>
                       </div>
+                      <div className="mt-3 text-right">
+                        <button
+                          onClick={() => onNavigate('video-learning') || (window.location.href = `/video-learning?course=${course.id}`)}
+                          className="btn-primary px-4 py-2"
+                        >
+                          Continue watching
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
