@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { ArrowLeft, Trophy, Award, Download, Play } from 'lucide-react';
 import VideoCourse from '@/components/VideoCourse';
 import { loadCourses } from '@/services/courseService.js';
+import { useToast } from '@/context/ToastContext.jsx';
 
 /**
  * VideoLearningPage - Main page for video-based learning
@@ -13,6 +14,7 @@ export default function VideoLearningPage({ onNavigate }) {
   const [completedCourses, setCompletedCourses] = useState(new Set());
   const [list, setList] = useState(loadCourses());
   const location = useLocation();
+  const { notify } = useToast();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -27,7 +29,7 @@ export default function VideoLearningPage({ onNavigate }) {
     setCompletedCourses(prev => new Set([...prev, course.id]));
     
     // Show completion modal or notification
-    alert(`Congratulations! You've completed ${course.title}!`);
+    notify(`You've completed ${course.title}!`, 'success');
   };
 
   // If a course is selected, show the course view

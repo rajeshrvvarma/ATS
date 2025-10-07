@@ -4,6 +4,7 @@ import VideoLesson from './VideoLesson';
 import { Award } from 'lucide-react';
 import { awardCourseCertificate } from '@/services/certificateService';
 import { createOrder, processPayment, verifyPayment } from '@/services/razorpay';
+import { useToast } from '@/context/ToastContext.jsx';
 
 /**
  * VideoCourse Component - Course structure with video lessons
@@ -15,6 +16,7 @@ export default function VideoCourse({ course, onCourseComplete }) {
   const [completedLessons, setCompletedLessons] = useState(new Set());
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [enrolling, setEnrolling] = useState(false);
+  const { notify } = useToast();
 
   // Load course progress from localStorage
   useEffect(() => {
@@ -62,11 +64,10 @@ const handleLessonComplete = async (lesson) => {
       // Award certificate
       const certificate = await awardCourseCertificate(course.id, 'Student Name');
       console.log('Certificate awarded:', certificate);
-      
-      // Show success message
-      alert(`Congratulations! You've completed ${course.title} and earned a certificate!`);
+      notify(`Completed ${course.title}! Certificate generated.`, 'success');
     } catch (error) {
       console.error('Error awarding certificate:', error);
+      notify('Error generating certificate. Please try again later.', 'error');
     }
     
     onCourseComplete?.(course);
@@ -151,10 +152,10 @@ const handleLessonComplete = async (lesson) => {
       const receipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
       receipts.push({ courseId: course.id, orderId: paymentResult.orderId, paymentId: paymentResult.paymentId, ts: Date.now() });
       localStorage.setItem('enrollment_receipts', JSON.stringify(receipts));
-      alert('Enrollment successful!');
+      notify('Enrollment successful!', 'success');
     } catch (err) {
       console.error('Enrollment failed:', err);
-      alert(err.message || 'Enrollment failed. Please try again.');
+      notify(err.message || 'Enrollment failed. Please try again.', 'error');
     } finally {
       setEnrolling(false);
     }

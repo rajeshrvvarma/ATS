@@ -109,10 +109,10 @@ export default function Header({ onNavigate, currentPage }) {
                             </div>
                         )}
                     </div>
-                    <button onClick={() => scrollToSection('Video Learning')} className="font-medium pb-1 text-slate-300 hover:text-blue-400 transition-colors">Video Learning</button>
-                    <button onClick={() => scrollToSection('Admissions')} className="font-medium pb-1 text-slate-300 hover:text-blue-400 transition-colors">Admissions</button>
-                    <button onClick={() => scrollToSection('Contact Us')} className="font-medium pb-1 text-slate-300 hover:text-blue-400 transition-colors">Contact</button>
-                    <button onClick={() => scrollToSection('Account')} className="font-medium pb-1 text-slate-300 hover:text-blue-400 transition-colors">Account</button>
+                    <button onClick={() => scrollToSection('Video Learning')} className={`font-medium pb-1 transition-colors ${isLinkActive('Video Learning') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Video Learning</button>
+                    <button onClick={() => scrollToSection('Admissions')} className={`font-medium pb-1 transition-colors ${isLinkActive('Admissions') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Admissions</button>
+                    <button onClick={() => scrollToSection('Contact Us')} className={`font-medium pb-1 transition-colors ${isLinkActive('Contact Us') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Contact</button>
+                    <button onClick={() => scrollToSection('Account')} className={`font-medium pb-1 transition-colors ${isLinkActive('Account') ? 'text-blue-400 border-b-2 border-blue-500' : 'text-slate-300 hover:text-blue-400'}`}>Account</button>
                     <button onClick={() => onNavigate('enroll')} className="btn-primary px-4 py-2">Enroll</button>
                 </div>
                 

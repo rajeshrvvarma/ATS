@@ -1,6 +1,8 @@
 import React, { Suspense, useMemo } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext.jsx';
+import { ToastProvider } from '@/context/ToastContext.jsx';
+import ToastContainer from '@/components/ToastContainer.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 
 // Layout
@@ -89,6 +91,7 @@ export default function App() {
 
     return (
         <AuthProvider>
+        <ToastProvider>
         <div className="bg-slate-900 antialiased">
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>
@@ -119,7 +122,9 @@ export default function App() {
                     </Suspense>
             </main>
                 <Footer onNavigate={go} />
+                <ToastContainer />
         </div>
+        </ToastProvider>
         </AuthProvider>
     );
 }
