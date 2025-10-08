@@ -3,122 +3,547 @@ import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCirc
 import SectionTitle from '@/components/SectionTitle.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
-import SpecializedTrainingModal from '@/components/SpecializedTrainingModal.jsx'; // Import the new modal
+import SpecializedTrainingModal from '@/components/SpecializedTrainingModal.jsx';
+import SyllabusRequestModal from '@/components/SyllabusRequestModal.jsx';
+import EnrollmentEnquiryModal from '@/components/EnrollmentEnquiryModal.jsx';
 import { callGeminiAPI } from '@/api/gemini.js';
 
 // --- Sub-components specific to HomePage ---
 
-const Hero = () => {
+// Company Introduction Section (1st Section)
+const CompanyIntro = () => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+    
     return (
-    <>
-        <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-        <section id="home" className="py-24 md:py-32 text-center bg-slate-900">
-            <div className="container mx-auto px-6">
-                <div className="flex justify-center items-center gap-4">
-                    <Shield className="w-16 h-16 md:w-20 md:h-20 text-blue-400 mb-6 animate-pulse" />
-                    <Code className="w-16 h-16 md:w-20 md:h-20 text-red-400 mb-6 animate-pulse" />
+        <>
+            <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+            <section id="home" className="py-24 md:py-32 text-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+                <div className="container mx-auto px-6">
+                    {/* Company Logo */}
+                    <div className="flex justify-center items-center mb-8">
+                        <img src="/logo.png" alt="Agnidhra Technologies" className="w-24 h-24 md:w-32 md:h-32 rounded-full shadow-2xl" />
+                    </div>
+                    
+                    {/* Company Name */}
+                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-red-400 bg-clip-text text-transparent">
+                        Agnidhra Technologies
+                    </h1>
+                    
+                    {/* Company Description */}
+                    <div className="max-w-4xl mx-auto mb-8">
+                        <p className="text-xl md:text-2xl text-slate-300 mb-6 font-light leading-relaxed">
+                            Premier Cybersecurity Training Institute
+                        </p>
+                        <p className="text-lg md:text-xl text-slate-400 leading-relaxed">
+                            At Agnidhra Technologies, we specialize in transforming aspiring cybersecurity professionals into industry-ready experts. Our comprehensive training programs bridge the gap between theoretical knowledge and real-world application, ensuring our students are equipped with the practical skills demanded by today's cybersecurity landscape.
+                        </p>
+                        
+                        <div className="grid md:grid-cols-3 gap-6 mt-12 text-center">
+                            <div className="p-6 bg-slate-800/50 rounded-xl backdrop-blur-sm border border-slate-700">
+                                <Users className="w-12 h-12 text-blue-400 mx-auto mb-4" />
+                                <h3 className="text-lg font-semibold text-white mb-2">Expert-Led Training</h3>
+                                <p className="text-slate-400">Industry professionals with years of hands-on experience</p>
+                            </div>
+                            <div className="p-6 bg-slate-800/50 rounded-xl backdrop-blur-sm border border-slate-700">
+                                <Target className="w-12 h-12 text-purple-400 mx-auto mb-4" />
+                                <h3 className="text-lg font-semibold text-white mb-2">Job-Ready Skills</h3>
+                                <p className="text-slate-400">Practical, hands-on training that employers value</p>
+                            </div>
+                            <div className="p-6 bg-slate-800/50 rounded-xl backdrop-blur-sm border border-slate-700">
+                                <Award className="w-12 h-12 text-red-400 mx-auto mb-4" />
+                                <h3 className="text-lg font-semibold text-white mb-2">Industry Recognition</h3>
+                                <p className="text-slate-400">Certified programs aligned with industry standards</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Call to Action */}
+                    <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <button
+                            onClick={() => document.getElementById('cybersecurity-mastery')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="btn-primary px-8 py-3 shadow-lg transform hover:scale-105"
+                        >
+                            Explore Our Expertise
+                        </button>
+                        <button
+                            onClick={() => setIsAdvisorOpen(true)}
+                            className="bg-slate-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-slate-600 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                        >
+                            <Sparkles className="w-5 h-5" />
+                            Get AI Career Advice
+                        </button>
+                    </div>
                 </div>
-                <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-                    Master Offensive & Defensive Cyber Security
-                </h1>
-                <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto">
-                    Master in-demand skills with our expert-led, hands-on training programs designed to make you a job-ready SOC Analyst or Ethical Hacker.
-                </p>
-                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                     <button
-                        onClick={() => document.getElementById('offerings')?.scrollIntoView({ behavior: 'smooth' })}
-                        className="btn-primary px-8 py-3 shadow-lg transform hover:scale-105"
-                    >
-                        Explore Programs
-                    </button>
-                    <button
-                        onClick={() => setIsAdvisorOpen(true)}
-                        className="bg-slate-700 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-slate-600 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
-                    >
-                        <Sparkles className="w-5 h-5" />
-                        Get AI Career Advice
-                    </button>
-                </div>
-            </div>
-        </section>
-    </>
+            </section>
+        </>
     );
 };
 
-const About = () => (
-    <section id="about" className="py-20 bg-slate-800">
-        <div className="container mx-auto px-6">
-            <SectionTitle>About Agnidhra Technologies</SectionTitle>
-            <div className="max-w-4xl mx-auto text-center">
-                 <p className="text-lg text-slate-300">
-                    In today's rapidly evolving tech landscape, theoretical knowledge is not enough. Agnidhra Technologies was founded on the principle of bridging the critical gap between academic learning and real-world industry demands. Our mission is to empower aspiring tech professionals with practical, hands-on skills that make them not just knowledgeable, but job-ready from day one.
+// Master Cybersecurity Section (2nd Section)
+const CybersecurityMastery = () => (
+    <section id="cybersecurity-mastery" className="py-20 bg-slate-800 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-red-600/20"></div>
+        </div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+            <div className="text-center mb-16">
+                <div className="flex justify-center items-center gap-6 mb-8">
+                    <Shield className="w-16 h-16 md:w-20 md:h-20 text-blue-400 animate-pulse" />
+                    <Code className="w-16 h-16 md:w-20 md:h-20 text-red-400 animate-pulse" />
+                </div>
+                
+                <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                    Master Offensive & Defensive Cyber Security
+                </h2>
+                
+                <p className="text-lg md:text-xl text-slate-300 max-w-4xl mx-auto leading-relaxed">
+                    Comprehensive training programs designed to transform you into a skilled cybersecurity professional. 
+                    Whether you're defending against threats or learning ethical hacking techniques, our expert-led courses 
+                    provide the hands-on experience you need to excel in the cybersecurity industry.
                 </p>
+            </div>
+            
+            {/* Dual Path Overview */}
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                <div className="bg-gradient-to-br from-blue-900/50 to-blue-800/30 p-8 rounded-xl border border-blue-500/30 backdrop-blur-sm">
+                    <div className="flex items-center gap-4 mb-6">
+                        <Shield className="w-12 h-12 text-blue-400" />
+                        <h3 className="text-2xl font-bold text-white">Defensive Security</h3>
+                    </div>
+                    <p className="text-blue-100 mb-6">
+                        Become a SOC Analyst and learn to protect organizations from cyber threats. Master incident response, 
+                        threat hunting, and security monitoring techniques used by industry professionals.
+                    </p>
+                    <ul className="space-y-3 text-blue-200">
+                        <li className="flex items-center gap-3">
+                            <Target className="w-5 h-5 text-blue-400" />
+                            <span>SIEM Tools & Log Analysis</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <Target className="w-5 h-5 text-blue-400" />
+                            <span>Incident Response & Forensics</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <Target className="w-5 h-5 text-blue-400" />
+                            <span>Threat Intelligence & Hunting</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div className="bg-gradient-to-br from-red-900/50 to-red-800/30 p-8 rounded-xl border border-red-500/30 backdrop-blur-sm">
+                    <div className="flex items-center gap-4 mb-6">
+                        <Code className="w-12 h-12 text-red-400" />
+                        <h3 className="text-2xl font-bold text-white">Offensive Security</h3>
+                    </div>
+                    <p className="text-red-100 mb-6">
+                        Master ethical hacking and penetration testing to identify vulnerabilities before malicious actors do. 
+                        Learn the attacker's mindset and advanced exploitation techniques.
+                    </p>
+                    <ul className="space-y-3 text-red-200">
+                        <li className="flex items-center gap-3">
+                            <Target className="w-5 h-5 text-red-400" />
+                            <span>Penetration Testing & VAPT</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <Target className="w-5 h-5 text-red-400" />
+                            <span>Web & Network Exploitation</span>
+                        </li>
+                        <li className="flex items-center gap-3">
+                            <Target className="w-5 h-5 text-red-400" />
+                            <span>Advanced Attack Techniques</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 );
 
-const CourseOfferings = ({ setVisibleSyllabus, onNavigate }) => {
-    const freeWorkshop = { icon: Users, title: "Free Introductory Workshop", description: "A live, 1-hour session covering the landscape of Cyber Security.", cta: "Register for Free", page: "workshop" };
-    const defensivePath = { title: "Defensive Security Path (SOC Analyst)", icon: Shield, courses: [{ title: "7-Day Bootcamp", description: "An intensive week of learning core defensive skills.", features: ["OS Hardening Labs", "Intro to SIEM", "Vulnerability Scanning"], cta: "Enroll in Bootcamp", page: "defensiveBootcamp" }, { title: "2-Month Intensive Program", description: "The complete SOC Analyst training, from fundamentals to advanced incident response.", features: ["Entire 8-week syllabus", "Capstone Project", "Interview Preparation"], cta: "Learn More", syllabus: "soc" }] };
-    const offensivePath = { title: "Offensive Security Path (Ethical Hacking)", icon: Code, courses: [{ title: "7-Day Bootcamp", description: "A fast-paced introduction to the attacker's mindset.", features: ["Kali Linux Setup", "Scanning with Nmap", "Basic Exploitation"], cta: "Enroll in Bootcamp", page: "offensiveBootcamp" }, { title: "2-Month Intensive Program", description: "Become a job-ready Ethical Hacker by mastering offensive techniques.", features: ["Advanced Exploitation", "Web & Network Hacking", "Reporting & Remediation"], cta: "Learn More", syllabus: "ethicalHacking" }]};
-    const handleSyllabusClick = (syllabus) => { setVisibleSyllabus(syllabus); setTimeout(() => { document.getElementById('syllabus')?.scrollIntoView({ behavior: 'smooth' }); }, 100); };
-    const [activeTab, setActiveTab] = useState('defensive');
-    return (
-        <section id="offerings" className="py-20 bg-slate-900">
-            <div className="container mx-auto px-6">
-                <SectionTitle>Programs</SectionTitle>
-                <div className="max-w-4xl mx-auto text-center mb-10">
-                    <div className="inline-flex bg-slate-800 border border-slate-700 rounded-lg p-1">
-                        <button onClick={() => setActiveTab('defensive')} className={`px-4 py-2 rounded-md text-sm font-semibold ${activeTab==='defensive' ? 'bg-blue-600 text-white' : 'text-slate-300 hover:text-white'}`}>Defensive (SOC)</button>
-                        <button onClick={() => setActiveTab('offensive')} className={`px-4 py-2 rounded-md text-sm font-semibold ${activeTab==='offensive' ? 'bg-red-600 text-white' : 'text-slate-300 hover:text-white'}`}>Offensive (Ethical Hacking)</button>
+// Our Expertise Section (4th Section)
+const About = () => (
+    <section id="about" className="py-20 bg-slate-800" name="expertise">
+        <div className="container mx-auto px-6">
+            <SectionTitle>Our Expertise</SectionTitle>
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-12">
+                    <p className="text-lg text-slate-300 leading-relaxed">
+                        With years of industry experience and a passion for cybersecurity education, 
+                        Agnidhra Technologies stands at the forefront of practical cybersecurity training.
+                    </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div className="text-center group">
+                        <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-400 rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <Shield className="w-8 h-8 text-white" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2">Defensive Security</h3>
+                        <p className="text-slate-400 text-sm">SOC operations, incident response, threat hunting, and security monitoring expertise.</p>
+                    </div>
+
+                    <div className="text-center group">
+                        <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-400 rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <Code className="w-8 h-8 text-white" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2">Offensive Security</h3>
+                        <p className="text-slate-400 text-sm">Penetration testing, ethical hacking, vulnerability assessment, and red team operations.</p>
+                    </div>
+
+                    <div className="text-center group">
+                        <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-purple-400 rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <Server className="w-8 h-8 text-white" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2">Cloud Security</h3>
+                        <p className="text-slate-400 text-sm">AWS, Azure, GCP security implementations and cloud-native security solutions.</p>
+                    </div>
+
+                    <div className="text-center group">
+                        <div className="w-16 h-16 bg-gradient-to-br from-green-600 to-green-400 rounded-xl mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                            <BrainCircuit className="w-8 h-8 text-white" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2">Industry Training</h3>
+                        <p className="text-slate-400 text-sm">Corporate training, compliance programs, and customized cybersecurity workshops.</p>
                     </div>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                    {(activeTab==='defensive' ? defensivePath.courses : offensivePath.courses).map((course, index) => (
-                        <div key={index} className={`card card-hover p-6 flex flex-col ${activeTab==='defensive' ? 'hover:border-blue-500' : 'hover:border-red-500'}`}>
-                            <h4 className="text-xl font-bold text-white mb-1">{course.title}</h4>
-                            <p className="text-slate-400 mb-4">{course.description}</p>
-                            <ul className="space-y-2 mb-6 text-slate-300">{course.features.map((feature, i) => <li key={i} className="flex items-center"><Target size={16} className={`${activeTab==='defensive' ? 'text-blue-400' : 'text-red-400'} mr-3 flex-shrink-0`} /><span>{feature}</span></li>)}</ul>
-                            <div className="mt-auto flex items-center gap-3">
-                                <button onClick={() => course.syllabus ? handleSyllabusClick(course.syllabus) : onNavigate(course.page)} className={`${activeTab==='defensive' ? 'btn-primary' : 'btn-danger'} px-5 py-2`}>{course.cta}</button>
-                                {course.syllabus && (<button onClick={() => handleSyllabusClick(course.syllabus)} className="btn-secondary px-4 py-2">View syllabus</button>)}
-                            </div>
-                            </div>
-                        ))}
-                </div>
-
-                <div className="max-w-5xl mx-auto mt-12 text-slate-300">
-                    <div className="overflow-x-auto rounded-lg border border-slate-700">
-                        <table className="min-w-full text-sm">
-                            <thead className="bg-slate-800 text-slate-200">
-                                <tr>
-                                    <th className="px-4 py-3 text-left">Feature</th>
-                                    <th className="px-4 py-3 text-left">7‑Day Bootcamp</th>
-                                    <th className="px-4 py-3 text-left">2‑Month Program</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className="border-t border-slate-700"><td className="px-4 py-3">Duration</td><td className="px-4 py-3">7 days</td><td className="px-4 py-3">8 weeks</td></tr>
-                                <tr className="border-t border-slate-700"><td className="px-4 py-3">Projects</td><td className="px-4 py-3">Mini labs</td><td className="px-4 py-3">Capstone + labs</td></tr>
-                                <tr className="border-t border-slate-700"><td className="px-4 py-3">Career Prep</td><td className="px-4 py-3">Basics</td><td className="px-4 py-3">Mock interviews</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                            </div>
-
-                <div className="max-w-xl mx-auto mt-12">
-                    <div className="card card-hover p-8 flex flex-col text-center items-center">
-                        <freeWorkshop.icon size={32} className="mb-4 text-blue-400" />
-                        <h3 className="text-2xl font-bold text-white mb-3">{freeWorkshop.title}</h3>
-                        <p className="text-slate-400 mb-6">{freeWorkshop.description}</p>
-                        <button onClick={() => onNavigate(freeWorkshop.page)} className="btn-primary w-full max-w-xs mt-auto py-3">{freeWorkshop.cta}</button>
+                <div className="mt-16 bg-gradient-to-r from-slate-900/50 to-slate-800/50 rounded-2xl p-8 border border-slate-700">
+                    <div className="grid md:grid-cols-3 gap-8 text-center">
+                        <div>
+                            <div className="text-3xl font-bold text-blue-400 mb-2">500+</div>
+                            <p className="text-slate-300">Students Trained</p>
+                        </div>
+                        <div>
+                            <div className="text-3xl font-bold text-green-400 mb-2">85%</div>
+                            <p className="text-slate-300">Job Placement Rate</p>
+                        </div>
+                        <div>
+                            <div className="text-3xl font-bold text-purple-400 mb-2">50+</div>
+                            <p className="text-slate-300">Industry Partners</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
+);
+
+// Revamped Programs Section (3rd Section)
+const ProgramsOffering = ({ onNavigate }) => {
+    const [activeProgram, setActiveProgram] = useState('all');
+    const [syllabusModal, setSyllabusModal] = useState({ isOpen: false, course: '', type: '' });
+    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, course: '', type: '', formType: 'enquiry' });
+
+    // New program structure
+    const programs = {
+        foundation: {
+            title: "Foundation Programs",
+            subtitle: "Start your cybersecurity journey",
+            courses: [
+                {
+                    title: "Free Cybersecurity Workshop",
+                    duration: "2 Hours",
+                    type: "Online Live Session",
+                    description: "Introduction to cybersecurity landscape, career paths, and industry opportunities.",
+                    features: ["Career Guidance", "Industry Overview", "Live Q&A Session", "Free Certificate"],
+                    level: "Beginner",
+                    price: "Free",
+                    cta: "Register Now",
+                    action: () => onNavigate('workshop'),
+                    color: "green"
+                }
+            ]
+        },
+        defensive: {
+            title: "Defensive Security Programs",
+            subtitle: "Become a SOC Analyst & Incident Response Expert",
+            courses: [
+                {
+                    title: "SOC Analyst Bootcamp",
+                    duration: "7 Days",
+                    type: "Intensive Training",
+                    description: "Fast-track program covering essential SOC analyst skills and tools.",
+                    features: ["SIEM Tools", "Log Analysis", "Incident Response", "Threat Detection"],
+                    level: "Beginner to Intermediate",
+                    price: "₹15,000",
+                    cta: "Enroll Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'SOC Analyst Bootcamp', type: 'defensive', formType: 'enrollment' }),
+                    color: "blue"
+                },
+                {
+                    title: "Complete SOC Analyst Program",
+                    duration: "2 Months",
+                    type: "Comprehensive Training",
+                    description: "In-depth training to become job-ready SOC analyst with hands-on projects.",
+                    features: ["Advanced SIEM", "Digital Forensics", "Malware Analysis", "Capstone Project", "Job Assistance"],
+                    level: "Intermediate to Advanced",
+                    price: "₹45,000",
+                    cta: "Get Syllabus",
+                    action: () => setSyllabusModal({ isOpen: true, course: 'Complete SOC Analyst Program', type: 'defensive' }),
+                    color: "blue"
+                }
+            ]
+        },
+        offensive: {
+            title: "Offensive Security Programs",
+            subtitle: "Master Ethical Hacking & Penetration Testing",
+            courses: [
+                {
+                    title: "Ethical Hacking Bootcamp",
+                    duration: "7 Days",
+                    type: "Intensive Training",
+                    description: "Learn the fundamentals of ethical hacking and penetration testing.",
+                    features: ["Kali Linux", "Network Scanning", "Web App Testing", "Exploitation Basics"],
+                    level: "Beginner to Intermediate",
+                    price: "₹18,000",
+                    cta: "Enroll Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Ethical Hacking Bootcamp', type: 'offensive', formType: 'enrollment' }),
+                    color: "red"
+                },
+                {
+                    title: "Advanced Penetration Testing",
+                    duration: "2 Months",
+                    type: "Professional Training",
+                    description: "Comprehensive penetration testing program with real-world scenarios.",
+                    features: ["Advanced Exploitation", "Red Team Tactics", "Report Writing", "Live Projects", "Certification Prep"],
+                    level: "Advanced",
+                    price: "₹55,000",
+                    cta: "Get Syllabus", 
+                    action: () => setSyllabusModal({ isOpen: true, course: 'Advanced Penetration Testing', type: 'offensive' }),
+                    color: "red"
+                }
+            ]
+        },
+        specialized: {
+            title: "Specialized Training Programs",
+            subtitle: "Advanced & Custom Training Solutions",
+            courses: [
+                {
+                    title: "Cloud Security Specialist",
+                    duration: "6 Weeks",
+                    type: "Specialized Training",
+                    description: "Master cloud security across AWS, Azure, and GCP platforms.",
+                    features: ["Multi-Cloud Security", "IAM & Compliance", "Container Security", "DevSecOps"],
+                    level: "Intermediate",
+                    price: "₹35,000",
+                    cta: "Get Details",
+                    action: () => setSyllabusModal({ isOpen: true, course: 'Cloud Security Specialist', type: 'specialized' }),
+                    color: "purple"
+                },
+                {
+                    title: "Corporate Training",
+                    duration: "Customizable",
+                    type: "Enterprise Solution",
+                    description: "Tailored cybersecurity training programs for organizations and teams.",
+                    features: ["Custom Curriculum", "On-site Training", "Team Assessments", "Ongoing Support"],
+                    level: "All Levels",
+                    price: "Contact Us",
+                    cta: "Enquire Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Corporate Training', type: 'corporate', formType: 'enquiry' }),
+                    color: "indigo"
+                }
+            ]
+        }
+    };
+
+    const getColorClasses = (color) => {
+        const colors = {
+            green: "border-green-500/30 hover:border-green-500 bg-gradient-to-br from-green-900/20 to-green-800/10",
+            blue: "border-blue-500/30 hover:border-blue-500 bg-gradient-to-br from-blue-900/20 to-blue-800/10",
+            red: "border-red-500/30 hover:border-red-500 bg-gradient-to-br from-red-900/20 to-red-800/10",
+            purple: "border-purple-500/30 hover:border-purple-500 bg-gradient-to-br from-purple-900/20 to-purple-800/10",
+            indigo: "border-indigo-500/30 hover:border-indigo-500 bg-gradient-to-br from-indigo-900/20 to-indigo-800/10"
+        };
+        return colors[color] || colors.blue;
+    };
+
+    const getButtonClasses = (color) => {
+        const colors = {
+            green: "bg-green-600 hover:bg-green-700 text-white",
+            blue: "bg-blue-600 hover:bg-blue-700 text-white",
+            red: "bg-red-600 hover:bg-red-700 text-white",
+            purple: "bg-purple-600 hover:bg-purple-700 text-white",
+            indigo: "bg-indigo-600 hover:bg-indigo-700 text-white"
+        };
+        return colors[color] || colors.blue;
+    };
+
+    const filteredPrograms = activeProgram === 'all' 
+        ? Object.values(programs).flatMap(category => category.courses.map(course => ({ ...course, category: category.title })))
+        : programs[activeProgram]?.courses || [];
+
+    return (
+        <>
+            <section id="programs" className="py-20 bg-slate-900">
+                <div className="container mx-auto px-6">
+                    <SectionTitle>Our Training Programs</SectionTitle>
+                    
+                    {/* Program Categories Filter */}
+                    <div className="max-w-4xl mx-auto text-center mb-12">
+                        <div className="inline-flex flex-wrap gap-2 bg-slate-800 border border-slate-700 rounded-xl p-2">
+                            <button 
+                                onClick={() => setActiveProgram('all')}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                    activeProgram === 'all' 
+                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white' 
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                                }`}
+                            >
+                                All Programs
+                            </button>
+                            <button 
+                                onClick={() => setActiveProgram('foundation')}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                    activeProgram === 'foundation' 
+                                        ? 'bg-green-600 text-white' 
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                                }`}
+                            >
+                                Foundation
+                            </button>
+                            <button 
+                                onClick={() => setActiveProgram('defensive')}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                    activeProgram === 'defensive' 
+                                        ? 'bg-blue-600 text-white' 
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                                }`}
+                            >
+                                Defensive Security
+                            </button>
+                            <button 
+                                onClick={() => setActiveProgram('offensive')}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                    activeProgram === 'offensive' 
+                                        ? 'bg-red-600 text-white' 
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                                }`}
+                            >
+                                Offensive Security
+                            </button>
+                            <button 
+                                onClick={() => setActiveProgram('specialized')}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                    activeProgram === 'specialized' 
+                                        ? 'bg-purple-600 text-white' 
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                                }`}
+                            >
+                                Specialized
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Programs Grid */}
+                    {activeProgram === 'all' ? (
+                        // Show all programs by category
+                        Object.entries(programs).map(([key, category]) => (
+                            <div key={key} className="mb-16">
+                                <div className="text-center mb-8">
+                                    <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{category.title}</h3>
+                                    <p className="text-slate-400">{category.subtitle}</p>
+                                </div>
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                                    {category.courses.map((course, index) => (
+                                        <div key={index} className={`card p-6 border-2 transition-all duration-300 ${getColorClasses(course.color)}`}>
+                                            <div className="flex justify-between items-start mb-4">
+                                                <div>
+                                                    <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">{course.type}</span>
+                                                    <h4 className="text-xl font-bold text-white mt-1">{course.title}</h4>
+                                                </div>
+                                                <span className="text-lg font-bold text-blue-400">{course.duration}</span>
+                                            </div>
+                                            
+                                            <p className="text-slate-300 text-sm mb-4">{course.description}</p>
+                                            
+                                            <div className="flex items-center justify-between mb-4">
+                                                <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">{course.level}</span>
+                                                <span className="text-lg font-bold text-white">{course.price}</span>
+                                            </div>
+                                            
+                                            <ul className="space-y-2 mb-6 text-sm text-slate-300">
+                                                {course.features.slice(0, 4).map((feature, i) => (
+                                                    <li key={i} className="flex items-center">
+                                                        <Target size={14} className={`text-${course.color}-400 mr-2 flex-shrink-0`} />
+                                                        <span>{feature}</span>
+                                                    </li>
+                                                ))}
+                                                {course.features.length > 4 && (
+                                                    <li className="text-slate-400 text-xs">+{course.features.length - 4} more...</li>
+                                                )}
+                                            </ul>
+                                            
+                                            <button 
+                                                onClick={course.action}
+                                                className={`w-full px-4 py-3 rounded-lg font-semibold transition-all duration-200 ${getButtonClasses(course.color)}`}
+                                            >
+                                                {course.cta}
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        // Show filtered programs
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                            {filteredPrograms.map((course, index) => (
+                                <div key={index} className={`card p-6 border-2 transition-all duration-300 ${getColorClasses(course.color)}`}>
+                                    <div className="flex justify-between items-start mb-4">
+                                        <div>
+                                            <span className="text-xs font-medium text-slate-400 uppercase tracking-wide">{course.type}</span>
+                                            <h4 className="text-xl font-bold text-white mt-1">{course.title}</h4>
+                                        </div>
+                                        <span className="text-lg font-bold text-blue-400">{course.duration}</span>
+                                    </div>
+                                    
+                                    <p className="text-slate-300 text-sm mb-4">{course.description}</p>
+                                    
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">{course.level}</span>
+                                        <span className="text-lg font-bold text-white">{course.price}</span>
+                                    </div>
+                                    
+                                    <ul className="space-y-2 mb-6 text-sm text-slate-300">
+                                        {course.features.map((feature, i) => (
+                                            <li key={i} className="flex items-center">
+                                                <Target size={14} className={`text-${course.color}-400 mr-2 flex-shrink-0`} />
+                                                <span>{feature}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    
+                                    <button 
+                                        onClick={course.action}
+                                        className={`w-full px-4 py-3 rounded-lg font-semibold transition-all duration-200 ${getButtonClasses(course.color)}`}
+                                    >
+                                        {course.cta}
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* Syllabus Request Modal */}
+            <SyllabusRequestModal 
+                isOpen={syllabusModal.isOpen}
+                onClose={() => setSyllabusModal({ isOpen: false, course: '', type: '' })}
+                courseTitle={syllabusModal.course}
+                courseType={syllabusModal.type}
+            />
+
+            {/* Enrollment & Enquiry Modal */}
+            <EnrollmentEnquiryModal 
+                isOpen={enrollmentModal.isOpen}
+                onClose={() => setEnrollmentModal({ isOpen: false, course: '', type: '', formType: 'enquiry' })}
+                initialType={enrollmentModal.formType}
+                courseTitle={enrollmentModal.course}
+                courseType={enrollmentModal.type}
+            />
+        </>
     );
 };
 
@@ -306,9 +731,10 @@ export default function HomePage({ onNavigate }) {
 
     return (
         <>
-            <Hero />
+            <CompanyIntro />
+            <CybersecurityMastery />
+            <ProgramsOffering onNavigate={onNavigate} />
             <About />
-            <CourseOfferings setVisibleSyllabus={setVisibleSyllabus} onNavigate={onNavigate} />
             <SpecializedTrainings onTrainingSelect={setSelectedTraining} />
             <WhyUs />
             <Admissions />            
