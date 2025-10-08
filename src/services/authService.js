@@ -48,11 +48,12 @@ export const login = async (email, password) => {
     // Mock authentication - in real app, this would call your API
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Mock user validation
+    // Mock user validation (FOR DEVELOPMENT ONLY - REPLACE WITH REAL AUTH IN PRODUCTION)
+    // WARNING: These are demo credentials. In production, implement proper authentication
     const mockUsers = [
-      { id: 1, email: 'admin@agnidhra.com', password: 'admin123', role: ROLES.ADMIN, name: 'Admin User', twoFactorEnabled: false },
-      { id: 2, email: 'instructor@agnidhra.com', password: 'instructor123', role: ROLES.INSTRUCTOR, name: 'Instructor User', twoFactorEnabled: false },
-      { id: 3, email: 'student@agnidhra.com', password: 'student123', role: ROLES.STUDENT, name: 'Student User', twoFactorEnabled: false }
+      { id: 1, email: 'admin@agnidhra.com', password: 'SecureAdmin@2024!', role: ROLES.ADMIN, name: 'Admin User', twoFactorEnabled: false },
+      { id: 2, email: 'instructor@agnidhra.com', password: 'InstructorPass@2024!', role: ROLES.INSTRUCTOR, name: 'Instructor User', twoFactorEnabled: false },
+      { id: 3, email: 'student@agnidhra.com', password: 'StudentDemo@2024!', role: ROLES.STUDENT, name: 'Student User', twoFactorEnabled: false }
     ];
     
     const user = mockUsers.find(u => u.email === email && u.password === password);

@@ -4,8 +4,8 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
     // It reads the secret API key from the Netlify environment variables.
     const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
     if (!apiKey) {
-        console.error("VITE_GEMINI_API_KEY is not configured in Netlify.");
-        return "The AI service is not configured correctly. The API key is missing.";
+        // Don't log sensitive configuration details in production
+        return "The AI service is not configured correctly. Please contact support.";
     }
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
@@ -37,10 +37,16 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
                     return "The AI generated an empty response. Please try rephrasing your question.";
                 }
             } else {
-                 console.error("API Error:", response.status, await response.text());
+                 // Log error for debugging but don't expose sensitive details
+                 if (import.meta.env.DEV) {
+                     console.error("API Error:", response.status, await response.text());
+                 }
             }
         } catch (error) {
-            console.error("Fetch call failed:", error);
+            // Only log in development mode to prevent information leakage
+            if (import.meta.env.DEV) {
+                console.error("Fetch call failed:", error);
+            }
         }
 
         retries--;
