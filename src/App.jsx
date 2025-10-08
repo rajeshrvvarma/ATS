@@ -2,6 +2,7 @@ import React, { Suspense, useMemo } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider } from '@/context/AuthContext.jsx';
+import { CourseAccessProvider } from '@/context/CourseAccessContext.jsx';
 import { ToastProvider } from '@/context/ToastContext.jsx';
 import ToastContainer from '@/components/ToastContainer.jsx';
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
@@ -111,6 +112,7 @@ export default function App() {
 
     return (
         <AuthProvider>
+        <CourseAccessProvider>
         <ThemeProvider>
         <SettingsProvider>
         <ToastProvider>
@@ -160,6 +162,7 @@ export default function App() {
         </ToastProvider>
         </SettingsProvider>
         </ThemeProvider>
+        </CourseAccessProvider>
         </AuthProvider>
     );
 }

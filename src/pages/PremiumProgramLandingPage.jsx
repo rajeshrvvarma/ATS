@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
-import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const PremiumProgramLandingPage = () => {
@@ -564,13 +564,17 @@ const PremiumProgramLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* Enrollment Modal */}
-      <EnrollmentModal
+      {/* Enhanced Enrollment Modal */}
+      <EnhancedEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="premium"
-        courseTitle="2-Month Cybersecurity Mastery Program"
-        price="₹5,999"
+        courseType="2-month-premium"
+        courseName="2-Month Cybersecurity Mastery Program"
+        coursePrice={5999}
+        onEnrollmentSuccess={(result) => {
+          console.log('Premium enrollment successful:', result);
+          // You can add success tracking or analytics here
+        }}
       />
     </div>
   );

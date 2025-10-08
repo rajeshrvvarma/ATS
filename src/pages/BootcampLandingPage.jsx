@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
-import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const BootcampLandingPage = () => {
@@ -422,13 +422,17 @@ const BootcampLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* Enrollment Modal */}
-      <EnrollmentModal
+      {/* Enhanced Enrollment Modal */}
+      <EnhancedEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="bootcamp"
-        courseTitle="7-Day Intensive Cybersecurity Bootcamp"
-        price={pricing.price}
+        courseType="7-day-bootcamp"
+        courseName="7-Day Intensive Cybersecurity Bootcamp"
+        coursePrice={pricing.price}
+        onEnrollmentSuccess={(result) => {
+          console.log('Enrollment successful:', result);
+          // You can add success tracking or analytics here
+        }}
       />
     </div>
   );
