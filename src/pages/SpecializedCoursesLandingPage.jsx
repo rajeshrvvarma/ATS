@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const SpecializedCoursesLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -272,7 +273,7 @@ const SpecializedCoursesLandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <AnimatedBackground variant="specialized" className="min-h-screen text-white">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-gray-900 py-20">
         <div className="container mx-auto px-6">
@@ -533,7 +534,7 @@ const SpecializedCoursesLandingPage = () => {
         courseTitle={enrollmentModal.course}
         price={enrollmentModal.price}
       />
-    </div>
+    </AnimatedBackground>
   );
 };
 

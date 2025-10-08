@@ -359,7 +359,7 @@ const PremiumProgramLandingPage = () => {
       </AnimatedBackground>
 
       {/* What's Included */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="premium" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Premium Package Includes</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
@@ -377,10 +377,10 @@ const PremiumProgramLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Payment Plans */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="premium" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Payment Plan</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -442,10 +442,10 @@ const PremiumProgramLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Enrollment Form */}
-      <section id="enrollment-form" className="py-16 bg-gray-800">
+      <AnimatedBackground variant="premium" className="py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-8 border border-gray-600">
             <h2 className="text-3xl font-bold text-center mb-8">Reserve Your Premium Seat</h2>
@@ -546,10 +546,10 @@ const PremiumProgramLandingPage = () => {
             </form>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Footer CTA */}
-      <section className="py-12 bg-gradient-to-r from-purple-900 to-blue-900">
+      <AnimatedBackground variant="premium" className="py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Limited to 20 Premium Students Only</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -562,7 +562,7 @@ const PremiumProgramLandingPage = () => {
             Reserve Premium Seat - ₹5,999
           </button>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Enrollment Modal */}
       <EnrollmentModal
