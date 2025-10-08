@@ -17,13 +17,8 @@ const CompanyIntro = () => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <section id="home" className="py-24 md:py-32 text-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+            <section id="home" className="py-16 md:py-20 text-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
                 <div className="container mx-auto px-6">
-                    {/* Company Logo */}
-                    <div className="flex justify-center items-center mb-8">
-                        <img src="/logo.png" alt="Agnidhra Technologies" className="w-24 h-24 md:w-32 md:h-32 rounded-full shadow-2xl" />
-                    </div>
-                    
                     {/* Company Name */}
                     <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-red-400 bg-clip-text text-transparent">
                         Agnidhra Technologies
