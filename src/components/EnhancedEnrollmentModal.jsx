@@ -88,19 +88,37 @@ const EnhancedEnrollmentModal = ({
     setError('');
 
     try {
-      // Import Razorpay dynamically
-      const { processPayment } = await import('@/services/razorpay.js');
+      // Import Razorpay services
+      const { createOrder, processPayment } = await import('@/services/razorpay.js');
       
-      const paymentData = {
-        amount: course.price * 100, // Razorpay expects amount in paise
+      // First create an order
+      const orderData = {
+        amount: course.price,
         currency: 'INR',
-        receipt: `receipt_${Date.now()}`,
+        receipt: `receipt_${courseType}_${Date.now()}`,
         notes: {
           courseType,
           studentName: formData.name,
           studentEmail: formData.email,
           studentPhone: formData.phone
         }
+      };
+
+      const order = await createOrder(orderData);
+      
+      if (!order.id) {
+        throw new Error('Failed to create payment order');
+      }
+
+      // Then process payment with the order
+      const paymentData = {
+        amount: course.price * 100, // Razorpay expects amount in paise
+        currency: 'INR',
+        orderId: order.id,
+        description: `${course.name} - Enrollment`,
+        customerName: formData.name,
+        customerEmail: formData.email,
+        customerPhone: formData.phone
       };
 
       const result = await processPayment(paymentData);
@@ -113,7 +131,34 @@ const EnhancedEnrollmentModal = ({
       }
     } catch (error) {
       console.error('Payment error:', error);
-      setError(error.message || 'Payment failed. Please try again.');
+      
+      // If order creation fails, try direct payment (test mode)
+      if (error.message.includes('Order creation failed') || error.message.includes('Server payment keys')) {
+        try {
+          console.log('Falling back to direct payment mode...');
+          
+          const { processPayment } = await import('@/services/razorpay.js');
+          const directPaymentData = {
+            amount: course.price * 100,
+            currency: 'INR',
+            description: `${course.name} - Enrollment`,
+            customerName: formData.name,
+            customerEmail: formData.email,
+            customerPhone: formData.phone
+          };
+
+          const result = await processPayment(directPaymentData);
+          
+          if (result.success) {
+            await handleEnrollmentAfterPayment(`test_${result.paymentId || Date.now()}`);
+            return;
+          }
+        } catch (fallbackError) {
+          console.error('Fallback payment also failed:', fallbackError);
+        }
+      }
+      
+      setError(error.message || 'Payment failed. Please use UPI or Bank Transfer option below.');
     } finally {
       setLoading(false);
     }

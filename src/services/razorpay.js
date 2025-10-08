@@ -4,7 +4,7 @@
  */
 
 // Razorpay configuration
-const RAZORPAY_KEY_ID = import.meta.env.VITE_RAZORPAY_KEY_ID || 'your_razorpay_key_id';
+const RAZORPAY_KEY_ID = import.meta.env.REACT_APP_RAZORPAY_KEY_ID || import.meta.env.VITE_RAZORPAY_KEY_ID || 'your_razorpay_key_id';
 
 /**
  * Load Razorpay script dynamically
@@ -80,20 +80,7 @@ export const processPayment = async (paymentData) => {
                 email: paymentData.customerEmail,
                 contact: paymentData.customerPhone
             },
-            config: {
-                display: {
-                    blocks: {
-                        upi: {
-                            name: 'UPI',
-                            instruments: [{ method: 'upi' }]
-                        }
-                    },
-                    sequence: ['upi'],
-                    preferences: {
-                        show_default_blocks: false
-                    }
-                }
-            },
+
             theme: {
                 color: '#2563eb' // Blue 600 to match the new theme
             },
