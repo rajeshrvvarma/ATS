@@ -37,7 +37,7 @@ const ScrollNavigation = () => {
     };
 
     return (
-        <div className="fixed right-6 bottom-6 z-50 flex flex-col gap-3">
+        <div className="fixed left-6 bottom-6 z-50 flex flex-col gap-3">
             {showScrollTop && (
                 <button
                     onClick={scrollToTop}
