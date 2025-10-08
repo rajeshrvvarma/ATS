@@ -85,12 +85,82 @@ export default function Header({ onNavigate, currentPage }) {
 
                     {/* Center - Main Navigation */}
                     <nav className="flex items-center space-x-8">
-                        <button
-                            onClick={() => scrollToSection('programs')}
-                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                        <div 
+                            className="relative"
+                            onMouseEnter={() => setIsProgramsOpen(true)}
+                            onMouseLeave={() => setIsProgramsOpen(false)}
                         >
-                            Programs
-                        </button>
+                            <button
+                                className="flex items-center text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                            >
+                                Programs
+                                <ChevronDown className="ml-1 h-4 w-4" />
+                            </button>
+                            
+                            <AnimatePresence>
+                                {isProgramsOpen && (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute top-full left-0 mt-2 w-80 bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden z-50"
+                                    >
+                                        <div className="p-6">
+                                            <h3 className="text-lg font-semibold text-white mb-4">Training Programs</h3>
+                                            <div className="space-y-3">
+                                                <button
+                                                    onClick={() => onNavigate('bootcampLanding')}
+                                                    className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
+                                                >
+                                                    <div className="flex items-start space-x-3">
+                                                        <div className="bg-blue-600 rounded-lg p-2">
+                                                            <Shield className="h-5 w-5 text-white" />
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-medium text-white group-hover:text-blue-400">
+                                                                7-Day Intensive Bootcamp
+                                                            </div>
+                                                            <div className="text-sm text-slate-400 mt-1">
+                                                                From Zero to SOC Analyst Ready • Starting ₹499
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+                                                
+                                                <button
+                                                    onClick={() => onNavigate('premiumProgram')}
+                                                    className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
+                                                >
+                                                    <div className="flex items-start space-x-3">
+                                                        <div className="bg-purple-600 rounded-lg p-2">
+                                                            <Sparkles className="h-5 w-5 text-white" />
+                                                        </div>
+                                                        <div>
+                                                            <div className="font-medium text-white group-hover:text-purple-400">
+                                                                2-Month Mastery Program
+                                                            </div>
+                                                            <div className="text-sm text-slate-400 mt-1">
+                                                                Premium certification with mentorship • ₹5,999
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </button>
+
+                                                <div className="border-t border-slate-700 pt-3 mt-3">
+                                                    <button
+                                                        onClick={() => scrollToSection('programs')}
+                                                        className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200"
+                                                    >
+                                                        View All Programs →
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
                         <button
                             onClick={() => scrollToSection('about')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"

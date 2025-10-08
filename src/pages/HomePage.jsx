@@ -320,28 +320,28 @@ const ProgramsOffering = ({ onNavigate }) => {
             subtitle: "Become a SOC Analyst & Incident Response Expert",
             courses: [
                 {
-                    title: "SOC Analyst Bootcamp",
+                    title: "7-Day Intensive Bootcamp",
                     duration: "7 Days",
-                    type: "Intensive Training",
-                    description: "Fast-track program covering essential SOC analyst skills and tools.",
-                    features: ["SIEM Tools", "Log Analysis", "Incident Response", "Threat Detection"],
+                    type: "High-Volume Enrollment",
+                    description: "From Zero to SOC Analyst Ready - Join 100+ cybersecurity enthusiasts",
+                    features: ["Live Sessions", "Recorded Access", "Certificate", "Job Assistance"],
                     level: "Beginner to Intermediate",
-                    price: "₹1,499",
-                    cta: "Register Now",
-                    action: () => setEnrollmentModal({ isOpen: true, course: 'SOC Analyst Bootcamp', type: 'defensive', formType: 'enrollment' }),
+                    price: "Starting ₹499",
+                    cta: "Join Bootcamp",
+                    action: () => onNavigate('bootcampLanding'),
                     color: "blue"
                 },
                 {
-                    title: "Complete SOC Analyst Program",
+                    title: "2-Month Mastery Program",
                     duration: "2 Months",
-                    type: "Comprehensive Training",
-                    description: "In-depth training to become job-ready SOC analyst with hands-on projects.",
-                    features: ["Advanced SIEM", "Digital Forensics", "Malware Analysis", "Capstone Project", "Job Assistance"],
-                    level: "Intermediate to Advanced",
-                    price: "₹45,000",
-                    cta: "Register Now",
-                    action: () => setEnrollmentModal({ isOpen: true, course: 'Complete SOC Analyst Program', type: 'defensive', formType: 'enrollment' }),
-                    color: "blue"
+                    type: "Premium with Mentorship",
+                    description: "Advanced certification program with personal mentorship and guaranteed job support",
+                    features: ["Personal Mentor", "10+ Projects", "Small Batch (20 students)", "Interview Guarantee"],
+                    level: "All levels welcome",
+                    price: "₹5,999",
+                    cta: "Reserve Premium Seat",
+                    action: () => onNavigate('premiumProgram'),
+                    color: "purple"
                 }
             ]
         },
@@ -867,6 +867,125 @@ const Testimonials = () => {
 };
 const Contact = ({ onNavigate }) => ( <section id="contact" className="py-20 bg-slate-800"><div className="container mx-auto px-6"><SectionTitle>Get In Touch</SectionTitle><div className="max-w-3xl mx-auto text-center"><p className="text-lg text-slate-300 mb-8">Have a question about our programs? Send us a message!</p><div className="grid md:grid-cols-2 gap-8"><div className="bg-slate-900 p-8 text-left space-y-6 rounded-lg border border-slate-700"><h3 className="text-xl font-bold text-white mb-4 text-center">General Inquiry</h3><form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="space-y-6"><input type="hidden" name="_next" value="https://atstatic.netlify.app/thank-you" /><input type="hidden" name="_subject" value="New Cyber Security Inquiry!" /><div><label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label><input type="text" id="name" name="name" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500" /></div><div><label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" id="email" name="email" required className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500" /></div><div><label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">Message</label><textarea id="message" name="message" rows="4" required placeholder="Ask us about our programs, schedules, or anything else!" className="block w-full bg-slate-800 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"></textarea></div><button type="submit" className="w-full bg-slate-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-700 transition-colors duration-300">Send Message</button></form></div><div className="bg-gradient-to-r from-blue-600 to-blue-700 p-8 rounded-lg text-center"><h3 className="text-2xl font-bold text-white mb-4">Ready to Enroll?</h3><p className="text-blue-100 mb-6">Start your cybersecurity journey with personalized guidance and career counseling.</p><button onClick={() => onNavigate('enroll')} className="bg-white text-blue-600 font-bold py-4 px-8 rounded-lg shadow-lg hover:bg-blue-50 transition-colors duration-300 transform hover:scale-105 mb-4">Start Enrollment Process</button><div className="space-y-2 text-sm text-blue-200"><div>✓ Free career counseling</div><div>✓ Personalized learning path</div><div>✓ Flexible payment options</div></div></div></div></div></div></section>);
 
+// New Programs Banner
+const NewProgramsBanner = ({ onNavigate }) => (
+    <section className="py-16 bg-gradient-to-r from-blue-900 via-purple-900 to-blue-900 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/20"></div>
+        <div className="container mx-auto px-6 relative z-10">
+            <div className="text-center mb-12">
+                <div className="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-2 rounded-full text-sm font-bold mb-6 animate-pulse">
+                    🔥 NEW LAUNCH • HIGH DEMAND PROGRAMS
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                    Transform Your Career in Cybersecurity
+                </h2>
+                <p className="text-xl text-gray-200 mb-8 max-w-3xl mx-auto">
+                    Choose your path: Fast-track bootcamp for immediate entry or premium mastery program for advanced certification
+                </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                {/* Bootcamp Card */}
+                <div className="bg-gradient-to-br from-blue-800 to-blue-900 rounded-2xl p-8 border border-blue-600 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                    <div className="text-center mb-6">
+                        <div className="inline-block bg-blue-600 rounded-full p-4 mb-4">
+                            <Shield className="h-8 w-8 text-white" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-2">7-Day Intensive Bootcamp</h3>
+                        <p className="text-blue-200">Join 100+ Students • High-Volume Enrollment</p>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                        <div className="flex items-center text-blue-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>From Zero to SOC Analyst Ready</span>
+                        </div>
+                        <div className="flex items-center text-blue-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>21+ hours live + recorded sessions</span>
+                        </div>
+                        <div className="flex items-center text-blue-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>Industry-recognized certificate</span>
+                        </div>
+                        <div className="flex items-center text-blue-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>Job placement assistance</span>
+                        </div>
+                    </div>
+
+                    <div className="text-center mb-6">
+                        <div className="text-3xl font-bold text-white">Starting ₹499</div>
+                        <div className="text-blue-200">Early Bird Special • Limited Time</div>
+                    </div>
+
+                    <button
+                        onClick={() => onNavigate('bootcampLanding')}
+                        className="w-full bg-white text-blue-900 font-bold py-4 rounded-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    >
+                        Join Bootcamp Now →
+                    </button>
+                </div>
+
+                {/* Premium Program Card */}
+                <div className="bg-gradient-to-br from-purple-800 to-purple-900 rounded-2xl p-8 border border-purple-600 transform hover:scale-105 transition-all duration-300 shadow-2xl relative">
+                    <div className="absolute -top-3 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-1 rounded-full text-sm font-bold">
+                        PREMIUM
+                    </div>
+                    
+                    <div className="text-center mb-6">
+                        <div className="inline-block bg-purple-600 rounded-full p-4 mb-4">
+                            <Sparkles className="h-8 w-8 text-white" />
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-2">2-Month Mastery Program</h3>
+                        <p className="text-purple-200">Only 20 Students • Personal Mentorship</p>
+                    </div>
+                    
+                    <div className="space-y-4 mb-8">
+                        <div className="flex items-center text-purple-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>Advanced certification program</span>
+                        </div>
+                        <div className="flex items-center text-purple-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>100+ hours with 10+ projects</span>
+                        </div>
+                        <div className="flex items-center text-purple-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>Personal industry mentor</span>
+                        </div>
+                        <div className="flex items-center text-purple-100">
+                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
+                            <span>Guaranteed interview opportunities</span>
+                        </div>
+                    </div>
+
+                    <div className="text-center mb-6">
+                        <div className="text-3xl font-bold text-white">₹5,999</div>
+                        <div className="text-purple-200">Full Payment • Save ₹3,000</div>
+                    </div>
+
+                    <button
+                        onClick={() => onNavigate('premiumProgram')}
+                        className="w-full bg-white text-purple-900 font-bold py-4 rounded-lg hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                    >
+                        Reserve Premium Seat →
+                    </button>
+                </div>
+            </div>
+
+            <div className="text-center mt-12">
+                <p className="text-gray-300 text-lg mb-4">
+                    🚀 <strong>Fast-Track Your Career</strong> • 📊 <strong>Proven Success Rate</strong> • 🏆 <strong>Industry Partnerships</strong>
+                </p>
+                <p className="text-gray-400">
+                    Choose the program that fits your goals and timeline
+                </p>
+            </div>
+        </div>
+    </section>
+);
+
 // --- Main HomePage Component ---
 export default function HomePage({ onNavigate }) {
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
@@ -884,6 +1003,7 @@ export default function HomePage({ onNavigate }) {
     return (
         <>
             <CompanyIntro />
+            <NewProgramsBanner onNavigate={onNavigate} />
             <CybersecurityMastery />
             <ProgramsOffering onNavigate={onNavigate} />
             <About />

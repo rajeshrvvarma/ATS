@@ -18,6 +18,8 @@ import Footer from '@/components/Footer.jsx';
 const HomePage = React.lazy(() => import('@/pages/HomePage.jsx'));
 const FreeWorkshopPage = React.lazy(() => import('@/pages/WorkshopPage.jsx'));
 const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
+const BootcampLandingPage = React.lazy(() => import('@/pages/BootcampLandingPage.jsx'));
+const PremiumProgramLandingPage = React.lazy(() => import('@/pages/PremiumProgramLandingPage.jsx'));
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
 const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
@@ -46,6 +48,8 @@ export default function App() {
         workshop: '/workshop',
         defensiveBootcamp: '/bootcamp/defensive',
         offensiveBootcamp: '/bootcamp/offensive',
+        bootcampLanding: '/bootcamp-intensive',
+        premiumProgram: '/cybersecurity-mastery',
         terms: '/terms',
         disclaimer: '/disclaimer',
         'accountActivation-defensive': '/activate/defensive',
@@ -69,6 +73,8 @@ export default function App() {
         '/workshop': 'workshop',
         '/bootcamp/defensive': 'defensiveBootcamp',
         '/bootcamp/offensive': 'offensiveBootcamp',
+        '/bootcamp-intensive': 'bootcampLanding',
+        '/cybersecurity-mastery': 'premiumProgram',
         '/terms': 'terms',
         '/disclaimer': 'disclaimer',
         '/activate/defensive': 'accountActivation-defensive',
@@ -111,6 +117,8 @@ export default function App() {
                             <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
                             <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
                             <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
+                            <Route path="/bootcamp-intensive" element={<BootcampLandingPage onNavigate={go} />} />
+                            <Route path="/cybersecurity-mastery" element={<PremiumProgramLandingPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
                             <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
