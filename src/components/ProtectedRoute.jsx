@@ -14,9 +14,19 @@ export default function ProtectedRoute({ children, roles }) {
         const enrollmentId = urlParams.get('enrollmentId');
         const hasLocalEnrollments = localStorage.getItem('enrollment_receipts');
         
+        console.log('🔍 Dashboard Access Check:', {
+            currentPath,
+            enrollmentId,
+            hasLocalEnrollments: !!hasLocalEnrollments,
+            fullUrl: window.location.href
+        });
+        
         if (enrollmentId || hasLocalEnrollments) {
+            console.log('✅ Dashboard access granted for enrolled student');
             // Allow access to dashboard for enrolled students
             return children;
+        } else {
+            console.log('❌ No enrollment data found, will redirect');
         }
     }
     
