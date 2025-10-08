@@ -83,10 +83,53 @@ const EnhancedEnrollmentModal = ({
     setStep(2); // Move to payment step
   };
 
+  const handleRazorpayPayment = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      // Import Razorpay dynamically
+      const { processPayment } = await import('@/services/razorpay.js');
+      
+      const paymentData = {
+        amount: course.price * 100, // Razorpay expects amount in paise
+        currency: 'INR',
+        receipt: `receipt_${Date.now()}`,
+        notes: {
+          courseType,
+          studentName: formData.name,
+          studentEmail: formData.email,
+          studentPhone: formData.phone
+        }
+      };
+
+      const result = await processPayment(paymentData);
+      
+      if (result.success) {
+        // Payment successful, proceed with enrollment
+        await handleEnrollmentAfterPayment(result.paymentId);
+      } else {
+        throw new Error(result.error || 'Payment failed');
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      setError(error.message || 'Payment failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
-    if (!paymentData.reference) {
+    // Handle Razorpay payment
+    if (formData.paymentMethod === 'razorpay') {
+      await handleRazorpayPayment();
+      return;
+    }
+    
+    // Only require reference for non-Razorpay payment methods
+    if (!paymentData.reference.trim()) {
       setError('Please provide payment reference/transaction ID');
       return;
     }
@@ -95,11 +138,23 @@ const EnhancedEnrollmentModal = ({
     setError('');
 
     try {
+      // Process enrollment with manual payment reference
+      await handleEnrollmentAfterPayment(paymentData.reference);
+    } catch (error) {
+      console.error('Enrollment error:', error);
+      setError(error.message || 'Enrollment failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEnrollmentAfterPayment = async (paymentReference) => {
+    try {
       // Process enrollment
       const enrollmentData = {
         courseType,
         paymentAmount: course.price,
-        paymentReference: paymentData.reference,
+        paymentReference: paymentReference,
         paymentMethod: formData.paymentMethod,
         studentEmail: formData.email,
         studentName: formData.name,
@@ -135,7 +190,7 @@ const EnhancedEnrollmentModal = ({
         },
         {
           amount: course.price,
-          paymentReference: paymentData.reference,
+          paymentReference: paymentReference,
           paymentMethod: formData.paymentMethod,
           courseType,
           enrollmentId: enrollmentResult.enrollmentId
@@ -404,13 +459,21 @@ const EnhancedEnrollmentModal = ({
                       { value: 'upi', label: 'Direct UPI Transfer' },
                       { value: 'bank_transfer', label: 'Bank Transfer' }
                     ].map((method) => (
-                      <label key={method.value} className="flex items-center gap-3 p-3 bg-slate-700/30 rounded-lg border border-slate-600 hover:border-slate-500 cursor-pointer">
+                      <div 
+                        key={method.value} 
+                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                          formData.paymentMethod === method.value 
+                            ? 'bg-sky-500/20 border-sky-500' 
+                            : 'bg-slate-700/30 border-slate-600 hover:border-slate-500'
+                        }`}
+                        onClick={() => setFormData(prev => ({ ...prev, paymentMethod: method.value }))}
+                      >
                         <input
                           type="radio"
                           name="paymentMethod"
                           value={method.value}
                           checked={formData.paymentMethod === method.value}
-                          onChange={(e) => setFormData(prev => ({ ...prev, paymentMethod: e.target.value }))}
+                          onChange={() => {}} // Controlled by div click
                           className="text-sky-500 focus:ring-sky-500 focus:ring-offset-slate-800"
                         />
                         <div className="flex-1">
@@ -421,7 +484,7 @@ const EnhancedEnrollmentModal = ({
                             </span>
                           )}
                         </div>
-                      </label>
+                      </div>
                     ))}
                   </div>
                 </div>
