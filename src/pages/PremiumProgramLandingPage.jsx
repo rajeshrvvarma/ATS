@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const PremiumProgramLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(7); // Dynamic counter for small batch
@@ -178,9 +179,9 @@ const PremiumProgramLandingPage = () => {
   const progressPercentage = (currentEnrolled / 20) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-gray-900 py-20">
+      <AnimatedBackground variant="premium" className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -188,8 +189,8 @@ const PremiumProgramLandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                🏆 PREMIUM PROGRAM • LIMITED TO 20 STUDENTS
+              <div className="inline-block bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 text-white px-6 py-3 rounded-full text-sm font-bold mb-6 shadow-lg animate-pulse">
+                🏆 PREMIUM PROGRAM • LIMITED TO 20 STUDENTS ✨
               </div>
               <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
                 2-Month Cybersecurity Mastery Program
@@ -276,10 +277,10 @@ const PremiumProgramLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Premium Benefits */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="premium" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Premium Program?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -300,10 +301,10 @@ const PremiumProgramLandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Detailed Curriculum */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="premium" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Comprehensive 8-Week Curriculum</h2>
           <div className="space-y-6">
@@ -355,7 +356,7 @@ const PremiumProgramLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* What's Included */}
       <section className="py-16 bg-gray-800">

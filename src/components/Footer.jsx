@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin, Youtube, Instagram } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 // NOTE: The Firebase logic remains the same. The only changes are to the layout (JSX).
 
@@ -77,10 +78,59 @@ export default function Footer({ onNavigate }) {
     }, []);
 
     return (
-        <footer className="bg-slate-900 text-slate-400 py-16 relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20"></div>
+        <footer className="text-slate-400 py-16 relative overflow-hidden">
+            {/* Enhanced Animated Background */}
+            <div className="absolute inset-0">
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-purple-900/20"></div>
+                
+                {/* Floating particles */}
+                <div className="absolute inset-0">
+                    {[...Array(10)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 bg-indigo-400 rounded-full opacity-70"
+                            initial={{
+                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                                y: Math.random() * 600,
+                                opacity: Math.random() * 0.7
+                            }}
+                            animate={{
+                                y: [null, -100, -200],
+                                opacity: [null, 0.7, 0]
+                            }}
+                            transition={{
+                                duration: 8 + Math.random() * 4,
+                                repeat: Infinity,
+                                delay: Math.random() * 4
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* Floating geometric shapes */}
+                <div className="absolute inset-0 opacity-5">
+                    {[...Array(3)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className="absolute w-32 h-32 bg-indigo-400 rounded-full blur-3xl"
+                            initial={{
+                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                                y: Math.random() * 400,
+                            }}
+                            animate={{
+                                x: [null, Math.random() * 300 - 150],
+                                y: [null, Math.random() * 200 - 100],
+                            }}
+                            transition={{
+                                duration: 20 + Math.random() * 10,
+                                repeat: Infinity,
+                                repeatType: 'reverse',
+                                delay: Math.random() * 6
+                            }}
+                        />
+                    ))}
+                </div>
             </div>
             
             <div className="container mx-auto px-6 relative z-10">

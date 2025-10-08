@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const BootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(23); // Dynamic counter
@@ -107,9 +108,9 @@ const BootcampLandingPage = () => {
   const progressPercentage = (currentEnrolled / 100) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-900 via-purple-900 to-gray-900 py-20">
+      <AnimatedBackground variant="bootcamp" className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -133,13 +134,13 @@ const BootcampLandingPage = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="bg-gray-800 rounded-2xl p-8 mb-8 border border-gray-700"
+              className="bg-gradient-to-br from-gray-800/90 via-blue-900/30 to-purple-900/30 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 shadow-2xl"
             >
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                  <div className="text-6xl font-bold text-green-400 mb-2">{pricing.price}</div>
-                  <div className="text-lg text-gray-300 mb-1">{pricing.label}</div>
-                  <div className="text-green-400 font-semibold">{pricing.savings}</div>
+                  <div className="text-6xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2">{pricing.price}</div>
+                  <div className="text-lg text-white mb-1">{pricing.label}</div>
+                  <div className="text-green-400 font-semibold bg-green-500/10 px-3 py-1 rounded-full inline-block">{pricing.savings}</div>
                 </div>
                 
                 <div>
@@ -194,7 +195,7 @@ const BootcampLandingPage = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-12 rounded-full text-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white font-bold py-4 px-12 rounded-full text-xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-blue-500/25"
               onClick={() => setIsEnrollmentModalOpen(true)}
             >
               Secure Your Seat Now - {pricing.price}
@@ -202,34 +203,55 @@ const BootcampLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Key Benefits */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="bootcamp" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Our Bootcamp?</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center bg-gray-700 rounded-xl p-6">
-              <Target className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Job-Ready Skills</h3>
-              <p className="text-gray-300">Learn practical skills that employers actually want. No theory overload.</p>
-            </div>
-            <div className="text-center bg-gray-700 rounded-xl p-6">
-              <Users className="h-12 w-12 text-purple-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Learn with Peers</h3>
-              <p className="text-gray-300">Join 100+ like-minded individuals on the same cybersecurity journey.</p>
-            </div>
-            <div className="text-center bg-gray-700 rounded-xl p-6">
-              <Award className="h-12 w-12 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Industry Recognition</h3>
-              <p className="text-gray-300">Get certified and stand out in the competitive job market.</p>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-center bg-gradient-to-br from-gray-700/80 via-blue-900/30 to-transparent backdrop-blur-sm rounded-xl p-6 border border-blue-500/20 hover:border-blue-400/40 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <Target className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Job-Ready Skills</h3>
+              <p className="text-blue-100">Learn practical skills that employers actually want. No theory overload.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-center bg-gradient-to-br from-gray-700/80 via-purple-900/30 to-transparent backdrop-blur-sm rounded-xl p-6 border border-purple-500/20 hover:border-purple-400/40 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <Users className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Learn with Peers</h3>
+              <p className="text-purple-100">Join 100+ like-minded individuals on the same cybersecurity journey.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center bg-gradient-to-br from-gray-700/80 via-green-900/30 to-transparent backdrop-blur-sm rounded-xl p-6 border border-green-500/20 hover:border-green-400/40 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <Award className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Industry Recognition</h3>
+              <p className="text-green-100">Get certified and stand out in the competitive job market.</p>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Curriculum */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="bootcamp" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">7-Day Intensive Curriculum</h2>
           <div className="space-y-6">
@@ -278,10 +300,10 @@ const BootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* What's Included */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="bootcamp" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Everything You Get</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
@@ -299,10 +321,10 @@ const BootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Enrollment Form */}
-      <section id="enrollment-form" className="py-16 bg-gray-900">
+      <AnimatedBackground variant="bootcamp" className="py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gray-800 rounded-2xl p-8 border border-gray-700">
             <h2 className="text-3xl font-bold text-center mb-8">Secure Your Seat Now!</h2>
@@ -382,10 +404,10 @@ const BootcampLandingPage = () => {
             </form>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Footer CTA */}
-      <section className="py-12 bg-gradient-to-r from-blue-900 to-purple-900">
+      <AnimatedBackground variant="bootcamp" className="py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Don't Miss This Opportunity!</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -398,7 +420,7 @@ const BootcampLandingPage = () => {
             Join Now - {pricing.price}
           </button>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Enrollment Modal */}
       <EnrollmentModal

@@ -6,6 +6,106 @@ import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
+// Animated Background Component
+const AnimatedBackground = ({ variant = 'default', children, className = '' }) => {
+    const variants = {
+        default: {
+            gradient: 'bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950',
+            overlay: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-red-900/20',
+            particles: { color: 'bg-blue-400', count: 15 }
+        },
+        testimonials: {
+            gradient: 'bg-gradient-to-br from-slate-800 via-purple-900 to-blue-900',
+            overlay: 'bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-800/20 via-transparent to-blue-800/20',
+            particles: { color: 'bg-purple-400', count: 12 }
+        },
+        contact: {
+            gradient: 'bg-gradient-to-br from-slate-900 via-green-950 to-blue-950',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-transparent to-blue-900/20',
+            particles: { color: 'bg-green-400', count: 18 }
+        },
+        footer: {
+            gradient: 'bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950',
+            overlay: 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-purple-900/20',
+            particles: { color: 'bg-indigo-400', count: 10 }
+        },
+        programs: {
+            gradient: 'bg-gradient-to-br from-slate-800 via-blue-900 to-purple-900',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-800/20 via-transparent to-purple-800/20',
+            particles: { color: 'bg-blue-400', count: 16 }
+        },
+        success: {
+            gradient: 'bg-gradient-to-br from-slate-900 via-emerald-950 to-blue-950',
+            overlay: 'bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-blue-900/20',
+            particles: { color: 'bg-emerald-400', count: 14 }
+        }
+    };
+
+    const currentVariant = variants[variant] || variants.default;
+
+    return (
+        <div className={`relative overflow-hidden ${className}`}>
+            {/* Animated Background */}
+            <div className="absolute inset-0">
+                <div className={`absolute inset-0 ${currentVariant.gradient}`}></div>
+                <div className={`absolute inset-0 ${currentVariant.overlay}`}></div>
+                
+                {/* Floating particles */}
+                <div className="absolute inset-0">
+                    {[...Array(currentVariant.particles.count)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className={`absolute w-1 h-1 ${currentVariant.particles.color} rounded-full opacity-70`}
+                            initial={{
+                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                                opacity: Math.random() * 0.7
+                            }}
+                            animate={{
+                                y: [null, -100, -200],
+                                opacity: [null, 0.7, 0]
+                            }}
+                            transition={{
+                                duration: 6 + Math.random() * 4,
+                                repeat: Infinity,
+                                delay: Math.random() * 3
+                            }}
+                        />
+                    ))}
+                </div>
+
+                {/* Floating geometric shapes */}
+                <div className="absolute inset-0 opacity-10">
+                    {[...Array(5)].map((_, i) => (
+                        <motion.div
+                            key={i}
+                            className={`absolute w-20 h-20 ${currentVariant.particles.color} rounded-full blur-xl`}
+                            initial={{
+                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                            }}
+                            animate={{
+                                x: [null, Math.random() * 200 - 100],
+                                y: [null, Math.random() * 200 - 100],
+                            }}
+                            transition={{
+                                duration: 15 + Math.random() * 10,
+                                repeat: Infinity,
+                                repeatType: 'reverse',
+                                delay: Math.random() * 5
+                            }}
+                        />
+                    ))}
+                </div>
+            </div>
+            
+            <div className="relative z-10">
+                {children}
+            </div>
+        </div>
+    );
+};
+
 // Modern Hero Section
 const HeroSection = ({ onNavigate }) => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
@@ -13,38 +113,8 @@ const HeroSection = ({ onNavigate }) => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden bg-slate-900">
-                {/* Animated Background */}
-                <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950"></div>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-red-900/20"></div>
-                    
-                    {/* Floating particles */}
-                    <div className="absolute inset-0">
-                        {[...Array(20)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                className="absolute w-1 h-1 bg-blue-400 rounded-full"
-                                initial={{
-                                    x: Math.random() * window.innerWidth,
-                                    y: Math.random() * window.innerHeight,
-                                    opacity: Math.random() * 0.7
-                                }}
-                                animate={{
-                                    y: [null, -100, -200],
-                                    opacity: [null, 0.7, 0]
-                                }}
-                                transition={{
-                                    duration: 4 + Math.random() * 4,
-                                    repeat: Infinity,
-                                    delay: Math.random() * 2
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                <div className="container mx-auto px-6 relative z-10 text-center">
+            <AnimatedBackground variant="default" className="min-h-screen flex items-center justify-center">
+                <section id="home" className="container mx-auto px-6 text-center">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -120,8 +190,8 @@ const HeroSection = ({ onNavigate }) => {
                             </div>
                         </motion.div>
                     </motion.div>
-                </div>
-            </section>
+                </section>
+            </AnimatedBackground>
         </>
     );
 };
@@ -381,8 +451,8 @@ const ProgramsShowcase = ({ onNavigate }) => {
     };
 
     return (
-        <section id="programs" className="py-20 bg-slate-800">
-            <div className="container mx-auto px-6">
+        <AnimatedBackground variant="programs" className="py-20">
+            <section id="programs" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -455,8 +525,8 @@ const ProgramsShowcase = ({ onNavigate }) => {
                         </button>
                     </motion.div>
                 )}
-            </div>
-        </section>
+            </section>
+        </AnimatedBackground>
     );
 };
 
@@ -689,13 +759,8 @@ const ProgramCard = ({ program, index }) => {
 
 // Success Metrics & Why Choose Us Section
 const SuccessMetrics = () => (
-    <section className="py-20 bg-slate-900 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-red-600/20"></div>
-        </div>
-
-        <div className="container mx-auto px-6 relative z-10">
+    <AnimatedBackground variant="success" className="py-20">
+        <section className="container mx-auto px-6">
             {/* Success Stats */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -777,7 +842,7 @@ const SuccessMetrics = () => (
                             color: 'green'
                         },
                         {
-                            icon: Clock,
+                            icon: BookOpen,
                             title: 'Flexible Learning Options',
                             description: 'Choose from intensive bootcamps, premium programs, or specialized courses',
                             color: 'yellow'
@@ -805,8 +870,8 @@ const SuccessMetrics = () => (
                     ))}
                 </div>
             </motion.div>
-        </div>
-    </section>
+        </section>
+    </AnimatedBackground>
 );
 
 // Testimonials Section
@@ -827,8 +892,8 @@ const Testimonials = () => {
     const current = items[index];
     
     return (
-        <section id="testimonials" className="py-20 bg-slate-800">
-            <div className="container mx-auto px-6">
+        <AnimatedBackground variant="testimonials" className="py-20">
+            <section id="testimonials" className="container mx-auto px-6">
                 <SectionTitle>What Our Students Say</SectionTitle>
                 <div className="text-center mb-12">
                     <p className="text-slate-300 text-lg">
@@ -843,7 +908,7 @@ const Testimonials = () => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.5 }}
-                        className="bg-slate-900 p-8 rounded-xl border border-slate-700 relative"
+                        className="bg-gradient-to-br from-slate-900/90 via-purple-900/20 to-blue-900/30 backdrop-blur-sm p-8 rounded-xl border border-purple-500/30 relative shadow-2xl hover:border-purple-400/50 transition-all duration-300"
                     >
                         <p className="text-slate-300 italic mb-6 text-lg">"{current.quote}"</p>
                         <div className="flex items-center">
@@ -865,15 +930,15 @@ const Testimonials = () => {
                         </div>
                     </motion.div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </AnimatedBackground>
     );
 };
 
 // Contact Section
 const Contact = ({ onNavigate }) => ( 
-    <section id="contact" className="py-20 bg-slate-900">
-        <div className="container mx-auto px-6">
+    <AnimatedBackground variant="contact" className="py-20">
+        <section id="contact" className="container mx-auto px-6">
             <SectionTitle>Get In Touch</SectionTitle>
             <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-12">
@@ -883,8 +948,19 @@ const Contact = ({ onNavigate }) => (
                 </div>
                 
                 <div className="grid md:grid-cols-2 gap-8">
-                    <div className="bg-slate-800 p-8 text-left space-y-6 rounded-xl border border-slate-700">
-                        <h3 className="text-xl font-bold text-white mb-4 text-center">General Inquiry</h3>
+                    <motion.div 
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="bg-gradient-to-br from-slate-800/80 to-blue-900/30 backdrop-blur-sm p-8 text-left space-y-6 rounded-xl border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 shadow-2xl"
+                    >
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-green-500 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                <MessageCircle className="w-8 h-8 text-white" />
+                            </div>
+                            <h3 className="text-xl font-bold text-white">General Inquiry</h3>
+                            <p className="text-blue-200 text-sm mt-2">We'd love to hear from you!</p>
+                        </div>
                         <form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="space-y-6">
                             <input type="hidden" name="_next" value="https://atstatic.netlify.app/thank-you" />
                             <input type="hidden" name="_subject" value="New Cyber Security Inquiry!" />
@@ -921,34 +997,57 @@ const Contact = ({ onNavigate }) => (
                             </div>
                             <button 
                                 type="submit" 
-                                className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-blue-700 transition-colors duration-300"
+                                className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-green-700 transition-all duration-300 transform hover:scale-105"
                             >
                                 Send Message
                             </button>
                         </form>
-                    </div>
+                    </motion.div>
                     
-                    <div className="bg-gradient-to-br from-blue-600 to-purple-600 p-8 rounded-xl text-center text-white">
-                        <h3 className="text-2xl font-bold mb-4">Ready to Enroll?</h3>
-                        <p className="text-blue-100 mb-6">
-                            Start your cybersecurity journey with personalized guidance and career counseling.
-                        </p>
-                        <button 
-                            onClick={() => onNavigate('enroll')} 
-                            className="bg-white text-blue-600 font-bold py-4 px-8 rounded-lg shadow-lg hover:bg-blue-50 transition-colors duration-300 transform hover:scale-105 mb-4"
-                        >
-                            Start Enrollment Process
-                        </button>
-                        <div className="space-y-2 text-sm text-blue-200">
-                            <div>✓ Free career counseling</div>
-                            <div>✓ Personalized learning path</div>
-                            <div>✓ Flexible payment options</div>
+                    <motion.div 
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.6, delay: 0.1 }}
+                        className="bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 p-8 rounded-xl text-center text-white relative overflow-hidden shadow-2xl"
+                    >
+                        {/* Decorative elements */}
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -translate-y-10 translate-x-10"></div>
+                        <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-8 -translate-x-8"></div>
+                        
+                        <div className="relative z-10">
+                            <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center backdrop-blur-sm">
+                                <Star className="w-8 h-8 text-white" />
+                            </div>
+                            <h3 className="text-2xl font-bold mb-4">Ready to Enroll?</h3>
+                            <p className="text-white/90 mb-6">
+                                Start your cybersecurity journey with personalized guidance and career counseling.
+                            </p>
+                            <button 
+                                onClick={() => onNavigate('enroll')} 
+                                className="bg-white text-purple-600 font-bold py-4 px-8 rounded-lg shadow-lg hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 mb-4 hover:shadow-xl"
+                            >
+                                Start Enrollment Process
+                            </button>
+                            <div className="space-y-2 text-sm text-white/80">
+                                <div className="flex items-center justify-center">
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Free career counseling
+                                </div>
+                                <div className="flex items-center justify-center">
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Personalized learning path
+                                </div>
+                                <div className="flex items-center justify-center">
+                                    <CheckCircle className="w-4 h-4 mr-2" />
+                                    Flexible payment options
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </AnimatedBackground>
 );
 
 // Main HomePage Component
