@@ -25,16 +25,11 @@ export default function Header({ onNavigate, currentPage }) {
         window.addEventListener('keydown', onKey);
         return () => window.removeEventListener('keydown', onKey);
     }, [toggleOpen]);
-    // Navigation structure like dettol.co.in
-    const leftNavItems = [
+    // Mobile navigation items
+    const mobileNavItems = [
         { name: "Programs", action: () => scrollToSection('programs') },
         { name: "About Us", action: () => scrollToSection('about') },
-        { name: "Our Expertise", action: () => scrollToSection('expertise') }
-    ];
-
-    const rightNavItems = [
         { name: "Video Learning", action: () => onNavigate('video-learning') },
-        { name: "Admissions", action: () => onNavigate('enroll') },
         { name: "Contact Us", action: () => onNavigate('contact') },
         { name: "Login", action: () => onNavigate('login') }
     ];
@@ -83,62 +78,66 @@ export default function Header({ onNavigate, currentPage }) {
     return (
         <header className="bg-slate-900/80 backdrop-blur-md shadow-lg shadow-black/20 sticky top-0 z-50">
             <nav className="container mx-auto px-6 py-4">
-                {/* Desktop Navigation - Dettol.co.in inspired layout */}
-                <div className="hidden md:flex items-center justify-between">
-                    {/* Left Navigation */}
-                    <div className="flex items-center space-x-8">
-                        {leftNavItems.map((item, index) => (
-                            <button
-                                key={index}
-                                onClick={item.action}
-                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                            >
-                                {item.name}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Center Logo (Home Button) */}
-                    <div className="relative">
+                {/* Desktop Navigation - Clean & Professional */}
+                <div className="hidden md:flex items-center justify-between w-full">
+                    {/* Left - Logo & Company Name */}
+                    <div className="flex items-center space-x-3">
                         <button 
                             onClick={() => onNavigate('home')} 
-                            className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 border-2 border-slate-700 flex items-center justify-center hover:scale-105 transition-all duration-300 shadow-lg group"
-                            title="Agnidhra Technologies - Home"
+                            className="flex items-center space-x-3 group"
                         >
-                            <img 
-                                src="/logo.png" 
-                                alt="AT Logo" 
-                                className="w-12 h-12 rounded-full group-hover:scale-110 transition-transform duration-200" 
-                            />
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center hover:scale-105 transition-all duration-300 shadow-lg">
+                                <img 
+                                    src="/logo.png" 
+                                    alt="AT Logo" 
+                                    className="w-10 h-10 rounded-full group-hover:scale-110 transition-transform duration-200" 
+                                />
+                            </div>
+                            <div>
+                                <span className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
+                                    Agnidhra Technologies
+                                </span>
+                            </div>
                         </button>
-                        
-                        {/* Company name below logo - visible on hover */}
-                        <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-                            <span className="text-xs text-slate-400 font-medium">Agnidhra Technologies</span>
-                        </div>
                     </div>
 
-                    {/* Right Navigation */}
-                    <div className="flex items-center space-x-6">
-                        {rightNavItems.slice(0, -1).map((item, index) => (
-                            <button
-                                key={index}
-                                onClick={item.action}
-                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                            >
-                                {item.name}
-                            </button>
-                        ))}
-                        
-                        {/* CTA Button */}
+                    {/* Center - Main Navigation */}
+                    <nav className="flex items-center space-x-8">
+                        <button
+                            onClick={() => scrollToSection('programs')}
+                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                        >
+                            Programs
+                        </button>
+                        <button
+                            onClick={() => scrollToSection('about')}
+                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                        >
+                            About Us
+                        </button>
+                        <button
+                            onClick={() => onNavigate('video-learning')}
+                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                        >
+                            Video Learning
+                        </button>
+                        <button
+                            onClick={() => onNavigate('contact')}
+                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                        >
+                            Contact Us
+                        </button>
+                    </nav>
+
+                    {/* Right - Actions */}
+                    <div className="flex items-center space-x-4">
                         <button 
                             onClick={() => onNavigate('enroll')} 
-                            className="btn-primary px-6 py-2 font-semibold"
+                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
                         >
                             Enroll Now
                         </button>
                         
-                        {/* Login */}
                         <button
                             onClick={() => onNavigate('login')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
@@ -146,18 +145,18 @@ export default function Header({ onNavigate, currentPage }) {
                             Login
                         </button>
 
-                        {/* Settings & Theme */}
-                        <div className="flex items-center space-x-2">
+                        {/* Settings */}
+                        <div className="flex items-center space-x-1">
                             <button 
                                 onClick={toggleTheme} 
-                                className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700" 
+                                className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200" 
                                 title="Toggle theme"
                             >
                                 {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
                             </button>
                             <button 
                                 onClick={toggleOpen} 
-                                className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700" 
+                                className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200" 
                                 title="Settings"
                             >
                                 ⚙
@@ -187,9 +186,9 @@ export default function Header({ onNavigate, currentPage }) {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden bg-slate-900/95 backdrop-blur-sm">
+                <div className="md:hidden bg-slate-900/95 backdrop-blur-sm border-t border-slate-700">
                     <ul className="px-4 pt-2 pb-3 space-y-1">
-                        {[...leftNavItems, ...rightNavItems].map((item, index) => (
+                        {mobileNavItems.map((item, index) => (
                             <li key={index}>
                                 <button 
                                     onClick={() => { item.action(); setIsOpen(false); }} 
@@ -202,7 +201,7 @@ export default function Header({ onNavigate, currentPage }) {
                         <li className="pt-2 border-t border-slate-700">
                             <button 
                                 onClick={() => { setIsOpen(false); onNavigate('enroll'); }} 
-                                className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700"
+                                className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                             >
                                 Enroll Now
                             </button>

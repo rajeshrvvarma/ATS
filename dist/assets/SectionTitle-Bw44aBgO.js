@@ -1,0 +1,1 @@
+import{j as x}from"./index-BwIwH0To.js";function n({children:t,className:e=""}){return x.jsx("h2",{className:`text-3xl md:text-4xl font-bold text-center text-white mb-12 ${e}`,children:t})}export{n as S};

@@ -3,6 +3,7 @@ import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCirc
 import SectionTitle from '@/components/SectionTitle.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
+import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import SpecializedTrainingModal from '@/components/SpecializedTrainingModal.jsx';
 import SyllabusRequestModal from '@/components/SyllabusRequestModal.jsx';
 import EnrollmentEnquiryModal from '@/components/EnrollmentEnquiryModal.jsx';
@@ -242,15 +243,27 @@ const ProgramsOffering = ({ onNavigate }) => {
             subtitle: "Start your cybersecurity journey",
             courses: [
                 {
-                    title: "Free Cybersecurity Workshop",
+                    title: "Cybersecurity Fundamentals Workshop",
                     duration: "2 Hours",
                     type: "Online Live Session",
                     description: "Introduction to cybersecurity landscape, career paths, and industry opportunities.",
-                    features: ["Career Guidance", "Industry Overview", "Live Q&A Session", "Free Certificate"],
+                    features: ["Career Guidance", "Industry Overview", "Live Q&A Session", "Certificate of Participation"],
                     level: "Beginner",
-                    price: "Free",
+                    price: "₹99",
                     cta: "Register Now",
-                    action: () => onNavigate('workshop'),
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Cybersecurity Fundamentals Workshop', type: 'foundation', formType: 'enrollment' }),
+                    color: "green"
+                },
+                {
+                    title: "Specialized Technologies Workshop",
+                    duration: "2 Hours",
+                    type: "Online Live Session",
+                    description: "Explore emerging technologies including AI, Cloud Computing, and DevSecOps fundamentals.",
+                    features: ["Technology Overview", "Career Paths", "Industry Trends", "Certificate of Participation"],
+                    level: "Beginner",
+                    price: "₹99",
+                    cta: "Register Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Specialized Technologies Workshop', type: 'foundation', formType: 'enrollment' }),
                     color: "green"
                 }
             ]
@@ -266,8 +279,8 @@ const ProgramsOffering = ({ onNavigate }) => {
                     description: "Fast-track program covering essential SOC analyst skills and tools.",
                     features: ["SIEM Tools", "Log Analysis", "Incident Response", "Threat Detection"],
                     level: "Beginner to Intermediate",
-                    price: "₹15,000",
-                    cta: "Enroll Now",
+                    price: "₹1,499",
+                    cta: "Register Now",
                     action: () => setEnrollmentModal({ isOpen: true, course: 'SOC Analyst Bootcamp', type: 'defensive', formType: 'enrollment' }),
                     color: "blue"
                 },
@@ -279,8 +292,8 @@ const ProgramsOffering = ({ onNavigate }) => {
                     features: ["Advanced SIEM", "Digital Forensics", "Malware Analysis", "Capstone Project", "Job Assistance"],
                     level: "Intermediate to Advanced",
                     price: "₹45,000",
-                    cta: "Get Syllabus",
-                    action: () => setSyllabusModal({ isOpen: true, course: 'Complete SOC Analyst Program', type: 'defensive' }),
+                    cta: "Register Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Complete SOC Analyst Program', type: 'defensive', formType: 'enrollment' }),
                     color: "blue"
                 }
             ]
@@ -296,8 +309,8 @@ const ProgramsOffering = ({ onNavigate }) => {
                     description: "Learn the fundamentals of ethical hacking and penetration testing.",
                     features: ["Kali Linux", "Network Scanning", "Web App Testing", "Exploitation Basics"],
                     level: "Beginner to Intermediate",
-                    price: "₹18,000",
-                    cta: "Enroll Now",
+                    price: "₹1,499",
+                    cta: "Register Now",
                     action: () => setEnrollmentModal({ isOpen: true, course: 'Ethical Hacking Bootcamp', type: 'offensive', formType: 'enrollment' }),
                     color: "red"
                 },
@@ -309,8 +322,8 @@ const ProgramsOffering = ({ onNavigate }) => {
                     features: ["Advanced Exploitation", "Red Team Tactics", "Report Writing", "Live Projects", "Certification Prep"],
                     level: "Advanced",
                     price: "₹55,000",
-                    cta: "Get Syllabus", 
-                    action: () => setSyllabusModal({ isOpen: true, course: 'Advanced Penetration Testing', type: 'offensive' }),
+                    cta: "Register Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Advanced Penetration Testing', type: 'offensive', formType: 'enrollment' }),
                     color: "red"
                 }
             ]
@@ -320,26 +333,50 @@ const ProgramsOffering = ({ onNavigate }) => {
             subtitle: "Advanced & Custom Training Solutions",
             courses: [
                 {
-                    title: "Cloud Security Specialist",
-                    duration: "6 Weeks",
+                    title: "Cloud Computing & DevOps",
+                    duration: "Customizable",
                     type: "Specialized Training",
-                    description: "Master cloud security across AWS, Azure, and GCP platforms.",
-                    features: ["Multi-Cloud Security", "IAM & Compliance", "Container Security", "DevSecOps"],
+                    description: "Comprehensive training on cloud platforms, DevOps practices, and infrastructure management.",
+                    features: ["AWS/Azure/GCP", "Docker & Kubernetes", "CI/CD Pipelines", "Infrastructure as Code", "Hands-on Projects"],
                     level: "Intermediate",
-                    price: "₹35,000",
-                    cta: "Get Details",
-                    action: () => setSyllabusModal({ isOpen: true, course: 'Cloud Security Specialist', type: 'specialized' }),
+                    price: "₹25,000",
+                    cta: "Register Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Cloud Computing & DevOps', type: 'specialized', formType: 'enrollment' }),
+                    color: "purple"
+                },
+                {
+                    title: "AI & Data Science Fundamentals",
+                    duration: "Customizable",
+                    type: "Specialized Training",
+                    description: "Introduction to artificial intelligence, machine learning, and data analytics.",
+                    features: ["Python Programming", "Machine Learning", "Data Analytics", "AI Applications", "Practical Projects"],
+                    level: "Beginner to Intermediate",
+                    price: "₹20,000",
+                    cta: "Register Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'AI & Data Science Fundamentals', type: 'specialized', formType: 'enrollment' }),
+                    color: "purple"
+                },
+                {
+                    title: "Programming & Web Development",
+                    duration: "Customizable",
+                    type: "Specialized Training",
+                    description: "Full-stack development training covering modern programming languages and frameworks.",
+                    features: ["Frontend Development", "Backend Programming", "Database Management", "API Development", "Project Portfolio"],
+                    level: "Beginner to Advanced",
+                    price: "₹30,000",
+                    cta: "Register Now",
+                    action: () => setEnrollmentModal({ isOpen: true, course: 'Programming & Web Development', type: 'specialized', formType: 'enrollment' }),
                     color: "purple"
                 },
                 {
                     title: "Corporate Training",
                     duration: "Customizable",
                     type: "Enterprise Solution",
-                    description: "Tailored cybersecurity training programs for organizations and teams.",
-                    features: ["Custom Curriculum", "On-site Training", "Team Assessments", "Ongoing Support"],
+                    description: "Tailored training programs for organizations across all technology domains.",
+                    features: ["Custom Curriculum", "On-site Training", "Team Assessments", "Ongoing Support", "Multiple Technologies"],
                     level: "All Levels",
                     price: "Contact Us",
-                    cta: "Enquire Now",
+                    cta: "Register Now",
                     action: () => setEnrollmentModal({ isOpen: true, course: 'Corporate Training', type: 'corporate', formType: 'enquiry' }),
                     color: "indigo"
                 }
@@ -634,37 +671,134 @@ const Syllabus = ({ visibleSyllabus, setVisibleSyllabus }) => {
 const Trainers = () => {
     const [bio, setBio] = useState(null);
     const trainers = [
-        { name: 'Santosh Kumar', role: 'Lead Trainer & Founder', img: '/logo.png', bio: '8+ years across SOC, EDR, and threat hunting. Built multiple hands‑on labs and capstones.' },
-        { name: 'Jeevan Kumar', role: 'Co‑Trainer | SOC Certified', img: '/logo.png', bio: '6+ years in blue team operations and incident response with enterprise experience.' }
+        { 
+            name: 'Santosh Kumar', 
+            role: 'Lead Trainer & Founder', 
+            img: '/logo.png', 
+            specialization: 'Cybersecurity & SOC Operations',
+            experience: '8+ Years',
+            certifications: ['CISSP', 'CEH', 'GCIH', 'GCFA'],
+            bio: 'Santosh is a seasoned cybersecurity professional with over 8 years of hands-on experience in Security Operations Centers (SOC), Endpoint Detection & Response (EDR), and advanced threat hunting. As the founder of Agnidhra Technologies, he has successfully designed and implemented comprehensive training programs that bridge the gap between theoretical knowledge and real-world application.\n\nHis expertise spans across multiple domains including incident response, digital forensics, malware analysis, and security architecture. Santosh has worked with leading enterprises to strengthen their security posture and has trained over 500+ professionals who are now working in top-tier organizations.\n\nHe is passionate about mentoring the next generation of cybersecurity professionals and believes in hands-on, practical learning approaches. His training methodology focuses on real-world scenarios, ensuring students are job-ready from day one.',
+            achievements: [
+                'Trained 500+ cybersecurity professionals',
+                'Designed 20+ hands-on lab environments',
+                'Led incident response for 100+ security incidents',
+                'Published research on advanced persistent threats'
+            ]
+        },
+        { 
+            name: 'Jeevan Kumar', 
+            role: 'Co-Trainer | SOC Specialist', 
+            img: '/logo.png', 
+            specialization: 'Blue Team Operations & Incident Response',
+            experience: '6+ Years',
+            certifications: ['GCIH', 'GCFA', 'CySA+', 'Security+'],
+            bio: 'Jeevan brings 6+ years of intensive experience in blue team operations and incident response from enterprise environments. He has worked extensively with Fortune 500 companies, handling complex security incidents and building robust defense mechanisms.\n\nHis expertise includes advanced SIEM technologies, log analysis, threat hunting, and digital forensics. Jeevan has been instrumental in developing incident response playbooks and has led critical security investigations that prevented major data breaches.\n\nAs a co-trainer at Agnidhra Technologies, Jeevan focuses on practical SOC analyst training, ensuring students understand real-world threat landscapes and response procedures. His teaching style emphasizes hands-on learning through simulated environments and real-world case studies.',
+            achievements: [
+                'Managed SOC operations for enterprise clients',
+                'Developed incident response frameworks',
+                'Expertise in SIEM platforms (Splunk, QRadar, ArcSight)',
+                'Led threat hunting operations resulting in proactive threat detection'
+            ]
+        }
     ];
     return (
         <section id="trainers" className="py-20 bg-slate-900">
             <div className="container mx-auto px-6">
                 <SectionTitle>Meet Your Trainers</SectionTitle>
-                <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
                     {trainers.map((t) => (
-                        <div key={t.name} className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center">
-                            <img src={t.img} alt={t.name} className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-slate-600" />
-                            <h3 className="text-2xl font-bold text-white">{t.name}</h3>
-                            <p className="text-blue-400 font-semibold mb-3">{t.role}</p>
-                            <button onClick={() => setBio(t)} className="btn-secondary px-4 py-2">Read bio</button>
+                        <div key={t.name} className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 p-8 rounded-xl border border-slate-700 text-center hover:border-blue-500/50 transition-all duration-300">
+                            <div className="relative">
+                                <img src={t.img} alt={t.name} className="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-blue-500/50 shadow-lg" />
+                                <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                                    {t.experience}
+                                </div>
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-2">{t.name}</h3>
+                            <p className="text-blue-400 font-semibold mb-2">{t.role}</p>
+                            <p className="text-slate-300 text-sm mb-4">{t.specialization}</p>
+                            
+                            {/* Certifications */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-6">
+                                {t.certifications.map((cert, index) => (
+                                    <span key={index} className="text-xs bg-slate-700 text-blue-400 px-2 py-1 rounded-md font-medium">
+                                        {cert}
+                                    </span>
+                                ))}
+                            </div>
+                            
+                            <button 
+                                onClick={() => setBio(t)} 
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                            >
+                                View Full Bio
+                            </button>
                         </div>
                     ))}
                 </div>
 
                 {bio && (
-                    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setBio(null)}>
-                        <div className="bg-slate-900 border border-slate-700 rounded-lg max-w-lg w-full p-6" onClick={(e)=>e.stopPropagation()}>
-                            <div className="flex items-center gap-4 mb-4">
-                                <img src={bio.img} alt={bio.name} className="w-16 h-16 rounded-full border-2 border-slate-600" />
-                                <div>
-                                    <h3 className="text-xl font-bold text-white">{bio.name}</h3>
-                                    <p className="text-slate-300 text-sm">{bio.role}</p>
+                    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setBio(null)}>
+                        <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8" onClick={(e)=>e.stopPropagation()}>
+                            {/* Header */}
+                            <div className="flex items-center gap-6 mb-8">
+                                <img src={bio.img} alt={bio.name} className="w-24 h-24 rounded-full border-4 border-blue-500/50" />
+                                <div className="flex-1">
+                                    <h3 className="text-3xl font-bold text-white mb-2">{bio.name}</h3>
+                                    <p className="text-blue-400 font-semibold text-lg mb-2">{bio.role}</p>
+                                    <p className="text-slate-300">{bio.specialization} • {bio.experience}</p>
+                                </div>
+                                <button 
+                                    onClick={() => setBio(null)} 
+                                    className="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800"
+                                >
+                                    <X size={24} />
+                                </button>
+                            </div>
+
+                            {/* Certifications */}
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold text-white mb-3">Professional Certifications</h4>
+                                <div className="flex flex-wrap gap-3">
+                                    {bio.certifications.map((cert, index) => (
+                                        <span key={index} className="bg-blue-600/20 text-blue-400 px-3 py-1 rounded-lg font-medium border border-blue-500/30">
+                                            {cert}
+                                        </span>
+                                    ))}
                                 </div>
                             </div>
-                            <p className="text-slate-300 mb-6">{bio.bio}</p>
+
+                            {/* Bio */}
+                            <div className="mb-6">
+                                <h4 className="text-lg font-semibold text-white mb-3">Professional Background</h4>
+                                <div className="text-slate-300 leading-relaxed space-y-4">
+                                    {bio.bio.split('\n\n').map((paragraph, index) => (
+                                        <p key={index}>{paragraph}</p>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Achievements */}
+                            <div className="mb-8">
+                                <h4 className="text-lg font-semibold text-white mb-3">Key Achievements</h4>
+                                <ul className="space-y-2">
+                                    {bio.achievements.map((achievement, index) => (
+                                        <li key={index} className="flex items-center text-slate-300">
+                                            <Target size={16} className="text-blue-400 mr-3 flex-shrink-0" />
+                                            <span>{achievement}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
                             <div className="text-right">
-                                <button onClick={() => setBio(null)} className="btn-primary px-4 py-2">Close</button>
+                                <button 
+                                    onClick={() => setBio(null)} 
+                                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
+                                >
+                                    Close Bio
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -675,29 +809,57 @@ const Trainers = () => {
 };
 const Testimonials = () => {
     const items = [
-        { quote: "The project-based approach was a game-changer. I landed a job as a SOC Analyst within two months!", name: "Rohan S.", role: "SOC Analyst", img: "https://placehold.co/50x50/0F172A/38BDF8?text=R" },
-        { quote: "Hands-on labs prepared me for technical interviews. Highly recommended!", name: "Anjali P.", role: "Cyber Security Graduate", img: "https://placehold.co/50x50/0F172A/38BDF8?text=A" },
-        { quote: "Mentors were amazing and kept me accountable throughout.", name: "Kartik V.", role: "Security Engineer", img: "https://placehold.co/50x50/0F172A/38BDF8?text=K" }
+        { quote: "The project-based approach was a game-changer. I landed a job as a SOC Analyst within two months of completing the program!", name: "Rohan Sharma", role: "SOC Analyst at TCS", company: "TCS", img: "https://placehold.co/50x50/0F172A/38BDF8?text=RS", rating: 5 },
+        { quote: "Hands-on labs and real-world scenarios prepared me perfectly for technical interviews. The mentorship was exceptional!", name: "Anjali Patel", role: "Cybersecurity Analyst", company: "Infosys", img: "https://placehold.co/50x50/0F172A/F59E0B?text=AP", rating: 5 },
+        { quote: "The trainers were amazing and kept me accountable throughout. Now I'm working as a Security Engineer!", name: "Kartik Verma", role: "Security Engineer", company: "Wipro", img: "https://placehold.co/50x50/0F172A/10B981?text=KV", rating: 5 },
+        { quote: "Excellent training program with practical approach. The ethical hacking bootcamp opened doors to my dream career!", name: "Priya Singh", role: "Penetration Tester", company: "Accenture", img: "https://placehold.co/50x50/0F172A/EF4444?text=PS", rating: 5 },
+        { quote: "From zero knowledge to landing a cybersecurity role in 4 months. The curriculum is industry-relevant and up-to-date.", name: "Amit Kumar", role: "Information Security Analyst", company: "HCL Technologies", img: "https://placehold.co/50x50/0F172A/8B5CF6?text=AK", rating: 5 },
+        { quote: "The cloud security training was comprehensive. Got placed in a leading MNC with 40% salary hike!", name: "Sneha Reddy", role: "Cloud Security Specialist", company: "Cognizant", img: "https://placehold.co/50x50/0F172A/F97316?text=SR", rating: 5 },
+        { quote: "Best investment I made for my career. The trainers have real industry experience and share practical insights.", name: "Rahul Gupta", role: "SOC Team Lead", company: "Tech Mahindra", img: "https://placehold.co/50x50/0F172A/06B6D4?text=RG", rating: 5 },
+        { quote: "The incident response training was top-notch. I now handle critical security incidents with confidence.", name: "Kavya Nair", role: "Incident Response Analyst", company: "IBM", img: "https://placehold.co/50x50/0F172A/EC4899?text=KN", rating: 5 },
+        { quote: "Comprehensive program covering all aspects of cybersecurity. The job assistance program really helped!", name: "Vikash Singh", role: "Security Consultant", company: "Deloitte", img: "https://placehold.co/50x50/0F172A/84CC16?text=VS", rating: 5 },
+        { quote: "Learned SIEM tools, threat hunting, and digital forensics. Now working with one of India's top IT companies!", name: "Meera Joshi", role: "Digital Forensics Expert", company: "Capgemini", img: "https://placehold.co/50x50/0F172A/F59E0B?text=MJ", rating: 5 },
+        { quote: "The corporate training for our team was excellent. Enhanced our entire security operations capability.", name: "Suresh Menon", role: "CISO", company: "Leading Bank", img: "https://placehold.co/50x50/0F172A/3B82F6?text=SM", rating: 5 },
+        { quote: "Practical approach to learning cybersecurity. The hands-on labs simulated real-world attack scenarios perfectly.", name: "Deepak Yadav", role: "Ethical Hacker", company: "Freelancer", img: "https://placehold.co/50x50/0F172A/EF4444?text=DY", rating: 5 },
+        { quote: "From a fresher to a cybersecurity professional - this program transformed my career completely!", name: "Ritu Kumari", role: "Security Analyst", company: "L&T Infotech", img: "https://placehold.co/50x50/0F172A/8B5CF6?text=RK", rating: 5 }
     ];
     const [index, setIndex] = React.useState(0);
+    const [isPaused, setIsPaused] = React.useState(false);
+    
     React.useEffect(() => {
-        const id = setInterval(() => setIndex((i) => (i + 1) % items.length), 5000);
+        if (isPaused) return;
+        const id = setInterval(() => setIndex((i) => (i + 1) % items.length), 4000);
         return () => clearInterval(id);
-    }, [items.length]);
+    }, [items.length, isPaused]);
 
     const current = items[index];
+    
+    const renderStars = (rating) => {
+        return Array.from({ length: 5 }, (_, i) => (
+            <span key={i} className={`text-lg ${i < rating ? 'text-yellow-400' : 'text-slate-600'}`}>
+                ★
+            </span>
+        ));
+    };
     return (
         <section id="testimonials" className="py-20 bg-slate-800">
             <div className="container mx-auto px-6">
                 <SectionTitle>What Our Students Say</SectionTitle>
-                <div className="max-w-3xl mx-auto">
+                <div className="text-center mb-12">
+                    <p className="text-slate-300 text-lg">
+                        Over 500+ students have transformed their careers with us
+                    </p>
+                </div>
+                
+                <div className="max-w-4xl mx-auto">
                     <div className="bg-slate-900 p-8 rounded-lg border border-slate-700 relative">
                         <p className="text-slate-300 italic mb-6">“{current.quote}”</p>
                         <div className="flex items-center">
                             <img src={current.img} alt={current.name} className="w-12 h-12 rounded-full mr-4"/>
                             <div>
                                 <h4 className="font-bold text-white">{current.name}</h4>
-                                <p className="text-sm text-slate-400">{current.role}</p>
+                                <p className="text-blue-400 font-semibold">{current.role}</p>
+                                <p className="text-slate-400 text-sm">{current.company}</p>
                             </div>
                         </div>
                         <div className="absolute right-4 top-4 flex gap-2">
@@ -715,9 +877,7 @@ const Contact = ({ onNavigate }) => ( <section id="contact" className="py-20 bg-
 
 // --- Main HomePage Component ---
 export default function HomePage({ onNavigate }) {
-    const [visibleSyllabus, setVisibleSyllabus] = useState(null);
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
-    const [selectedTraining, setSelectedTraining] = useState(null);
     
     React.useEffect(() => {
         // On mount, if a hash exists, attempt smooth scroll to that section
@@ -735,10 +895,8 @@ export default function HomePage({ onNavigate }) {
             <CybersecurityMastery />
             <ProgramsOffering onNavigate={onNavigate} />
             <About />
-            <SpecializedTrainings onTrainingSelect={setSelectedTraining} />
             <WhyUs />
             <Admissions />            
-            <Syllabus visibleSyllabus={visibleSyllabus} setVisibleSyllabus={setVisibleSyllabus} />
             <Trainers />
             <Testimonials />
             <Contact onNavigate={onNavigate} />
@@ -754,13 +912,7 @@ export default function HomePage({ onNavigate }) {
             </div>
             
             <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
-
-            {selectedTraining && (
-                <SpecializedTrainingModal 
-                    courseTitle={selectedTraining} 
-                    onClose={() => setSelectedTraining(null)} 
-                />
-            )}
+            <ScrollNavigation />
         </>
     );
 }
