@@ -10,12 +10,12 @@ import { getStorage } from 'firebase/storage';
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || "demo-api-key",
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "agnidhra-cybersecurity.firebaseapp.com",
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || "agnidhra-cybersecurity",
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "agnidhra-cybersecurity.appspot.com",
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "123456789",
-  appId: process.env.REACT_APP_FIREBASE_APP_ID || "demo-app-id"
+  apiKey: import.meta.env.REACT_APP_FIREBASE_API_KEY || "demo-api-key",
+  authDomain: import.meta.env.REACT_APP_FIREBASE_AUTH_DOMAIN || "agnidhra-cybersecurity.firebaseapp.com",
+  projectId: import.meta.env.REACT_APP_FIREBASE_PROJECT_ID || "agnidhra-cybersecurity",
+  storageBucket: import.meta.env.REACT_APP_FIREBASE_STORAGE_BUCKET || "agnidhra-cybersecurity.appspot.com",
+  messagingSenderId: import.meta.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || "123456789",
+  appId: import.meta.env.REACT_APP_FIREBASE_APP_ID || "demo-app-id"
 };
 
 // Initialize Firebase

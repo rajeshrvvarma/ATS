@@ -422,17 +422,13 @@ const BootcampLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* Enhanced Enrollment Modal */}
+      {/* Enrollment Modal */}
       <EnhancedEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="7-day-bootcamp"
-        courseName="7-Day Intensive Cybersecurity Bootcamp"
-        coursePrice={pricing.price}
-        onEnrollmentSuccess={(result) => {
-          console.log('Enrollment successful:', result);
-          // You can add success tracking or analytics here
-        }}
+        courseType="bootcamp"
+        courseTitle="7-Day Intensive Cybersecurity Bootcamp"
+        price={pricing.price}
       />
     </div>
   );

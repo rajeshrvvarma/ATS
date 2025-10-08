@@ -7,15 +7,15 @@ import emailjs from '@emailjs/browser';
 
 // EmailJS Configuration
 const EMAILJS_CONFIG = {
-  serviceId: process.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_agnidhra',
-  publicKey: process.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'your_public_key',
+  serviceId: import.meta.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_agnidhra',
+  publicKey: import.meta.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'your_public_key',
   templates: {
-    welcome: process.env.REACT_APP_EMAILJS_WELCOME_TEMPLATE || 'template_welcome',
-    courseAccess: process.env.REACT_APP_EMAILJS_ACCESS_TEMPLATE || 'template_access',
-    paymentConfirmation: process.env.REACT_APP_EMAILJS_PAYMENT_TEMPLATE || 'template_payment',
-    progressUpdate: process.env.REACT_APP_EMAILJS_PROGRESS_TEMPLATE || 'template_progress',
-    certificate: process.env.REACT_APP_EMAILJS_CERTIFICATE_TEMPLATE || 'template_certificate',
-    reminder: process.env.REACT_APP_EMAILJS_REMINDER_TEMPLATE || 'template_reminder'
+    welcome: import.meta.env.REACT_APP_EMAILJS_WELCOME_TEMPLATE || 'template_welcome',
+    courseAccess: import.meta.env.REACT_APP_EMAILJS_ACCESS_TEMPLATE || 'template_access',
+    paymentConfirmation: import.meta.env.REACT_APP_EMAILJS_PAYMENT_TEMPLATE || 'template_payment',
+    progressUpdate: import.meta.env.REACT_APP_EMAILJS_PROGRESS_TEMPLATE || 'template_progress',
+    certificate: import.meta.env.REACT_APP_EMAILJS_CERTIFICATE_TEMPLATE || 'template_certificate',
+    reminder: import.meta.env.REACT_APP_EMAILJS_REMINDER_TEMPLATE || 'template_reminder'
   }
 };
 
