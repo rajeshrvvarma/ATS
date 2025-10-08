@@ -1,20 +1,62 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target } from 'lucide-react';
+import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
-    const [isProgramsOpen, setIsProgramsOpen] = useState(false);
-    const [showMega, setShowMega] = useState(false);
+    // Mobile navigation state
+    const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
+
     // Mobile navigation items
     const mobileNavItems = [
-        { name: "Programs", action: () => scrollToSection('programs') },
         { name: "About Us", action: () => scrollToSection('about') },
         { name: "Video Learning", action: () => onNavigate('video-learning') },
         { name: "Contact Us", action: () => onNavigate('contact') },
         { name: "Login", action: () => onNavigate('login') }
     ];
+
+    // Mobile program categories (simplified from mega menu)
+    const mobileProgramCategories = {
+        foundation: {
+            title: '🎯 Foundation Programs (₹99)',
+            courses: [
+                { name: 'Cybersecurity Fundamentals', action: () => onNavigate('enroll') },
+                { name: 'Technology Overview', action: () => onNavigate('enroll') }
+            ]
+        },
+        bootcamp: {
+            title: '⚡ 7-Day Bootcamps',
+            courses: [
+                { name: 'SOC Analyst Bootcamp (₹499+)', action: () => onNavigate('bootcampLanding') },
+                { name: 'Ethical Hacking Bootcamp (₹599+)', action: () => onNavigate('offensiveBootcampLanding') }
+            ]
+        },
+        premium: {
+            title: '🏆 2-Month Programs',
+            courses: [
+                { name: 'Defensive Mastery (₹5,999)', action: () => onNavigate('premiumProgram') },
+                { name: 'Elite Hacker Program (₹7,999)', action: () => onNavigate('offensiveMastery') }
+            ]
+        },
+        specialized: {
+            title: '🎯 Specialized Courses',
+            courses: [
+                { name: 'Cloud Security', action: () => onNavigate('specializedCourses') },
+                { name: 'Digital Forensics', action: () => onNavigate('specializedCourses') },
+                { name: 'GRC & Compliance', action: () => onNavigate('specializedCourses') }
+            ]
+        },
+        technology: {
+            title: '💻 Technology Training',
+            courses: [
+                { name: 'Full Stack Development', action: () => onNavigate('enroll') },
+                { name: 'Cloud & DevOps', action: () => onNavigate('enroll') },
+                { name: 'AI & Data Science', action: () => onNavigate('enroll') },
+                { name: 'Software Testing', action: () => onNavigate('enroll') }
+            ]
+        }
+    };
 
     const scrollToSection = (id) => {
         setActiveLink(id);
@@ -85,147 +127,7 @@ export default function Header({ onNavigate, currentPage }) {
 
                     {/* Center - Main Navigation */}
                     <nav className="flex items-center space-x-8">
-                        <div 
-                            className="relative"
-                            onMouseEnter={() => setIsProgramsOpen(true)}
-                            onMouseLeave={() => setIsProgramsOpen(false)}
-                        >
-                            <button
-                                className="flex items-center text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                            >
-                                Programs
-                                <ChevronDown className="ml-1 h-4 w-4" />
-                            </button>
-                            
-                            <AnimatePresence>
-                                {isProgramsOpen && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        transition={{ duration: 0.2 }}
-                                        className="absolute top-full left-0 mt-2 w-80 bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden z-50"
-                                    >
-                                        <div className="p-6">
-                                            <h3 className="text-lg font-semibold text-white mb-4">Training Programs</h3>
-                                            <div className="space-y-3">
-                                                <div className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                                                    Defensive Security
-                                                </div>
-                                                <button
-                                                    onClick={() => onNavigate('bootcampLanding')}
-                                                    className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
-                                                >
-                                                    <div className="flex items-start space-x-3">
-                                                        <div className="bg-blue-600 rounded-lg p-2">
-                                                            <Shield className="h-5 w-5 text-white" />
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-white group-hover:text-blue-400">
-                                                                7-Day SOC Bootcamp
-                                                            </div>
-                                                            <div className="text-sm text-slate-400 mt-1">
-                                                                From Zero to SOC Analyst • Starting ₹499
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </button>
-                                                
-                                                <button
-                                                    onClick={() => onNavigate('premiumProgram')}
-                                                    className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
-                                                >
-                                                    <div className="flex items-start space-x-3">
-                                                        <div className="bg-purple-600 rounded-lg p-2">
-                                                            <Sparkles className="h-5 w-5 text-white" />
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-medium text-white group-hover:text-purple-400">
-                                                                2-Month Mastery Program
-                                                            </div>
-                                                            <div className="text-sm text-slate-400 mt-1">
-                                                                Premium certification • ₹5,999
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </button>
-
-                                                <div className="border-t border-slate-700 pt-3 mt-3">
-                                                    <div className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
-                                                        Offensive Security
-                                                    </div>
-                                                    <button
-                                                        onClick={() => onNavigate('offensiveBootcampLanding')}
-                                                        className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
-                                                    >
-                                                        <div className="flex items-start space-x-3">
-                                                            <div className="bg-red-600 rounded-lg p-2">
-                                                                <Sword className="h-5 w-5 text-white" />
-                                                            </div>
-                                                            <div>
-                                                                <div className="font-medium text-white group-hover:text-red-400">
-                                                                    7-Day Hacking Bootcamp
-                                                                </div>
-                                                                <div className="text-sm text-slate-400 mt-1">
-                                                                    Ethical hacking fundamentals • Starting ₹599
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                    
-                                                    <button
-                                                        onClick={() => onNavigate('offensiveMastery')}
-                                                        className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
-                                                    >
-                                                        <div className="flex items-start space-x-3">
-                                                            <div className="bg-orange-600 rounded-lg p-2">
-                                                                <Sparkles className="h-5 w-5 text-white" />
-                                                            </div>
-                                                            <div>
-                                                                <div className="font-medium text-white group-hover:text-orange-400">
-                                                                    2-Month Elite Hacker
-                                                                </div>
-                                                                <div className="text-sm text-slate-400 mt-1">
-                                                                    Advanced red team training • ₹7,999
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                </div>
-
-                                                <div className="border-t border-slate-700 pt-3 mt-3">
-                                                    <button
-                                                        onClick={() => onNavigate('specializedCourses')}
-                                                        className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
-                                                    >
-                                                        <div className="flex items-start space-x-3">
-                                                            <div className="bg-green-600 rounded-lg p-2">
-                                                                <Target className="h-5 w-5 text-white" />
-                                                            </div>
-                                                            <div>
-                                                                <div className="font-medium text-white group-hover:text-green-400">
-                                                                    Specialized Courses
-                                                                </div>
-                                                                <div className="text-sm text-slate-400 mt-1">
-                                                                    Cloud, Forensics, GRC & More • ₹2,999+
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </button>
-                                                    
-                                                    <button
-                                                        onClick={() => scrollToSection('programs')}
-                                                        className="w-full text-center mt-3 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200"
-                                                    >
-                                                        View All Programs →
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </div>
+                        <MegaMenuPrograms onNavigate={onNavigate} scrollToSection={scrollToSection} />
                         <button
                             onClick={() => scrollToSection('about')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
@@ -285,8 +187,63 @@ export default function Header({ onNavigate, currentPage }) {
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden bg-slate-900/95 backdrop-blur-sm border-t border-slate-700">
+                <div className="md:hidden bg-slate-900/95 backdrop-blur-sm border-t border-slate-700 max-h-96 overflow-y-auto">
                     <ul className="px-4 pt-2 pb-3 space-y-1">
+                        {/* Programs Section */}
+                        <li>
+                            <div className="text-sm font-semibold text-slate-400 uppercase tracking-wide px-3 py-2">
+                                Training Programs
+                            </div>
+                            {Object.entries(mobileProgramCategories).map(([key, category]) => (
+                                <div key={key} className="mb-2">
+                                    <button
+                                        onClick={() => setExpandedMobileCategory(expandedMobileCategory === key ? null : key)}
+                                        className="flex items-center justify-between w-full text-left px-3 py-2 text-slate-300 hover:text-blue-400 hover:bg-slate-800/50 rounded-md"
+                                    >
+                                        <span className="text-sm font-medium">{category.title}</span>
+                                        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
+                                            expandedMobileCategory === key ? 'rotate-180' : ''
+                                        }`} />
+                                    </button>
+                                    
+                                    <AnimatePresence>
+                                        {expandedMobileCategory === key && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="overflow-hidden"
+                                            >
+                                                <div className="pl-4 space-y-1">
+                                                    {category.courses.map((course, courseIndex) => (
+                                                        <button
+                                                            key={courseIndex}
+                                                            onClick={() => { course.action(); setIsOpen(false); setExpandedMobileCategory(null); }}
+                                                            className="block w-full text-left px-3 py-2 text-sm text-slate-400 hover:text-blue-400 hover:bg-slate-800/30 rounded-md"
+                                                        >
+                                                            {course.name}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            ))}
+                            
+                            <button
+                                onClick={() => { scrollToSection('programs'); setIsOpen(false); }}
+                                className="w-full text-center px-3 py-2 text-blue-400 hover:text-blue-300 text-sm font-medium"
+                            >
+                                📋 View All Programs
+                            </button>
+                        </li>
+
+                        {/* Divider */}
+                        <li className="border-t border-slate-700 pt-2"></li>
+
+                        {/* Other Navigation Items */}
                         {mobileNavItems.map((item, index) => (
                             <li key={index}>
                                 <button 
@@ -297,12 +254,14 @@ export default function Header({ onNavigate, currentPage }) {
                                 </button>
                             </li>
                         ))}
+                        
+                        {/* CTA Button */}
                         <li className="pt-2 border-t border-slate-700">
                             <button 
                                 onClick={() => { setIsOpen(false); onNavigate('enroll'); }} 
                                 className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
                             >
-                                Enroll Now
+                                🚀 Enroll Now
                             </button>
                         </li>
                     </ul>
@@ -311,4 +270,308 @@ export default function Header({ onNavigate, currentPage }) {
         </header>
     );
 }
+
+// Mega Menu Component for Programs
+const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
+    const [isProgramsOpen, setIsProgramsOpen] = useState(false);
+    const [activeCategory, setActiveCategory] = useState('foundation');
+
+    const programCategories = {
+        foundation: {
+            title: 'Foundation Programs',
+            icon: BookOpen,
+            color: 'green',
+            courses: [
+                {
+                    title: 'Cybersecurity Fundamentals Workshop',
+                    duration: '2 Days',
+                    price: '₹99',
+                    description: 'Introduction to cybersecurity landscape and career paths',
+                    action: () => onNavigate('enroll'),
+                    popular: true
+                },
+                {
+                    title: 'Technology Overview Workshop',
+                    duration: '2 Days',
+                    price: '₹99',
+                    description: 'Explore AI, Cloud Computing, and DevSecOps fundamentals',
+                    action: () => onNavigate('enroll')
+                }
+            ]
+        },
+        defensive: {
+            title: 'Defensive Security',
+            icon: Shield,
+            color: 'blue',
+            courses: [
+                {
+                    title: '7-Day SOC Bootcamp',
+                    duration: '1 Week',
+                    price: 'Starting ₹499',
+                    description: 'From Zero to SOC Analyst Ready',
+                    action: () => onNavigate('bootcampLanding'),
+                    popular: true
+                },
+                {
+                    title: '2-Month Mastery Program',
+                    duration: '2 Months',
+                    price: '₹5,999',
+                    description: 'Premium certification with mentorship',
+                    action: () => onNavigate('premiumProgram')
+                }
+            ]
+        },
+        offensive: {
+            title: 'Offensive Security',
+            icon: Sword,
+            color: 'red',
+            courses: [
+                {
+                    title: '7-Day Ethical Hacking Bootcamp',
+                    duration: '1 Week',
+                    price: 'Starting ₹599',
+                    description: 'Master penetration testing fundamentals',
+                    action: () => onNavigate('offensiveBootcampLanding'),
+                    popular: true
+                },
+                {
+                    title: '2-Month Elite Hacker Program',
+                    duration: '2 Months',
+                    price: '₹7,999',
+                    description: 'Advanced red team operations',
+                    action: () => onNavigate('offensiveMastery')
+                }
+            ]
+        },
+        specialized: {
+            title: 'Specialized Security',
+            icon: Target,
+            color: 'purple',
+            courses: [
+                {
+                    title: 'Cloud Security Specialist',
+                    duration: '4-6 Weeks',
+                    price: 'Starting ₹3,999',
+                    description: 'AWS, Azure, and multi-cloud security',
+                    action: () => onNavigate('specializedCourses')
+                },
+                {
+                    title: 'Digital Forensics Expert',
+                    duration: '5 Weeks',
+                    price: 'Starting ₹4,999',
+                    description: 'Digital evidence and malware forensics',
+                    action: () => onNavigate('specializedCourses')
+                },
+                {
+                    title: 'GRC & Compliance',
+                    duration: '4-5 Weeks',
+                    price: 'Starting ₹3,499',
+                    description: 'ISO 27001 and risk management',
+                    action: () => onNavigate('specializedCourses')
+                }
+            ]
+        },
+        technology: {
+            title: 'Technology Training',
+            icon: Laptop,
+            color: 'indigo',
+            courses: [
+                {
+                    title: 'Full Stack Web Development',
+                    duration: 'Flexible',
+                    price: '₹30,000',
+                    description: 'Frontend, backend, and database development',
+                    action: () => onNavigate('enroll')
+                },
+                {
+                    title: 'Cloud Computing & DevOps',
+                    duration: 'Flexible',
+                    price: '₹25,000',
+                    description: 'AWS, Docker, Kubernetes, CI/CD',
+                    action: () => onNavigate('enroll')
+                },
+                {
+                    title: 'AI & Data Science',
+                    duration: 'Flexible',
+                    price: '₹20,000',
+                    description: 'Machine learning and data analytics',
+                    action: () => onNavigate('enroll')
+                },
+                {
+                    title: 'Software Testing',
+                    duration: 'Flexible',
+                    price: '₹18,000',
+                    description: 'Manual and automation testing',
+                    action: () => onNavigate('enroll')
+                }
+            ]
+        },
+        corporate: {
+            title: 'Corporate Training',
+            icon: Sparkles,
+            color: 'orange',
+            courses: [
+                {
+                    title: 'Enterprise Security Training',
+                    duration: 'Customizable',
+                    price: 'Contact Us',
+                    description: 'Tailored programs for organizations',
+                    action: () => onNavigate('contact')
+                },
+                {
+                    title: 'Team Skill Development',
+                    duration: 'Customizable',
+                    price: 'Contact Us',
+                    description: 'Multi-technology training solutions',
+                    action: () => onNavigate('contact')
+                }
+            ]
+        }
+    };
+
+    const getColorClasses = (color) => {
+        const colors = {
+            green: 'text-green-400 bg-green-600',
+            blue: 'text-blue-400 bg-blue-600',
+            red: 'text-red-400 bg-red-600',
+            purple: 'text-purple-400 bg-purple-600',
+            indigo: 'text-indigo-400 bg-indigo-600',
+            orange: 'text-orange-400 bg-orange-600'
+        };
+        return colors[color] || colors.blue;
+    };
+
+    const getHoverClasses = (color) => {
+        const colors = {
+            green: 'hover:bg-green-600/20 hover:text-green-300',
+            blue: 'hover:bg-blue-600/20 hover:text-blue-300',
+            red: 'hover:bg-red-600/20 hover:text-red-300',
+            purple: 'hover:bg-purple-600/20 hover:text-purple-300',
+            indigo: 'hover:bg-indigo-600/20 hover:text-indigo-300',
+            orange: 'hover:bg-orange-600/20 hover:text-orange-300'
+        };
+        return colors[color] || colors.blue;
+    };
+
+    return (
+        <div 
+            className="relative"
+            onMouseEnter={() => setIsProgramsOpen(true)}
+            onMouseLeave={() => setIsProgramsOpen(false)}
+        >
+            <button className="flex items-center text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200">
+                Programs
+                <ChevronDown className="ml-1 h-4 w-4" />
+            </button>
+            
+            <AnimatePresence>
+                {isProgramsOpen && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute top-full left-0 mt-2 w-[800px] bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden z-50"
+                    >
+                        <div className="flex">
+                            {/* Left sidebar - Categories */}
+                            <div className="w-64 bg-slate-900 p-4 border-r border-slate-700">
+                                <h3 className="text-lg font-semibold text-white mb-4">Training Categories</h3>
+                                <div className="space-y-1">
+                                    {Object.entries(programCategories).map(([key, category]) => {
+                                        const IconComponent = category.icon;
+                                        const isActive = activeCategory === key;
+                                        const colorClasses = getColorClasses(category.color);
+                                        const hoverClasses = getHoverClasses(category.color);
+                                        
+                                        return (
+                                            <button
+                                                key={key}
+                                                onMouseEnter={() => setActiveCategory(key)}
+                                                className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
+                                                    isActive 
+                                                        ? `bg-slate-700 ${category.color === 'blue' ? 'text-blue-400' : category.color === 'red' ? 'text-red-400' : category.color === 'green' ? 'text-green-400' : category.color === 'purple' ? 'text-purple-400' : category.color === 'indigo' ? 'text-indigo-400' : 'text-orange-400'}` 
+                                                        : `text-slate-300 ${hoverClasses}`
+                                                }`}
+                                            >
+                                                <div className="flex items-center space-x-3">
+                                                    <div className={`rounded-lg p-2 ${isActive ? colorClasses.split(' ')[1] : 'bg-slate-700'}`}>
+                                                        <IconComponent className="h-5 w-5 text-white" />
+                                                    </div>
+                                                    <div>
+                                                        <div className="font-medium">{category.title}</div>
+                                                        <div className="text-xs text-slate-400">
+                                                            {category.courses.length} course{category.courses.length !== 1 ? 's' : ''}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            {/* Right content - Courses */}
+                            <div className="flex-1 p-6">
+                                <div className="mb-4">
+                                    <h4 className="text-xl font-semibold text-white mb-2">
+                                        {programCategories[activeCategory]?.title}
+                                    </h4>
+                                    <p className="text-slate-400 text-sm">
+                                        Choose from our comprehensive {programCategories[activeCategory]?.title.toLowerCase()} programs
+                                    </p>
+                                </div>
+
+                                <div className="space-y-3 max-h-80 overflow-y-auto">
+                                    {programCategories[activeCategory]?.courses.map((course, index) => (
+                                        <button
+                                            key={index}
+                                            onClick={course.action}
+                                            className="w-full text-left p-4 rounded-lg hover:bg-slate-700 transition-colors duration-200 group border border-slate-700 hover:border-slate-600"
+                                        >
+                                            <div className="flex items-start justify-between">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <h5 className="font-medium text-white group-hover:text-blue-400">
+                                                            {course.title}
+                                                        </h5>
+                                                        {course.popular && (
+                                                            <span className="bg-yellow-500 text-black text-xs px-2 py-0.5 rounded-full font-semibold">
+                                                                POPULAR
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                    <p className="text-sm text-slate-400 mb-2">{course.description}</p>
+                                                    <div className="flex items-center gap-4 text-xs text-slate-500">
+                                                        <span className="flex items-center gap-1">
+                                                            <Clock className="h-3 w-3" />
+                                                            {course.duration}
+                                                        </span>
+                                                        <span className="font-semibold text-green-400">
+                                                            {course.price}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="mt-6 pt-4 border-t border-slate-700">
+                                    <button
+                                        onClick={() => scrollToSection('programs')}
+                                        className="w-full text-center text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200 flex items-center justify-center gap-2"
+                                    >
+                                        <Star className="h-4 w-4" />
+                                        View All Programs & Detailed Information
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </div>
+    );
+};
 
