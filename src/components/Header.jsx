@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles } from 'lucide-react';
+import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Header({ onNavigate, currentPage }) {
@@ -109,6 +109,9 @@ export default function Header({ onNavigate, currentPage }) {
                                         <div className="p-6">
                                             <h3 className="text-lg font-semibold text-white mb-4">Training Programs</h3>
                                             <div className="space-y-3">
+                                                <div className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
+                                                    Defensive Security
+                                                </div>
                                                 <button
                                                     onClick={() => onNavigate('bootcampLanding')}
                                                     className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
@@ -119,10 +122,10 @@ export default function Header({ onNavigate, currentPage }) {
                                                         </div>
                                                         <div>
                                                             <div className="font-medium text-white group-hover:text-blue-400">
-                                                                7-Day Intensive Bootcamp
+                                                                7-Day SOC Bootcamp
                                                             </div>
                                                             <div className="text-sm text-slate-400 mt-1">
-                                                                From Zero to SOC Analyst Ready • Starting ₹499
+                                                                From Zero to SOC Analyst • Starting ₹499
                                                             </div>
                                                         </div>
                                                     </div>
@@ -141,16 +144,78 @@ export default function Header({ onNavigate, currentPage }) {
                                                                 2-Month Mastery Program
                                                             </div>
                                                             <div className="text-sm text-slate-400 mt-1">
-                                                                Premium certification with mentorship • ₹5,999
+                                                                Premium certification • ₹5,999
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </button>
 
                                                 <div className="border-t border-slate-700 pt-3 mt-3">
+                                                    <div className="text-sm font-semibold text-slate-400 uppercase tracking-wide mb-2">
+                                                        Offensive Security
+                                                    </div>
+                                                    <button
+                                                        onClick={() => onNavigate('offensiveBootcampLanding')}
+                                                        className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
+                                                    >
+                                                        <div className="flex items-start space-x-3">
+                                                            <div className="bg-red-600 rounded-lg p-2">
+                                                                <Sword className="h-5 w-5 text-white" />
+                                                            </div>
+                                                            <div>
+                                                                <div className="font-medium text-white group-hover:text-red-400">
+                                                                    7-Day Hacking Bootcamp
+                                                                </div>
+                                                                <div className="text-sm text-slate-400 mt-1">
+                                                                    Ethical hacking fundamentals • Starting ₹599
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                    
+                                                    <button
+                                                        onClick={() => onNavigate('offensiveMastery')}
+                                                        className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
+                                                    >
+                                                        <div className="flex items-start space-x-3">
+                                                            <div className="bg-orange-600 rounded-lg p-2">
+                                                                <Sparkles className="h-5 w-5 text-white" />
+                                                            </div>
+                                                            <div>
+                                                                <div className="font-medium text-white group-hover:text-orange-400">
+                                                                    2-Month Elite Hacker
+                                                                </div>
+                                                                <div className="text-sm text-slate-400 mt-1">
+                                                                    Advanced red team training • ₹7,999
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                </div>
+
+                                                <div className="border-t border-slate-700 pt-3 mt-3">
+                                                    <button
+                                                        onClick={() => onNavigate('specializedCourses')}
+                                                        className="w-full text-left p-3 rounded-lg hover:bg-slate-700 transition-colors duration-200 group"
+                                                    >
+                                                        <div className="flex items-start space-x-3">
+                                                            <div className="bg-green-600 rounded-lg p-2">
+                                                                <Target className="h-5 w-5 text-white" />
+                                                            </div>
+                                                            <div>
+                                                                <div className="font-medium text-white group-hover:text-green-400">
+                                                                    Specialized Courses
+                                                                </div>
+                                                                <div className="text-sm text-slate-400 mt-1">
+                                                                    Cloud, Forensics, GRC & More • ₹2,999+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </button>
+                                                    
                                                     <button
                                                         onClick={() => scrollToSection('programs')}
-                                                        className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200"
+                                                        className="w-full text-center mt-3 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors duration-200"
                                                     >
                                                         View All Programs →
                                                     </button>

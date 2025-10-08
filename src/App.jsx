@@ -20,6 +20,9 @@ const FreeWorkshopPage = React.lazy(() => import('@/pages/WorkshopPage.jsx'));
 const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
 const BootcampLandingPage = React.lazy(() => import('@/pages/BootcampLandingPage.jsx'));
 const PremiumProgramLandingPage = React.lazy(() => import('@/pages/PremiumProgramLandingPage.jsx'));
+const OffensiveBootcampLandingPage = React.lazy(() => import('@/pages/OffensiveBootcampLandingPage.jsx'));
+const OffensiveMasteryLandingPage = React.lazy(() => import('@/pages/OffensiveMasteryLandingPage.jsx'));
+const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/SpecializedCoursesLandingPage.jsx'));
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
 const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
@@ -50,6 +53,9 @@ export default function App() {
         offensiveBootcamp: '/bootcamp/offensive',
         bootcampLanding: '/bootcamp-intensive',
         premiumProgram: '/cybersecurity-mastery',
+        offensiveBootcampLanding: '/ethical-hacking-bootcamp',
+        offensiveMastery: '/offensive-security-mastery',
+        specializedCourses: '/specialized-courses',
         terms: '/terms',
         disclaimer: '/disclaimer',
         'accountActivation-defensive': '/activate/defensive',
@@ -75,6 +81,9 @@ export default function App() {
         '/bootcamp/offensive': 'offensiveBootcamp',
         '/bootcamp-intensive': 'bootcampLanding',
         '/cybersecurity-mastery': 'premiumProgram',
+        '/ethical-hacking-bootcamp': 'offensiveBootcampLanding',
+        '/offensive-security-mastery': 'offensiveMastery',
+        '/specialized-courses': 'specializedCourses',
         '/terms': 'terms',
         '/disclaimer': 'disclaimer',
         '/activate/defensive': 'accountActivation-defensive',
@@ -119,6 +128,9 @@ export default function App() {
                             <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
                             <Route path="/bootcamp-intensive" element={<BootcampLandingPage onNavigate={go} />} />
                             <Route path="/cybersecurity-mastery" element={<PremiumProgramLandingPage onNavigate={go} />} />
+                            <Route path="/ethical-hacking-bootcamp" element={<OffensiveBootcampLandingPage onNavigate={go} />} />
+                            <Route path="/offensive-security-mastery" element={<OffensiveMasteryLandingPage onNavigate={go} />} />
+                            <Route path="/specialized-courses" element={<SpecializedCoursesLandingPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
                             <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />

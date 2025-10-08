@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit } from 'lucide-react';
+import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle } from 'lucide-react';
 import SectionTitle from '@/components/SectionTitle.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
@@ -350,34 +350,76 @@ const ProgramsOffering = ({ onNavigate }) => {
             subtitle: "Master Ethical Hacking & Penetration Testing",
             courses: [
                 {
-                    title: "Ethical Hacking Bootcamp",
+                    title: "7-Day Ethical Hacking Bootcamp",
                     duration: "7 Days",
-                    type: "Intensive Training",
-                    description: "Learn the fundamentals of ethical hacking and penetration testing.",
-                    features: ["Kali Linux", "Network Scanning", "Web App Testing", "Exploitation Basics"],
+                    type: "High-Volume Enrollment",
+                    description: "Master penetration testing - Join 80+ aspiring ethical hackers",
+                    features: ["Kali Linux Mastery", "Web App Pentesting", "Network Exploitation", "Report Writing"],
                     level: "Beginner to Intermediate",
-                    price: "₹1,499",
-                    cta: "Register Now",
-                    action: () => setEnrollmentModal({ isOpen: true, course: 'Ethical Hacking Bootcamp', type: 'offensive', formType: 'enrollment' }),
+                    price: "Starting ₹599",
+                    cta: "Join Hacking Bootcamp",
+                    action: () => onNavigate('offensiveBootcampLanding'),
                     color: "red"
                 },
                 {
-                    title: "Advanced Penetration Testing",
+                    title: "2-Month Elite Hacker Program",
                     duration: "2 Months",
-                    type: "Professional Training",
-                    description: "Comprehensive penetration testing program with real-world scenarios.",
-                    features: ["Advanced Exploitation", "Red Team Tactics", "Report Writing", "Live Projects", "Certification Prep"],
+                    type: "Elite Training (15 students)",
+                    description: "Advanced red team operations with personal mentorship and custom exploit development",
+                    features: ["Custom Exploits", "Red Team Ops", "Advanced Techniques", "Elite Mentorship"],
                     level: "Advanced",
-                    price: "₹55,000",
-                    cta: "Register Now",
-                    action: () => setEnrollmentModal({ isOpen: true, course: 'Advanced Penetration Testing', type: 'offensive', formType: 'enrollment' }),
-                    color: "red"
+                    price: "₹7,999",
+                    cta: "Reserve Elite Seat",
+                    action: () => onNavigate('offensiveMastery'),
+                    color: "orange"
                 }
             ]
         },
         specialized: {
             title: "Specialized Training Programs",
-            subtitle: "Advanced & Custom Training Solutions",
+            subtitle: "Domain Expertise & Niche Skills",
+            courses: [
+                {
+                    title: "Cloud Security Specialist",
+                    duration: "4-6 weeks",
+                    type: "Domain Specialization",
+                    description: "Master AWS, Azure, and multi-cloud security architectures",
+                    features: ["AWS Security", "Azure Security", "Multi-Cloud", "Compliance"],
+                    level: "Intermediate",
+                    price: "Starting ₹3,999",
+                    cta: "Explore Specializations",
+                    action: () => onNavigate('specializedCourses'),
+                    color: "blue"
+                },
+                {
+                    title: "Digital Forensics Expert",
+                    duration: "5 weeks", 
+                    type: "Investigation Skills",
+                    description: "Master digital evidence collection and malware forensics",
+                    features: ["Evidence Collection", "Memory Forensics", "Mobile Forensics", "Legal Framework"],
+                    level: "Intermediate",
+                    price: "Starting ₹4,999",
+                    cta: "Explore Specializations", 
+                    action: () => onNavigate('specializedCourses'),
+                    color: "green"
+                },
+                {
+                    title: "GRC & Compliance Analyst",
+                    duration: "4-5 weeks",
+                    type: "Risk & Compliance",
+                    description: "ISO 27001, risk management, and governance frameworks",
+                    features: ["ISO 27001", "Risk Management", "Audit Techniques", "Compliance"],
+                    level: "Intermediate",
+                    price: "Starting ₹3,499",
+                    cta: "Explore Specializations",
+                    action: () => onNavigate('specializedCourses'),
+                    color: "purple"
+                }
+            ]
+        },
+        additional: {
+            title: "Additional Training Programs", 
+            subtitle: "Comprehensive Technology Solutions",
             courses: [
                 {
                     title: "Cloud Computing & DevOps",
@@ -515,6 +557,16 @@ const ProgramsOffering = ({ onNavigate }) => {
                                 }`}
                             >
                                 Specialized
+                            </button>
+                            <button 
+                                onClick={() => setActiveProgram('additional')}
+                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                                    activeProgram === 'additional' 
+                                        ? 'bg-indigo-600 text-white' 
+                                        : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                                }`}
+                            >
+                                Additional
                             </button>
                         </div>
                     </div>
@@ -884,92 +936,144 @@ const NewProgramsBanner = ({ onNavigate }) => (
                 </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                {/* Bootcamp Card */}
-                <div className="bg-gradient-to-br from-blue-800 to-blue-900 rounded-2xl p-8 border border-blue-600 transform hover:scale-105 transition-all duration-300 shadow-2xl">
-                    <div className="text-center mb-6">
-                        <div className="inline-block bg-blue-600 rounded-full p-4 mb-4">
-                            <Shield className="h-8 w-8 text-white" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+                {/* Defensive Bootcamp */}
+                <div className="bg-gradient-to-br from-blue-800 to-blue-900 rounded-xl p-6 border border-blue-600 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                    <div className="text-center mb-4">
+                        <div className="inline-block bg-blue-600 rounded-full p-3 mb-3">
+                            <Shield className="h-6 w-6 text-white" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">7-Day Intensive Bootcamp</h3>
-                        <p className="text-blue-200">Join 100+ Students • High-Volume Enrollment</p>
+                        <h3 className="text-lg font-bold text-white mb-1">SOC Bootcamp</h3>
+                        <p className="text-blue-200 text-sm">7 Days • 100+ Students</p>
                     </div>
                     
-                    <div className="space-y-4 mb-8">
+                    <div className="space-y-2 mb-6 text-sm">
                         <div className="flex items-center text-blue-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>From Zero to SOC Analyst Ready</span>
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>SOC Analyst Ready</span>
                         </div>
                         <div className="flex items-center text-blue-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>21+ hours live + recorded sessions</span>
-                        </div>
-                        <div className="flex items-center text-blue-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>Industry-recognized certificate</span>
-                        </div>
-                        <div className="flex items-center text-blue-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>Job placement assistance</span>
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>SIEM Tools & Analysis</span>
                         </div>
                     </div>
 
-                    <div className="text-center mb-6">
-                        <div className="text-3xl font-bold text-white">Starting ₹499</div>
-                        <div className="text-blue-200">Early Bird Special • Limited Time</div>
+                    <div className="text-center mb-4">
+                        <div className="text-2xl font-bold text-white">₹499</div>
+                        <div className="text-blue-200 text-sm">Early Bird Special</div>
                     </div>
 
                     <button
                         onClick={() => onNavigate('bootcampLanding')}
-                        className="w-full bg-white text-blue-900 font-bold py-4 rounded-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        className="w-full bg-white text-blue-900 font-bold py-3 rounded-lg hover:bg-blue-50 transition-all duration-300 text-sm"
                     >
-                        Join Bootcamp Now →
+                        Join Bootcamp →
                     </button>
                 </div>
 
-                {/* Premium Program Card */}
-                <div className="bg-gradient-to-br from-purple-800 to-purple-900 rounded-2xl p-8 border border-purple-600 transform hover:scale-105 transition-all duration-300 shadow-2xl relative">
-                    <div className="absolute -top-3 right-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-4 py-1 rounded-full text-sm font-bold">
+                {/* Defensive Premium */}
+                <div className="bg-gradient-to-br from-purple-800 to-purple-900 rounded-xl p-6 border border-purple-600 transform hover:scale-105 transition-all duration-300 shadow-2xl relative">
+                    <div className="absolute -top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded-full text-xs font-bold">
                         PREMIUM
                     </div>
                     
-                    <div className="text-center mb-6">
-                        <div className="inline-block bg-purple-600 rounded-full p-4 mb-4">
-                            <Sparkles className="h-8 w-8 text-white" />
+                    <div className="text-center mb-4">
+                        <div className="inline-block bg-purple-600 rounded-full p-3 mb-3">
+                            <Sparkles className="h-6 w-6 text-white" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">2-Month Mastery Program</h3>
-                        <p className="text-purple-200">Only 20 Students • Personal Mentorship</p>
+                        <h3 className="text-lg font-bold text-white mb-1">SOC Mastery</h3>
+                        <p className="text-purple-200 text-sm">2 Months • 20 Students</p>
                     </div>
                     
-                    <div className="space-y-4 mb-8">
+                    <div className="space-y-2 mb-6 text-sm">
                         <div className="flex items-center text-purple-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>Advanced certification program</span>
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>Personal Mentor</span>
                         </div>
                         <div className="flex items-center text-purple-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>100+ hours with 10+ projects</span>
-                        </div>
-                        <div className="flex items-center text-purple-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>Personal industry mentor</span>
-                        </div>
-                        <div className="flex items-center text-purple-100">
-                            <CheckCircle className="h-5 w-5 text-green-400 mr-3" />
-                            <span>Guaranteed interview opportunities</span>
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>100+ Hours Training</span>
                         </div>
                     </div>
 
-                    <div className="text-center mb-6">
-                        <div className="text-3xl font-bold text-white">₹5,999</div>
-                        <div className="text-purple-200">Full Payment • Save ₹3,000</div>
+                    <div className="text-center mb-4">
+                        <div className="text-2xl font-bold text-white">₹5,999</div>
+                        <div className="text-purple-200 text-sm">Save ₹3,000</div>
                     </div>
 
                     <button
                         onClick={() => onNavigate('premiumProgram')}
-                        className="w-full bg-white text-purple-900 font-bold py-4 rounded-lg hover:bg-purple-50 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        className="w-full bg-white text-purple-900 font-bold py-3 rounded-lg hover:bg-purple-50 transition-all duration-300 text-sm"
                     >
-                        Reserve Premium Seat →
+                        Reserve Seat →
+                    </button>
+                </div>
+
+                {/* Offensive Bootcamp */}
+                <div className="bg-gradient-to-br from-red-800 to-red-900 rounded-xl p-6 border border-red-600 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                    <div className="text-center mb-4">
+                        <div className="inline-block bg-red-600 rounded-full p-3 mb-3">
+                            <Sword className="h-6 w-6 text-white" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-1">Hacking Bootcamp</h3>
+                        <p className="text-red-200 text-sm">7 Days • 80+ Hackers</p>
+                    </div>
+                    
+                    <div className="space-y-2 mb-6 text-sm">
+                        <div className="flex items-center text-red-100">
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>Ethical Hacking</span>
+                        </div>
+                        <div className="flex items-center text-red-100">
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>Pentesting Skills</span>
+                        </div>
+                    </div>
+
+                    <div className="text-center mb-4">
+                        <div className="text-2xl font-bold text-white">₹599</div>
+                        <div className="text-red-200 text-sm">Early Bird Special</div>
+                    </div>
+
+                    <button
+                        onClick={() => onNavigate('offensiveBootcampLanding')}
+                        className="w-full bg-white text-red-900 font-bold py-3 rounded-lg hover:bg-red-50 transition-all duration-300 text-sm"
+                    >
+                        Join Hackers →
+                    </button>
+                </div>
+
+                {/* Specialized Courses */}
+                <div className="bg-gradient-to-br from-green-800 to-green-900 rounded-xl p-6 border border-green-600 transform hover:scale-105 transition-all duration-300 shadow-2xl">
+                    <div className="text-center mb-4">
+                        <div className="inline-block bg-green-600 rounded-full p-3 mb-3">
+                            <Target className="h-6 w-6 text-white" />
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-1">Specialized</h3>
+                        <p className="text-green-200 text-sm">11+ Courses • Niche Skills</p>
+                    </div>
+                    
+                    <div className="space-y-2 mb-6 text-sm">
+                        <div className="flex items-center text-green-100">
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>Cloud Security</span>
+                        </div>
+                        <div className="flex items-center text-green-100">
+                            <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                            <span>Digital Forensics</span>
+                        </div>
+                    </div>
+
+                    <div className="text-center mb-4">
+                        <div className="text-2xl font-bold text-white">₹2,999+</div>
+                        <div className="text-green-200 text-sm">Various Durations</div>
+                    </div>
+
+                    <button
+                        onClick={() => onNavigate('specializedCourses')}
+                        className="w-full bg-white text-green-900 font-bold py-3 rounded-lg hover:bg-green-50 transition-all duration-300 text-sm"
+                    >
+                        Explore All →
                     </button>
                 </div>
             </div>
