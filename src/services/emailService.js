@@ -5,19 +5,22 @@
 
 import emailjs from '@emailjs/browser';
 
-// EmailJS Configuration
+// EmailJS Configuration (supports both REACT_APP_ and VITE_ prefixes)
 const EMAILJS_CONFIG = {
-  serviceId: import.meta.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_agnidhra',
-  publicKey: import.meta.env.REACT_APP_EMAILJS_PUBLIC_KEY || 'your_public_key',
+  serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || import.meta.env.REACT_APP_EMAILJS_SERVICE_ID || 'service_9a2dva8',
+  publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || import.meta.env.REACT_APP_EMAILJS_PUBLIC_KEY || '2yoZ6KftIv06WhCtg',
   templates: {
-    welcome: import.meta.env.REACT_APP_EMAILJS_WELCOME_TEMPLATE || 'template_welcome',
-    courseAccess: import.meta.env.REACT_APP_EMAILJS_ACCESS_TEMPLATE || 'template_access',
-    paymentConfirmation: import.meta.env.REACT_APP_EMAILJS_PAYMENT_TEMPLATE || 'template_payment',
-    progressUpdate: import.meta.env.REACT_APP_EMAILJS_PROGRESS_TEMPLATE || 'template_progress',
-    certificate: import.meta.env.REACT_APP_EMAILJS_CERTIFICATE_TEMPLATE || 'template_certificate',
-    reminder: import.meta.env.REACT_APP_EMAILJS_REMINDER_TEMPLATE || 'template_reminder'
+    welcome: import.meta.env.VITE_EMAILJS_WELCOME_TEMPLATE || import.meta.env.REACT_APP_EMAILJS_WELCOME_TEMPLATE || 'template_abc123',
+    courseAccess: import.meta.env.VITE_EMAILJS_ACCESS_TEMPLATE || import.meta.env.REACT_APP_EMAILJS_ACCESS_TEMPLATE || 'template_xyz123'
   }
 };
+
+// Debug environment variables
+console.log('EmailJS Debug:', {
+  serviceId: import.meta.env.REACT_APP_EMAILJS_SERVICE_ID,
+  publicKey: import.meta.env.REACT_APP_EMAILJS_PUBLIC_KEY,
+  welcomeTemplate: import.meta.env.REACT_APP_EMAILJS_WELCOME_TEMPLATE
+});
 
 // Initialize EmailJS
 emailjs.init(EMAILJS_CONFIG.publicKey);
@@ -171,11 +174,8 @@ export const sendPaymentConfirmationEmail = async (studentData, paymentDetails) 
       current_year: new Date().getFullYear()
     };
     
-    // Try payment template first, fallback to welcome template
-    const templateId = EMAILJS_CONFIG.templates.paymentConfirmation && 
-                      !EMAILJS_CONFIG.templates.paymentConfirmation.includes('template_payment') 
-                      ? EMAILJS_CONFIG.templates.paymentConfirmation 
-                      : EMAILJS_CONFIG.templates.welcome;
+    // Use welcome template for payment confirmation
+    const templateId = EMAILJS_CONFIG.templates.welcome;
     
     const response = await emailjs.send(
       EMAILJS_CONFIG.serviceId,
