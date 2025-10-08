@@ -597,31 +597,6 @@ const WhyUs = () => (
     </section>
 );
 
-const Admissions = () => (
-    <section id="admissions" className="py-20 bg-slate-900">
-        <div className="container mx-auto px-6">
-            <SectionTitle>Admissions</SectionTitle>
-            <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-8">
-                <div className="card p-6 text-center">
-                    <div className="mx-auto w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-3">1</div>
-                    <h3 className="text-lg font-bold text-white mb-1">Apply</h3>
-                    <p className="text-slate-400 text-sm">Tell us your goals and pick a program.</p>
-                    </div>
-                <div className="card p-6 text-center">
-                    <div className="mx-auto w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-3">2</div>
-                    <h3 className="text-lg font-bold text-white mb-1">Free Demo</h3>
-                    <p className="text-slate-400 text-sm">Experience a live session and get your roadmap.</p>
-                    </div>
-                <div className="card p-6 text-center">
-                    <div className="mx-auto w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold mb-3">3</div>
-                    <h3 className="text-lg font-bold text-white mb-1">Enroll</h3>
-                    <p className="text-slate-400 text-sm">Secure your seat and start learning.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-);
-
 const SpecializedTrainings = ({ onTrainingSelect }) => {
     const trainings = [
         { name: "C & Python Programming", icon: Code },
@@ -912,7 +887,6 @@ export default function HomePage({ onNavigate }) {
             <ProgramsOffering onNavigate={onNavigate} />
             <About />
             <WhyUs />
-            <Admissions />            
             <Trainers />
             <Testimonials />
             <Contact onNavigate={onNavigate} />
