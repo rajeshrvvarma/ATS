@@ -32,6 +32,7 @@ console.log('EmailJS initialized with public key:', EMAILJS_CONFIG.publicKey);
 export const sendWelcomeEmail = async (studentData, enrollmentDetails) => {
   try {
     console.log('Attempting to send welcome email:', { studentData, enrollmentDetails });
+    console.log('EmailJS Config being used:', EMAILJS_CONFIG);
     const { name, email, phone } = studentData;
     const { enrollmentId, courseType, startDate, accessUrl } = enrollmentDetails;
     
@@ -41,11 +42,9 @@ export const sendWelcomeEmail = async (studentData, enrollmentDetails) => {
     };
     
     const templateParams = {
+      // Exact variables matching your EmailJS template
       to_name: name,
       to_email: email,
-      student_name: name,
-      student_email: email,
-      student_phone: phone,
       course_name: courseNames[courseType] || courseType,
       enrollment_id: enrollmentId,
       course_start_date: new Date(startDate).toLocaleDateString('en-IN', {
@@ -56,9 +55,11 @@ export const sendWelcomeEmail = async (studentData, enrollmentDetails) => {
       }),
       access_url: accessUrl,
       support_email: 'support@agnidhra.com',
-      company_name: 'Agnidhra Cybersecurity Training',
-      current_year: new Date().getFullYear()
+      company_name: 'Agnidhra Cybersecurity Training'
     };
+
+    console.log('Sending email with template params:', templateParams);
+    console.log('Using template ID:', EMAILJS_CONFIG.templates.welcome);
     
     const response = await emailjs.send(
       EMAILJS_CONFIG.serviceId,
@@ -97,13 +98,11 @@ export const sendCourseAccessEmail = async (studentData, accessDetails) => {
     };
     
     const templateParams = {
+      // Exact variables matching your EmailJS course access template
       to_name: name,
       to_email: email,
-      student_name: name,
-      course_name: courseNames[courseType],
-      access_url: accessUrl,
       login_email: loginCredentials?.email || email,
-      temporary_password: loginCredentials?.temporaryPassword,
+      platform_url: `${window.location.origin}/student-dashboard`,
       course_start_date: new Date(startDate).toLocaleDateString('en-IN', {
         weekday: 'long',
         year: 'numeric', 
@@ -111,9 +110,9 @@ export const sendCourseAccessEmail = async (studentData, accessDetails) => {
         day: 'numeric'
       }),
       course_start_time: '9:00 AM IST',
-      platform_url: `${window.location.origin}/student-dashboard`,
       support_email: 'support@agnidhra.com',
-      support_phone: '+91-9876543210'
+      support_phone: '+91-9876543210',
+      company_name: 'Agnidhra Cybersecurity Training'
     };
     
     const response = await emailjs.send(
