@@ -3,7 +3,7 @@
  * Setup for Authentication, Firestore Database, and Storage
  */
 
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
@@ -18,8 +18,8 @@ const firebaseConfig = {
   appId: import.meta.env.REACT_APP_FIREBASE_APP_ID || "demo-app-id"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase (prevent duplicate app error)
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Firebase services
 export const auth = getAuth(app);

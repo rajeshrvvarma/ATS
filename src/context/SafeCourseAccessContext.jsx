@@ -23,7 +23,10 @@ export const CourseAccessProvider = ({ children }) => {
     // Initialize Firebase services safely
     const initializeFirebase = async () => {
       try {
-        // Lazy load Firebase services only when needed
+        // Ensure Firebase config is loaded first
+        await import('@/config/firebase.js');
+        
+        // Then load Firebase services only when needed
         const { onAuthStateChange, getStudentProfile } = await import('@/services/firebaseAuthService.js');
         const { checkCourseAccess } = await import('@/services/studentManagementService.js');
         
