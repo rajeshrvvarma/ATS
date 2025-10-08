@@ -289,7 +289,7 @@ const EnhancedEnrollmentModal = ({
       const existingReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
       existingReceipts.push(enrollmentReceipt);
       localStorage.setItem('enrollment_receipts', JSON.stringify(existingReceipts));
-      console.log('Enrollment receipt saved:', enrollmentReceipt);
+      console.log('✅ Enrollment receipt saved for dashboard access:', enrollmentReceipt.enrollmentId);
 
       console.log('Enrollment process completed successfully');
 
