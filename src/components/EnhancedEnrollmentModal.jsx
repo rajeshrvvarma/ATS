@@ -290,6 +290,8 @@ const EnhancedEnrollmentModal = ({
       existingReceipts.push(enrollmentReceipt);
       localStorage.setItem('enrollment_receipts', JSON.stringify(existingReceipts));
       console.log('✅ Enrollment receipt saved for dashboard access:', enrollmentReceipt.enrollmentId);
+      console.log('📊 All enrollment receipts:', existingReceipts);
+      console.log('🔗 Dashboard URL will be:', `/dashboard?enrollmentId=${finalResult.enrollmentId}`);
 
       console.log('Enrollment process completed successfully');
 
@@ -694,9 +696,22 @@ const EnhancedEnrollmentModal = ({
                 <div className="flex gap-4">
                   <button
                     onClick={() => {
-                      handleClose();
-                      // Navigate to dashboard with enrollment ID
-                      window.location.href = enrollmentResult.courseAccess.accessUrl;
+                      console.log('🔘 Dashboard button clicked');
+                      console.log('📊 Current enrollment result:', enrollmentResult);
+                      console.log('� Access URL:', enrollmentResult.courseAccess?.accessUrl);
+                      console.log('🌍 Current location:', window.location.href);
+                      
+                      // Navigate immediately without closing modal first
+                      const targetUrl = enrollmentResult.courseAccess?.accessUrl;
+                      if (targetUrl) {
+                        console.log('🚀 About to navigate to:', targetUrl);
+                        setTimeout(() => {
+                          console.log('🎯 Executing navigation now...');
+                          window.location.href = targetUrl;
+                        }, 100);
+                      } else {
+                        console.error('❌ No target URL found');
+                      }
                     }}
                     className="flex-1 bg-sky-600 text-white py-3 px-6 rounded-lg hover:bg-sky-700 transition-colors font-semibold"
                   >
