@@ -7,7 +7,6 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import SpecializedTrainingModal from '@/components/SpecializedTrainingModal.jsx';
 import SyllabusRequestModal from '@/components/SyllabusRequestModal.jsx';
 import EnrollmentEnquiryModal from '@/components/EnrollmentEnquiryModal.jsx';
-import { callGeminiAPI } from '@/api/gemini.js';
 
 // --- Sub-components specific to HomePage ---
 
@@ -596,52 +595,6 @@ const WhyUs = () => (
         </div>
     </section>
 );
-
-const SpecializedTrainings = ({ onTrainingSelect }) => {
-    const trainings = [
-        { name: "C & Python Programming", icon: Code },
-        { name: "Cloud & DevOps", icon: Server },
-        { name: "AI & Data Science", icon: BrainCircuit }
-    ];
-    return (
-        <section id="specialized-trainings" className="py-20 bg-slate-800">
-            <div className="container mx-auto px-6">
-                <SectionTitle>On-Demand Specialized Trainings</SectionTitle>
-                <div className="max-w-4xl mx-auto text-center">
-                    <p className="text-lg text-slate-300 mb-8">
-                        Alongside our core Cyber Security programs, we offer flexible, on-demand training modules. These are designed for individuals, college groups, and corporate teams seeking customized learning experiences in other high-demand technologies.
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {trainings.map(training => (
-                            <button 
-                                key={training.name}
-                                onClick={() => onTrainingSelect(training.name)}
-                                className="bg-slate-900 border border-slate-700 rounded-lg p-6 text-center hover:bg-slate-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1"
-                            >
-                                <training.icon className="w-12 h-12 mx-auto mb-4 text-blue-400" />
-                                <h3 className="text-xl font-bold text-white">{training.name}</h3>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        </section>
-    );
-};
-
-const SyllabusWeek = ({ week, accentColor }) => {
-    const [explanation, setExplanation] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const handleExplain = async () => { if (explanation) { setExplanation(''); return; } setIsLoading(true); const systemPrompt = "You are an expert cybersecurity instructor. Explain the following topic to a complete beginner in a simple, concise, and encouraging way. Focus on why this skill is important for their future job. Keep the explanation to 2-3 sentences."; const userPrompt = `Explain the topic "${week.title}" which is described as: "${week.desc}"`; const result = await callGeminiAPI(userPrompt, systemPrompt); setExplanation(result); setIsLoading(false); };
-    return ( <div className="relative"><div className={`absolute -left-[34px] top-1 h-4 w-4 rounded-full bg-${accentColor}-500`}></div><h4 className="font-bold text-white">{week.title}</h4><p className="text-slate-400">{week.desc}</p><button onClick={handleExplain} disabled={isLoading} className={`mt-2 text-sm text-${accentColor}-400 hover:text-${accentColor}-300 flex items-center gap-1 disabled:text-slate-500`}>{explanation ? <X size={14} /> : <Sparkles size={14} />}{isLoading ? 'Explaining...' : (explanation ? 'Hide Explanation' : '✨ Explain Topic')}</button>{explanation && (<div className="mt-2 text-sm bg-slate-900/50 p-3 rounded-md border border-slate-700 animate-fade-in"><p className="text-slate-200">{explanation}</p></div>)}</div>);
-};
-
-const Syllabus = ({ visibleSyllabus, setVisibleSyllabus }) => {
-    const socSyllabus = { title: "SOC Analyst Program Syllabus", month1: { title: "Month 1: Cybersecurity Fundamentals & Tooling", weeks: [{ title: "Week 1: Security, Networking & OS Hardening", desc: "Combine core security principles, networking, and hands-on system hardening for Windows and Linux." }, { title: "Week 2: The Attacker's Mindset & Threat Intel", desc: "Understand the Cyber Kill Chain and use the MITRE ATT&CK framework to analyze attacker TTPs." }, { title: "Week 3: SIEM & Log Analysis", desc: "A deep dive into SIEM tools. Learn to write queries and correlation rules to detect threats." }, { title: "Week 4: EDR & Vulnerability Management", desc: "Explore EDR for monitoring devices and use scanners to find and prioritize system vulnerabilities." }] }, month2: { title: "Month 2: Incident Response & Career Readiness", weeks: [{ title: "Week 5: Phishing & Malware Analysis", desc: "Deconstruct phishing emails and use sandboxing tools to safely inspect suspicious attachments." }, { title: "Week 6: Introduction to Digital Forensics", desc: "Learn the principles of digital evidence collection and use tools like Autopsy to analyze a disk image." }, { title: "Week 7: Capstone Project: SOC Analyst Simulation", desc: "Apply your skills in a real-world simulation, investigating security alerts and recommending remediation." }, { title: "Week 8: Career Prep & Final Review", desc: "Focus on resume building, LinkedIn optimization, and mock interviews for SOC Analyst roles." }] } };
-    const ethicalHackingSyllabus = { title: "Ethical Hacking Program Syllabus", month1: { title: "Month 1: Foundations of Offensive Security", weeks: [{ title: "Week 1: Intro to Hacking & Kali Linux", desc: "Explore pentesting phases, legal frameworks, and set up your virtual hacking lab." }, { title: "Week 2: Reconnaissance & Scanning", desc: "Master passive and active reconnaissance techniques and perform deep dives with Nmap." }, { title: "Week 3: Gaining Access & Enumeration", desc: "Learn system hacking, password cracking, and vulnerability analysis to find entry points." }, { title: "Week 4: Exploitation Fundamentals", desc: "Get hands-on with Metasploit, learn to customize payloads, and exploit common vulnerabilities." }] }, month2: { title: "Month 2: Advanced Attacks & Reporting", weeks: [{ title: "Week 5: Web Application Hacking", desc: "Exploit the OWASP Top 10 vulnerabilities like SQL Injection, XSS, and more." }, { title: "Week 6: Network Hacking & Sniffing", desc: "Dive into network-level attacks like ARP spoofing, DNS poisoning, and session hijacking." }, { title: "Week 7: Capstone Project: Live Pentest", desc: "Conduct a full penetration test against a vulnerable, multi-system lab environment." }, { title: "Week 8: Reporting & Career Prep", desc: "Learn to write professional pentesting reports and prepare for certifications and interviews." }] } };
-    const syllabusData = visibleSyllabus === 'soc' ? socSyllabus : ethicalHackingSyllabus; const accentColor = visibleSyllabus === 'soc' ? 'blue' : 'red'; if (!visibleSyllabus) { return <div id="syllabus"></div>; }
-    return ( <section id="syllabus" className="py-20 bg-slate-800"><div className="container mx-auto px-6 relative"><button onClick={() => setVisibleSyllabus(null)} className="absolute top-0 right-6 text-slate-400 hover:text-white transition-colors z-10"><X size={32} /></button><SectionTitle>{syllabusData.title}</SectionTitle><div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12"><div><h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month1.title}</h3><div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month1.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div></div><div><h3 className={`text-2xl font-bold text-${accentColor}-400 mb-6`}>{syllabusData.month2.title}</h3><div className="space-y-6 border-l-2 border-slate-700 pl-6">{syllabusData.month2.weeks.map((week, index) => <SyllabusWeek key={index} week={week} accentColor={accentColor} />)}</div></div></div><div className="text-center mt-12"><button onClick={() => onNavigate('enroll')} className={`bg-${accentColor}-600 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-${accentColor}-700 transition-colors duration-300 transform hover:scale-105`}>Enroll in 2-Month Program</button></div></div></section>);
-};
 
 const Trainers = () => {
     const [bio, setBio] = useState(null);
