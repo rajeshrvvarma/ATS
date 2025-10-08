@@ -54,43 +54,22 @@ export default function StudentDashboard({ onNavigate }) {
 
         // Load local student data
         const savedData = localStorage.getItem('studentData');
-        
-        // Check for enrollment ID in URL params to get student email
-        const urlParams = new URLSearchParams(window.location.search);
-        const enrollmentId = urlParams.get('enrollmentId');
-        
-        // Try to get student email from recent enrollment receipts if no saved data
-        let userEmail = 'student@example.com';
         if (savedData) {
           setStudentData(JSON.parse(savedData));
-          userEmail = JSON.parse(savedData).email;
-        } else if (enrollmentId) {
-          // Try to get email from recent enrollment receipts
-          const receipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
-          const recentReceipt = receipts.find(r => r.enrollmentId === enrollmentId);
-          if (recentReceipt && recentReceipt.studentEmail) {
-            userEmail = recentReceipt.studentEmail;
-            setStudentData({
-              name: recentReceipt.studentName || 'Student',
-              email: recentReceipt.studentEmail,
-              joinDate: new Date().toISOString(),
-              totalHours: 0,
-              coursesCompleted: 0,
-              certificatesEarned: 0,
-              currentStreak: 0,
-              longestStreak: 0
-            });
-          }
         }
-        
+
+        // Load Firebase enrollments for current user
+        const userEmail = savedData ? JSON.parse(savedData).email : 'student@example.com';
         console.log('Loading enrollments for:', userEmail);
         
         const firebaseEnrollmentsData = await getStudentEnrollments(userEmail);
         console.log('Firebase enrollments loaded:', firebaseEnrollmentsData);
         setFirebaseEnrollments(firebaseEnrollmentsData);
 
-        // Check for new enrollment from URL params (reuse enrollmentId from above)
-        if (enrollmentId) {
+        // Check for new enrollment from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const newEnrollmentId = urlParams.get('enrollmentId');
+        if (newEnrollmentId) {
           const newEnrollment = firebaseEnrollmentsData.find(e => e.enrollmentId === newEnrollmentId);
           if (newEnrollment) {
             setNewEnrollment(newEnrollment);
@@ -240,6 +219,176 @@ export default function StudentDashboard({ onNavigate }) {
               </h1>
               <p className="text-slate-400">
                 Continue your cybersecurity learning journey
+              </p></div>arget,
+  Star,
+  CheckCircle,
+  Play,
+  ExternalLink,
+  ChevronRight,
+  GraduationCap
+} from 'lucide-react';
+import { loadCourses } from '@/services/courseService.js';
+import { downloadCertificate } from '@/services/certificateService.js';
+import { getStudentEnrollments, getStudentData } from '@/services/studentManagementService.js';
+
+/**
+ * StudentDashboard - Main dashboard for students
+ * Shows progress, certificates, stats, and course management
+ */
+export default function StudentDashboard({ onNavigate }) {
+  const [studentData, setStudentData] = useState({
+    name: 'Student Name',
+    email: 'student@example.com',
+    joinDate: '2024-01-15',
+    totalHours: 0,
+    coursesCompleted: 0,
+    certificatesEarned: 0,
+    currentStreak: 0,
+    longestStreak: 0
+  });
+
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [firebaseEnrollments, setFirebaseEnrollments] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const [receipts, setReceipts] = useState([]);
+  const [lastCourseId, setLastCourseId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [newEnrollment, setNewEnrollment] = useState(null);
+
+  // Load student data from localStorage and Firebase
+  useEffect(() => {
+    const loadStudentDashboard = async () => {
+      try {
+        setLoading(true);
+
+        // Load local student data
+        const savedData = localStorage.getItem('studentData');
+        if (savedData) {
+          setStudentData(JSON.parse(savedData));
+        }
+
+        // Load Firebase enrollments for current user
+        const userEmail = savedData ? JSON.parse(savedData).email : 'student@example.com';
+        console.log('Loading enrollments for:', userEmail);
+        
+        const firebaseEnrollmentsData = await getStudentEnrollments(userEmail);
+        console.log('Firebase enrollments loaded:', firebaseEnrollmentsData);
+        setFirebaseEnrollments(firebaseEnrollmentsData);
+
+        // Check for new enrollment from URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const newEnrollmentId = urlParams.get('enrollmentId');
+        if (newEnrollmentId) {
+          const newEnrollment = firebaseEnrollmentsData.find(e => e.enrollmentId === newEnrollmentId);
+          if (newEnrollment) {
+            setNewEnrollment(newEnrollment);
+            // Clear URL params after showing welcome
+            window.history.replaceState({}, '', window.location.pathname);
+          }
+        }
+
+        // Load legacy enrolled courses from localStorage
+        const enrolled = [];
+        const courses = loadCourses();
+        courses.forEach(course => {
+          const enrollment = localStorage.getItem(`enrollment_${course.id}`);
+          if (enrollment === 'true') {
+            const progress = localStorage.getItem(`course_progress_${course.id}`);
+            const progressData = progress ? JSON.parse(progress) : { courseProgress: 0, completedLessons: [], lastUpdated: 0 };
+            
+            enrolled.push({
+              ...course,
+              progress: progressData.courseProgress,
+              completedLessons: progressData.completedLessons || [],
+              isCompleted: progressData.courseProgress >= 100,
+              lastUpdated: progressData.lastUpdated || 0,
+              source: 'localStorage'
+            });
+          }
+        });
+        setEnrolledCourses(enrolled);
+
+        // Determine last course by most recent progress update
+        if (enrolled.length > 0) {
+          const sorted = [...enrolled].sort((a,b) => (b.lastUpdated||0) - (a.lastUpdated||0));
+          setLastCourseId(sorted[0]?.id || null);
+        }
+
+        // Load certificates
+        const savedCertificates = localStorage.getItem('certificates');
+        if (savedCertificates) {
+          setCertificates(JSON.parse(savedCertificates));
+        }
+
+        // Load recent activity
+        const savedActivity = localStorage.getItem('recentActivity');
+        if (savedActivity) {
+          setRecentActivity(JSON.parse(savedActivity));
+        }
+
+        // Load payment receipts
+        const savedReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
+        setReceipts(savedReceipts.sort((a,b)=> b.ts - a.ts));
+
+      } catch (error) {
+        console.error('Error loading student dashboard:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStudentDashboard();
+  }, []);
+
+  // Calculate combined statistics from both localStorage and Firebase enrollments
+  const allCourses = [...enrolledCourses, ...firebaseEnrollments];
+  const stats = {
+    totalCourses: allCourses.length,
+    completedCourses: enrolledCourses.filter(course => course.isCompleted).length,
+    inProgressCourses: enrolledCourses.filter(course => course.progress > 0 && course.progress < 100).length,
+    firebaseEnrollments: firebaseEnrollments.length,
+    totalHours: enrolledCourses.reduce((total, course) => {
+      const duration = course.lessons?.reduce((sum, lesson) => {
+        const [minutes, seconds] = (lesson.duration || '0:00').split(':').map(Number);
+        return sum + (minutes * 60) + seconds;
+      }, 0) || 0;
+      return total + (duration / 3600) * ((course.progress || 0) / 100);
+    }, 0),
+    certificates: certificates.length
+  };
+
+  const formatTime = (hours) => {
+    if (hours < 1) return `${Math.round(hours * 60)}m`;
+    return `${Math.round(hours)}h`;
+  };
+
+  const getProgressColor = (progress) => {
+    if (progress >= 100) return 'text-green-400';
+    if (progress >= 70) return 'text-yellow-400';
+    if (progress >= 30) return 'text-blue-400';
+    return 'text-gray-400';
+  };
+
+  const getProgressBarColor = (progress) => {
+    if (progress >= 100) return 'bg-green-500';
+    if (progress >= 70) return 'bg-yellow-500';
+    if (progress >= 30) return 'bg-blue-500';
+    return 'bg-gray-500';
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-900 py-8">
+      <div className="container mx-auto px-6">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-white mb-2">
+                Welcome back, {studentData.name}! 👋
+              </h1>
+              <p className="text-slate-400">
+                Continue your cybersecurity learning journey
               </p>
             </div>
             <div className="flex items-center gap-4">
@@ -300,7 +449,7 @@ export default function StudentDashboard({ onNavigate }) {
               <span className="text-2xl font-bold text-white">{stats.certificates}</span>
             </div>
             <h3 className="text-slate-400 text-sm">Certificates</h3>
-            <p className="text-xs text-slate-500 mt-1">Achievements unlocked</p>
+            <p className="text-xs text-slate-500 mt-1">Achievements earned</p>
           </div>
 
           <div className="bg-slate-800 rounded-lg p-6">
@@ -310,18 +459,17 @@ export default function StudentDashboard({ onNavigate }) {
               </div>
               <span className="text-2xl font-bold text-white">{studentData.currentStreak}</span>
             </div>
-            <h3 className="text-slate-400 text-sm">Current Streak</h3>
-            <p className="text-xs text-slate-500 mt-1">Days of continuous learning</p>
+            <h3 className="text-slate-400 text-sm">Day Streak</h3>
+            <p className="text-xs text-slate-500 mt-1">Current learning streak</p>
           </div>
         </div>
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Enrolled Courses */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* My Courses */}
           <div className="lg:col-span-2">
             <div className="bg-slate-800 rounded-lg p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-white">My Courses</h2>
+                <h2 className="text-xl font-bold text-white">My Courses</h2>
                 <button
                   onClick={() => onNavigate('video-learning')}
                   className="text-sky-400 hover:text-sky-300 text-sm"
@@ -399,33 +547,36 @@ export default function StudentDashboard({ onNavigate }) {
                   enrolledCourses.map((course) => (
                     <div key={course.id} className="bg-slate-700 rounded-lg p-4 hover:bg-slate-600 transition-colors">
                       <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-slate-600 p-2 rounded-lg">
-                            <BookOpen className="w-5 h-5 text-slate-300" />
-                          </div>
-                          <div>
-                            <h4 className="text-white font-semibold">{course.title}</h4>
-                            <p className="text-slate-400 text-sm">{course.lessons.length} lessons • {course.duration}</p>
-                          </div>
-                        </div>
+                        <h3 className="font-semibold text-white">{course.title}</h3>
                         <div className="flex items-center gap-2">
-                          <span className={`text-sm font-medium ${getProgressColor(course.progress)}`}>
-                            {course.progress}%
-                          </span>
-                          <button
-                            onClick={() => onNavigate('video-learning') || (window.location.href = `/video-learning?course=${course.id}`)}
-                            className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors"
-                          >
-                            {course.progress > 0 ? 'Continue' : 'Start'}
-                          </button>
+                          {course.isCompleted ? (
+                            <CheckCircle className="w-5 h-5 text-green-400" />
+                          ) : (
+                            <div className={`text-sm font-medium ${getProgressColor(course.progress)}`}>
+                              {Math.round(course.progress)}%
+                            </div>
+                          )}
                         </div>
                       </div>
                       
-                      <div className="w-full bg-slate-600 rounded-full h-2">
+                      <div className="w-full bg-slate-600 rounded-full h-2 mb-3">
                         <div 
                           className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(course.progress)}`}
                           style={{ width: `${course.progress}%` }}
-                        ></div>
+                        />
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-sm text-slate-400">
+                        <span>{course.lessons.length} lessons</span>
+                        <span>{course.duration}</span>
+                      </div>
+                      <div className="mt-3 text-right">
+                        <button
+                          onClick={() => onNavigate('video-learning') || (window.location.href = `/video-learning?course=${course.id}`)}
+                          className="btn-primary px-4 py-2"
+                        >
+                          Continue watching
+                        </button>
                       </div>
                     </div>
                   ))
@@ -444,14 +595,10 @@ export default function StudentDashboard({ onNavigate }) {
                   <p className="text-slate-400 text-sm">No recent activity</p>
                 ) : (
                   recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-700 rounded-lg">
-                      <div className="p-2 bg-green-500/20 rounded-lg">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-white text-sm">{activity.title}</p>
-                        <p className="text-slate-400 text-xs">{activity.timestamp}</p>
-                      </div>
+                    <div key={index} className="flex items-center gap-3 text-sm">
+                      <div className="w-2 h-2 bg-sky-400 rounded-full flex-shrink-0" />
+                      <span className="text-slate-300">{activity.description}</span>
+                      <span className="text-slate-500 ml-auto">{activity.time}</span>
                     </div>
                   ))
                 )}
@@ -460,23 +607,25 @@ export default function StudentDashboard({ onNavigate }) {
 
             {/* Certificates */}
             <div className="bg-slate-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Certificates</h3>
-              <div className="space-y-3">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white">My Certificates</h3>
+                <span className="text-slate-400 text-sm">{certificates.length} total</span>
+              </div>
+              <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
                 {certificates.length === 0 ? (
-                  <p className="text-slate-400 text-sm">No certificates earned yet</p>
+                  <p className="text-slate-400 text-sm">No certificates yet</p>
                 ) : (
-                  certificates.map((cert) => (
-                    <div key={cert.id} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <Award className="w-5 h-5 text-yellow-400" />
-                        <div>
-                          <p className="text-white text-sm font-medium">{cert.courseName}</p>
-                          <p className="text-slate-400 text-xs">{cert.date}</p>
-                        </div>
+                  certificates.map((cert, index) => (
+                    <div key={index} className="flex items-center gap-3 p-3 bg-slate-700 rounded-lg">
+                      <Award className="w-5 h-5 text-yellow-400 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-sm font-medium truncate">{cert.courseName}</p>
+                        <p className="text-slate-400 text-xs">{new Date(cert.earnedDate).toLocaleDateString()} • ID: <span className="font-mono">{cert.certificateId}</span></p>
                       </div>
                       <button
-                        onClick={() => downloadCertificate(cert.id)}
-                        className="p-2 text-sky-400 hover:bg-slate-600 rounded-lg transition-colors"
+                        onClick={() => { try { downloadCertificate(cert.certificateId); } catch (e) { alert('Download failed'); } }}
+                        className="text-sky-400 hover:text-sky-300"
+                        title="Download PDF"
                       >
                         <Download className="w-4 h-4" />
                       </button>
@@ -486,28 +635,48 @@ export default function StudentDashboard({ onNavigate }) {
               </div>
             </div>
 
-            {/* Payment History */}
+            {/* Quick Actions */}
             <div className="bg-slate-800 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Payment History</h3>
+              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+              <div className="space-y-2">
+                <button
+                  onClick={() => onNavigate('video-learning')}
+                  className="w-full text-left p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors flex items-center gap-3"
+                >
+                  <BookOpen className="w-5 h-5 text-sky-400" />
+                  <span className="text-white">Browse Courses</span>
+                </button>
+                <button className="w-full text-left p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors flex items-center gap-3">
+                  <BarChart3 className="w-5 h-5 text-green-400" />
+                  <span className="text-white">View Progress</span>
+                </button>
+                <button className="w-full text-left p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors flex items-center gap-3">
+                  <Award className="w-5 h-5 text-yellow-400" />
+                  <span className="text-white">My Certificates</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+            {/* Payment Receipts */}
+            <div className="bg-slate-800 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-white mb-4">Payment Receipts</h3>
               <div className="space-y-3">
                 {receipts.length === 0 ? (
-                  <p className="text-slate-400 text-sm">No payment history</p>
+                  <p className="text-slate-400 text-sm">No receipts yet</p>
                 ) : (
-                  receipts.slice(0, 3).map((receipt, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
+                  receipts.slice(0, 5).map((r, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
                       <div>
-                        <p className="text-white text-sm font-medium">₹{receipt.amount.toLocaleString('en-IN')}</p>
-                        <p className="text-slate-400 text-xs">{new Date(receipt.ts).toLocaleDateString()}</p>
+                        <p className="text-white text-sm font-medium">{r.courseId}</p>
+                        <p className="text-slate-400 text-xs">Order: <span className="font-mono">{r.orderId}</span> • Payment: <span className="font-mono">{r.paymentId}</span></p>
                       </div>
-                      <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs">
-                        Paid
-                      </span>
+                      <div className="text-right text-slate-400 text-xs">{new Date(r.ts).toLocaleString()}</div>
                     </div>
                   ))
                 )}
               </div>
             </div>
-          </div>
         </div>
       </div>
     </div>

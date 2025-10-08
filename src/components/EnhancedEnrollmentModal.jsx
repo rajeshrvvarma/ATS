@@ -231,7 +231,7 @@ const EnhancedEnrollmentModal = ({
             enrollmentId: enrollmentResult.enrollmentId || `enrollment_${Date.now()}`,
             courseType,
             startDate: new Date().toISOString(),
-            accessUrl: '/dashboard'
+            accessUrl: `/dashboard?enrollmentId=${enrollmentResult.enrollmentId}`
           }
         );
         console.log('Welcome email result:', welcomeEmailResult);
@@ -266,7 +266,7 @@ const EnhancedEnrollmentModal = ({
         enrollmentId: enrollmentResult.enrollmentId || `enrollment_${Date.now()}`,
         courseAccess: enrollmentResult.courseAccess || {
           startDate: new Date().toISOString(),
-          accessUrl: '/dashboard'
+          accessUrl: `/dashboard?enrollmentId=${enrollmentResult.enrollmentId}`
         }
       };
 
@@ -674,12 +674,16 @@ const EnhancedEnrollmentModal = ({
                 </div>
 
                 <div className="flex gap-4">
-                  <a
-                    href={enrollmentResult.courseAccess.accessUrl}
+                  <button
+                    onClick={() => {
+                      handleClose();
+                      // Navigate to dashboard with enrollment ID
+                      window.location.href = enrollmentResult.courseAccess.accessUrl;
+                    }}
                     className="flex-1 bg-sky-600 text-white py-3 px-6 rounded-lg hover:bg-sky-700 transition-colors font-semibold"
                   >
                     Access Course Dashboard
-                  </a>
+                  </button>
                   <button
                     onClick={handleClose}
                     className="flex-1 bg-slate-700 text-white py-3 px-6 rounded-lg hover:bg-slate-600 transition-colors"

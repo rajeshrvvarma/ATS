@@ -404,3 +404,101 @@ const generateCourseCertificate = async (enrollmentId) => {
     return { success: false };
   }
 };
+
+/**
+ * Get all enrollments for a specific student
+ */
+export const getStudentEnrollments = async (studentEmail) => {
+  try {
+    console.log('Fetching enrollments for:', studentEmail);
+    
+    if (!db) {
+      console.log('Firebase not available, returning empty enrollments');
+      return [];
+    }
+
+    const enrollmentsQuery = query(
+      collection(db, 'enrollments'),
+      where('studentDetails.email', '==', studentEmail),
+      orderBy('enrollmentDate', 'desc')
+    );
+
+    const querySnapshot = await getDocs(enrollmentsQuery);
+    const enrollments = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      enrollments.push({
+        id: doc.id,
+        ...data,
+        enrollmentDate: data.enrollmentDate?.toDate?.() || new Date(data.enrollmentDate) || new Date()
+      });
+    });
+
+    console.log('Found enrollments:', enrollments);
+    return enrollments;
+
+  } catch (error) {
+    console.error('Error fetching student enrollments:', error);
+    // Return empty array on error to maintain functionality
+    return [];
+  }
+};
+
+/**
+ * Get student profile data
+ */
+export const getStudentData = async (studentEmail) => {
+  try {
+    console.log('Fetching student data for:', studentEmail);
+    
+    if (!db) {
+      console.log('Firebase not available, returning default student data');
+      return {
+        name: 'Student',
+        email: studentEmail,
+        joinDate: new Date().toISOString(),
+        totalHours: 0,
+        coursesCompleted: 0,
+        certificatesEarned: 0
+      };
+    }
+
+    // Try to get student profile from enrollments
+    const enrollments = await getStudentEnrollments(studentEmail);
+    
+    if (enrollments.length > 0) {
+      const firstEnrollment = enrollments[0];
+      return {
+        name: firstEnrollment.studentDetails.name || 'Student',
+        email: studentEmail,
+        joinDate: firstEnrollment.enrollmentDate.toISOString(),
+        totalEnrollments: enrollments.length,
+        totalHours: 0, // Calculate from progress data
+        coursesCompleted: 0, // Calculate from completion status
+        certificatesEarned: 0 // Calculate from certificates
+      };
+    }
+
+    // Return default if no enrollments found
+    return {
+      name: 'Student',
+      email: studentEmail,
+      joinDate: new Date().toISOString(),
+      totalHours: 0,
+      coursesCompleted: 0,
+      certificatesEarned: 0
+    };
+
+  } catch (error) {
+    console.error('Error fetching student data:', error);
+    return {
+      name: 'Student',
+      email: studentEmail,
+      joinDate: new Date().toISOString(),
+      totalHours: 0,
+      coursesCompleted: 0,
+      certificatesEarned: 0
+    };
+  }
+};
