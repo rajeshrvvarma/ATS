@@ -417,10 +417,10 @@ export const getStudentEnrollments = async (studentEmail) => {
       return [];
     }
 
+    // Use simple query without orderBy to avoid composite index requirement
     const enrollmentsQuery = query(
       collection(db, 'enrollments'),
-      where('studentDetails.email', '==', studentEmail),
-      orderBy('enrollmentDate', 'desc')
+      where('studentDetails.email', '==', studentEmail)
     );
 
     const querySnapshot = await getDocs(enrollmentsQuery);
@@ -434,6 +434,9 @@ export const getStudentEnrollments = async (studentEmail) => {
         enrollmentDate: data.enrollmentDate?.toDate?.() || new Date(data.enrollmentDate) || new Date()
       });
     });
+
+    // Sort on client side to avoid composite index
+    enrollments.sort((a, b) => new Date(b.enrollmentDate) - new Date(a.enrollmentDate));
 
     console.log('Found enrollments:', enrollments);
     return enrollments;
