@@ -1,30 +1,12 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Sun, Moon, Home, Shield, Sword, Sparkles } from 'lucide-react';
+import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useTheme } from '@/context/ThemeContext.jsx';
-import { useSettings } from '@/context/SettingsContext.jsx';
 
 export default function Header({ onNavigate, currentPage }) {
-    const { theme, toggleTheme } = useTheme();
-    const { toggleOpen } = useSettings();
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     const [isProgramsOpen, setIsProgramsOpen] = useState(false);
     const [showMega, setShowMega] = useState(false);
-
-    // Global shortcut: press "s" to open Settings
-    React.useEffect(() => {
-        const onKey = (e) => {
-            const tag = e.target?.tagName;
-            if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target?.isContentEditable) return;
-            if (e.key.toLowerCase() === 's') {
-                e.preventDefault();
-                toggleOpen();
-            }
-        };
-        window.addEventListener('keydown', onKey);
-        return () => window.removeEventListener('keydown', onKey);
-    }, [toggleOpen]);
     // Mobile navigation items
     const mobileNavItems = [
         { name: "Programs", action: () => scrollToSection('programs') },
@@ -144,24 +126,6 @@ export default function Header({ onNavigate, currentPage }) {
                         >
                             Login
                         </button>
-
-                        {/* Settings */}
-                        <div className="flex items-center space-x-1">
-                            <button 
-                                onClick={toggleTheme} 
-                                className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200" 
-                                title="Toggle theme"
-                            >
-                                {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                            </button>
-                            <button 
-                                onClick={toggleOpen} 
-                                className="p-2 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200" 
-                                title="Settings"
-                            >
-                                ⚙
-                            </button>
-                        </div>
                     </div>
                 </div>
                 
