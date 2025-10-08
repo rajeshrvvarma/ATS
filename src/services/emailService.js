@@ -21,6 +21,7 @@ const EMAILJS_CONFIG = {
 
 // Initialize EmailJS
 emailjs.init(EMAILJS_CONFIG.publicKey);
+console.log('EmailJS initialized with public key:', EMAILJS_CONFIG.publicKey);
 
 /**
  * Send welcome email after student registration
