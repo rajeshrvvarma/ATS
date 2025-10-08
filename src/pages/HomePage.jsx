@@ -17,8 +17,61 @@ const CompanyIntro = () => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <section id="home" className="py-16 md:py-20 text-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-                <div className="container mx-auto px-6">
+            <section id="home" className="py-16 md:py-20 text-center relative overflow-hidden min-h-screen flex items-center">
+                {/* Hero Background */}
+                <div className="absolute inset-0">
+                    {/* Base gradient background */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"></div>
+                    
+                    {/* Cybersecurity themed background pattern */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-purple-900/30 to-red-900/40"></div>
+                    
+                    {/* Digital grid pattern */}
+                    <div className="absolute inset-0 opacity-20">
+                        <div 
+                            className="w-full h-full"
+                            style={{
+                                backgroundImage: `
+                                    linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+                                    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px)
+                                `,
+                                backgroundSize: '40px 40px'
+                            }}
+                        ></div>
+                    </div>
+                    
+                    {/* Animated cybersecurity icons as background elements */}
+                    <div className="absolute inset-0 overflow-hidden">
+                        {/* Top left area */}
+                        <div className="absolute top-20 left-10 md:top-32 md:left-20 opacity-20">
+                            <Shield className="w-20 h-20 md:w-32 md:h-32 text-blue-400 animate-pulse" />
+                        </div>
+                        <div className="absolute top-40 left-40 md:top-60 md:left-60 opacity-15">
+                            <Code className="w-16 h-16 md:w-24 md:h-24 text-purple-400 animate-bounce" style={{ animationDelay: '0.5s' }} />
+                        </div>
+                        
+                        {/* Top right area */}
+                        <div className="absolute top-10 right-20 md:top-20 md:right-32 opacity-20">
+                            <Server className="w-18 h-18 md:w-28 md:h-28 text-red-400 animate-pulse" style={{ animationDelay: '1s' }} />
+                        </div>
+                        <div className="absolute top-60 right-10 md:top-80 md:right-20 opacity-15">
+                            <BrainCircuit className="w-16 h-16 md:w-24 md:h-24 text-green-400 animate-bounce" style={{ animationDelay: '1.5s' }} />
+                        </div>
+                        
+                        {/* Bottom area */}
+                        <div className="absolute bottom-20 left-20 md:bottom-32 md:left-40 opacity-20">
+                            <Target className="w-16 h-16 md:w-24 md:h-24 text-yellow-400 animate-pulse" style={{ animationDelay: '2s' }} />
+                        </div>
+                        <div className="absolute bottom-40 right-40 md:bottom-60 md:right-60 opacity-15">
+                            <Briefcase className="w-14 h-14 md:w-20 md:h-20 text-indigo-400 animate-bounce" style={{ animationDelay: '2.5s' }} />
+                        </div>
+                    </div>
+                    
+                    {/* Radial gradient overlay for focus */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,rgba(15,23,42,0.8)_70%)]"></div>
+                </div>
+
+                <div className="container mx-auto px-6 relative z-10">
                     {/* Company Name */}
                     <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 bg-gradient-to-r from-blue-400 via-purple-500 to-red-400 bg-clip-text text-transparent">
                         Agnidhra Technologies

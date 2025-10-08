@@ -10,6 +10,7 @@ import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 
 // Layout
+import AnnouncementBanner from '@/components/AnnouncementBanner.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 
@@ -99,6 +100,7 @@ export default function App() {
         <SettingsProvider>
         <ToastProvider>
         <div className="bg-slate-900 antialiased">
+                <AnnouncementBanner />
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>
                     <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>
