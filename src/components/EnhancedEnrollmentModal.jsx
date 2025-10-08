@@ -273,6 +273,24 @@ const EnhancedEnrollmentModal = ({
       setEnrollmentResult(finalResult);
       setStep(3); // Move to confirmation step
 
+      // Save enrollment receipt for dashboard access
+      const enrollmentReceipt = {
+        enrollmentId: finalResult.enrollmentId,
+        courseType,
+        studentEmail: formData.email,
+        studentName: formData.name,
+        studentPhone: formData.phone,
+        paymentId: paymentReference,
+        amount: courseType === 'bootcamp' ? 2999 : 9999,
+        timestamp: new Date().toISOString(),
+        ts: Date.now()
+      };
+      
+      const existingReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
+      existingReceipts.push(enrollmentReceipt);
+      localStorage.setItem('enrollment_receipts', JSON.stringify(existingReceipts));
+      console.log('Enrollment receipt saved:', enrollmentReceipt);
+
       console.log('Enrollment process completed successfully');
 
       // Notify parent component
