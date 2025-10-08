@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 export default function ContactUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -98,7 +99,7 @@ export default function ContactUsPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-slate-900 text-white min-h-screen">
+        <AnimatedBackground variant="contact" className="text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
@@ -371,6 +372,6 @@ export default function ContactUsPage({ onNavigate }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </AnimatedBackground>
     );
 }

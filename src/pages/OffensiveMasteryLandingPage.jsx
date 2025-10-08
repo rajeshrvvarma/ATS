@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp, Sword, Zap, Code2 } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const OffensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(4); // Dynamic counter for small batch
@@ -180,9 +181,9 @@ const OffensiveMasteryLandingPage = () => {
   const progressPercentage = (currentEnrolled / 15) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-red-900 via-gray-900 to-black py-20">
+      <AnimatedBackground variant="offensive" className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -278,10 +279,10 @@ const OffensiveMasteryLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Elite Benefits */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Elite Offensive Program?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -302,10 +303,10 @@ const OffensiveMasteryLandingPage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Detailed Curriculum */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Comprehensive 8-Week Elite Curriculum</h2>
           <div className="space-y-6">
@@ -357,10 +358,10 @@ const OffensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* What's Included */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Elite Package Includes</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
@@ -378,10 +379,10 @@ const OffensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Payment Plans */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Investment Plan</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -443,10 +444,10 @@ const OffensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Footer CTA */}
-      <section className="py-12 bg-gradient-to-r from-red-900 to-orange-900">
+      <AnimatedBackground variant="offensive" className="py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Limited to 15 Elite Hackers Only</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -459,7 +460,7 @@ const OffensiveMasteryLandingPage = () => {
             Reserve Elite Seat - ₹7,999
           </button>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Enrollment Modal */}
       <EnrollmentModal

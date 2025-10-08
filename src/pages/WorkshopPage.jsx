@@ -1,10 +1,11 @@
 import React from 'react';
 import { ArrowLeft, Target } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 export default function FreeWorkshopPage({ onNavigate }) {
     return (
-        <div className="bg-slate-900 text-white min-h-screen">
+        <AnimatedBackground variant="workshop" className="text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                  <button onClick={() => onNavigate('home')} className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8">
                     <ArrowLeft size={20} className="mr-2" />
@@ -42,7 +43,7 @@ export default function FreeWorkshopPage({ onNavigate }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </AnimatedBackground>
     );
 }
 

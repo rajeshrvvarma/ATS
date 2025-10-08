@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target, Sword, Zap, Shield } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 const OffensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(18); // Dynamic counter
@@ -108,9 +109,9 @@ const OffensiveBootcampLandingPage = () => {
   const progressPercentage = (currentEnrolled / 80) * 100;
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-red-900 via-gray-900 to-black py-20">
+      <AnimatedBackground variant="offensive" className="py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -203,34 +204,55 @@ const OffensiveBootcampLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Key Benefits */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Ethical Hacking?</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center bg-gray-700 rounded-xl p-6">
-              <Sword className="h-12 w-12 text-red-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Think Like a Hacker</h3>
-              <p className="text-gray-300">Learn the offensive mindset to better defend against real threats.</p>
-            </div>
-            <div className="text-center bg-gray-700 rounded-xl p-6">
-              <Zap className="h-12 w-12 text-orange-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">High Demand Skills</h3>
-              <p className="text-gray-300">Penetration testers are among the highest paid cybersecurity professionals.</p>
-            </div>
-            <div className="text-center bg-gray-700 rounded-xl p-6">
-              <Shield className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Ethical Framework</h3>
-              <p className="text-gray-300">Master ethical hacking within legal boundaries and professional standards.</p>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-center bg-gradient-to-br from-gray-700/80 via-red-900/30 to-transparent backdrop-blur-sm rounded-xl p-6 border border-red-500/20 hover:border-red-400/40 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-rose-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <Sword className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Think Like a Hacker</h3>
+              <p className="text-red-100">Learn the offensive mindset to better defend against real threats.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-center bg-gradient-to-br from-gray-700/80 via-orange-900/30 to-transparent backdrop-blur-sm rounded-xl p-6 border border-orange-500/20 hover:border-orange-400/40 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <Zap className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">High Demand Skills</h3>
+              <p className="text-orange-100">Penetration testers are among the highest paid cybersecurity professionals.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center bg-gradient-to-br from-gray-700/80 via-yellow-900/30 to-transparent backdrop-blur-sm rounded-xl p-6 border border-yellow-500/20 hover:border-yellow-400/40 transition-all duration-300"
+            >
+              <div className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <Shield className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-white">Ethical Framework</h3>
+              <p className="text-yellow-100">Master ethical hacking within legal boundaries and professional standards.</p>
+            </motion.div>
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Curriculum */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">7-Day Intensive Curriculum</h2>
           <div className="space-y-6">
@@ -279,10 +301,10 @@ const OffensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* What's Included */}
-      <section className="py-16 bg-gray-800">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Everything You Get</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
@@ -300,10 +322,10 @@ const OffensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Tools & Technologies */}
-      <section className="py-16 bg-gray-900">
+      <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Tools You'll Master</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -324,10 +346,10 @@ const OffensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Footer CTA */}
-      <section className="py-12 bg-gradient-to-r from-red-900 to-orange-900">
+      <AnimatedBackground variant="offensive" className="py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Start Your Ethical Hacking Journey!</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -340,7 +362,7 @@ const OffensiveBootcampLandingPage = () => {
             Join Now - {pricing.price}
           </button>
         </div>
-      </section>
+      </AnimatedBackground>
 
       {/* Enrollment Modal */}
       <EnrollmentModal
