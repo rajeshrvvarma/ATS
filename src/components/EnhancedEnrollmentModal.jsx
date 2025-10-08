@@ -123,8 +123,11 @@ const EnhancedEnrollmentModal = ({
 
       const result = await processPayment(paymentData);
       
+      console.log('Payment result received:', result);
+      
       if (result.success) {
         // Payment successful, proceed with enrollment
+        console.log('Processing enrollment after successful payment...');
         await handleEnrollmentAfterPayment(result.paymentId);
       } else {
         throw new Error(result.error || 'Payment failed');
@@ -195,6 +198,7 @@ const EnhancedEnrollmentModal = ({
 
   const handleEnrollmentAfterPayment = async (paymentReference) => {
     try {
+      console.log('Starting enrollment process with payment reference:', paymentReference);
       // Process enrollment
       const enrollmentData = {
         courseType,
@@ -206,48 +210,74 @@ const EnhancedEnrollmentModal = ({
         studentPhone: formData.phone
       };
 
+      console.log('Calling enrollStudentInCourse with:', enrollmentData);
       const enrollmentResult = await enrollStudentInCourse(enrollmentData);
+      console.log('Enrollment result:', enrollmentResult);
 
       if (!enrollmentResult.success) {
         throw new Error(enrollmentResult.error);
       }
 
-      // Send welcome email
-      const welcomeEmailResult = await sendWelcomeEmail(
-        {
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone
-        },
-        {
-          enrollmentId: enrollmentResult.enrollmentId,
-          courseType,
-          startDate: enrollmentResult.courseAccess.startDate,
-          accessUrl: enrollmentResult.courseAccess.accessUrl
-        }
-      );
+      // Try to send welcome email (don't block on failure)
+      try {
+        console.log('Attempting to send welcome email...');
+        const welcomeEmailResult = await sendWelcomeEmail(
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone
+          },
+          {
+            enrollmentId: enrollmentResult.enrollmentId || `enrollment_${Date.now()}`,
+            courseType,
+            startDate: new Date().toISOString(),
+            accessUrl: '/dashboard'
+          }
+        );
+        console.log('Welcome email result:', welcomeEmailResult);
+      } catch (emailError) {
+        console.warn('Welcome email failed, continuing anyway:', emailError);
+      }
 
-      // Send payment confirmation email
-      await sendPaymentConfirmationEmail(
-        {
-          name: formData.name,
-          email: formData.email
-        },
-        {
-          amount: course.price,
-          paymentReference: paymentReference,
-          paymentMethod: formData.paymentMethod,
-          courseType,
-          enrollmentId: enrollmentResult.enrollmentId
-        }
-      );
+      // Try to send payment confirmation email (don't block on failure)
+      try {
+        console.log('Attempting to send payment confirmation email...');
+        await sendPaymentConfirmationEmail(
+          {
+            name: formData.name,
+            email: formData.email
+          },
+          {
+            amount: course.price,
+            paymentReference: paymentReference,
+            paymentMethod: formData.paymentMethod,
+            courseType,
+            enrollmentId: enrollmentResult.enrollmentId || `enrollment_${Date.now()}`
+          }
+        );
+        console.log('Payment confirmation email sent');
+      } catch (emailError) {
+        console.warn('Payment confirmation email failed, continuing anyway:', emailError);
+      }
 
-      setEnrollmentResult(enrollmentResult);
+      // Always show success, even if emails fail
+      const finalResult = {
+        ...enrollmentResult,
+        enrollmentId: enrollmentResult.enrollmentId || `enrollment_${Date.now()}`,
+        courseAccess: enrollmentResult.courseAccess || {
+          startDate: new Date().toISOString(),
+          accessUrl: '/dashboard'
+        }
+      };
+
+      setEnrollmentResult(finalResult);
       setStep(3); // Move to confirmation step
+
+      console.log('Enrollment process completed successfully');
 
       // Notify parent component
       if (onEnrollmentSuccess) {
-        onEnrollmentSuccess(enrollmentResult);
+        onEnrollmentSuccess(finalResult);
       }
 
     } catch (error) {

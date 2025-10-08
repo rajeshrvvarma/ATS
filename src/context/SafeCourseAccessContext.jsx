@@ -63,6 +63,7 @@ export const CourseAccessProvider = ({ children }) => {
         return unsubscribe;
       } catch (error) {
         console.warn('Firebase initialization failed, using fallback mode:', error);
+        // Set firebaseReady to false so the system works without Firebase
         setFirebaseReady(false);
         setLoading(false);
         return () => {};

@@ -27,6 +27,7 @@ emailjs.init(EMAILJS_CONFIG.publicKey);
  */
 export const sendWelcomeEmail = async (studentData, enrollmentDetails) => {
   try {
+    console.log('Attempting to send welcome email:', { studentData, enrollmentDetails });
     const { name, email, phone } = studentData;
     const { enrollmentId, courseType, startDate, accessUrl } = enrollmentDetails;
     

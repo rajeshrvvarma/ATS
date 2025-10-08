@@ -68,6 +68,7 @@ export const processPayment = async (paymentData) => {
             description: paymentData.description,
             order_id: paymentData.orderId,
             handler: function (response) {
+                console.log('Payment successful:', response);
                 resolve({
                     success: true,
                     paymentId: response.razorpay_payment_id,
@@ -86,8 +87,13 @@ export const processPayment = async (paymentData) => {
             },
             modal: {
                 ondismiss: function() {
+                    console.log('Payment modal dismissed by user');
                     reject(new Error('Payment cancelled by user'));
                 }
+            },
+            "error": function(error) {
+                console.error('Payment error:', error);
+                reject(new Error(`Payment failed: ${error.description || 'Unknown error'}`));
             }
         };
 

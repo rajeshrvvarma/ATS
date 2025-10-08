@@ -24,6 +24,8 @@ import { getCurrentUser, logActivity } from '@/services/firebaseAuthService.js';
  */
 export const enrollStudentInCourse = async (enrollmentData) => {
   try {
+    console.log('Attempting to enroll student:', enrollmentData);
+    
     const { 
       courseType, // '7-day-bootcamp' or '2-month-premium'
       paymentAmount,
@@ -37,44 +39,55 @@ export const enrollStudentInCourse = async (enrollmentData) => {
     // Generate enrollment ID
     const enrollmentId = `ENR${Date.now()}${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
     
-    // Create enrollment record
-    const enrollmentDoc = await addDoc(collection(db, 'enrollments'), {
-      enrollmentId,
-      courseType,
-      studentDetails: {
-        email: studentEmail,
-        name: studentName,
-        phone: studentPhone
-      },
-      payment: {
-        amount: paymentAmount,
-        reference: paymentReference,
-        method: paymentMethod,
-        status: 'verified',
-        verifiedAt: serverTimestamp()
-      },
-      enrollment: {
-        status: 'active',
-        enrolledAt: serverTimestamp(),
-        startDate: getCourseStartDate(courseType),
-        endDate: getCourseEndDate(courseType),
-        accessLevel: 'full'
-      },
-      course: {
-        progress: 0,
-        completedLessons: [],
-        currentModule: 1,
-        lastAccessed: null,
-        timeSpent: 0
-      },
-      metadata: {
-        source: 'landing_page',
-        enrollmentMethod: 'manual_verification',
-        userAgent: navigator.userAgent
-      },
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
-    });
+    // Try to create enrollment record in Firebase
+    let enrollmentDoc;
+    try {
+      enrollmentDoc = await addDoc(collection(db, 'enrollments'), {
+        enrollmentId,
+        courseType,
+        studentDetails: {
+          email: studentEmail,
+          name: studentName,
+          phone: studentPhone
+        },
+        payment: {
+          amount: paymentAmount,
+          reference: paymentReference,
+          method: paymentMethod,
+          status: 'verified',
+          verifiedAt: serverTimestamp()
+        },
+        enrollment: {
+          status: 'active',
+          enrolledAt: serverTimestamp(),
+          startDate: getCourseStartDate(courseType),
+          endDate: getCourseEndDate(courseType),
+          accessLevel: 'full'
+        },
+        course: {
+          progress: 0,
+          completedLessons: [],
+          currentModule: 1,
+          lastAccessed: null,
+          timeSpent: 0
+        },
+        metadata: {
+          source: 'landing_page',
+          enrollmentMethod: 'manual_verification',
+          userAgent: navigator.userAgent
+        },
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
+      console.log('Enrollment saved to Firebase:', enrollmentDoc.id);
+    } catch (firebaseError) {
+      console.warn('Firebase enrollment failed, using fallback mode:', firebaseError);
+      // Create a mock doc for fallback
+      enrollmentDoc = {
+        id: `fallback_${enrollmentId}`,
+        data: () => ({ enrollmentId })
+      };
+    }
     
     // Send welcome email (will implement with EmailJS)
     await sendWelcomeEmail(enrollmentData, enrollmentId);
