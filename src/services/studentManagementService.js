@@ -378,7 +378,7 @@ const getCourseEndDate = (courseType) => {
 // Generate course access URL
 const generateCourseAccessUrl = (courseType, enrollmentId) => {
   const baseUrl = window.location.origin;
-  return `${baseUrl}/student-dashboard?course=${courseType}&enrollment=${enrollmentId}`;
+  return `${baseUrl}/dashboard?enrollmentId=${enrollmentId}`;
 };
 
 // Send welcome email (placeholder for EmailJS implementation)
