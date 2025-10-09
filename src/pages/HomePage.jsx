@@ -333,7 +333,7 @@ const ProgramsShowcase = ({ onNavigate }) => {
             icon: Laptop,
             color: 'indigo',
             features: ['Full Stack Dev', 'Cloud & DevOps', 'AI & Data Science', 'Testing'],
-            action: () => onNavigate('enroll'),
+            action: () => onNavigate('technologyTraining'),
             gradient: 'from-indigo-600 to-indigo-800',
             bgGradient: 'from-indigo-900/20 to-indigo-800/10',
             borderColor: 'border-indigo-500/30 hover:border-indigo-400',

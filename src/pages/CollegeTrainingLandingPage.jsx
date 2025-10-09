@@ -10,6 +10,7 @@ const CollegeTrainingLandingPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(2847);
+  const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
 
   useEffect(() => {
     // Simulate visitor count updates
@@ -73,74 +74,159 @@ const CollegeTrainingLandingPage = () => {
     }
   ];
 
-  const curriculum = [
-    {
-      week: "Week 1-2",
-      title: "Cybersecurity Fundamentals",
-      topics: ["Network Security Basics", "Threat Landscape", "Security Frameworks", "Risk Assessment"]
+  const programData = {
+    cybersecurity: {
+      title: "Cybersecurity Training",
+      description: "Comprehensive cybersecurity training designed specifically for engineering colleges",
+      curriculum: [
+        {
+          week: "Week 1-2",
+          title: "Cybersecurity Fundamentals",
+          topics: ["Network Security Basics", "Threat Landscape", "Security Frameworks", "Risk Assessment"]
+        },
+        {
+          week: "Week 3-4", 
+          title: "Defensive Security Skills",
+          topics: ["SOC Operations", "Incident Response", "Log Analysis", "Security Monitoring"]
+        },
+        {
+          week: "Week 5-6",
+          title: "Ethical Hacking Basics", 
+          topics: ["Penetration Testing", "Vulnerability Assessment", "Web Application Security", "Network Scanning"]
+        },
+        {
+          week: "Week 7-8",
+          title: "Industry Projects & Certification",
+          topics: ["Capstone Project", "Industry Case Studies", "Certification Exam", "Placement Preparation"]
+        }
+      ]
     },
-    {
-      week: "Week 3-4", 
-      title: "Defensive Security Skills",
-      topics: ["SOC Operations", "Incident Response", "Log Analysis", "Security Monitoring"]
-    },
-    {
-      week: "Week 5-6",
-      title: "Ethical Hacking Basics", 
-      topics: ["Penetration Testing", "Vulnerability Assessment", "Web Application Security", "Network Scanning"]
-    },
-    {
-      week: "Week 7-8",
-      title: "Industry Projects & Certification",
-      topics: ["Capstone Project", "Industry Case Studies", "Certification Exam", "Placement Preparation"]
+    technology: {
+      title: "Technology Training",
+      description: "Modern technology stack training covering development, cloud, AI, and testing",
+      curriculum: [
+        {
+          week: "Week 1-3",
+          title: "Programming Fundamentals",
+          topics: ["Python/Java Basics", "Data Structures", "Algorithms", "Object-Oriented Programming"]
+        },
+        {
+          week: "Week 4-6", 
+          title: "Web Development Stack",
+          topics: ["Frontend (React/Angular)", "Backend (Node.js/Spring)", "Database Design", "API Development"]
+        },
+        {
+          week: "Week 7-9",
+          title: "Cloud & DevOps", 
+          topics: ["AWS/Azure Basics", "Docker Containers", "CI/CD Pipelines", "Infrastructure as Code"]
+        },
+        {
+          week: "Week 10-12",
+          title: "Specialization & Projects",
+          topics: ["AI/ML Basics OR Testing", "Industry Projects", "Portfolio Development", "Job Preparation"]
+        }
+      ]
     }
-  ];
+  };
 
-  const pricingTiers = [
-    {
-      name: "Standard Batch",
-      students: "50-99 Students", 
-      price: "₹399",
-      originalPrice: "₹599",
-      features: [
-        "8-week comprehensive training",
-        "Industry-standard curriculum",
-        "Basic certification",
-        "Email support",
-        "Basic placement assistance"
-      ]
-    },
-    {
-      name: "Premium Batch",
-      students: "100-149 Students",
-      price: "₹299", 
-      originalPrice: "₹499",
-      popular: true,
-      features: [
-        "8-week intensive training",
-        "Advanced hands-on labs",
-        "Premium certification", 
-        "Dedicated support manager",
-        "Priority placement support",
-        "Industry mentor sessions"
-      ]
-    },
-    {
-      name: "Elite Batch",
-      students: "150+ Students",
-      price: "₹199",
-      originalPrice: "₹399", 
-      features: [
-        "10-week comprehensive program",
-        "Real-world project assignments",
-        "Elite certification with portfolio",
-        "24/7 support & mentorship",
-        "Guaranteed placement assistance", 
-        "Direct recruiter connects",
-        "Alumni network access"
-      ]
-    }
-  ];
+  const currentProgram = programData[selectedProgram];
+
+  const pricingTiers = {
+    cybersecurity: [
+      {
+        name: "Standard Batch",
+        students: "50-99 Students", 
+        price: "₹399",
+        originalPrice: "₹599",
+        features: [
+          "8-week comprehensive training",
+          "Cybersecurity curriculum",
+          "Basic certification",
+          "Email support",
+          "Basic placement assistance"
+        ]
+      },
+      {
+        name: "Premium Batch",
+        students: "100-149 Students",
+        price: "₹299", 
+        originalPrice: "₹499",
+        popular: true,
+        features: [
+          "8-week intensive training",
+          "Advanced hands-on labs",
+          "Premium certification", 
+          "Dedicated support manager",
+          "Priority placement support",
+          "Industry mentor sessions"
+        ]
+      },
+      {
+        name: "Elite Batch",
+        students: "150+ Students",
+        price: "₹199",
+        originalPrice: "₹399", 
+        features: [
+          "8-week comprehensive program",
+          "Real-world project assignments",
+          "Elite certification with portfolio",
+          "24/7 support & mentorship",
+          "Guaranteed placement assistance", 
+          "Direct recruiter connects",
+          "Alumni network access"
+        ]
+      }
+    ],
+    technology: [
+      {
+        name: "Standard Batch",
+        students: "50-99 Students", 
+        price: "₹599",
+        originalPrice: "₹899",
+        features: [
+          "12-week comprehensive training",
+          "Multi-technology curriculum",
+          "Basic certification",
+          "Email support",
+          "Basic placement assistance"
+        ]
+      },
+      {
+        name: "Premium Batch",
+        students: "100-149 Students",
+        price: "₹499", 
+        originalPrice: "₹799",
+        popular: true,
+        features: [
+          "12-week intensive training",
+          "Advanced project-based learning",
+          "Premium certification", 
+          "Dedicated support manager",
+          "Priority placement support",
+          "Industry mentor sessions",
+          "Portfolio development"
+        ]
+      },
+      {
+        name: "Elite Batch",
+        students: "150+ Students",
+        price: "₹399",
+        originalPrice: "₹699", 
+        features: [
+          "12-week comprehensive program",
+          "Real-world industry projects",
+          "Elite certification with portfolio",
+          "24/7 support & mentorship",
+          "Guaranteed placement assistance", 
+          "Direct recruiter connects",
+          "Alumni network access",
+          "Specialization tracks"
+        ]
+      }
+    ]
+  };
+
+  const currentPricingTiers = pricingTiers[selectedProgram];
 
   return (
     <div className="min-h-screen text-white">
@@ -158,14 +244,45 @@ const CollegeTrainingLandingPage = () => {
               <span className="text-blue-300 text-sm">College Bulk Training Program</span>
             </div>
             
+            {/* Program Selection Tabs */}
+            <div className="flex justify-center mb-8">
+              <div className="bg-slate-800/50 rounded-full p-1 backdrop-blur-sm border border-slate-700">
+                <motion.button
+                  onClick={() => setSelectedProgram('cybersecurity')}
+                  className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                    selectedProgram === 'cybersecurity'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  🛡️ Cybersecurity Training
+                </motion.button>
+                <motion.button
+                  onClick={() => setSelectedProgram('technology')}
+                  className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                    selectedProgram === 'technology'
+                      ? 'bg-gradient-to-r from-green-600 to-teal-600 text-white shadow-lg'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  💻 Technology Training
+                </motion.button>
+              </div>
+            </div>
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               Transform Your Students Into
-              <span className="block">Cybersecurity Professionals</span>
+              <span className="block">
+                {selectedProgram === 'cybersecurity' ? 'Cybersecurity' : 'Technology'} Professionals
+              </span>
             </h1>
             
             <p className="text-xl text-slate-300 mb-8 max-w-4xl mx-auto">
-              Comprehensive cybersecurity training designed specifically for engineering colleges. 
-              Train 100-200 students with industry-focused curriculum and guaranteed placement support.
+              {currentProgram.description}. Train 100-200 students with industry-focused curriculum and guaranteed placement support.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -291,12 +408,16 @@ const CollegeTrainingLandingPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-12 max-w-5xl mx-auto"
           >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">8-Week Industry-Ready Curriculum</h2>
-            <p className="text-slate-300 text-lg">Comprehensive training program designed by industry experts</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              {selectedProgram === 'cybersecurity' ? '8-Week' : '12-Week'} Industry-Ready Curriculum
+            </h2>
+            <p className="text-slate-300 text-lg">
+              {currentProgram.title} program designed by industry experts
+            </p>
           </motion.div>
           
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {curriculum.map((week, index) => (
+            {currentProgram.curriculum.map((week, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
@@ -334,7 +455,7 @@ const CollegeTrainingLandingPage = () => {
           </motion.div>
           
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {pricingTiers.map((tier, index) => (
+            {currentPricingTiers.map((tier, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}

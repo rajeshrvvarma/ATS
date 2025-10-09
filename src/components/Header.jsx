@@ -388,28 +388,28 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
                     duration: 'Flexible',
                     price: '₹30,000',
                     description: 'Frontend, backend, and database development',
-                    action: () => onNavigate('enroll')
+                    action: () => onNavigate('technologyTraining')
                 },
                 {
                     title: 'Cloud Computing & DevOps',
                     duration: 'Flexible',
                     price: '₹25,000',
                     description: 'AWS, Docker, Kubernetes, CI/CD',
-                    action: () => onNavigate('enroll')
+                    action: () => onNavigate('technologyTraining')
                 },
                 {
                     title: 'AI & Data Science',
                     duration: 'Flexible',
                     price: '₹20,000',
                     description: 'Machine learning and data analytics',
-                    action: () => onNavigate('enroll')
+                    action: () => onNavigate('technologyTraining')
                 },
                 {
                     title: 'Software Testing',
                     duration: 'Flexible',
                     price: '₹18,000',
                     description: 'Manual and automation testing',
-                    action: () => onNavigate('enroll')
+                    action: () => onNavigate('technologyTraining')
                 }
             ]
         },
