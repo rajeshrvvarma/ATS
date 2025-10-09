@@ -365,34 +365,85 @@ const ProgramsShowcase = ({ onNavigate }) => {
     };
 
     // View selection interface
-    const ViewSelectionInterface = () => {
-        const viewOptions = [
+    const StudentJobSelector = () => {
+        const jobOptions = [
             {
-                id: 'complete',
-                title: 'Complete Overview',
-                description: 'All 7 program categories in organized cards',
-                icon: Grid3X3,
-                color: 'blue',
-                preview: '7 comprehensive program cards',
-                gradient: 'from-blue-600 to-blue-800'
+                id: 'cybersecurity-analyst',
+                title: '🛡️ Cybersecurity Analyst',
+                salary: '₹4-6 LPA',
+                demand: 'High Demand',
+                description: 'Protect companies from cyber threats',
+                course: '7-Day SOC Bootcamp',
+                price: '₹499',
+                icon: Shield,
+                gradient: 'from-blue-600 to-cyan-600',
+                companies: 'TCS, Wipro, Infosys',
+                viewId: 'cybersecurity'
             },
             {
-                id: 'grouped',
-                title: 'Smart Grouping',
-                description: '4 intelligent groups for simplified decision making',
-                icon: Layers,
-                color: 'purple',
-                preview: 'Related programs grouped together',
-                gradient: 'from-purple-600 to-purple-800'
+                id: 'cloud-engineer',
+                title: '☁️ Cloud Engineer',
+                salary: '₹5-8 LPA',
+                demand: 'Growing Fast',
+                description: 'Build and manage cloud infrastructure',
+                course: 'Cloud Security Specialist',
+                price: '₹3,999',
+                icon: Cloud,
+                gradient: 'from-purple-600 to-blue-600',
+                companies: 'Amazon, Microsoft, Google',
+                viewId: 'cloud'
             },
             {
-                id: 'journey',
-                title: 'Learning Journey',
-                description: 'Progressive tabs to follow your career path',
-                icon: Map,
-                color: 'green',
-                preview: 'Step-by-step program progression',
-                gradient: 'from-green-600 to-green-800'
+                id: 'software-developer',
+                title: '💻 Software Developer',
+                salary: '₹3-5 LPA',
+                demand: 'Always Hiring',
+                description: 'Create websites and applications',
+                course: 'Full Stack Development',
+                price: '₹4,999',
+                icon: Code,
+                gradient: 'from-green-600 to-blue-600',
+                companies: 'Zoho, Freshworks, Startups',
+                viewId: 'development'
+            },
+            {
+                id: 'devops-engineer',
+                title: '🔧 DevOps Engineer',
+                salary: '₹6-9 LPA',
+                demand: 'Hot Skill',
+                description: 'Automate software delivery',
+                course: 'DevOps & Automation',
+                price: '₹5,499',
+                icon: Server,
+                gradient: 'from-orange-600 to-red-600',
+                companies: 'Tech Mahindra, HCL, L&T',
+                viewId: 'devops'
+            },
+            {
+                id: 'ethical-hacker',
+                title: '🔍 Ethical Hacker',
+                salary: '₹5-7 LPA',
+                demand: 'Exciting',
+                description: 'Find security vulnerabilities',
+                course: '7-Day Hacking Bootcamp',
+                price: '₹599',
+                icon: Sword,
+                gradient: 'from-red-600 to-pink-600',
+                companies: 'Security Firms, Banks',
+                viewId: 'hacking'
+            },
+            {
+                id: 'data-analyst',
+                title: '📊 Data Analyst',
+                salary: '₹4-6 LPA',
+                demand: 'Stable',
+                description: 'Turn data into insights',
+                course: 'AI & Data Science',
+                price: '₹3,999',
+                icon: BrainCircuit,
+                gradient: 'from-indigo-600 to-purple-600',
+                companies: 'Accenture, Deloitte, EY',
+                viewId: 'data'
             }
         ];
 
@@ -402,34 +453,79 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.5 }}
-                className="text-center mb-16"
             >
-                <h3 className="text-2xl font-semibold text-slate-300 mb-4">
-                    How would you like to explore our programs?
-                </h3>
-                <p className="text-slate-400 mb-8">Choose your preferred viewing style</p>
-                
-                <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                    {viewOptions.map((option) => (
+                {/* Main Job Selection Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-8">
+                    {jobOptions.map((job, index) => (
                         <motion.button
-                            key={option.id}
-                            onClick={() => handleViewSelection(option.id)}
+                            key={job.id}
+                            onClick={() => handleJobSelection(job)}
                             whileHover={{ y: -5, scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="bg-slate-900 border border-slate-700 rounded-xl p-6 text-left hover:border-slate-600 transition-all duration-300 group"
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                            className="bg-slate-900 border border-slate-700 rounded-xl p-6 text-left hover:border-slate-500 transition-all duration-300 group relative overflow-hidden"
                         >
-                            <div className={`w-12 h-12 bg-gradient-to-br ${option.gradient} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                                <option.icon className="w-6 h-6 text-white" />
-                            </div>
-                            <h4 className="text-lg font-semibold text-white mb-2">{option.title}</h4>
-                            <p className="text-slate-400 text-sm mb-3">{option.description}</p>
-                            <div className="flex items-center gap-2 text-xs text-slate-500">
-                                <Eye className="w-3 h-3" />
-                                <span>{option.preview}</span>
+                            {/* Background Gradient */}
+                            <div className={`absolute inset-0 bg-gradient-to-br ${job.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                            
+                            <div className="relative z-10">
+                                {/* Header */}
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className={`w-12 h-12 bg-gradient-to-br ${job.gradient} rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                        <job.icon className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-sm font-medium text-green-400">{job.salary}</div>
+                                        <div className="text-xs text-slate-400">{job.demand}</div>
+                                    </div>
+                                </div>
+
+                                {/* Job Title & Description */}
+                                <h4 className="text-lg font-semibold text-white mb-2">{job.title}</h4>
+                                <p className="text-slate-400 text-sm mb-4">{job.description}</p>
+
+                                {/* Course Info */}
+                                <div className="bg-slate-800/50 rounded-lg p-3 mb-3">
+                                    <div className="text-sm text-slate-300 font-medium">{job.course}</div>
+                                    <div className="text-xs text-slate-400 mt-1">Starting {job.price}</div>
+                                </div>
+
+                                {/* Companies */}
+                                <div className="flex items-center gap-2 text-xs text-slate-500">
+                                    <Briefcase className="w-3 h-3" />
+                                    <span>Hiring: {job.companies}</span>
+                                </div>
                             </div>
                         </motion.button>
                     ))}
                 </div>
+
+                {/* View All Courses Option */}
+                <motion.div 
+                    className="text-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                >
+                    <div className="bg-slate-800/30 border border-slate-600/50 rounded-xl p-6 max-w-2xl mx-auto">
+                        <h3 className="text-xl font-semibold text-white mb-3">
+                            🎯 Want to see all courses we offer?
+                        </h3>
+                        <p className="text-slate-400 mb-4">
+                            Explore our complete catalog of 15+ courses across cybersecurity, programming, cloud, and more
+                        </p>
+                        <button
+                            onClick={() => handleViewSelection('complete')}
+                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 mx-auto group"
+                        >
+                            <Grid3X3 className="w-5 h-5" />
+                            <span>View All Courses</span>
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    </div>
+                </motion.div>
             </motion.div>
         );
     };
@@ -438,6 +534,15 @@ const ProgramsShowcase = ({ onNavigate }) => {
         setIsTransitioning(true);
         setTimeout(() => {
             setSelectedView(viewId);
+            setIsTransitioning(false);
+        }, 200);
+    };
+
+    const handleJobSelection = (job) => {
+        setIsTransitioning(true);
+        setTimeout(() => {
+            // For now, show the complete overview but could be enhanced to show job-specific courses
+            setSelectedView('complete');
             setIsTransitioning(false);
         }, 200);
     };
@@ -460,16 +565,20 @@ const ProgramsShowcase = ({ onNavigate }) => {
                     className="text-center mb-16"
                 >
                     <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                        Choose Your <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Path</span>
+                        Which Tech <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Job</span> Do You Want?
                     </h2>
                     <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-                        From foundation workshops to elite mastery programs - discover the perfect training for your career goals
+                        Pick your dream career and we'll show you the perfect course to get there
                     </p>
+                    <div className="mt-4 flex items-center justify-center gap-2 text-sm text-slate-400">
+                        <Users className="w-4 h-4" />
+                        <span>1,247 students got placed this month!</span>
+                    </div>
                 </motion.div>
 
                 <AnimatePresence mode="wait">
                     {!selectedView && !isTransitioning && (
-                        <ViewSelectionInterface />
+                        <StudentJobSelector />
                     )}
 
                     {selectedView && !isTransitioning && (
