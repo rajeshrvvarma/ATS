@@ -5,40 +5,50 @@ import { useAuth } from '@/context/AuthContext.jsx';
 export default function ProtectedRoute({ children, roles }) {
     const { user, loading } = useAuth();
     
-    // Special handling for student dashboard - allow access if user has enrollments
     const currentPath = window.location.pathname;
-    console.log('🛡️ ProtectedRoute called for:', currentPath, 'Roles:', roles);
+    console.log('🛡️ ProtectedRoute called for:', currentPath, 'Required roles:', roles);
     
-    if (currentPath === '/dashboard' && roles?.includes('student')) {
-        // Check if user has enrollment data (either URL param or localStorage)
+    // Special handling for student dashboard - allow access for enrolled students OR authenticated users
+    if (currentPath === '/dashboard') {
+        // Check if user is authenticated with student role
+        if (user && user.role === 'student') {
+            console.log('✅ Authenticated student accessing dashboard');
+            return children;
+        }
+        
+        // Check for enrollment data (for non-authenticated access)
         const urlParams = new URLSearchParams(window.location.search);
         const enrollmentId = urlParams.get('enrollmentId');
         const hasLocalEnrollments = localStorage.getItem('enrollment_receipts');
         
-        console.log('🔍 Dashboard Access Check:', {
-            currentPath,
-            enrollmentId,
-            hasLocalEnrollments: !!hasLocalEnrollments,
-            fullUrl: window.location.href,
-            allLocalStorage: Object.keys(localStorage)
-        });
+        if (enrollmentId || hasLocalEnrollments) {
+            console.log('✅ Dashboard access granted via enrollment data');
+            return children;
+        }
         
-        // TEMPORARY: Allow all dashboard access for testing
-        console.log('🧪 TEMPORARY: Allowing all dashboard access for testing');
-        return children;
-        
-        // Original logic (commented out for testing)
-        // if (enrollmentId || hasLocalEnrollments) {
-        //     console.log('✅ Dashboard access granted for enrolled student');
-        //     return children;
-        // } else {
-        //     console.log('❌ No enrollment data found, will redirect');
-        // }
+        // Redirect unauthenticated users without enrollments to home
+        if (!user) {
+            console.log('❌ No authentication or enrollment data, redirecting to home');
+            return <Navigate to="/" replace />;
+        }
+    }
+    
+    // Admin dashboard access
+    if (currentPath === '/admin') {
+        if (!user || user.role !== 'admin') {
+            console.log('❌ Admin access denied, redirecting to home');
+            return <Navigate to="/" replace />;
+        }
     }
     
     if (loading) return <div className="text-slate-300 p-8">Loading...</div>;
-    if (!user) return <Navigate to="/login" replace />;
-    if (roles && roles.length && !roles.includes(user.role)) return <Navigate to="/" replace />;
+    
+    // General role-based access control
+    if (roles && roles.length) {
+        if (!user) return <Navigate to="/login" replace />;
+        if (!roles.includes(user.role)) return <Navigate to="/" replace />;
+    }
+    
     return children;
 }
 

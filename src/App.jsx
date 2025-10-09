@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/context/ThemeContext.jsx';
 import { SettingsProvider } from '@/context/SettingsContext.jsx';
 import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
+import DashboardRouter from '@/components/DashboardRouter.jsx';
 
 // Layout
 import AnnouncementBanner from '@/components/AnnouncementBanner.jsx';
@@ -145,8 +146,8 @@ export default function App() {
                             <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
                             <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
-                            <Route path="/video-learning" element={<ProtectedRoute roles={['student','admin','instructor']}><VideoLearningPage onNavigate={go} /></ProtectedRoute>} />
-                            <Route path="/dashboard" element={<ProtectedRoute roles={['student','admin','instructor']}><StudentDashboard onNavigate={go} /></ProtectedRoute>} />
+                            <Route path="/video-learning" element={<ProtectedRoute roles={['student','admin']}><VideoLearningPage onNavigate={go} /></ProtectedRoute>} />
+                            <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />

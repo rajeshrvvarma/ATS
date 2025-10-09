@@ -3,11 +3,11 @@
  * Handles user authentication, authorization, and security features
  */
 
-// Mock user roles and permissions
+// Enhanced user roles and permissions
 const ROLES = {
   STUDENT: 'student',
-  INSTRUCTOR: 'instructor',
-  ADMIN: 'admin'
+  ADMIN: 'admin', // Unified role for admin/instructor/owner
+  OWNER: 'admin' // Alias for owner (same permissions as admin)
 };
 
 const PERMISSIONS = {
@@ -16,23 +16,30 @@ const PERMISSIONS = {
     'enroll_courses',
     'view_progress',
     'download_certificates',
-    'update_profile'
-  ],
-  [ROLES.INSTRUCTOR]: [
-    'view_courses',
-    'create_courses',
-    'edit_courses',
-    'view_students',
-    'grade_assignments',
-    'view_analytics'
+    'update_profile',
+    'view_dashboard',
+    'track_progress',
+    'view_certificates'
   ],
   [ROLES.ADMIN]: [
+    // Admin has all permissions (instructor + owner + admin)
     'manage_users',
-    'manage_courses',
+    'manage_courses', 
+    'create_courses',
+    'edit_courses',
+    'delete_courses',
+    'view_students',
+    'manage_students',
     'view_analytics',
     'manage_system',
     'view_audit_logs',
-    'manage_certificates'
+    'manage_certificates',
+    'grade_assignments',
+    'manage_enrollments',
+    'view_admin_dashboard',
+    'export_data',
+    'import_data',
+    'manage_settings'
   ]
 };
 
@@ -48,12 +55,43 @@ export const login = async (email, password) => {
     // Mock authentication - in real app, this would call your API
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Mock user validation (FOR DEVELOPMENT ONLY - REPLACE WITH REAL AUTH IN PRODUCTION)
+    // Enhanced mock users (FOR DEVELOPMENT ONLY - REPLACE WITH REAL AUTH IN PRODUCTION)
     // WARNING: These are demo credentials. In production, implement proper authentication
     const mockUsers = [
-      { id: 1, email: 'admin@agnidhra.com', password: 'SecureAdmin@2024!', role: ROLES.ADMIN, name: 'Admin User', twoFactorEnabled: false },
-      { id: 2, email: 'instructor@agnidhra.com', password: 'InstructorPass@2024!', role: ROLES.INSTRUCTOR, name: 'Instructor User', twoFactorEnabled: false },
-      { id: 3, email: 'student@agnidhra.com', password: 'StudentDemo@2024!', role: ROLES.STUDENT, name: 'Student User', twoFactorEnabled: false }
+      { 
+        id: 1, 
+        email: 'admin@agnidhra.com', 
+        password: 'SecureAdmin@2024!', 
+        role: ROLES.ADMIN, 
+        name: 'Administrator', 
+        twoFactorEnabled: false,
+        profileImage: null,
+        joinDate: '2024-01-01',
+        department: 'Administration'
+      },
+      { 
+        id: 2, 
+        email: 'owner@agnidhra.com', 
+        password: 'OwnerPass@2024!', 
+        role: ROLES.ADMIN, 
+        name: 'Owner/Instructor', 
+        twoFactorEnabled: false,
+        profileImage: null,
+        joinDate: '2024-01-01',
+        department: 'Management'
+      },
+      { 
+        id: 3, 
+        email: 'student@agnidhra.com', 
+        password: 'StudentDemo@2024!', 
+        role: ROLES.STUDENT, 
+        name: 'Student User', 
+        twoFactorEnabled: false,
+        profileImage: null,
+        joinDate: '2024-01-15',
+        enrollments: [],
+        progress: {}
+      }
     ];
     
     const user = mockUsers.find(u => u.email === email && u.password === password);

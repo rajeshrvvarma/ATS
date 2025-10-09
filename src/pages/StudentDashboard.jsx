@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext.jsx';
 import { 
   User, 
   BookOpen, 
@@ -15,17 +16,21 @@ import {
   Play,
   ExternalLink,
   ChevronRight,
-  GraduationCap
+  GraduationCap,
+  X
 } from 'lucide-react';
 import { loadCourses } from '@/services/courseService.js';
 import { downloadCertificate } from '@/services/certificateService.js';
 import { getStudentEnrollments, getStudentData } from '@/services/studentManagementService.js';
+import StudentProfile from '@/components/StudentProfile.jsx';
+import ProgressTracker from '@/components/ProgressTracker.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
  * Shows progress, certificates, stats, and course management
  */
 export default function StudentDashboard({ onNavigate }) {
+  const { user } = useAuth(); // Get authenticated user
   const [studentData, setStudentData] = useState({
     name: 'Student Name',
     email: 'student@example.com',
@@ -45,6 +50,15 @@ export default function StudentDashboard({ onNavigate }) {
   const [lastCourseId, setLastCourseId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [newEnrollment, setNewEnrollment] = useState(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
+  
+  // Determine user type: authenticated student vs enrollment-based access
+  const isAuthenticated = !!user;
+  const isEnrollmentAccess = !user && (
+    new URLSearchParams(window.location.search).get('enrollmentId') || 
+    localStorage.getItem('enrollment_receipts')
+  );
 
   // Load student data from localStorage and Firebase
   useEffect(() => {
@@ -52,34 +66,48 @@ export default function StudentDashboard({ onNavigate }) {
       try {
         setLoading(true);
 
-        // Load local student data
-        const savedData = localStorage.getItem('studentData');
-        
-        // Check for enrollment ID in URL params to get student email
-        const urlParams = new URLSearchParams(window.location.search);
-        const enrollmentId = urlParams.get('enrollmentId');
-        
-        // Try to get student email from recent enrollment receipts if no saved data
+        // Determine user data source and email
         let userEmail = 'student@example.com';
-        if (savedData) {
-          setStudentData(JSON.parse(savedData));
-          userEmail = JSON.parse(savedData).email;
-        } else if (enrollmentId) {
-          // Try to get email from recent enrollment receipts
-          const receipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
-          const recentReceipt = receipts.find(r => r.enrollmentId === enrollmentId);
-          if (recentReceipt && recentReceipt.studentEmail) {
-            userEmail = recentReceipt.studentEmail;
-            setStudentData({
-              name: recentReceipt.studentName || 'Student',
-              email: recentReceipt.studentEmail,
-              joinDate: new Date().toISOString(),
-              totalHours: 0,
-              coursesCompleted: 0,
-              certificatesEarned: 0,
-              currentStreak: 0,
-              longestStreak: 0
-            });
+        
+        if (user) {
+          // Authenticated user - use user data
+          setStudentData({
+            name: user.name,
+            email: user.email,
+            joinDate: user.joinDate || '2024-01-15',
+            totalHours: 0,
+            coursesCompleted: 0,
+            certificatesEarned: 0,
+            currentStreak: 0,
+            longestStreak: 0
+          });
+          userEmail = user.email;
+        } else {
+          // Enrollment-based access - try to get data from localStorage or URL
+          const savedData = localStorage.getItem('studentData');
+          const urlParams = new URLSearchParams(window.location.search);
+          const enrollmentId = urlParams.get('enrollmentId');
+          
+          if (savedData) {
+            setStudentData(JSON.parse(savedData));
+            userEmail = JSON.parse(savedData).email;
+          } else if (enrollmentId) {
+            // Try to get email from recent enrollment receipts
+            const receipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
+            const recentReceipt = receipts.find(r => r.enrollmentId === enrollmentId);
+            if (recentReceipt && recentReceipt.studentEmail) {
+              userEmail = recentReceipt.studentEmail;
+              setStudentData({
+                name: recentReceipt.studentName || 'Student',
+                email: recentReceipt.studentEmail,
+                joinDate: new Date().toISOString(),
+                totalHours: 0,
+                coursesCompleted: 0,
+                certificatesEarned: 0,
+                currentStreak: 0,
+                longestStreak: 0
+              });
+            }
           }
         }
         
@@ -236,11 +264,31 @@ export default function StudentDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-white mb-2">
-                Welcome back, {studentData.name}! 👋
+                {isAuthenticated ? (
+                  <>Welcome back, {studentData.name}! 👋</>
+                ) : (
+                  <>Welcome, {studentData.name}! 🎓</>
+                )}
               </h1>
-              <p className="text-slate-400">
-                Continue your cybersecurity learning journey
-              </p>
+              <div className="flex items-center gap-4">
+                <p className="text-slate-400">
+                  {isAuthenticated ? (
+                    'Continue your cybersecurity learning journey'
+                  ) : (
+                    'Access your enrolled courses and track progress'
+                  )}
+                </p>
+                {!isAuthenticated && (
+                  <div className="bg-sky-500/20 px-3 py-1 rounded-full">
+                    <span className="text-sky-400 text-sm font-medium">Enrollment Access</span>
+                  </div>
+                )}
+                {isAuthenticated && (
+                  <div className="bg-green-500/20 px-3 py-1 rounded-full">
+                    <span className="text-green-400 text-sm font-medium">Authenticated Student</span>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="flex items-center gap-4">
               {lastCourseId && (
@@ -259,12 +307,95 @@ export default function StudentDashboard({ onNavigate }) {
                 <BookOpen className="w-5 h-5" />
                 Browse Courses
               </button>
+              
+              {/* Enhanced action buttons */}
+              <button
+                onClick={() => setShowProgress(true)}
+                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+              >
+                <BarChart3 className="w-5 h-5" />
+                Progress
+              </button>
+              
+              {isAuthenticated && (
+                <button
+                  onClick={() => setShowProfile(true)}
+                  className="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors flex items-center gap-2"
+                >
+                  <User className="w-5 h-5" />
+                  Profile
+                </button>
+              )}
+              
               <button className="bg-slate-700 text-white px-4 py-3 rounded-lg hover:bg-slate-600 transition-colors">
                 <Settings className="w-5 h-5" />
               </button>
             </div>
           </div>
         </div>
+
+        {/* Student Profile Section - Only for authenticated users */}
+        {isAuthenticated && (
+          <div className="bg-gradient-to-r from-slate-800 to-slate-700 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <div className="w-20 h-20 bg-gradient-to-r from-sky-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                    {studentData.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-slate-800 flex items-center justify-center">
+                    <CheckCircle className="w-3 h-3 text-white" />
+                  </div>
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-white">{studentData.name}</h2>
+                  <p className="text-slate-300">{studentData.email}</p>
+                  <div className="flex items-center gap-4 mt-2">
+                    <div className="flex items-center gap-1 text-slate-400 text-sm">
+                      <Calendar className="w-4 h-4" />
+                      <span>Joined {new Date(studentData.joinDate).toLocaleDateString()}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-slate-400 text-sm">
+                      <Clock className="w-4 h-4" />
+                      <span>{formatTime(stats.totalHours)} learned</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="bg-slate-900 rounded-lg p-4">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-sky-400">{stats.completedCourses}</div>
+                    <div className="text-slate-400 text-sm">Completed</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Actions for Enrollment Access */}
+        {isEnrollmentAccess && (
+          <div className="bg-sky-500/10 border border-sky-500/20 rounded-lg p-6 mb-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-sky-400 mb-2">Get Full Access</h3>
+                <p className="text-slate-400 mb-4">
+                  Create an account to unlock additional features, track progress across devices, and manage your profile.
+                </p>
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 transition-colors"
+                >
+                  Create Account / Login
+                </button>
+              </div>
+              <div className="text-slate-400">
+                <User className="w-16 h-16" />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -510,6 +641,41 @@ export default function StudentDashboard({ onNavigate }) {
           </div>
         </div>
       </div>
+      
+      {/* Student Profile Modal */}
+      {showProfile && (
+        <StudentProfile
+          onNavigate={onNavigate}
+          onClose={() => setShowProfile(false)}
+        />
+      )}
+      
+      {/* Progress Tracker Modal */}
+      {showProgress && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 rounded-lg w-full max-w-6xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white">Progress Tracker</h2>
+                <p className="text-green-100">Track your learning journey and achievements</p>
+              </div>
+              <button
+                onClick={() => setShowProgress(false)}
+                className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <ProgressTracker
+                studentData={studentData}
+                enrollments={enrolledCourses}
+                onNavigate={onNavigate}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
