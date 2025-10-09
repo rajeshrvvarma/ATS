@@ -27,7 +27,7 @@ const CollegeTrainingLandingPage = () => {
     },
     {
       icon: <Target className="w-8 h-8 text-green-500" />,
-      title: "Placement-Ready Skills", 
+      title: "Placement-Ready Skills",
       description: "Skills specifically chosen by recruiters from top companies for immediate employment"
     },
     {
@@ -48,32 +48,35 @@ const CollegeTrainingLandingPage = () => {
     {
       icon: <Shield className="w-8 h-8 text-indigo-500" />,
       title: "Hands-on Learning",
-      description: "Practical labs and projects that prepare students for real-world challenges"
+      description: "Real-world labs, live projects, and practical scenarios for better learning retention"
     }
   ];
 
-  const successStories = [
+  const collegeSuccessStories = [
     {
-      college: "VIT University",
-      studentsPlaced: 156,
-      avgSalary: "₹5.2 LPA",
+      college: "VIT Chennai",
+      students: 180,
+      placed: 156,
+      avgSalary: "₹4.2 LPA",
       topCompany: "TCS, Wipro, Infosys"
     },
     {
-      college: "SRM University", 
-      studentsPlaced: 134,
-      avgSalary: "₹4.8 LPA",
-      topCompany: "Accenture, HCL, Tech Mahindra"
+      college: "SRM University",
+      students: 200,
+      placed: 175,
+      avgSalary: "₹3.8 LPA", 
+      topCompany: "Cognizant, HCL, Tech Mahindra"
     },
     {
-      college: "Amity University",
-      studentsPlaced: 178,
-      avgSalary: "₹5.5 LPA", 
-      topCompany: "IBM, Capgemini, DXC Technology"
+      college: "Anna University",
+      students: 150,
+      placed: 135,
+      avgSalary: "₹4.5 LPA",
+      topCompany: "L&T Infotech, Zoho, Freshworks"
     }
   ];
 
-  const curriculum = [
+  const curriculumModules = [
     {
       week: "Week 1-2",
       title: "Cybersecurity Fundamentals",
@@ -188,12 +191,11 @@ const CollegeTrainingLandingPage = () => {
                 Download Course Curriculum
               </motion.button>
             </div>
-
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-slate-400">
+            
+            <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-400">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>500+ Colleges Served</span>
+                <span>500+ Colleges Trained</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-500" />
@@ -221,31 +223,29 @@ const CollegeTrainingLandingPage = () => {
             <p className="text-slate-300 text-lg">Real results from engineering colleges across India</p>
           </motion.div>
           
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {successStories.map((story, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-blue-500/50 transition-colors backdrop-blur-sm"
-              >
-                <h3 className="text-xl font-semibold mb-3 text-blue-400">{story.college}</h3>
-                <div className="space-y-2">
+          <div className="grid md:grid-cols-3 gap-8">
+            {collegeSuccessStories.map((story, index) => (
+              <div key={index} className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <h3 className="text-xl font-semibold mb-4 text-blue-400">{story.college}</h3>
+                <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Students Placed:</span>
-                    <span className="font-semibold text-green-400">{story.studentsPlaced}</span>
+                    <span className="text-gray-400">Students Trained:</span>
+                    <span className="font-semibold">{story.students}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Average Salary:</span>
+                    <span className="text-gray-400">Successfully Placed:</span>
+                    <span className="font-semibold text-green-400">{story.placed}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">Average Salary:</span>
                     <span className="font-semibold text-yellow-400">{story.avgSalary}</span>
                   </div>
-                  <div className="pt-2 border-t border-slate-700">
-                    <span className="text-slate-400 text-sm">Top Recruiters:</span>
+                  <div className="pt-2 border-t border-gray-700">
+                    <span className="text-gray-400 text-sm">Top Recruiters:</span>
                     <p className="text-sm font-medium mt-1">{story.topCompany}</p>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </section>
@@ -264,19 +264,13 @@ const CollegeTrainingLandingPage = () => {
             <p className="text-slate-300 text-lg">Designed specifically for engineering students and fresh graduates</p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-emerald-500/50 transition-colors backdrop-blur-sm"
-              >
+              <div key={index} className="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-blue-500/50 transition-colors">
                 <div className="mb-4">{benefit.icon}</div>
                 <h3 className="text-xl font-semibold mb-3">{benefit.title}</h3>
-                <p className="text-slate-400">{benefit.description}</p>
-              </motion.div>
+                <p className="text-gray-400">{benefit.description}</p>
+              </div>
             ))}
           </div>
         </section>
@@ -295,70 +289,50 @@ const CollegeTrainingLandingPage = () => {
             <p className="text-slate-300 text-lg">Comprehensive training program designed by industry experts</p>
           </motion.div>
           
-          <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {curriculum.map((week, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 hover:border-blue-500/50 transition-colors backdrop-blur-sm"
-              >
-                <div className="text-blue-400 font-semibold mb-2">{week.week}</div>
-                <h3 className="text-xl font-semibold mb-3">{week.title}</h3>
-                <ul className="space-y-1 text-slate-400">
-                  {week.topics.map((topic, topicIndex) => (
-                    <li key={topicIndex} className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                      {topic}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {curriculumModules.map((module, index) => (
+              <div key={index} className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                <div className="text-blue-400 font-semibold mb-2">{module.week}</div>
+                <h3 className="text-lg font-semibold mb-4">{module.title}</h3>
+                <ul className="space-y-2">
+                  {module.topics.map((topic, topicIndex) => (
+                    <li key={topicIndex} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-400 text-sm">{topic}</span>
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </section>
-      </AnimatedBackground>
+        </div>
+      </section>
 
       {/* Pricing Section */}
-      <AnimatedBackground variant="premium" className="py-16">
-        <section className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12 max-w-5xl mx-auto"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Flexible Pricing for Every College</h2>
-            <p className="text-slate-300 text-lg">Choose the perfect plan based on your student batch size</p>
-          </motion.div>
+      <section className="py-16 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">College Bulk Pricing</h2>
+            <p className="text-gray-400 text-lg">Special rates for engineering colleges - bigger batches, better prices!</p>
+          </div>
           
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8">
             {pricingTiers.map((tier, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`relative bg-slate-800/50 rounded-xl p-6 border transition-all duration-300 backdrop-blur-sm ${
-                  tier.popular 
-                    ? 'border-blue-500 scale-105 shadow-lg shadow-blue-500/25' 
-                    : 'border-slate-700 hover:border-blue-500/50'
-                }`}
-              >
+              <div key={index} className={`bg-gray-800 rounded-xl p-6 border ${tier.popular ? 'border-blue-500 relative' : 'border-gray-700'}`}>
                 {tier.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
                     Most Popular
                   </div>
                 )}
                 
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-semibold mb-2">{tier.name}</h3>
-                  <div className="text-slate-400 text-sm mb-3">{tier.students}</div>
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-3xl font-bold text-white">{tier.price}</span>
-                    <span className="text-slate-400 line-through">{tier.originalPrice}</span>
-                    <span className="text-slate-400 text-sm">/student</span>
+                  <p className="text-gray-400 mb-4">{tier.students}</p>
+                  
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold text-blue-400">{tier.price}</span>
+                    <span className="text-gray-400">/student</span>
+                    <div className="text-sm text-gray-500 line-through">{tier.originalPrice}/student</div>
                   </div>
                 </div>
                 
@@ -366,68 +340,56 @@ const CollegeTrainingLandingPage = () => {
                   {tier.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start gap-2">
                       <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-slate-300 text-sm">{feature}</span>
+                      <span className="text-gray-400 text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                <button 
                   onClick={() => setIsModalOpen(true)}
                   className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                     tier.popular 
                       ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'border border-slate-600 hover:border-blue-500 text-slate-300'
+                      : 'border border-gray-600 hover:border-blue-500 text-gray-300'
                   }`}
                 >
                   Get Quote for {tier.students}
-                </motion.button>
-              </motion.div>
+                </button>
+              </div>
             ))}
           </div>
-        </section>
-      </AnimatedBackground>
+        </div>
+      </section>
 
       {/* CTA Section */}
-      <AnimatedBackground variant="contact" className="py-16">
-        <section className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Train Your Students?</h2>
-            <p className="text-slate-300 text-lg mb-8">
-              Join 500+ engineering colleges that have successfully trained over 15,000 students with our proven curriculum.
-            </p>
+      <section className="py-16 px-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Train Your Students?</h2>
+          <p className="text-gray-300 text-lg mb-8">
+            Join 500+ engineering colleges that have successfully trained over 15,000 students with our proven curriculum.
+          </p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300 transform hover:scale-105"
+            >
+              <Users className="w-5 h-5" />
+              Start College Training Program
+              <ArrowRight className="w-5 h-5" />
+            </button>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsModalOpen(true)}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
-              >
-                Start Your Program Today
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="border border-slate-600 hover:border-green-500 px-8 py-4 rounded-lg font-semibold transition-colors"
-              >
-                Schedule Demo Session
-              </motion.button>
-            </div>
-
-            <p className="text-slate-400 text-sm">
-              Over {visitorCount.toLocaleString()} colleges have visited us this month
-            </p>
-          </motion.div>
-        </section>
-      </AnimatedBackground>
+            <button className="border border-gray-600 hover:border-blue-500 px-8 py-4 rounded-lg font-semibold transition-colors">
+              Schedule College Demo
+            </button>
+          </div>
+          
+          <div className="mt-8 text-sm text-gray-400">
+            <p>📞 Call us for immediate assistance: +91-XXXXX-XXXXX</p>
+            <p>📧 Email: college-training@at-cs.com</p>
+          </div>
+        </div>
+      </section>
 
       <EnrollmentModal 
         isOpen={isModalOpen} 

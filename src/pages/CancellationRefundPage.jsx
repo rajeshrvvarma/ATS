@@ -1,6 +1,8 @@
 import React from 'react';
 import { ArrowLeft, RefreshCw, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionTitle from '../components/SectionTitle';
+import AnimatedBackground from '../components/AnimatedBackground';
 
 export default function CancellationRefundPage({ onNavigate }) {
     const refundTimeline = [
@@ -55,20 +57,28 @@ export default function CancellationRefundPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-slate-900 text-white min-h-screen">
+        <AnimatedBackground variant="contact" className="min-h-screen text-white">
             <div className="container mx-auto px-6 py-12 md:py-20">
-                <button 
+                <motion.button 
                     onClick={() => onNavigate('home')} 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                     className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home
-                </button>
+                </motion.button>
 
-                <SectionTitle>Cancellation & Refund Policy</SectionTitle>
-                <p className="text-center text-xl text-slate-300 -mt-8 mb-12">
-                    Transparent and fair refund policy for all our courses
-                </p>
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <SectionTitle>Cancellation & Refund Policy</SectionTitle>
+                    <p className="text-center text-xl text-slate-300 -mt-8 mb-12 max-w-4xl mx-auto">
+                        Transparent and fair refund policy for all our courses
+                    </p>
+                </motion.div>
 
                 <div className="max-w-6xl mx-auto space-y-12">
                     {/* Refund Timeline */}
@@ -240,6 +250,6 @@ export default function CancellationRefundPage({ onNavigate }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </AnimatedBackground>
     );
 }
