@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCap, Target } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCap, Target, Calendar, Users, Clock, Zap } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { createOrder, processPayment, verifyPayment } from '@/services/razorpay.js';
+import { getBatchById, getActiveBatches, getBatchesByCourse, getUrgencyColor } from '@/data/activeBatches.js';
 
 export default function EnrollUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -9,12 +10,50 @@ export default function EnrollUsPage({ onNavigate }) {
         email: '',
         phone: '',
         course: '',
+        batchId: '',
         experience: 'beginner',
         background: '',
         goals: '',
         startDate: '',
         source: 'website'
     });
+    
+    const [selectedBatch, setSelectedBatch] = useState(null);
+    const [availableBatches, setAvailableBatches] = useState([]);
+    
+    // Handle URL parameters for targeted enrollment
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const courseParam = urlParams.get('course');
+        const batchParam = urlParams.get('batch');
+        
+        if (courseParam) {
+            setFormData(prev => ({
+                ...prev,
+                course: courseParam,
+                source: 'banner_targeted'
+            }));
+            
+            // Get available batches for this course
+            const courseBatches = getBatchesByCourse(courseParam);
+            setAvailableBatches(courseBatches);
+            
+            if (batchParam) {
+                const batch = getBatchById(batchParam);
+                if (batch) {
+                    setSelectedBatch(batch);
+                    setFormData(prev => ({
+                        ...prev,
+                        batchId: batchParam,
+                        source: 'banner_specific'
+                    }));
+                }
+            }
+        } else {
+            // Load all active batches for general enrollment
+            setAvailableBatches(getActiveBatches());
+        }
+    }, []);
     const [submitted, setSubmitted] = useState(false);
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [paymentMsg, setPaymentMsg] = useState('');
@@ -106,11 +145,12 @@ export default function EnrollUsPage({ onNavigate }) {
             category: 'Foundation Programs'
         },
         { 
-            id: 'custom', 
-            name: 'Custom Training Program', 
-            price: 'Contact for pricing',
-            razorpayPrice: null,
-            category: 'Custom Programs'
+            id: 'collegeTraining', 
+            name: 'College Bulk Training Program (100-200 Students)', 
+            price: 'Starting ₹299/student',
+            razorpayPrice: 299,
+            category: 'College Programs',
+            description: 'Specialized cybersecurity training for engineering colleges, designed for 100-200 student batches with placement-focused curriculum'
         }
     ];
 
@@ -158,10 +198,15 @@ export default function EnrollUsPage({ onNavigate }) {
             const order = await createOrder({ amount: selectedCourse.razorpayPrice, currency: 'INR' });
             setLastOrderId(order.id);
 
+            const batchInfo = selectedBatch || (formData.batchId ? getBatchById(formData.batchId) : null);
+            const description = batchInfo 
+                ? `${selectedCourse.name} - ${batchInfo.batchName}`
+                : `Payment for ${selectedCourse.name}`;
+
             const paymentResult = await processPayment({
                 amount: order.amount,
                 currency: order.currency,
-                description: `Payment for ${selectedCourse.name}`,
+                description: description,
                 orderId: order.id,
                 customerName: formData.name || 'Demo User',
                 customerEmail: formData.email || 'demo@example.com',
@@ -219,10 +264,69 @@ export default function EnrollUsPage({ onNavigate }) {
                     Back to Home
                 </button>
 
-                <SectionTitle>Enroll in Our Programs</SectionTitle>
-                <p className="text-center text-xl text-slate-300 -mt-8 mb-12">
-                    Start your cybersecurity journey with personalized guidance
-                </p>
+                {selectedBatch ? (
+                    <>
+                        <div className="text-center mb-8">
+                            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                                {selectedBatch.title}
+                            </h1>
+                            <p className="text-xl text-slate-300 mb-6">
+                                {selectedBatch.batchName} - Limited Time Enrollment
+                            </p>
+                        </div>
+                        
+                        {/* Batch Information Card */}
+                        <div className={`max-w-4xl mx-auto mb-8 p-6 rounded-xl border ${getUrgencyColor(selectedBatch.urgency)} backdrop-blur-sm`}>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                                <div>
+                                    <Calendar className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                                    <p className="text-sm text-slate-400">Start Date</p>
+                                    <p className="font-semibold text-white">{selectedBatch.startDate}</p>
+                                </div>
+                                <div>
+                                    <Clock className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                                    <p className="text-sm text-slate-400">Schedule</p>
+                                    <p className="font-semibold text-white">{selectedBatch.schedule}</p>
+                                </div>
+                                <div>
+                                    <Users className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                                    <p className="text-sm text-slate-400">Seats Available</p>
+                                    <p className={`font-semibold ${selectedBatch.urgency === 'high' ? 'text-red-300' : 'text-white'}`}>
+                                        {selectedBatch.seatsLeft}/{selectedBatch.totalSeats}
+                                    </p>
+                                </div>
+                                <div>
+                                    <Target className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+                                    <p className="text-sm text-slate-400">Investment</p>
+                                    <p className="font-semibold text-green-300">{selectedBatch.price}</p>
+                                    <p className="text-xs text-slate-400 line-through">{selectedBatch.originalPrice}</p>
+                                </div>
+                            </div>
+                            
+                            {selectedBatch.urgency === 'high' && (
+                                <div className="mt-4 p-3 bg-red-900/30 border border-red-500 rounded-lg flex items-center justify-center">
+                                    <Zap className="w-5 h-5 text-red-400 mr-2 animate-pulse" />
+                                    <span className="text-red-300 font-semibold">
+                                        ⚡ Hurry! Only {selectedBatch.seatsLeft} seats remaining for this batch!
+                                    </span>
+                                </div>
+                            )}
+                            
+                            <div className="mt-4 text-center">
+                                <p className="text-sm text-slate-300">
+                                    📚 <strong>{selectedBatch.features.length} Key Benefits:</strong> {selectedBatch.features.join(' • ')}
+                                </p>
+                            </div>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <SectionTitle>Enroll in Our Programs</SectionTitle>
+                        <p className="text-center text-xl text-slate-300 -mt-8 mb-12">
+                            Start your cybersecurity journey with personalized guidance
+                        </p>
+                    </>
+                )}
 
                 <div className="max-w-6xl mx-auto">
                     {submitted && (
@@ -308,7 +412,8 @@ export default function EnrollUsPage({ onNavigate }) {
                                             required
                                             value={formData.course}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
+                                            disabled={selectedBatch} // Disable if coming from specific batch
+                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
                                         >
                                             <option value="">Select a course</option>
                                             
@@ -353,7 +458,55 @@ export default function EnrollUsPage({ onNavigate }) {
                                                 ))}
                                             </optgroup>
                                         </select>
+                                        
+                                        {selectedBatch && (
+                                            <p className="text-sm text-blue-300 mt-1">
+                                                ✅ Pre-selected from banner: {selectedBatch.courseName}
+                                            </p>
+                                        )}
                                     </div>
+                                    
+                                    {/* Batch Selection (when course is selected and multiple batches available) */}
+                                    {availableBatches.length > 0 && formData.course && !selectedBatch && (
+                                        <div>
+                                            <label htmlFor="batchId" className="block text-sm font-medium text-slate-300 mb-2">
+                                                Select Batch *
+                                            </label>
+                                            <select
+                                                id="batchId"
+                                                name="batchId"
+                                                value={formData.batchId}
+                                                onChange={handleInputChange}
+                                                className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
+                                            >
+                                                <option value="">Choose your preferred batch</option>
+                                                {availableBatches
+                                                    .filter(batch => batch.courseId === formData.course)
+                                                    .map(batch => (
+                                                        <option key={batch.id} value={batch.id}>
+                                                            {batch.batchName} - Starts {batch.startDate} ({batch.seatsLeft} seats left)
+                                                        </option>
+                                                    ))
+                                                }
+                                            </select>
+                                        </div>
+                                    )}
+                                    
+                                    {selectedBatch && (
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-300 mb-2">
+                                                Selected Batch
+                                            </label>
+                                            <div className="bg-slate-900 border border-green-600 rounded-md p-3">
+                                                <p className="text-green-300 font-semibold">
+                                                    ✅ {selectedBatch.batchName}
+                                                </p>
+                                                <p className="text-slate-300 text-sm">
+                                                    Starts {selectedBatch.startDate} • {selectedBatch.schedule}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Experience Level */}
@@ -474,6 +627,12 @@ export default function EnrollUsPage({ onNavigate }) {
                                             if (!selectedCourse) return 'Select a course first';
                                             if (selectedCourse.razorpayPrice === 0) return 'Free Course - Submit Form';
                                             if (selectedCourse.razorpayPrice === null) return 'Contact for Custom Pricing';
+                                            
+                                            const batchInfo = selectedBatch || (formData.batchId ? getBatchById(formData.batchId) : null);
+                                            if (batchInfo) {
+                                                return `Secure Seat in ${batchInfo.batchName} - ${batchInfo.price}`;
+                                            }
+                                            
                                             return `Pay via UPI (${selectedCourse.price})`;
                                         })()}
                                     </button>

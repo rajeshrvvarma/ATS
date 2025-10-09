@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
-import { X, Calendar, Users, Sparkles, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getActiveBatches, getUrgencyColor } from '@/data/activeBatches.js';
 
 const AnnouncementBanner = ({ onNavigate }) => {
     const [isVisible, setIsVisible] = useState(true);
+    const [currentBatchIndex, setCurrentBatchIndex] = useState(0);
+    
+    const activeBatches = getActiveBatches();
+    
+    // Rotate between batches every 8 seconds if multiple batches exist
+    useEffect(() => {
+        if (activeBatches.length > 1) {
+            const interval = setInterval(() => {
+                setCurrentBatchIndex(prev => (prev + 1) % activeBatches.length);
+            }, 8000);
+            return () => clearInterval(interval);
+        }
+    }, [activeBatches.length]);
 
-    if (!isVisible) return null;
+    if (!isVisible || activeBatches.length === 0) return null;
+    
+    const currentBatch = activeBatches[currentBatchIndex] || activeBatches[0];
 
     return (
         <AnimatePresence>
@@ -33,28 +49,53 @@ const AnnouncementBanner = ({ onNavigate }) => {
                             <div className="flex flex-col sm:flex-row items-center text-center sm:text-left space-y-1 sm:space-y-0 sm:space-x-3">
                                 <div className="flex items-center space-x-2">
                                     <span className="font-bold text-sm md:text-base">
-                                        🚀 NEW BATCH ALERT!
+                                        {currentBatch.title}
                                     </span>
                                     <span className="hidden md:inline text-yellow-300">|</span>
                                 </div>
                                 
                                 <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2">
                                     <span className="text-xs md:text-sm font-medium">
-                                        Cybersecurity Bootcamp starting January 15th, 2025
+                                        Starting {currentBatch.startDate}
                                     </span>
                                     <div className="flex items-center space-x-2">
-                                        <Users className="w-3 h-3 md:w-4 md:h-4" />
-                                        <span className="text-xs md:text-sm">Limited seats available</span>
+                                        {currentBatch.urgency === 'high' ? (
+                                            <Zap className="w-3 h-3 md:w-4 md:h-4 text-red-400 animate-pulse" />
+                                        ) : (
+                                            <Users className="w-3 h-3 md:w-4 md:h-4" />
+                                        )}
+                                        <span className={`text-xs md:text-sm ${
+                                            currentBatch.urgency === 'high' ? 'text-red-300 font-semibold' : 'text-white'
+                                        }`}>
+                                            {currentBatch.urgency === 'high' 
+                                                ? `Only ${currentBatch.seatsLeft} seats left!` 
+                                                : `${currentBatch.seatsLeft} seats available`
+                                            }
+                                        </span>
+                                    </div>
+                                    
+                                    {/* Price indicator */}
+                                    <div className="flex items-center space-x-1">
+                                        <span className="text-yellow-300">•</span>
+                                        <span className="text-xs md:text-sm font-semibold text-green-300">
+                                            {currentBatch.price}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
                             {/* CTA Button */}
                             <button 
-                                onClick={() => onNavigate && onNavigate('enroll')}
-                                className="hidden sm:flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border border-white/20"
+                                onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                                className={`hidden sm:flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
+                                    currentBatch.urgency === 'high' 
+                                        ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse' 
+                                        : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
+                                }`}
                             >
-                                <span>Register Now</span>
+                                <span>
+                                    {currentBatch.urgency === 'high' ? 'Grab Last Seats!' : 'Register Now'}
+                                </span>
                                 <ArrowRight className="w-3 h-3" />
                             </button>
                         </div>
@@ -72,13 +113,33 @@ const AnnouncementBanner = ({ onNavigate }) => {
                     {/* Mobile CTA */}
                     <div className="sm:hidden mt-2 text-center">
                         <button 
-                            onClick={() => onNavigate && onNavigate('enroll')}
-                            className="inline-flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border border-white/20"
+                            onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                            className={`inline-flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
+                                currentBatch.urgency === 'high' 
+                                    ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse' 
+                                    : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
+                            }`}
                         >
-                            <span>Register Now</span>
+                            <span>
+                                {currentBatch.urgency === 'high' ? 'Grab Last Seats!' : `Register - ${currentBatch.price}`}
+                            </span>
                             <ArrowRight className="w-3 h-3" />
                         </button>
                     </div>
+
+                    {/* Batch rotation indicator for multiple batches */}
+                    {activeBatches.length > 1 && (
+                        <div className="mt-2 flex justify-center space-x-1">
+                            {activeBatches.map((_, index) => (
+                                <div
+                                    key={index}
+                                    className={`h-1 w-6 rounded-full transition-all duration-300 ${
+                                        index === currentBatchIndex ? 'bg-white/70' : 'bg-white/20'
+                                    }`}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 {/* Animated Progress Bar */}

@@ -25,6 +25,7 @@ const DefensiveMasteryLandingPage = React.lazy(() => import('@/pages/DefensiveMa
 const OffensiveBootcampLandingPage = React.lazy(() => import('@/pages/OffensiveBootcampLandingPage.jsx'));
 const OffensiveMasteryLandingPage = React.lazy(() => import('@/pages/OffensiveMasteryLandingPage.jsx'));
 const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/SpecializedCoursesLandingPage.jsx'));
+const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrainingLandingPage.jsx'));
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
 const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
@@ -58,6 +59,7 @@ export default function App() {
         offensiveBootcampLanding: '/ethical-hacking-bootcamp',
         offensiveMastery: '/offensive-security-mastery',
         specializedCourses: '/specialized-courses',
+        collegeTraining: '/college-bulk-training',
         terms: '/terms',
         disclaimer: '/disclaimer',
         'accountActivation-defensive': '/activate/defensive',
@@ -86,6 +88,7 @@ export default function App() {
         '/ethical-hacking-bootcamp': 'offensiveBootcampLanding',
         '/offensive-security-mastery': 'offensiveMastery',
         '/specialized-courses': 'specializedCourses',
+        '/college-bulk-training': 'collegeTraining',
         '/terms': 'terms',
         '/disclaimer': 'disclaimer',
         '/activate/defensive': 'accountActivation-defensive',
@@ -134,6 +137,7 @@ export default function App() {
                             <Route path="/ethical-hacking-bootcamp" element={<OffensiveBootcampLandingPage onNavigate={go} />} />
                             <Route path="/offensive-security-mastery" element={<OffensiveMasteryLandingPage onNavigate={go} />} />
                             <Route path="/specialized-courses" element={<SpecializedCoursesLandingPage onNavigate={go} />} />
+                            <Route path="/college-bulk-training" element={<CollegeTrainingLandingPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
                             <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />

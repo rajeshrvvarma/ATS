@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star } from 'lucide-react';
+import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star, Users } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Header({ onNavigate, currentPage }) {
@@ -54,6 +54,13 @@ export default function Header({ onNavigate, currentPage }) {
                 { name: 'Cloud & DevOps', action: () => onNavigate('enroll') },
                 { name: 'AI & Data Science', action: () => onNavigate('enroll') },
                 { name: 'Software Testing', action: () => onNavigate('enroll') }
+            ]
+        },
+        college: {
+            title: '🎓 College Training',
+            courses: [
+                { name: 'Bulk Training Program (₹299/student)', action: () => onNavigate('collegeTraining') },
+                { name: 'Engineering Student Focus', action: () => onNavigate('collegeTraining') }
             ]
         }
     };
@@ -406,17 +413,18 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
                 }
             ]
         },
-        corporate: {
-            title: 'Corporate Training',
-            icon: Sparkles,
+        college: {
+            title: 'College Training',
+            icon: Users,
             color: 'orange',
             courses: [
                 {
-                    title: 'Enterprise Security Training',
-                    duration: 'Customizable',
-                    price: 'Contact Us',
-                    description: 'Tailored programs for organizations',
-                    action: () => onNavigate('contact')
+                    title: 'College Bulk Training Program',
+                    duration: '8 Weeks',
+                    price: 'Starting ₹299/student',
+                    description: 'Specialized training for 100-200 engineering students',
+                    action: () => onNavigate('collegeTraining'),
+                    popular: true
                 },
                 {
                     title: 'Team Skill Development',
