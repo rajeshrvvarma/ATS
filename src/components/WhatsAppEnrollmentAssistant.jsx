@@ -1,6 +1,10 @@
 import React from 'react';
 import { MessageCircle, Phone, User, Clock } from 'lucide-react';
-import { messageTemplates } from './WhatsAppWidget';
+
+// Message templates for fallback
+const messageTemplates = {
+  general: "Hi! I have some questions about Agnidhra Technologies cybersecurity training programs."
+};
 
 /**
  * WhatsApp Enrollment Assistant
@@ -126,5 +130,3 @@ export function WhatsAppAssistanceBanner({ message, className = "" }) {
     </div>
   );
 }
-
-export { messageTemplates };

@@ -195,6 +195,3 @@ export default function WhatsAppWidget() {
     </>
   );
 }
-
-// Export message templates for use in other components
-export { messageTemplates };

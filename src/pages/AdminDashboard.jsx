@@ -20,6 +20,8 @@ import {
 } from 'lucide-react';
 import { loadCourses, addCourse, updateCourse, deleteCourse, addLesson, updateLesson, deleteLesson, moveLesson, exportCourses, importCourses } from '@/services/courseService.js';
 import EnhancedCourseCreator from '@/components/EnhancedCourseCreator.jsx';
+import EnhancedAnalyticsDashboard from '@/components/EnhancedAnalyticsDashboard.jsx';
+import CourseContentManagementSystem from '@/components/CourseContentManagementSystem.jsx';
 
 /**
  * AdminDashboard - Complete admin panel for LMS management
@@ -362,132 +364,10 @@ export default function AdminDashboard({ onNavigate }) {
           </div>
         )}
 
-        {/* Courses Tab */}
+        {/* Enhanced Courses Tab */}
         {activeTab === 'courses' && (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Course Management</h3>
-              <div className="flex items-center gap-2">
-                <button onClick={() => { setEditingCourse(null); setShowCourseModal(true); }} className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2">
-                  <BookOpen className="w-4 h-4" />
-                  Add Course
-                </button>
-                <button onClick={() => { const data = exportCourses(); const blob = new Blob([data], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'courses.json'; a.click(); }} className="btn-secondary px-3 py-2">Export</button>
-                <label className="btn-secondary px-3 py-2 cursor-pointer">
-                  Import
-                  <input type="file" accept="application/json" className="hidden" onChange={(e)=>{ const file = e.target.files?.[0]; if (!file) return; const reader = new FileReader(); reader.onload = () => { try { importCourses(reader.result); setCourseList(loadCourses()); } catch (err) { alert('Invalid file'); } }; reader.readAsText(file); }} />
-                </label>
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {courseList.map((course) => (
-                <div key={course.id} className="bg-slate-800 rounded-lg p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-semibold text-white">{course.title}</h4>
-                    <div className="flex items-center gap-2">
-                      <button onClick={() => { setEditingCourse(course); setShowCourseModal(true); }} className="text-sky-400 hover:text-sky-300">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button onClick={()=>{ deleteCourse(course.id); setCourseList(loadCourses()); }} className="text-red-400 hover:text-red-300">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-slate-400 text-sm mb-4">{course.description}</p>
-                  <div className="flex items-center justify-between text-sm text-slate-500">
-                    <span>{course.lessons.length} lessons</span>
-                    <span>{course.duration}</span>
-                  </div>
-                  <div className="mt-4 flex items-center gap-2">
-                    <button onClick={()=>{ setLessonModal({ open:true, courseId: course.id, lesson: null }); setLessonForm({ title: '', type: 'youtube', videoId: '', videoUrl: '', duration: '10:00' }); }} className="btn-secondary px-3 py-1">Add Lesson</button>
-                    <button onClick={()=>{ setLessonModal({ open:true, courseId: course.id, lesson: { id: '__manage__' } }); }} className="btn-primary px-3 py-1">Manage Lessons</button>
-                  </div>
-                  <div className="mt-3">
-                    <label className="text-xs text-slate-400 block mb-1">Thumbnail</label>
-                    <div className="flex items-center gap-2">
-                      <img src={course.thumbnail || '/logo.png'} alt="thumb" className="w-12 h-12 rounded-md border border-slate-700 object-cover" />
-                      <label className="btn-secondary px-3 py-1 cursor-pointer">
-                        Upload
-                        <input type="file" accept="image/*" className="hidden" onChange={(e)=>{ const file=e.target.files?.[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ updateCourse(course.id, { thumbnail: reader.result }); setCourseList(loadCourses()); }; reader.readAsDataURL(file);} } />
-                      </label>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <EnhancedCourseCreator
-              course={editingCourse}
-              isOpen={showCourseModal}
-              onClose={() => setShowCourseModal(false)}
-              onSave={(courseData) => {
-                if (editingCourse) {
-                  updateCourse(editingCourse.id, courseData);
-                } else {
-                  addCourse(courseData);
-                }
-                setCourseList(loadCourses());
-                setShowCourseModal(false);
-              }}
-            />
-            {lessonModal.open && (
-              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setLessonModal({ open:false, courseId:null, lesson:null })}>
-                <div className="bg-slate-900 border border-slate-700 rounded-lg w-full max-w-2xl p-6" onClick={(e)=>e.stopPropagation()}>
-                  <h4 className="text-white text-lg font-semibold mb-4">{lessonModal.lesson && lessonModal.lesson.id === '__manage__' ? 'Manage Lessons' : (lessonModal.lesson ? 'Edit Lesson' : 'Add Lesson')}</h4>
-                  {lessonModal.lesson && lessonModal.lesson.id === '__manage__' ? (
-                    <div className="space-y-3">
-                      {courseList.find(c=>c.id===lessonModal.courseId)?.lessons.map((lsn, idx) => (
-                        <div key={lsn.id} className="flex items-center justify-between p-3 bg-slate-800 rounded-md">
-                          <div className="text-slate-200 text-sm">{lsn.title} <span className="text-slate-400">({lsn.type})</span></div>
-                          <div className="flex items-center gap-2">
-                            <button onClick={()=>{ if (idx>0) { moveLesson(lessonModal.courseId, idx, idx-1); setCourseList(loadCourses()); } }} className="text-slate-300 hover:text-white">↑</button>
-                            <button onClick={()=>{ const len = courseList.find(c=>c.id===lessonModal.courseId)?.lessons.length || 0; if (idx<len-1) { moveLesson(lessonModal.courseId, idx, idx+1); setCourseList(loadCourses()); } }} className="text-slate-300 hover:text-white">↓</button>
-                            <button onClick={()=>{ setLessonModal({ open:true, courseId: lessonModal.courseId, lesson: lsn }); setLessonForm({ title: lsn.title, type: lsn.type, videoId: lsn.videoId || '', videoUrl: lsn.videoUrl || '', duration: lsn.duration || '10:00' }); }} className="text-sky-400 hover:text-sky-300"><Edit className="w-4 h-4"/></button>
-                            <button onClick={()=>{ deleteLesson(lessonModal.courseId, lsn.id); setCourseList(loadCourses()); }} className="text-red-400 hover:text-red-300"><Trash2 className="w-4 h-4"/></button>
-                          </div>
-                        </div>
-                      ))}
-                      <div className="text-right pt-2">
-                        <button onClick={()=> setLessonModal({ open:false, courseId:null, lesson:null })} className="btn-secondary px-4 py-2">Close</button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm text-slate-300 mb-1">Title</label>
-                        <input value={lessonForm.title} onChange={(e)=>setLessonForm({ ...lessonForm, title:e.target.value })} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" />
-                      </div>
-                      <div className="grid grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-sm text-slate-300 mb-1">Type</label>
-                          <select value={lessonForm.type} onChange={(e)=>setLessonForm({ ...lessonForm, type:e.target.value })} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white">
-                            <option value="youtube">YouTube</option>
-                            <option value="vimeo">Vimeo</option>
-                            <option value="direct">Direct</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm text-slate-300 mb-1">Video ID</label>
-                          <input value={lessonForm.videoId} onChange={(e)=>setLessonForm({ ...lessonForm, videoId:e.target.value })} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" />
-                        </div>
-                        <div>
-                          <label className="block text-sm text-slate-300 mb-1">Video URL</label>
-                          <input value={lessonForm.videoUrl} onChange={(e)=>setLessonForm({ ...lessonForm, videoUrl:e.target.value })} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-sm text-slate-300 mb-1">Duration</label>
-                        <input value={lessonForm.duration} onChange={(e)=>setLessonForm({ ...lessonForm, duration:e.target.value })} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" />
-                      </div>
-                      <div className="mt-6 flex justify-end gap-2">
-                        <button onClick={()=> setLessonModal({ open:false, courseId:null, lesson:null })} className="btn-secondary px-4 py-2">Cancel</button>
-                        <button onClick={()=>{ if (lessonModal.lesson) { updateLesson(lessonModal.courseId, lessonModal.lesson.id, lessonForm); } else { addLesson(lessonModal.courseId, lessonForm); } setCourseList(loadCourses()); setLessonModal({ open:false, courseId:null, lesson:null }); }} className="btn-primary px-4 py-2">Save</button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+          <div className="p-0 -m-6">
+            <CourseContentManagementSystem />
           </div>
         )}
 
@@ -546,59 +426,10 @@ export default function AdminDashboard({ onNavigate }) {
           </div>
         )}
 
-        {/* Analytics Tab */}
+        {/* Enhanced Analytics Tab */}
         {activeTab === 'analytics' && (
-          <div className="space-y-8">
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-slate-800 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Course Completion Rate</h3>
-                <div className="space-y-4">
-                  {courses.map((course) => {
-                    const courseEnrollments = enrollments.filter(e => e.courseId === course.id);
-                    const completionRate = courseEnrollments.length > 0 
-                      ? (courseEnrollments.filter(e => e.status === 'completed').length / courseEnrollments.length) * 100 
-                      : 0;
-                    
-                    return (
-                      <div key={course.id} className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-slate-300">{course.title}</span>
-                          <span className="text-sm text-slate-400">{Math.round(completionRate)}%</span>
-                        </div>
-                        <div className="w-full bg-slate-700 rounded-full h-2">
-                          <div 
-                            className="bg-sky-500 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${completionRate}%` }}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="bg-slate-800 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Monthly Statistics</h3>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                    <span className="text-slate-300">New Students</span>
-                    <span className="text-white font-semibold">+12</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                    <span className="text-slate-300">Course Enrollments</span>
-                    <span className="text-white font-semibold">+28</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                    <span className="text-slate-300">Certificates Issued</span>
-                    <span className="text-white font-semibold">+15</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                    <span className="text-slate-300">Revenue</span>
-                    <span className="text-green-400 font-semibold">₹{stats.revenue.toLocaleString()}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="p-0 -m-6">
+            <EnhancedAnalyticsDashboard />
           </div>
         )}
       </div>
