@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const DefensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(7); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -576,6 +579,9 @@ const DefensiveMasteryLandingPage = () => {
           // You can add success tracking or analytics here
         }}
       />
+      
+      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+      <ScrollNavigation />
     </div>
   );
 };

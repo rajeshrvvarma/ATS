@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp, Sword, Zap, Code2 } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const OffensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(4); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -470,6 +473,9 @@ const OffensiveMasteryLandingPage = () => {
         courseTitle="2-Month Offensive Security Mastery"
         price="₹7,999"
       />
+      
+      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+      <ScrollNavigation />
     </div>
   );
 };

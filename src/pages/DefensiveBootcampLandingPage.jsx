@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const DefensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(23); // Dynamic counter
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 8, minutes: 42 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Simulate real-time enrollment updates
   useEffect(() => {
@@ -430,6 +433,9 @@ const DefensiveBootcampLandingPage = () => {
         courseTitle="7-Day Intensive Cybersecurity Bootcamp"
         price={pricing.price}
       />
+      
+      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+      <ScrollNavigation />
     </div>
   );
 };

@@ -3,10 +3,13 @@ import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const SpecializedCoursesLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, course: '', price: '' });
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   const categories = [
     { id: 'all', name: 'All Courses', icon: Target },
@@ -534,6 +537,9 @@ const SpecializedCoursesLandingPage = () => {
         courseTitle={enrollmentModal.course}
         price={enrollmentModal.price}
       />
+      
+      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+      <ScrollNavigation />
     </AnimatedBackground>
   );
 };

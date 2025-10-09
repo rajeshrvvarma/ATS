@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
 import EnrollmentModal from '../components/EnrollmentModal';
+import AiCareerAdvisor from '../components/AiCareerAdvisor';
+import ScrollNavigation from '../components/ScrollNavigation';
 
 const CollegeTrainingLandingPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(2847);
 
   useEffect(() => {
@@ -144,8 +145,6 @@ const CollegeTrainingLandingPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
-      <Header />
-      
       {/* Hero Section */}
       <section className="relative pt-20 pb-16 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
@@ -365,13 +364,14 @@ const CollegeTrainingLandingPage = () => {
         </div>
       </section>
 
-      <Footer />
-      
       <EnrollmentModal 
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         preselectedCourse="collegeTraining"
       />
+      
+      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+      <ScrollNavigation />
     </div>
   );
 };

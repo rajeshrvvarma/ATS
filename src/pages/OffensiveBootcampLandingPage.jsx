@@ -3,11 +3,14 @@ import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target, Sword, Zap, Shield } from 'lucide-react';
 import EnrollmentModal from '@/components/EnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const OffensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(18); // Dynamic counter
   const [timeLeft, setTimeLeft] = useState({ days: 12, hours: 6, minutes: 32 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
+  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Simulate real-time enrollment updates
   useEffect(() => {
@@ -372,6 +375,9 @@ const OffensiveBootcampLandingPage = () => {
         courseTitle="7-Day Ethical Hacking Bootcamp"
         price={pricing.price}
       />
+      
+      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+      <ScrollNavigation />
     </div>
   );
 };
