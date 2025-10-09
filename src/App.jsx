@@ -20,8 +20,8 @@ import Footer from '@/components/Footer.jsx';
 const HomePage = React.lazy(() => import('@/pages/HomePage.jsx'));
 const FreeWorkshopPage = React.lazy(() => import('@/pages/WorkshopPage.jsx'));
 const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
-const BootcampLandingPage = React.lazy(() => import('@/pages/BootcampLandingPage.jsx'));
-const PremiumProgramLandingPage = React.lazy(() => import('@/pages/PremiumProgramLandingPage.jsx'));
+const DefensiveBootcampLandingPage = React.lazy(() => import('@/pages/DefensiveBootcampLandingPage.jsx'));
+const DefensiveMasteryLandingPage = React.lazy(() => import('@/pages/DefensiveMasteryLandingPage.jsx'));
 const OffensiveBootcampLandingPage = React.lazy(() => import('@/pages/OffensiveBootcampLandingPage.jsx'));
 const OffensiveMasteryLandingPage = React.lazy(() => import('@/pages/OffensiveMasteryLandingPage.jsx'));
 const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/SpecializedCoursesLandingPage.jsx'));
@@ -53,8 +53,8 @@ export default function App() {
         workshop: '/workshop',
         defensiveBootcamp: '/bootcamp/defensive',
         offensiveBootcamp: '/bootcamp/offensive',
-        bootcampLanding: '/bootcamp-intensive',
-        premiumProgram: '/cybersecurity-mastery',
+        defensiveBootcampLanding: '/defensive-security-bootcamp',
+        defensiveMastery: '/defensive-security-mastery',
         offensiveBootcampLanding: '/ethical-hacking-bootcamp',
         offensiveMastery: '/offensive-security-mastery',
         specializedCourses: '/specialized-courses',
@@ -81,8 +81,8 @@ export default function App() {
         '/workshop': 'workshop',
         '/bootcamp/defensive': 'defensiveBootcamp',
         '/bootcamp/offensive': 'offensiveBootcamp',
-        '/bootcamp-intensive': 'bootcampLanding',
-        '/cybersecurity-mastery': 'premiumProgram',
+        '/defensive-security-bootcamp': 'defensiveBootcampLanding',
+        '/defensive-security-mastery': 'defensiveMastery',
         '/ethical-hacking-bootcamp': 'offensiveBootcampLanding',
         '/offensive-security-mastery': 'offensiveMastery',
         '/specialized-courses': 'specializedCourses',
@@ -129,8 +129,8 @@ export default function App() {
                             <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
                             <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
                             <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
-                            <Route path="/bootcamp-intensive" element={<BootcampLandingPage onNavigate={go} />} />
-                            <Route path="/cybersecurity-mastery" element={<PremiumProgramLandingPage onNavigate={go} />} />
+                            <Route path="/defensive-security-bootcamp" element={<DefensiveBootcampLandingPage onNavigate={go} />} />
+                            <Route path="/defensive-security-mastery" element={<DefensiveMasteryLandingPage onNavigate={go} />} />
                             <Route path="/ethical-hacking-bootcamp" element={<OffensiveBootcampLandingPage onNavigate={go} />} />
                             <Route path="/offensive-security-mastery" element={<OffensiveMasteryLandingPage onNavigate={go} />} />
                             <Route path="/specialized-courses" element={<SpecializedCoursesLandingPage onNavigate={go} />} />

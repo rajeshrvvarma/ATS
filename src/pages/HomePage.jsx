@@ -238,7 +238,7 @@ const ProgramsShowcase = ({ onNavigate }) => {
             icon: Shield,
             color: 'blue',
             features: ['SIEM Mastery', 'Incident Response', 'Live Labs', 'Certificate'],
-            action: () => onNavigate('bootcampLanding'),
+            action: () => onNavigate('defensiveBootcampLanding'),
             gradient: 'from-blue-600 to-blue-800',
             bgGradient: 'from-blue-900/20 to-blue-800/10',
             borderColor: 'border-blue-500/30 hover:border-blue-400'
@@ -274,7 +274,7 @@ const ProgramsShowcase = ({ onNavigate }) => {
             icon: Award,
             color: 'blue',
             features: ['Personal Mentor', '10+ Projects', 'Job Guarantee', 'Small Batch'],
-            action: () => onNavigate('premiumProgram'),
+            action: () => onNavigate('defensiveMastery'),
             gradient: 'from-blue-600 to-purple-800',
             bgGradient: 'from-blue-900/20 to-purple-800/10',
             borderColor: 'border-blue-500/30 hover:border-purple-400'

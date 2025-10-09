@@ -4,7 +4,7 @@ import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award,
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
-const PremiumProgramLandingPage = () => {
+const DefensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(7); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
@@ -193,7 +193,7 @@ const PremiumProgramLandingPage = () => {
                 🏆 PREMIUM PROGRAM • LIMITED TO 20 STUDENTS ✨
               </div>
               <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-                2-Month Cybersecurity Mastery Program
+                2-Month Defensive Security Mastery Program
               </h1>
               <p className="text-2xl md:text-3xl text-gray-300 mb-8">
                 Advanced Professional Certification Program
@@ -580,4 +580,4 @@ const PremiumProgramLandingPage = () => {
   );
 };
 
-export default PremiumProgramLandingPage;
+export default DefensiveMasteryLandingPage;

@@ -28,14 +28,14 @@ export default function Header({ onNavigate, currentPage }) {
         bootcamp: {
             title: '⚡ 7-Day Bootcamps',
             courses: [
-                { name: 'SOC Analyst Bootcamp (₹499+)', action: () => onNavigate('bootcampLanding') },
+                { name: 'SOC Analyst Bootcamp (₹499+)', action: () => onNavigate('defensiveBootcampLanding') },
                 { name: 'Ethical Hacking Bootcamp (₹599+)', action: () => onNavigate('offensiveBootcampLanding') }
             ]
         },
         premium: {
             title: '🏆 2-Month Programs',
             courses: [
-                { name: 'Defensive Mastery (₹5,999)', action: () => onNavigate('premiumProgram') },
+                { name: 'Defensive Mastery (₹5,999)', action: () => onNavigate('defensiveMastery') },
                 { name: 'Elite Hacker Program (₹7,999)', action: () => onNavigate('offensiveMastery') }
             ]
         },
@@ -309,7 +309,7 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
                     duration: '1 Week',
                     price: 'Starting ₹499',
                     description: 'From Zero to SOC Analyst Ready',
-                    action: () => onNavigate('bootcampLanding'),
+                    action: () => onNavigate('defensiveBootcampLanding'),
                     popular: true
                 },
                 {
@@ -317,7 +317,7 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
                     duration: '2 Months',
                     price: '₹5,999',
                     description: 'Premium certification with mentorship',
-                    action: () => onNavigate('premiumProgram')
+                    action: () => onNavigate('defensiveMastery')
                 }
             ]
         },

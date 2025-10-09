@@ -4,7 +4,7 @@ import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Ta
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
-const BootcampLandingPage = () => {
+const DefensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(23); // Dynamic counter
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 8, minutes: 42 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
@@ -119,7 +119,7 @@ const BootcampLandingPage = () => {
               transition={{ duration: 0.8 }}
             >
               <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                7-Day Intensive Cybersecurity Bootcamp
+                7-Day Defensive Security Bootcamp
               </h1>
               <p className="text-2xl md:text-3xl text-gray-300 mb-8">
                 From Zero to SOC Analyst Ready
@@ -434,4 +434,4 @@ const BootcampLandingPage = () => {
   );
 };
 
-export default BootcampLandingPage;
+export default DefensiveBootcampLandingPage;
