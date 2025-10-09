@@ -19,6 +19,7 @@ import {
   XCircle
 } from 'lucide-react';
 import { loadCourses, addCourse, updateCourse, deleteCourse, addLesson, updateLesson, deleteLesson, moveLesson, exportCourses, importCourses } from '@/services/courseService.js';
+import EnhancedCourseCreator from '@/components/EnhancedCourseCreator.jsx';
 
 /**
  * AdminDashboard - Complete admin panel for LMS management
@@ -367,7 +368,7 @@ export default function AdminDashboard({ onNavigate }) {
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-white">Course Management</h3>
               <div className="flex items-center gap-2">
-                <button onClick={() => { setEditingCourse(null); setCourseForm({ title: '', description: '', duration: '1 hour', category: 'defensive' }); setShowCourseModal(true); }} className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2">
+                <button onClick={() => { setEditingCourse(null); setShowCourseModal(true); }} className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2">
                   <BookOpen className="w-4 h-4" />
                   Add Course
                 </button>
@@ -385,7 +386,7 @@ export default function AdminDashboard({ onNavigate }) {
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-lg font-semibold text-white">{course.title}</h4>
                     <div className="flex items-center gap-2">
-                      <button onClick={() => { setEditingCourse(course); setCourseForm({ title: course.title, description: course.description, duration: course.duration, category: course.category }); setShowCourseModal(true); }} className="text-sky-400 hover:text-sky-300">
+                      <button onClick={() => { setEditingCourse(course); setShowCourseModal(true); }} className="text-sky-400 hover:text-sky-300">
                         <Edit className="w-4 h-4" />
                       </button>
                       <button onClick={()=>{ deleteCourse(course.id); setCourseList(loadCourses()); }} className="text-red-400 hover:text-red-300">
@@ -415,41 +416,20 @@ export default function AdminDashboard({ onNavigate }) {
                 </div>
               ))}
             </div>
-            {showCourseModal && (
-              <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setShowCourseModal(false)}>
-                <div className="bg-slate-900 border border-slate-700 rounded-lg w-full max-w-lg p-6" onClick={(e)=>e.stopPropagation()}>
-                  <h4 className="text-white text-lg font-semibold mb-4">{editingCourse ? 'Edit Course' : 'Add Course'}</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm text-slate-300 mb-1">Title</label>
-                      <input value={courseForm.title} onChange={(e)=>setCourseForm({...courseForm, title:e.target.value})} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" />
-                    </div>
-                    <div>
-                      <label className="block text-sm text-slate-300 mb-1">Description</label>
-                      <textarea value={courseForm.description} onChange={(e)=>setCourseForm({...courseForm, description:e.target.value})} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" rows="3" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-sm text-slate-300 mb-1">Duration</label>
-                        <input value={courseForm.duration} onChange={(e)=>setCourseForm({...courseForm, duration:e.target.value})} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white" />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-slate-300 mb-1">Category</label>
-                        <select value={courseForm.category} onChange={(e)=>setCourseForm({...courseForm, category:e.target.value})} className="w-full bg-slate-800 border border-slate-600 rounded-md p-2 text-white">
-                          <option value="defensive">Defensive</option>
-                          <option value="offensive">Offensive</option>
-                          <option value="workshop">Workshop</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-6 flex justify-end gap-2">
-                    <button onClick={()=>setShowCourseModal(false)} className="btn-secondary px-4 py-2">Cancel</button>
-                    <button onClick={()=>{ if (editingCourse) { updateCourse(editingCourse.id, courseForm); } else { addCourse(courseForm); } setCourseList(loadCourses()); setShowCourseModal(false); }} className="btn-primary px-4 py-2">Save</button>
-                  </div>
-                </div>
-              </div>
-            )}
+            <EnhancedCourseCreator
+              course={editingCourse}
+              isOpen={showCourseModal}
+              onClose={() => setShowCourseModal(false)}
+              onSave={(courseData) => {
+                if (editingCourse) {
+                  updateCourse(editingCourse.id, courseData);
+                } else {
+                  addCourse(courseData);
+                }
+                setCourseList(loadCourses());
+                setShowCourseModal(false);
+              }}
+            />
             {lessonModal.open && (
               <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50" onClick={() => setLessonModal({ open:false, courseId:null, lesson:null })}>
                 <div className="bg-slate-900 border border-slate-700 rounded-lg w-full max-w-2xl p-6" onClick={(e)=>e.stopPropagation()}>
