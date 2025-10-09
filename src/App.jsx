@@ -118,7 +118,7 @@ export default function App() {
         <SettingsProvider>
         <ToastProvider>
         <div className="bg-slate-900 antialiased">
-                <AnnouncementBanner />
+                <AnnouncementBanner onNavigate={go} />
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>
                     <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>

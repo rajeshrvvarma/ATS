@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { X, Calendar, Users, Sparkles, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const AnnouncementBanner = () => {
+const AnnouncementBanner = ({ onNavigate }) => {
     const [isVisible, setIsVisible] = useState(true);
 
     if (!isVisible) return null;
@@ -50,7 +50,10 @@ const AnnouncementBanner = () => {
                             </div>
 
                             {/* CTA Button */}
-                            <button className="hidden sm:flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border border-white/20">
+                            <button 
+                                onClick={() => onNavigate && onNavigate('enroll')}
+                                className="hidden sm:flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border border-white/20"
+                            >
                                 <span>Register Now</span>
                                 <ArrowRight className="w-3 h-3" />
                             </button>
@@ -68,7 +71,10 @@ const AnnouncementBanner = () => {
 
                     {/* Mobile CTA */}
                     <div className="sm:hidden mt-2 text-center">
-                        <button className="inline-flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border border-white/20">
+                        <button 
+                            onClick={() => onNavigate && onNavigate('enroll')}
+                            className="inline-flex items-center space-x-1 bg-white/20 hover:bg-white/30 text-white px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-200 backdrop-blur-sm border border-white/20"
+                        >
                             <span>Register Now</span>
                             <ArrowRight className="w-3 h-3" />
                         </button>

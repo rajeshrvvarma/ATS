@@ -35,10 +35,83 @@ export default function EnrollUsPage({ onNavigate }) {
     };
 
     const courses = [
-        { id: 'defensive', name: '7-Day Defensive Security Bootcamp', price: 'Starting ₹499' },
-        { id: 'offensive', name: '7-Day Ethical Hacking Bootcamp', price: 'Starting ₹599' },
-        { id: 'workshop', name: 'Free Cybersecurity Workshop', price: 'Free' },
-        { id: 'custom', name: 'Custom Training Program', price: 'Contact for pricing' }
+        // 7-Day Bootcamps
+        { 
+            id: 'defensiveBootcamp', 
+            name: '7-Day Defensive Security Bootcamp', 
+            price: 'Starting ₹499',
+            razorpayPrice: 499,
+            category: '7-Day Bootcamps'
+        },
+        { 
+            id: 'offensiveBootcamp', 
+            name: '7-Day Ethical Hacking Bootcamp', 
+            price: 'Starting ₹599',
+            razorpayPrice: 599,
+            category: '7-Day Bootcamps'
+        },
+        
+        // 2-Month Premium Programs
+        { 
+            id: 'defensiveMastery', 
+            name: '2-Month Defensive Security Mastery Program', 
+            price: '₹5,999',
+            razorpayPrice: 5999,
+            category: '2-Month Premium Programs'
+        },
+        { 
+            id: 'offensiveMastery', 
+            name: '2-Month Elite Hacker Program', 
+            price: '₹7,999',
+            razorpayPrice: 7999,
+            category: '2-Month Premium Programs'
+        },
+        
+        // Specialized Courses
+        { 
+            id: 'cloudSecurity', 
+            name: 'Cloud Security Specialist (AWS/Azure)', 
+            price: 'Starting ₹3,999',
+            razorpayPrice: 3999,
+            category: 'Specialized Courses'
+        },
+        { 
+            id: 'digitalForensics', 
+            name: 'Digital Forensics Expert', 
+            price: 'Starting ₹4,999',
+            razorpayPrice: 4999,
+            category: 'Specialized Courses'
+        },
+        { 
+            id: 'incidentResponse', 
+            name: 'Incident Response & Recovery', 
+            price: 'Starting ₹3,499',
+            razorpayPrice: 3499,
+            category: 'Specialized Courses'
+        },
+        
+        // Foundation/Workshop
+        { 
+            id: 'workshop', 
+            name: 'Free Cybersecurity Workshop', 
+            price: 'Free',
+            razorpayPrice: 0,
+            category: 'Foundation Programs'
+        },
+        { 
+            id: 'workshopPremium', 
+            name: 'Premium Workshop Bundle', 
+            price: '₹499',
+            razorpayPrice: 499,
+            category: 'Foundation Programs'
+        },
+        { 
+            id: 'custom', 
+            name: 'Custom Training Program', 
+            price: 'Contact for pricing',
+            razorpayPrice: null,
+            category: 'Custom Programs'
+        }
     ];
 
     const experienceLevels = [
@@ -62,13 +135,33 @@ export default function EnrollUsPage({ onNavigate }) {
             setPaymentLoading(true);
             setPaymentMsg('');
 
-            const order = await createOrder({ amount: 499, currency: 'INR' });
+            // Find selected course and get price
+            const selectedCourse = courses.find(course => course.id === formData.course);
+            if (!selectedCourse) {
+                setPaymentMsg('Please select a course first.');
+                setPaymentLoading(false);
+                return;
+            }
+
+            if (selectedCourse.razorpayPrice === null) {
+                setPaymentMsg('This course requires custom pricing. Please contact us.');
+                setPaymentLoading(false);
+                return;
+            }
+
+            if (selectedCourse.razorpayPrice === 0) {
+                setPaymentMsg('This is a free course. No payment required.');
+                setPaymentLoading(false);
+                return;
+            }
+
+            const order = await createOrder({ amount: selectedCourse.razorpayPrice, currency: 'INR' });
             setLastOrderId(order.id);
 
             const paymentResult = await processPayment({
                 amount: order.amount,
                 currency: order.currency,
-                description: 'Demo Payment (Workshop Premium) ',
+                description: `Payment for ${selectedCourse.name}`,
                 orderId: order.id,
                 customerName: formData.name || 'Demo User',
                 customerEmail: formData.email || 'demo@example.com',
@@ -85,7 +178,7 @@ export default function EnrollUsPage({ onNavigate }) {
                 const details = {
                     paymentId: paymentResult.paymentId,
                     orderId: paymentResult.orderId,
-                    planName: 'Premium Workshop Bundle',
+                    planName: selectedCourse.name,
                     customerName: formData.name || 'Demo User',
                     customerEmail: formData.email || 'demo@example.com'
                 };
@@ -94,7 +187,7 @@ export default function EnrollUsPage({ onNavigate }) {
                 setTimeout(() => onNavigate('paymentSuccess'), 600);
             } else {
                 const err = {
-                    planName: 'Premium Workshop Bundle',
+                    planName: selectedCourse.name,
                     message: 'Signature verification failed'
                 };
                 localStorage.setItem('paymentError', JSON.stringify(err));
@@ -103,8 +196,9 @@ export default function EnrollUsPage({ onNavigate }) {
             }
         } catch (e) {
             setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
+            const selectedCourse = courses.find(course => course.id === formData.course);
             const err = {
-                planName: 'Premium Workshop Bundle',
+                planName: selectedCourse?.name || 'Selected Course',
                 message: e?.message || 'Payment cancelled or failed'
             };
             localStorage.setItem('paymentError', JSON.stringify(err));
@@ -217,11 +311,47 @@ export default function EnrollUsPage({ onNavigate }) {
                                             className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                         >
                                             <option value="">Select a course</option>
-                                            {courses.map(course => (
-                                                <option key={course.id} value={course.name}>
-                                                    {course.name} - {course.price}
-                                                </option>
-                                            ))}
+                                            
+                                            {/* Group courses by category */}
+                                            <optgroup label="🔥 7-Day Bootcamps (Popular)">
+                                                {courses.filter(course => course.category === '7-Day Bootcamps').map(course => (
+                                                    <option key={course.id} value={course.id}>
+                                                        {course.name} - {course.price}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
+                                            
+                                            <optgroup label="🏆 2-Month Premium Programs">
+                                                {courses.filter(course => course.category === '2-Month Premium Programs').map(course => (
+                                                    <option key={course.id} value={course.id}>
+                                                        {course.name} - {course.price}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
+                                            
+                                            <optgroup label="🎯 Specialized Courses">
+                                                {courses.filter(course => course.category === 'Specialized Courses').map(course => (
+                                                    <option key={course.id} value={course.id}>
+                                                        {course.name} - {course.price}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
+                                            
+                                            <optgroup label="🚀 Foundation Programs">
+                                                {courses.filter(course => course.category === 'Foundation Programs').map(course => (
+                                                    <option key={course.id} value={course.id}>
+                                                        {course.name} - {course.price}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
+                                            
+                                            <optgroup label="🎨 Custom Programs">
+                                                {courses.filter(course => course.category === 'Custom Programs').map(course => (
+                                                    <option key={course.id} value={course.id}>
+                                                        {course.name} - {course.price}
+                                                    </option>
+                                                ))}
+                                            </optgroup>
                                         </select>
                                     </div>
                                 </div>
@@ -334,10 +464,18 @@ export default function EnrollUsPage({ onNavigate }) {
                                     <button
                                         type="button"
                                         onClick={handleTestPayment}
-                                        disabled={paymentLoading}
+                                        disabled={paymentLoading || !formData.course}
                                         className="btn-primary w-full py-4 shadow-lg"
                                     >
-                                        {paymentLoading ? 'Processing…' : 'Pay via UPI (₹499)'}
+                                        {(() => {
+                                            if (paymentLoading) return 'Processing…';
+                                            
+                                            const selectedCourse = courses.find(course => course.id === formData.course);
+                                            if (!selectedCourse) return 'Select a course first';
+                                            if (selectedCourse.razorpayPrice === 0) return 'Free Course - Submit Form';
+                                            if (selectedCourse.razorpayPrice === null) return 'Contact for Custom Pricing';
+                                            return `Pay via UPI (${selectedCourse.price})`;
+                                        })()}
                                     </button>
                                 </div>
                                 {paymentMsg && (
