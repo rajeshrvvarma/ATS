@@ -344,20 +344,20 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 { name: 'Software Testing', price: '₹18,000' }
             ]
         },
-        corporate: {
-            id: 'corporate-training',
-            title: 'Corporate Solutions',
-            subtitle: 'Enterprise Training',
-            description: 'Tailored training programs for organizations and teams',
-            price: 'Custom Pricing',
-            originalPrice: 'Contact Us',
-            enrolled: '50+ Companies',
-            duration: 'Customizable',
-            level: 'All Levels',
-            icon: Briefcase,
+        collegeTraining: {
+            id: 'college-training',
+            title: 'College Bulk Training',
+            subtitle: 'Student Programs',
+            description: 'Specialized cybersecurity training for 100-200 engineering students',
+            price: 'Starting ₹299/student',
+            originalPrice: '₹499/student',
+            enrolled: '500+ Colleges',
+            duration: '8 Weeks',
+            level: 'Beginner Friendly',
+            icon: Users,
             color: 'orange',
-            features: ['Custom Curriculum', 'On-site Training', 'Team Assessment', 'Ongoing Support'],
-            action: () => onNavigate('contact'),
+            features: ['Bulk Pricing', 'Placement Support', 'Industry Certificates', 'College Partnerships'],
+            action: () => onNavigate('collegeTraining'),
             gradient: 'from-orange-600 to-orange-800',
             bgGradient: 'from-orange-900/20 to-orange-800/10',
             borderColor: 'border-orange-500/30 hover:border-orange-400'
@@ -677,9 +677,9 @@ const SmartGrouping = ({ programs }) => {
             gradient: 'from-blue-600 to-purple-600'
         },
         {
-            title: 'Technology & Corporate',
+            title: 'Technology & College Programs',
             subtitle: 'Beyond cybersecurity',
-            programs: [programs.technology, programs.corporate],
+            programs: [programs.technology, programs.collegeTraining],
             color: 'indigo',
             gradient: 'from-indigo-600 to-orange-600'
         }
@@ -730,9 +730,9 @@ const LearningJourney = ({ programs }) => {
         },
         advanced: {
             title: '💼 Professional',
-            subtitle: 'Technology & Corporate',
-            programs: [programs.technology, programs.corporate],
-            description: 'Expand beyond cybersecurity or provide training for organizations'
+            subtitle: 'Technology & College Programs',
+            programs: [programs.technology, programs.collegeTraining],
+            description: 'Expand beyond cybersecurity or train college students in bulk'
         }
     };
 
