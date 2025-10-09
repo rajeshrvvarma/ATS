@@ -22,13 +22,13 @@ export default function BootcampPage({ onNavigate, type }) {
                          {/* Pricing Information */}
                          <div className="text-center mb-6">
                             <div className="text-3xl font-bold text-sky-400 mb-2">
-                                {type === 'defensive' ? '₹2,999' : '₹3,499'}
+                                {type === 'defensive' ? 'Starting ₹499' : 'Starting ₹599'}
                             </div>
                             <div className="text-lg text-slate-400 line-through mb-2">
-                                {type === 'defensive' ? '₹4,999' : '₹5,999'}
+                                {type === 'defensive' ? '₹2,999' : '₹3,999'}
                             </div>
                             <div className="text-sm text-green-400 font-semibold">
-                                Limited Time Offer - Save {type === 'defensive' ? '₹2,000' : '₹2,500'}!
+                                Early Bird Special - Save up to {type === 'defensive' ? '₹2,500' : '₹3,400'}!
                             </div>
                          </div>
 

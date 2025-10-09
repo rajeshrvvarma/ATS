@@ -35,8 +35,8 @@ export default function EnrollUsPage({ onNavigate }) {
     };
 
     const courses = [
-        { id: 'defensive', name: '7-Day Defensive Security Bootcamp', price: '₹2,999' },
-        { id: 'offensive', name: '7-Day Ethical Hacking Bootcamp', price: '₹3,499' },
+        { id: 'defensive', name: '7-Day Defensive Security Bootcamp', price: 'Starting ₹499' },
+        { id: 'offensive', name: '7-Day Ethical Hacking Bootcamp', price: 'Starting ₹599' },
         { id: 'workshop', name: 'Free Cybersecurity Workshop', price: 'Free' },
         { id: 'custom', name: 'Custom Training Program', price: 'Contact for pricing' }
     ];

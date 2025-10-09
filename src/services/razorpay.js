@@ -133,15 +133,15 @@ export const verifyPayment = async (paymentDetails) => {
 export const PAYMENT_PLANS = {
     defensiveBootcamp: {
         name: '7-Day Defensive Security Bootcamp',
-        price: 2999,
-        originalPrice: 4999,
+        price: 499,
+        originalPrice: 2999,
         currency: 'INR',
         description: 'Complete defensive security training with hands-on labs'
     },
     offensiveBootcamp: {
         name: '7-Day Ethical Hacking Bootcamp',
-        price: 3499,
-        originalPrice: 5999,
+        price: 599,
+        originalPrice: 3999,
         currency: 'INR',
         description: 'Comprehensive ethical hacking training with practical exercises'
     },
