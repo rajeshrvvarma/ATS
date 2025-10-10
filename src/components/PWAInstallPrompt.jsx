@@ -238,10 +238,11 @@ export function registerPWA() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
-        // Check if service worker file exists and has correct content
+        // First try the direct approach
         console.log('Attempting to fetch service worker from /sw.js...');
-        const swResponse = await fetch('/sw.js', {
-          cache: 'no-cache', // Ensure we get fresh content
+        
+        let swResponse = await fetch('/sw.js', {
+          cache: 'no-cache',
           headers: {
             'Accept': 'application/javascript, text/javascript, */*'
           }
@@ -253,6 +254,21 @@ export function registerPWA() {
           contentType: swResponse.headers.get('content-type'),
           url: swResponse.url
         });
+        
+        // If 404, try alternative approaches
+        if (swResponse.status === 404) {
+          console.log('Service worker not found at /sw.js, trying fallback methods...');
+          
+          // Try with explicit file extension handling
+          try {
+            swResponse = await fetch(`/sw.js?v=${Date.now()}`, {
+              cache: 'no-cache'
+            });
+            console.log('Fallback fetch result:', swResponse.status);
+          } catch (fallbackError) {
+            console.log('Fallback also failed:', fallbackError.message);
+          }
+        }
         
         if (swResponse.ok) {
           const swContent = await swResponse.text();
@@ -271,9 +287,9 @@ export function registerPWA() {
                         swContent.includes('<head>');
           
           if (isJavaScript && !isHTML) {
-            console.log('Valid service worker content detected, registering...');
+            console.log('✅ Valid service worker content detected, registering...');
             const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('✅ PWA Service Worker registered successfully:', registration);
+            console.log('✅ PWA Service Worker registered successfully:', registration.scope);
 
             // Check for updates
             registration.addEventListener('updatefound', () => {
@@ -282,26 +298,39 @@ export function registerPWA() {
               
               newWorker?.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  // Show update notification
+                  console.log('New service worker installed and ready');
                   if (confirm('A new version is available. Reload to update?')) {
                     window.location.reload();
                   }
                 }
               });
             });
+            
+            return; // Success!
+            
           } else {
-            console.warn('❌ PWA Service Worker file contains HTML instead of JavaScript - routing issue detected');
+            console.warn('❌ Service worker file contains HTML instead of JavaScript');
             console.log('Content type received:', swResponse.headers.get('content-type'));
-            console.log('Is HTML?', isHTML);
-            console.log('Is JavaScript?', isJavaScript);
+            console.log('Is HTML?', isHTML, 'Is JavaScript?', isJavaScript);
           }
         } else {
-          console.warn('PWA Service Worker file not accessible:', swResponse.status, swResponse.statusText);
+          console.warn(`❌ Service worker file not accessible: ${swResponse.status} ${swResponse.statusText}`);
+          
+          // If it's a routing issue, provide helpful info
+          if (swResponse.status === 404) {
+            console.log('💡 This might be a deployment issue. Check:');
+            console.log('   1. Latest build has been deployed to Netlify');
+            console.log('   2. _redirects file is properly configured');
+            console.log('   3. sw.js exists in the deployed dist folder');
+          }
         }
+        
+        // Final fallback - app works without PWA
+        console.log('⚠️  PWA features disabled - app will continue working normally');
         
       } catch (error) {
         console.warn('PWA Service Worker registration failed:', error.message);
-        console.error('Full error:', error);
+        console.log('⚠️  PWA features disabled - app will continue working normally');
       }
     });
   } else {
