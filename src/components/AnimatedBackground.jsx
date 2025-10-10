@@ -55,7 +55,8 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
         }
     };
 
-    const currentVariant = variants[variant] || variants.default;
+    // Fallback: If variant is not found, use 'default' style
+    const currentVariant = Object.prototype.hasOwnProperty.call(variants, variant) ? variants[variant] : variants.default;
     // Use static, higher particle count for all variants
     const particleCount = currentVariant.particles.count;
     // Old animation: random movement, more visible
