@@ -92,6 +92,7 @@ dist
 .cache/
 public
 !public/firebase-messaging-sw.js
+!public/manifest.json
 
 # Storybook build outputs
 .out
