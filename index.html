@@ -13,6 +13,46 @@
     <meta name="theme-color" content="#0ea5e9" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <!-- Inline manifest fallback if external file fails -->
+    <script>
+      // Check if manifest loads, if not create inline version
+      fetch('/manifest.json').catch(() => {
+        console.log('External manifest failed, creating inline version...');
+        const manifest = {
+          "name": "Agnidhra Technologies - Cybersecurity Training",
+          "short_name": "AT-CS Training",
+          "description": "Professional cybersecurity training platform with hands-on bootcamps and advanced courses",
+          "start_url": "/",
+          "display": "standalone",
+          "background_color": "#0f172a",
+          "theme_color": "#0ea5e9",
+          "orientation": "portrait-primary",
+          "scope": "/",
+          "icons": [
+            {
+              "src": "/logo.png",
+              "sizes": "192x192 512x512",
+              "type": "image/png",
+              "purpose": "any maskable"
+            }
+          ]
+        };
+        
+        const blob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        
+        // Remove existing manifest link and add new one
+        const existingLink = document.querySelector('link[rel="manifest"]');
+        if (existingLink && existingLink.href.includes('manifest.json')) {
+          const newLink = document.createElement('link');
+          newLink.rel = 'manifest';
+          newLink.href = url;
+          document.head.replaceChild(newLink, existingLink);
+          console.log('✅ Inline manifest created and linked');
+        }
+      });
+    </script>
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="AT-CS Training" />
     <link rel="apple-touch-icon" href="/logo.png" />

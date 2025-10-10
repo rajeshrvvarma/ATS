@@ -235,6 +235,65 @@ export function PWAStatusIndicator() {
 /**
  * Register PWA Service Worker
  */
+// Inline service worker as fallback
+const createInlineServiceWorker = () => {
+  const swCode = `
+    const CACHE_NAME = 'atcs-training-v1.2';
+    const OFFLINE_URL = '/offline.html';
+    
+    const ASSETS_TO_CACHE = [
+      '/',
+      '/offline.html',
+      '/manifest.json',
+      '/logo.png',
+      '/favicon.ico',
+    ];
+    
+    self.addEventListener('install', (event) => {
+      event.waitUntil(
+        caches.open(CACHE_NAME).then((cache) => {
+          return cache.addAll(ASSETS_TO_CACHE);
+        })
+      );
+      self.skipWaiting();
+    });
+    
+    self.addEventListener('activate', (event) => {
+      event.waitUntil(
+        caches.keys().then((cacheNames) => {
+          return Promise.all(
+            cacheNames.map((cacheName) => {
+              if (cacheName !== CACHE_NAME) {
+                return caches.delete(cacheName);
+              }
+            })
+          );
+        })
+      );
+      self.clients.claim();
+    });
+    
+    self.addEventListener('fetch', (event) => {
+      if (event.request.mode === 'navigate') {
+        event.respondWith(
+          fetch(event.request).catch(() => {
+            return caches.match(OFFLINE_URL);
+          })
+        );
+      } else {
+        event.respondWith(
+          caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+          })
+        );
+      }
+    });
+  `;
+  
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  return URL.createObjectURL(blob);
+};
+
 export function registerPWA() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
@@ -242,7 +301,7 @@ export function registerPWA() {
         // First try the direct approach
         console.log('Attempting to fetch service worker from /sw.js...');
         
-        let swResponse = await fetch('/sw.js', {
+        const swResponse = await fetch('/sw.js', {
           cache: 'no-cache',
           headers: {
             'Accept': 'application/javascript, text/javascript, */*'
@@ -255,21 +314,6 @@ export function registerPWA() {
           contentType: swResponse.headers.get('content-type'),
           url: swResponse.url
         });
-        
-        // If 404, try alternative approaches
-        if (swResponse.status === 404) {
-          console.log('Service worker not found at /sw.js, trying fallback methods...');
-          
-          // Try with explicit file extension handling
-          try {
-            swResponse = await fetch(`/sw.js?v=${Date.now()}`, {
-              cache: 'no-cache'
-            });
-            console.log('Fallback fetch result:', swResponse.status);
-          } catch (fallbackError) {
-            console.log('Fallback also failed:', fallbackError.message);
-          }
-        }
         
         if (swResponse.ok) {
           const swContent = await swResponse.text();
@@ -310,24 +354,20 @@ export function registerPWA() {
             return; // Success!
             
           } else {
-            console.warn('❌ Service worker file contains HTML instead of JavaScript');
-            console.log('Content type received:', swResponse.headers.get('content-type'));
-            console.log('Is HTML?', isHTML, 'Is JavaScript?', isJavaScript);
+            console.warn('❌ Service worker file contains HTML instead of JavaScript - using inline fallback');
           }
         } else {
-          console.warn(`❌ Service worker file not accessible: ${swResponse.status} ${swResponse.statusText}`);
-          
-          // If it's a routing issue, provide helpful info
-          if (swResponse.status === 404) {
-            console.log('💡 This might be a deployment issue. Check:');
-            console.log('   1. Latest build has been deployed to Netlify');
-            console.log('   2. _redirects file is properly configured');
-            console.log('   3. sw.js exists in the deployed dist folder');
-          }
+          console.warn(`❌ Service worker file not accessible: ${swResponse.status} - using inline fallback`);
         }
         
-        // Final fallback - app works without PWA
-        console.log('⚠️  PWA features disabled - app will continue working normally');
+        // Fallback: Use inline service worker
+        console.log('� Registering inline service worker as fallback...');
+        const inlineSwUrl = createInlineServiceWorker();
+        const registration = await navigator.serviceWorker.register(inlineSwUrl);
+        console.log('✅ Inline PWA Service Worker registered successfully:', registration.scope);
+        
+        // Clean up the blob URL after registration
+        URL.revokeObjectURL(inlineSwUrl);
         
       } catch (error) {
         console.warn('PWA Service Worker registration failed:', error.message);
