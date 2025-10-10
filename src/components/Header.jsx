@@ -5,6 +5,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
+    
+    // Production debugging
+    React.useEffect(() => {
+        console.log('🔧 Header mounted in production:', { currentPage, timestamp: new Date().toISOString() });
+    }, [currentPage]);
     // Mobile navigation state
     const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
 
@@ -121,10 +126,19 @@ export default function Header({ onNavigate, currentPage }) {
     };
 
     return (
-        <header className="bg-slate-900/95 backdrop-blur-md shadow-lg shadow-black/20 sticky top-0 z-50 w-full">
-            <nav className="container mx-auto px-6 py-4">
+        <header 
+            className="bg-slate-900 shadow-lg sticky top-0 w-full" 
+            style={{
+                zIndex: 50, 
+                backgroundColor: 'rgb(15 23 42)', 
+                display: 'block',
+                minHeight: '80px'
+            }}
+        >
+            <nav className="mx-auto px-6 py-4" style={{maxWidth: '1200px'}}>
                 {/* Desktop Navigation - Clean & Professional */}
-                <div className="hidden md:flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full"
+                     style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     {/* Left - Logo & Company Name */}
                     <div className="flex items-center space-x-3">
                         <button 
@@ -188,7 +202,7 @@ export default function Header({ onNavigate, currentPage }) {
                 </div>
                 
                 {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center justify-between">
+                <div className="hidden" style={{display: 'none'}}>
                     <button 
                         onClick={() => onNavigate('home')} 
                         className="flex items-center space-x-3"
