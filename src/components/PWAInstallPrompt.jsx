@@ -235,7 +235,7 @@ export function PWAStatusIndicator() {
 /**
  * Register PWA Service Worker
  */
-// Inline service worker as fallback
+// Inline service worker as fallback using data URL
 const createInlineServiceWorker = () => {
   const swCode = `
     const CACHE_NAME = 'atcs-training-v1.2';
@@ -250,20 +250,27 @@ const createInlineServiceWorker = () => {
     ];
     
     self.addEventListener('install', (event) => {
+      console.log('Service Worker: Installing...');
       event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
-          return cache.addAll(ASSETS_TO_CACHE);
+          return cache.addAll(ASSETS_TO_CACHE).catch((error) => {
+            console.warn('Service Worker: Cache add failed for some assets:', error);
+            // Continue installation even if some assets fail to cache
+            return Promise.resolve();
+          });
         })
       );
       self.skipWaiting();
     });
     
     self.addEventListener('activate', (event) => {
+      console.log('Service Worker: Activating...');
       event.waitUntil(
         caches.keys().then((cacheNames) => {
           return Promise.all(
             cacheNames.map((cacheName) => {
               if (cacheName !== CACHE_NAME) {
+                console.log('Service Worker: Cleaning old cache:', cacheName);
                 return caches.delete(cacheName);
               }
             })
@@ -274,24 +281,34 @@ const createInlineServiceWorker = () => {
     });
     
     self.addEventListener('fetch', (event) => {
+      // Only handle GET requests
+      if (event.request.method !== 'GET') return;
+      
       if (event.request.mode === 'navigate') {
         event.respondWith(
           fetch(event.request).catch(() => {
-            return caches.match(OFFLINE_URL);
+            return caches.match(OFFLINE_URL) || caches.match('/');
           })
         );
       } else {
         event.respondWith(
           caches.match(event.request).then((response) => {
-            return response || fetch(event.request);
+            return response || fetch(event.request).catch(() => {
+              // Fallback for failed fetches
+              if (event.request.destination === 'image') {
+                return new Response('', { status: 200, statusText: 'OK' });
+              }
+              return response;
+            });
           })
         );
       }
     });
   `;
   
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  return URL.createObjectURL(blob);
+  // Use data URL instead of blob URL to avoid scheme restrictions
+  const dataUrl = 'data:application/javascript;base64,' + btoa(swCode);
+  return dataUrl;
 };
 
 export function registerPWA() {
@@ -364,12 +381,11 @@ export function registerPWA() {
         console.log('🔄 Registering inline service worker as fallback...');
         const inlineSwUrl = createInlineServiceWorker();
         const registration = await navigator.serviceWorker.register(inlineSwUrl, {
-          scope: '/' // Explicitly set scope to root to avoid blob URL scope issues
+          scope: '/' // Explicitly set scope to root
         });
         console.log('✅ Inline PWA Service Worker registered successfully:', registration.scope);
         
-        // Clean up the blob URL after registration
-        URL.revokeObjectURL(inlineSwUrl);
+        // No need to clean up data URL
         
         // Also log PWA status
         console.log('📱 PWA Status: Fully functional with inline service worker and manifest');
