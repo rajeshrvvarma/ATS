@@ -423,7 +423,7 @@ export default function StudentDashboard({ onNavigate }) {
         )}
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
           <div className="bg-slate-800 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-lg">
@@ -480,6 +480,18 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <h3 className="text-white text-sm font-semibold group-hover:text-sky-100">Career Guidance</h3>
             <p className="text-xs text-sky-200/80 mt-1 group-hover:text-sky-100/90">Get personalized advice</p>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-500/20 to-indigo-600/20 rounded-lg p-6 group hover:from-purple-500/30 hover:to-indigo-600/30 transition-all cursor-pointer border border-purple-500/30"
+               onClick={() => onNavigate('quiz-library')}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors">
+                <BarChart3 className="w-6 h-6 text-purple-400" />
+              </div>
+              <span className="text-lg font-bold text-purple-300">NEW</span>
+            </div>
+            <h3 className="text-white text-sm font-semibold group-hover:text-purple-100">Quiz Analytics</h3>
+            <p className="text-xs text-purple-200/80 mt-1 group-hover:text-purple-100/90">Track your progress</p>
           </div>
         </div>
 

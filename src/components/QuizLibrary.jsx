@@ -19,9 +19,12 @@ import {
   Search,
   Filter,
   Star,
-  ChevronRight
+  ChevronRight,
+  BarChart3,
+  TrendingUp
 } from 'lucide-react';
 import Quiz from './Quiz.jsx';
+import QuizAnalytics from './QuizAnalytics.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 
 const QuizLibrary = ({ onClose }) => {
@@ -34,6 +37,7 @@ const QuizLibrary = ({ onClose }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Category icons mapping
   const categoryIcons = {
@@ -169,6 +173,19 @@ const QuizLibrary = ({ onClose }) => {
           </div>
           <h1 className="text-4xl font-bold text-white mb-2">Quiz Library</h1>
           <p className="text-xl text-slate-300">Test your cybersecurity knowledge</p>
+          
+          {/* Analytics Button */}
+          {user && (
+            <div className="mt-6">
+              <button
+                onClick={() => setShowAnalytics(true)}
+                className="bg-gradient-to-r from-sky-600 to-blue-600 text-white px-6 py-3 rounded-lg hover:from-sky-700 hover:to-blue-700 transition-all duration-300 flex items-center gap-2 mx-auto"
+              >
+                <BarChart3 className="w-5 h-5" />
+                View My Analytics
+              </button>
+            </div>
+          )}
         </motion.div>
 
         {/* Search and Filters */}
@@ -371,6 +388,11 @@ const QuizLibrary = ({ onClose }) => {
           </motion.button>
         </div>
       </div>
+      
+      {/* Quiz Analytics Modal */}
+      {showAnalytics && (
+        <QuizAnalytics onClose={() => setShowAnalytics(false)} />
+      )}
     </div>
   );
 };

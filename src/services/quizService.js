@@ -533,3 +533,148 @@ export const createSampleQuestions = async (quizId, category) => {
     return { success: false, error: error.message };
   }
 };
+
+/**
+ * Get comprehensive user quiz analytics
+ */
+export const getUserQuizAnalytics = async (userId, timeRange = '30d') => {
+  try {
+    // Get user's quiz attempts
+    const attemptsRef = collection(db, 'quizAttempts');
+    let q = query(attemptsRef, where('userId', '==', userId));
+    
+    // Apply time range filter
+    if (timeRange !== 'all') {
+      const days = parseInt(timeRange.replace('d', ''));
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - days);
+      q = query(q, where('completedAt', '>=', startDate));
+    }
+    
+    const attemptsSnapshot = await getDocs(q);
+    const attempts = [];
+    attemptsSnapshot.forEach((doc) => {
+      attempts.push({ id: doc.id, ...doc.data() });
+    });
+
+    if (attempts.length === 0) {
+      return { success: true, data: null };
+    }
+
+    // Calculate analytics
+    const totalQuizzes = attempts.length;
+    const passedQuizzes = attempts.filter(a => a.passed).length;
+    const totalScore = attempts.reduce((sum, a) => sum + a.percentage, 0);
+    const averageScore = Math.round(totalScore / totalQuizzes);
+    const totalTimeSpent = attempts.reduce((sum, a) => sum + (a.timeSpent || 0), 0);
+
+    // Get recent attempts (last 5)
+    const recentAttempts = attempts
+      .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt))
+      .slice(0, 5)
+      .map(attempt => ({
+        ...attempt,
+        quizTitle: attempt.quizTitle || 'Unknown Quiz'
+      }));
+
+    // Calculate best scores
+    const quizBestScores = {};
+    attempts.forEach(attempt => {
+      const quizId = attempt.quizId;
+      if (!quizBestScores[quizId] || attempt.percentage > quizBestScores[quizId].percentage) {
+        quizBestScores[quizId] = attempt;
+      }
+    });
+    
+    const bestScores = Object.values(quizBestScores)
+      .sort((a, b) => b.percentage - a.percentage)
+      .slice(0, 5)
+      .map(attempt => ({
+        quizTitle: attempt.quizTitle || 'Unknown Quiz',
+        percentage: attempt.percentage
+      }));
+
+    // Calculate category performance
+    const categoryStats = {};
+    attempts.forEach(attempt => {
+      const category = attempt.category || 'general-security';
+      if (!categoryStats[category]) {
+        categoryStats[category] = {
+          name: category.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+          scores: [],
+          count: 0
+        };
+      }
+      categoryStats[category].scores.push(attempt.percentage);
+      categoryStats[category].count++;
+    });
+
+    const categoryPerformance = Object.values(categoryStats).map(cat => ({
+      name: cat.name,
+      averageScore: Math.round(cat.scores.reduce((sum, score) => sum + score, 0) / cat.scores.length),
+      quizzesTaken: cat.count
+    }));
+
+    // Generate improvement areas (categories with scores below 75%)
+    const improvementAreas = categoryPerformance
+      .filter(cat => cat.averageScore < 75)
+      .sort((a, b) => a.averageScore - b.averageScore)
+      .slice(0, 3)
+      .map(cat => ({
+        category: cat.name,
+        averageScore: cat.averageScore
+      }));
+
+    // Generate personalized recommendations
+    const recommendations = [];
+    
+    if (averageScore < 70) {
+      recommendations.push({
+        title: "Focus on Fundamentals",
+        description: "Your overall average is below 70%. Consider reviewing basic cybersecurity concepts before attempting advanced quizzes.",
+        priority: "high"
+      });
+    }
+
+    if (improvementAreas.length > 0) {
+      recommendations.push({
+        title: `Improve ${improvementAreas[0].category} Knowledge`,
+        description: `Your ${improvementAreas[0].category} score is ${improvementAreas[0].averageScore}%. Focus on this area for significant improvement.`,
+        priority: "medium"
+      });
+    }
+
+    if (passedQuizzes / totalQuizzes > 0.8) {
+      recommendations.push({
+        title: "Try Advanced Level Quizzes",
+        description: "You're doing great! Challenge yourself with more advanced cybersecurity topics.",
+        priority: "low"
+      });
+    }
+
+    if (recommendations.length === 0) {
+      recommendations.push({
+        title: "Keep Up the Great Work!",
+        description: "Your performance is solid. Continue practicing regularly to maintain your skills.",
+        priority: "low"
+      });
+    }
+
+    const analytics = {
+      totalQuizzes,
+      passedQuizzes,
+      averageScore,
+      totalTimeSpent: Math.round(totalTimeSpent / 60), // Convert to minutes
+      recentAttempts,
+      bestScores,
+      categoryPerformance,
+      improvementAreas,
+      recommendations
+    };
+
+    return { success: true, data: analytics };
+  } catch (error) {
+    console.error('Error fetching user quiz analytics:', error);
+    return { success: false, error: error.message };
+  }
+};
