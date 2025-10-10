@@ -19,7 +19,8 @@ import {
   GraduationCap,
   X,
   Brain,
-  Trophy
+  Trophy,
+  Sparkles
 } from 'lucide-react';
 import { loadCourses } from '@/services/courseService.js';
 import { downloadCertificate } from '@/services/certificateService.js';
@@ -28,6 +29,7 @@ import StudentProfile from '@/components/StudentProfile.jsx';
 import ProgressTracker from '@/components/ProgressTracker.jsx';
 import Leaderboard from '@/components/Leaderboard.jsx';
 import StudentAnalytics from '@/components/StudentAnalytics.jsx';
+import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -58,6 +60,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [showProgress, setShowProgress] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showCareerAdvisor, setShowCareerAdvisor] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -467,16 +470,16 @@ export default function StudentDashboard({ onNavigate }) {
             <p className="text-xs text-slate-500 mt-1">Days of continuous learning</p>
           </div>
 
-          <div className="bg-slate-800 rounded-lg p-6 group hover:bg-slate-700 transition-colors cursor-pointer"
-               onClick={() => onNavigate('quiz-library')}>
+          <div className="bg-gradient-to-br from-sky-500/20 to-blue-600/20 rounded-lg p-6 group hover:from-sky-500/30 hover:to-blue-600/30 transition-all cursor-pointer border border-sky-500/30"
+               onClick={() => setShowCareerAdvisor(true)}>
             <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors">
-                <Brain className="w-6 h-6 text-indigo-400" />
+              <div className="p-3 bg-sky-500/20 rounded-lg group-hover:bg-sky-500/30 transition-colors">
+                <Sparkles className="w-6 h-6 text-sky-400" />
               </div>
-              <span className="text-2xl font-bold text-white">0</span>
+              <span className="text-lg font-bold text-sky-300">AI</span>
             </div>
-            <h3 className="text-slate-400 text-sm group-hover:text-slate-300">Quiz Library</h3>
-            <p className="text-xs text-slate-500 mt-1 group-hover:text-slate-400">Test your knowledge</p>
+            <h3 className="text-white text-sm font-semibold group-hover:text-sky-100">Career Guidance</h3>
+            <p className="text-xs text-sky-200/80 mt-1 group-hover:text-sky-100/90">Get personalized advice</p>
           </div>
         </div>
 
@@ -623,6 +626,42 @@ export default function StudentDashboard({ onNavigate }) {
               </div>
             </div>
 
+            {/* AI Career Guidance */}
+            <div className="bg-gradient-to-br from-sky-500/10 to-blue-600/10 border border-sky-500/20 rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-sky-500/20 rounded-lg">
+                  <Sparkles className="w-6 h-6 text-sky-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">AI Career Advisor</h3>
+                  <p className="text-sky-200/80 text-sm">Get personalized guidance</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <Target className="w-4 h-4 text-green-400" />
+                  <span>Career path recommendations</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <TrendingUp className="w-4 h-4 text-blue-400" />
+                  <span>Skill gap analysis</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <Calendar className="w-4 h-4 text-purple-400" />
+                  <span>12-month roadmap</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowCareerAdvisor(true)}
+                className="w-full bg-gradient-to-r from-sky-600 to-blue-600 text-white font-semibold py-3 rounded-lg hover:from-sky-700 hover:to-blue-700 transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <Brain className="w-4 h-4" />
+                Get Career Guidance
+              </button>
+            </div>
+
             {/* Certificates */}
             <div className="bg-slate-800 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Certificates</h3>
@@ -719,6 +758,14 @@ export default function StudentDashboard({ onNavigate }) {
       {/* Student Analytics Modal */}
       {showAnalytics && (
         <StudentAnalytics onClose={() => setShowAnalytics(false)} />
+      )}
+
+      {/* AI Career Advisor Modal */}
+      {showCareerAdvisor && (
+        <AiCareerAdvisor 
+          isOpen={showCareerAdvisor}
+          onClose={() => setShowCareerAdvisor(false)} 
+        />
       )}
     </div>
   );
