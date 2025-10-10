@@ -1,5 +1,23 @@
-# SPA fallback - redirect all routes to index.html for client-side routing
-/*    /index.html   200
+# Dashboard routes
+/dashboard/*    /index.html   200
 
-# Specific dashboard redirect to ensure it works
-/dashboard*    /index.html   200
+# Root level files that should NOT be redirected
+/sw.js    /sw.js    200!
+/manifest.json    /manifest.json    200!
+/offline.html    /offline.html    200!
+/robots.txt    /robots.txt    200!
+/sitemap.xml    /sitemap.xml    200!
+/favicon.ico    /favicon.ico    200!
+
+# Public HTML pages
+/privacy.html    /privacy.html    200!
+/terms.html    /terms.html    200!
+/contact.html    /contact.html    200!
+/shipping.html    /shipping.html    200!
+/cancellation-refund.html    /cancellation-refund.html    200!
+
+# Assets folder
+/assets/*    /assets/:splat    200!
+
+# SPA fallback - everything else goes to index.html
+/*    /index.html   200

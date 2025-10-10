@@ -239,15 +239,41 @@ export function registerPWA() {
     window.addEventListener('load', async () => {
       try {
         // Check if service worker file exists and has correct content
-        const swResponse = await fetch('/sw.js');
+        console.log('Attempting to fetch service worker from /sw.js...');
+        const swResponse = await fetch('/sw.js', {
+          cache: 'no-cache', // Ensure we get fresh content
+          headers: {
+            'Accept': 'application/javascript, text/javascript, */*'
+          }
+        });
+        
+        console.log('Service worker fetch response:', {
+          ok: swResponse.ok,
+          status: swResponse.status,
+          contentType: swResponse.headers.get('content-type'),
+          url: swResponse.url
+        });
         
         if (swResponse.ok) {
           const swContent = await swResponse.text();
+          const firstLine = swContent.substring(0, 100);
+          console.log('Service worker content preview:', firstLine);
           
           // Check if it's actual JavaScript content (not HTML redirect)
-          if (swContent.includes('CACHE_NAME') || swContent.includes('ServiceWorker') || swContent.includes('addEventListener')) {
+          const isJavaScript = swContent.includes('CACHE_NAME') || 
+                              swContent.includes('ServiceWorker') || 
+                              swContent.includes('addEventListener') ||
+                              swContent.startsWith('//') ||
+                              swContent.startsWith('/*');
+          
+          const isHTML = swContent.includes('<html>') || 
+                        swContent.includes('<!DOCTYPE') ||
+                        swContent.includes('<head>');
+          
+          if (isJavaScript && !isHTML) {
+            console.log('Valid service worker content detected, registering...');
             const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('PWA Service Worker registered successfully:', registration);
+            console.log('✅ PWA Service Worker registered successfully:', registration);
 
             // Check for updates
             registration.addEventListener('updatefound', () => {
@@ -264,15 +290,18 @@ export function registerPWA() {
               });
             });
           } else {
-            console.warn('PWA Service Worker file contains HTML instead of JavaScript - likely a routing issue');
+            console.warn('❌ PWA Service Worker file contains HTML instead of JavaScript - routing issue detected');
+            console.log('Content type received:', swResponse.headers.get('content-type'));
+            console.log('Is HTML?', isHTML);
+            console.log('Is JavaScript?', isJavaScript);
           }
         } else {
-          console.warn('PWA Service Worker file not accessible:', swResponse.status);
+          console.warn('PWA Service Worker file not accessible:', swResponse.status, swResponse.statusText);
         }
         
       } catch (error) {
         console.warn('PWA Service Worker registration failed:', error.message);
-        // Don't throw error - app should work without PWA
+        console.error('Full error:', error);
       }
     });
   } else {
