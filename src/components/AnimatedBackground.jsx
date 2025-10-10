@@ -132,7 +132,7 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
     ));
 
     return (
-        <div className={`relative overflow-hidden ${className}`} ref={containerRef} style={{ minHeight: 400 }}>
+        <div className={`relative overflow-hidden ${className}`} style={{ minHeight: 400 }}>
             {/* Animated Background */}
             <div className="absolute inset-0 pointer-events-none select-none">
                 <div className={`absolute inset-0 ${currentVariant.gradient}`}></div>
