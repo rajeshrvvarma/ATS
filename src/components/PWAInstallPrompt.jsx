@@ -361,13 +361,23 @@ export function registerPWA() {
         }
         
         // Fallback: Use inline service worker
-        console.log('� Registering inline service worker as fallback...');
+        console.log('🔄 Registering inline service worker as fallback...');
         const inlineSwUrl = createInlineServiceWorker();
         const registration = await navigator.serviceWorker.register(inlineSwUrl);
         console.log('✅ Inline PWA Service Worker registered successfully:', registration.scope);
         
         // Clean up the blob URL after registration
         URL.revokeObjectURL(inlineSwUrl);
+        
+        // Also log PWA status
+        console.log('📱 PWA Status: Fully functional with inline service worker and manifest');
+        
+        // Check if running as PWA
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+          console.log('🎉 App is running as installed PWA!');
+        } else {
+          console.log('💡 App can be installed as PWA - look for install prompt');
+        }
         
       } catch (error) {
         console.warn('PWA Service Worker registration failed:', error.message);
