@@ -37,6 +37,7 @@ import DiscussionForum from '@/components/DiscussionForum.jsx';
 import CreateThreadModal from '@/components/CreateThreadModal.jsx';
 import ThreadDetailModal from '@/components/ThreadDetailModal.jsx';
 import PeerMentoring from '@/components/PeerMentoring.jsx';
+import StudyGroups from '@/components/StudyGroups.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -75,6 +76,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [preselectedThreadType, setPreselectedThreadType] = useState(null);
   const [showPeerMentoring, setShowPeerMentoring] = useState(false);
+  const [showStudyGroups, setShowStudyGroups] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -549,10 +551,7 @@ export default function StudentDashboard({ onNavigate }) {
 
             {/* Study Groups */}
             <div className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-lg p-6 group hover:from-purple-500/30 hover:to-pink-600/30 transition-all cursor-pointer border border-purple-500/30"
-                 onClick={() => {
-                   setPreselectedThreadType('study-group');
-                   setShowCreateThread(true);
-                 }}>
+                 onClick={() => setShowStudyGroups(true)}>
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors">
                   <Users className="w-6 h-6 text-purple-400" />
@@ -560,7 +559,7 @@ export default function StudentDashboard({ onNavigate }) {
                 <span className="text-lg font-bold text-purple-300">🎓</span>
               </div>
               <h3 className="text-white text-sm font-semibold group-hover:text-purple-100">Study Groups</h3>
-              <p className="text-xs text-purple-200/80 mt-1 group-hover:text-purple-100/90">Form learning groups</p>
+              <p className="text-xs text-purple-200/80 mt-1 group-hover:text-purple-100/90">Collaborative learning groups</p>
             </div>
 
             {/* Peer Mentoring */}
@@ -1011,6 +1010,32 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <div className="flex-1 overflow-hidden">
               <PeerMentoring onClose={() => setShowPeerMentoring(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Study Groups Modal */}
+      {showStudyGroups && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-7xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Users className="h-6 w-6" />
+                  Study Groups & Collaborative Learning
+                </h2>
+                <p className="text-purple-100">Join study groups and learn together with peers</p>
+              </div>
+              <button
+                onClick={() => setShowStudyGroups(false)}
+                className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <StudyGroups onClose={() => setShowStudyGroups(false)} />
             </div>
           </div>
         </div>
