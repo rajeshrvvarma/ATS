@@ -19,5 +19,32 @@
     Content-Type = "application/manifest+json"
     Cache-Control = "public, max-age=86400"
 
-# Note: Redirects are now handled in public/_redirects file
-# This keeps netlify.toml focused on build settings and headers only
+# Explicit redirects for PWA files (backup to _redirects)
+[[redirects]]
+  from = "/sw.js"
+  to = "/sw.js"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/manifest.json"  
+  to = "/manifest.json"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/offline.html"
+  to = "/offline.html"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/dashboard*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html" 
+  status = 200
+  conditions = {Query = {path = "!*.js,!*.css,!*.json,!*.png,!*.jpg,!*.jpeg,!*.gif,!*.ico,!*.svg,!*.xml,!*.txt,!*.html"}}

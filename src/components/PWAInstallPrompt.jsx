@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone, Zap, Wifi } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { registerInlineServiceWorker } from './InlineServiceWorker.js';
 
 /**
  * PWA Install Prompt Component

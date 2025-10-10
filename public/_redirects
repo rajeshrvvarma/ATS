@@ -1,23 +1,22 @@
-# Dashboard routes
+# Dashboard routes  
 /dashboard/*    /index.html   200
 
-# Root level files that should NOT be redirected
-/sw.js    /sw.js    200!
-/manifest.json    /manifest.json    200!
-/offline.html    /offline.html    200!
-/robots.txt    /robots.txt    200!
-/sitemap.xml    /sitemap.xml    200!
-/favicon.ico    /favicon.ico    200!
+# Assets and static files (do NOT redirect these)
+/assets/*    /assets/:splat    200
 
-# Public HTML pages
-/privacy.html    /privacy.html    200!
-/terms.html    /terms.html    200!
-/contact.html    /contact.html    200!
-/shipping.html    /shipping.html    200!
-/cancellation-refund.html    /cancellation-refund.html    200!
+# Static files with explicit extensions (higher priority)
+/*.js    /:splat    200
+/*.css    /:splat    200  
+/*.json    /:splat    200
+/*.png    /:splat    200
+/*.jpg    /:splat    200
+/*.jpeg    /:splat    200
+/*.gif    /:splat    200
+/*.ico    /:splat    200
+/*.svg    /:splat    200
+/*.xml    /:splat    200
+/*.txt    /:splat    200
+/*.html    /:splat    200
 
-# Assets folder
-/assets/*    /assets/:splat    200!
-
-# SPA fallback - everything else goes to index.html
+# SPA fallback - only for routes without file extensions
 /*    /index.html   200
