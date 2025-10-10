@@ -27,6 +27,7 @@ import { getStudentEnrollments, getStudentData } from '@/services/studentManagem
 import StudentProfile from '@/components/StudentProfile.jsx';
 import ProgressTracker from '@/components/ProgressTracker.jsx';
 import Leaderboard from '@/components/Leaderboard.jsx';
+import StudentAnalytics from '@/components/StudentAnalytics.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -56,6 +57,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [showProfile, setShowProfile] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
   const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -319,6 +321,14 @@ export default function StudentDashboard({ onNavigate }) {
               >
                 <Trophy className="w-5 h-5" />
                 Leaderboard
+              </button>
+              
+              <button
+                onClick={() => setShowAnalytics(true)}
+                className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 shadow-lg"
+              >
+                <BarChart3 className="w-5 h-5" />
+                My Analytics
               </button>
               
               <button
@@ -704,6 +714,11 @@ export default function StudentDashboard({ onNavigate }) {
       {/* Leaderboard Modal */}
       {showLeaderboard && (
         <Leaderboard onClose={() => setShowLeaderboard(false)} />
+      )}
+
+      {/* Student Analytics Modal */}
+      {showAnalytics && (
+        <StudentAnalytics onClose={() => setShowAnalytics(false)} />
       )}
     </div>
   );
