@@ -60,3 +60,7 @@ export const callGeminiAPI = async (prompt, systemInstruction) => {
     return "Sorry, the AI service is currently unavailable. Please check your connection and try again later.";
 };
 
+// Alternative export names for backward compatibility
+export const generateGeminiResponse = callGeminiAPI;
+export const analyzeWithGemini = callGeminiAPI;
+
