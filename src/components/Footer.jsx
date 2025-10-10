@@ -28,9 +28,17 @@ export default function Footer({ onNavigate }) {
                 const firebaseConfig = JSON.parse(firebaseConfigStr);
 
                 // Use the lazy-loaded Firebase modules
-                const [{ initializeApp }, { getAuth, signInAnonymously }, { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp }] = await firebasePromise;
+                const [{ initializeApp, getApps, getApp }, { getAuth, signInAnonymously }, { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp }] = await firebasePromise;
 
-                const app = initializeApp(firebaseConfig);
+                // Prevent duplicate app initialization
+                let app;
+                try {
+                    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+                } catch (error) {
+                    // If app already exists with different config, use existing
+                    app = getApp();
+                }
+                
                 const auth = getAuth(app);
                 const db = getFirestore(app);
 

@@ -18,15 +18,25 @@ const firebaseConfig = {
   appId: import.meta.env.REACT_APP_FIREBASE_APP_ID || "1:484039318334:web:03a75c9183855ada36ea6f"
 };
 
-// Debug: Log the configuration being used
-console.log('Firebase config:', {
-  projectId: firebaseConfig.projectId,
-  authDomain: firebaseConfig.authDomain,
-  hasApiKey: !!firebaseConfig.apiKey && firebaseConfig.apiKey !== 'demo-api-key'
-});
-
 // Initialize Firebase (prevent duplicate app error)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+let app;
+try {
+  // Check if an app is already initialized
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+  
+  // Only log in development
+  if (import.meta.env.DEV) {
+    console.log('Firebase initialized:', {
+      projectId: firebaseConfig.projectId,
+      authDomain: firebaseConfig.authDomain,
+      hasApiKey: !!firebaseConfig.apiKey
+    });
+  }
+} catch (error) {
+  console.error('Firebase initialization error:', error);
+  // Fallback: try to get existing app or create new one
+  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+}
 
 // Initialize Firebase services
 export const auth = getAuth(app);

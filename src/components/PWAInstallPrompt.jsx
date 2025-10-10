@@ -238,27 +238,43 @@ export function registerPWA() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
-        console.log('PWA Service Worker registered:', registration);
-
-        // Check for updates
-        registration.addEventListener('updatefound', () => {
-          console.log('PWA update available');
-          const newWorker = registration.installing;
+        // Only register service worker in production or if sw.js exists
+        const isProduction = window.location.hostname !== 'localhost';
+        
+        if (isProduction) {
+          // Check if service worker file exists first
+          const swResponse = await fetch('/sw.js', { method: 'HEAD' });
           
-          newWorker?.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              // Show update notification
-              if (confirm('A new version is available. Reload to update?')) {
-                window.location.reload();
-              }
-            }
-          });
-        });
+          if (swResponse.ok && swResponse.headers.get('content-type')?.includes('javascript')) {
+            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('PWA Service Worker registered:', registration);
+
+            // Check for updates
+            registration.addEventListener('updatefound', () => {
+              console.log('PWA update available');
+              const newWorker = registration.installing;
+              
+              newWorker?.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  // Show update notification
+                  if (confirm('A new version is available. Reload to update?')) {
+                    window.location.reload();
+                  }
+                }
+              });
+            });
+          } else {
+            console.log('PWA Service Worker file not found or invalid, skipping registration');
+          }
+        } else {
+          console.log('PWA Service Worker registration skipped in development');
+        }
         
       } catch (error) {
-        console.error('PWA Service Worker registration failed:', error);
+        console.warn('PWA Service Worker registration failed:', error.message);
       }
     });
+  } else {
+    console.log('Service Worker not supported in this browser');
   }
 }
