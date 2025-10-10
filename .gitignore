@@ -100,7 +100,8 @@ public
 tmp/
 temp/
 
-
+# Documentation archive (consolidated into main docs)
+docs-archive/
 
 # Editor directories and files
 .vscode/*
