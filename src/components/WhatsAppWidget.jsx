@@ -82,7 +82,8 @@ export default function WhatsAppWidget() {
 
   // Auto-show widget on mobile devices after 3 seconds
   useEffect(() => {
-    const isMobile = window.innerWidth <= 768;
+    // Use matchMedia to avoid early layout calculation
+    const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
     const hasSeenWidget = localStorage.getItem('whatsapp_widget_seen');
     
     if (isMobile && !hasSeenWidget) {

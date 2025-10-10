@@ -8,12 +8,58 @@
     <title>Agnidhra Technologies | Cybersecurity Training (SOC & Ethical Hacking)</title>
     <meta name="description" content="Hands-on cybersecurity training in Defensive (SOC) and Offensive (Ethical Hacking). Bootcamps, 2-month programs, live mentorship, and job-ready skills." />
     
-    <!-- Prevent flash of unstyled content -->
+    <!-- Critical CSS to prevent FOUC -->
     <style>
-      /* Critical CSS to prevent FOUC */
-      body { margin: 0; background-color: #0f172a; color: #fff; font-family: system-ui, -apple-system, sans-serif; }
-      .loading { display: flex; align-items: center; justify-content: center; height: 100vh; }
+      /* Reset and base styles */
+      * { box-sizing: border-box; }
+      body { 
+        margin: 0; 
+        padding: 0;
+        background-color: #0f172a; 
+        color: #fff; 
+        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      
+      /* Root container */
+      #root { 
+        min-height: 100vh; 
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      /* Loading state */
+      .loading { 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        height: 100vh; 
+        background-color: #0f172a;
+        color: #64748b;
+      }
+      
+      /* Critical layout classes */
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+      .flex { display: flex; }
+      .hidden { display: none !important; }
+      .block { display: block !important; }
+      
+      /* Prevent layout shift for common elements */
+      img { max-width: 100%; height: auto; }
+      button { cursor: pointer; }
+      
+      /* Critical header styles to prevent shift */
+      header { background-color: #0f172a; border-bottom: 1px solid #1e293b; }
+      
+      /* Critical animation base */
+      * { transition-duration: 150ms; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
     </style>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"></noscript>
     
     <!-- Open Graph meta tags -->
     <meta property="og:title" content="Agnidhra Technologies | Cybersecurity Training" />
@@ -22,10 +68,17 @@
     <meta property="og:url" content="https://agnidhra-technologies.com/" />
     <meta property="og:image" content="/logo.png" />
     <link rel="canonical" href="https://agnidhra-technologies.com/" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Fallback loading state while React loads -->
+      <div class="loading">
+        <div style="text-align: center;">
+          <div style="font-size: 1.5rem; margin-bottom: 1rem;">⚡</div>
+          <div>Loading Agnidhra Technologies...</div>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

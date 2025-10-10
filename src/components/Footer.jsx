@@ -54,7 +54,7 @@ export default function Footer({ onNavigate }) {
                             key={i}
                             className="absolute w-1 h-1 bg-indigo-400 rounded-full opacity-70"
                             initial={{
-                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                                x: Math.random() * 1200, // Fixed width to prevent layout calculation
                                 y: Math.random() * 600,
                                 opacity: Math.random() * 0.7
                             }}

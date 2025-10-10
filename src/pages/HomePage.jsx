@@ -57,8 +57,8 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
                             key={i}
                             className={`absolute w-1 h-1 ${currentVariant.particles.color} rounded-full opacity-70`}
                             initial={{
-                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-                                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                                x: Math.random() * 1200, // Fixed width to prevent layout calculation
+                                y: Math.random() * 800, // Fixed height to prevent layout calculation
                                 opacity: Math.random() * 0.7
                             }}
                             animate={{
@@ -81,8 +81,8 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
                             key={i}
                             className={`absolute w-20 h-20 ${currentVariant.particles.color} rounded-full blur-xl`}
                             initial={{
-                                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-                                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
+                                x: Math.random() * 1200, // Fixed width to prevent layout calculation
+                                y: Math.random() * 800, // Fixed height to prevent layout calculation
                             }}
                             animate={{
                                 x: [null, Math.random() * 200 - 100],

@@ -128,7 +128,14 @@ export default function App() {
                 <AnnouncementBanner onNavigate={go} />
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>
-                    <Suspense fallback={<div className="text-slate-300 p-8">Loading...</div>}>
+                    <Suspense fallback={
+                        <div className="loading">
+                            <div style={{textAlign: 'center'}}>
+                                <div style={{fontSize: '1.5rem', marginBottom: '1rem'}}>⚡</div>
+                                <div>Loading...</div>
+                            </div>
+                        </div>
+                    }>
                         <AnimatePresence mode="wait">
                         <motion.div key={location.pathname} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.18 }}>
                         <Routes>
