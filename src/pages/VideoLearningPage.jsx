@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ArrowLeft, Trophy, Award, Download, Play } from 'lucide-react';
+import { ArrowLeft, Trophy, Award, Download, Play, FileText, Brain } from 'lucide-react';
 import VideoCourse from '@/components/VideoCourse';
+import TranscriptManager from '@/components/TranscriptManager';
+import AIContentDashboard from '@/components/ai/AIContentDashboard';
 import { loadCourses } from '@/services/courseService.js';
 import { useToast } from '@/context/ToastContext.jsx';
 
@@ -13,6 +15,8 @@ export default function VideoLearningPage({ onNavigate }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [completedCourses, setCompletedCourses] = useState(new Set());
   const [list, setList] = useState(loadCourses());
+  const [showTranscriptManager, setShowTranscriptManager] = useState(false);
+  const [showAIDashboard, setShowAIDashboard] = useState(false);
   const location = useLocation();
   const { notify } = useToast();
 
@@ -61,7 +65,25 @@ export default function VideoLearningPage({ onNavigate }) {
       <div className="container mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-white mb-4">Video Learning Center</h1>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <h1 className="text-4xl font-bold text-white">Video Learning Center</h1>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowTranscriptManager(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+              >
+                <FileText className="w-4 h-4" />
+                Manage Transcripts
+              </button>
+              <button
+                onClick={() => setShowAIDashboard(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
+              >
+                <Brain className="w-4 h-4" />
+                AI Content Dashboard
+              </button>
+            </div>
+          </div>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
             Master cybersecurity through our comprehensive video-based training programs. 
             Learn at your own pace with expert-led content and hands-on labs.
@@ -169,6 +191,31 @@ export default function VideoLearningPage({ onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* Transcript Manager Modal */}
+      {showTranscriptManager && (
+        <TranscriptManager onClose={() => setShowTranscriptManager(false)} />
+      )}
+
+      {/* AI Content Dashboard Modal */}
+      {showAIDashboard && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 rounded-lg w-full max-w-6xl max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-slate-700">
+              <h2 className="text-xl font-semibold text-white">AI Content Dashboard</h2>
+              <button
+                onClick={() => setShowAIDashboard(false)}
+                className="text-slate-400 hover:text-white text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
+              <AIContentDashboard />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

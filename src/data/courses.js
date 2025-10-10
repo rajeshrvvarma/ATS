@@ -28,7 +28,10 @@ export const courses = [
         duration: '15:30',
         type: 'youtube',
         videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
+        videoUrl: 'https://www.youtube.com/watch?v=KV7K5plJcsI', // Full URL for transcript extraction
         difficulty: 'Beginner',
+        transcript: null, // Will be auto-populated by transcript service
+        transcriptStatus: 'pending', // 'pending', 'loading', 'loaded', 'failed'
         resources: [
           { name: 'Course Syllabus PDF', url: '#' },
           { name: 'Additional Reading', url: '#' }
@@ -41,7 +44,10 @@ export const courses = [
         duration: '22:45',
         type: 'youtube',
         videoId: 'KV7K5plJcsI', // Replace with your actual YouTube video ID
+        videoUrl: 'https://www.youtube.com/watch?v=KV7K5plJcsI', // Full URL for transcript extraction
         difficulty: 'Beginner',
+        transcript: null, // Will be auto-populated by transcript service
+        transcriptStatus: 'pending', // 'pending', 'loading', 'loaded', 'failed'
         resources: [
           { name: 'Network Diagram', url: '#' },
           { name: 'Protocol Cheat Sheet', url: '#' }
