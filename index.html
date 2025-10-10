@@ -5,6 +5,22 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#16213e" />
+    <meta name="background-color" content="#1a1a2e" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Agnidhra LMS" />
+    
+    <!-- iOS Icons -->
+    <link rel="apple-touch-icon" href="/icon-192x192.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192x192.png" />
+    
     <title>Agnidhra Technologies | Cybersecurity Training (SOC & Ethical Hacking)</title>
     <meta name="description" content="Hands-on cybersecurity training in Defensive (SOC) and Offensive (Ethical Hacking). Bootcamps, 2-month programs, live mentorship, and job-ready skills." />
     
@@ -142,5 +158,62 @@
     </form>
     
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+      // Register service worker for PWA and push notifications
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/firebase-messaging-sw.js')
+            .then((registration) => {
+              console.log('🔧 Service Worker registered successfully:', registration);
+            })
+            .catch((error) => {
+              console.error('❌ Service Worker registration failed:', error);
+            });
+        });
+      }
+      
+      // Handle app installation prompt
+      let deferredPrompt;
+      
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // Prevent Chrome 67 and earlier from automatically showing the prompt
+        e.preventDefault();
+        // Stash the event so it can be triggered later
+        deferredPrompt = e;
+        
+        // Show install button or banner
+        console.log('📱 App can be installed');
+        
+        // You can show a custom install button here
+        const installButton = document.getElementById('install-app-button');
+        if (installButton) {
+          installButton.style.display = 'block';
+          installButton.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+              if (choiceResult.outcome === 'accepted') {
+                console.log('✅ User accepted the install prompt');
+              } else {
+                console.log('❌ User dismissed the install prompt');
+              }
+              deferredPrompt = null;
+            });
+          });
+        }
+      });
+      
+      // Handle successful installation
+      window.addEventListener('appinstalled', (evt) => {
+        console.log('🎉 App was installed successfully');
+        
+        // Hide install button
+        const installButton = document.getElementById('install-app-button');
+        if (installButton) {
+          installButton.style.display = 'none';
+        }
+      });
+    </script>
   </body>
 </html>
