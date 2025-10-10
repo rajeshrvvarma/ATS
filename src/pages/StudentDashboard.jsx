@@ -39,6 +39,7 @@ import ThreadDetailModal from '@/components/ThreadDetailModal.jsx';
 import PeerMentoring from '@/components/PeerMentoring.jsx';
 import StudyGroups from '@/components/StudyGroups.jsx';
 import KnowledgeBase from '@/components/KnowledgeBase.jsx';
+import RealTimeCollaboration from '@/components/RealTimeCollaboration.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -79,6 +80,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [showPeerMentoring, setShowPeerMentoring] = useState(false);
   const [showStudyGroups, setShowStudyGroups] = useState(false);
   const [showKnowledgeBase, setShowKnowledgeBase] = useState(false);
+  const [showCollaboration, setShowCollaboration] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -537,7 +539,7 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {/* Discussion Forum */}
             <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 rounded-lg p-6 group hover:from-blue-500/30 hover:to-cyan-600/30 transition-all cursor-pointer border border-blue-500/30"
                  onClick={() => setShowForum(true)}>
@@ -588,6 +590,19 @@ export default function StudentDashboard({ onNavigate }) {
               </div>
               <h3 className="text-white text-sm font-semibold group-hover:text-teal-100">Knowledge Base</h3>
               <p className="text-xs text-teal-200/80 mt-1 group-hover:text-teal-100/90">Collaborative wiki & resources</p>
+            </div>
+
+            {/* Real-time Collaboration */}
+            <div className="bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-lg p-6 group hover:from-indigo-500/30 hover:to-purple-600/30 transition-all cursor-pointer border border-indigo-500/30"
+                 onClick={() => setShowCollaboration(true)}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors">
+                  <Users className="w-6 h-6 text-indigo-400" />
+                </div>
+                <span className="text-lg font-bold text-indigo-300">🎯</span>
+              </div>
+              <h3 className="text-white text-sm font-semibold group-hover:text-indigo-100">Live Collaboration</h3>
+              <p className="text-xs text-indigo-200/80 mt-1 group-hover:text-indigo-100/90">Virtual study rooms & whiteboards</p>
             </div>
           </div>
         </div>
@@ -1061,6 +1076,32 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <div className="flex-1 overflow-hidden">
               <KnowledgeBase onClose={() => setShowKnowledgeBase(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Real-time Collaboration Modal */}
+      {showCollaboration && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-7xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Users className="h-6 w-6" />
+                  Real-time Collaboration
+                </h2>
+                <p className="text-indigo-100">Virtual study rooms, whiteboards, and live collaboration</p>
+              </div>
+              <button
+                onClick={() => setShowCollaboration(false)}
+                className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <RealTimeCollaboration onClose={() => setShowCollaboration(false)} />
             </div>
           </div>
         </div>
