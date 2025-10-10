@@ -24,6 +24,35 @@ export default defineConfig({
             return '[name][extname]';
           }
           return 'assets/[name]-[hash][extname]';
+        },
+        // PERFORMANCE FIX: Manual chunk splitting for better loading
+        manualChunks: (id) => {
+          // Core React and React Router
+          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+            return 'vendor-react';
+          }
+          // Firebase services (largest dependency)
+          if (id.includes('firebase')) {
+            return 'vendor-firebase';
+          }
+          // UI libraries
+          if (id.includes('lucide-react')) {
+            return 'vendor-ui';
+          }
+          // AI services
+          if (id.includes('@google/generative-ai') || id.includes('openai')) {
+            return 'vendor-ai';
+          }
+          // Dashboard components
+          if (id.includes('Dashboard') || id.includes('analytics') || id.includes('gamification')) {
+            return 'dashboard';
+          }
+          // Learning components
+          if (id.includes('VideoLearning') || id.includes('VideoLesson') || id.includes('quiz')) {
+            return 'learning';
+          }
+          // Default chunk for everything else
+          return undefined;
         }
       }
     }

@@ -10,11 +10,8 @@ export default {
     {
       pattern: /(bg|text|border)-(sky|blue|red)-(300|400|500|600|700)/,
     },
-    // Hover variants for buttons/links
-    {
-      pattern: /hover:(bg|text|border)-(sky|blue|red)-(300|400|500|600|700)/,
-      variants: ['hover']
-    }
+    // Note: Removed hover pattern as it wasn't matching any actual classes
+    // If you need hover variants, use them explicitly in your components
   ],
   theme: {
     extend: {},

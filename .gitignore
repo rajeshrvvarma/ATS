@@ -103,6 +103,11 @@ temp/
 # Documentation archive (consolidated into main docs)
 docs-archive/
 
+# Backup files
+*_backup.*
+*backup*
+*.bak
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
