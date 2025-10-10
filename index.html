@@ -79,6 +79,68 @@
         </div>
       </div>
     </div>
+    
+    <!-- Hidden Netlify Forms for form detection -->
+    <form name="enrollment-notification" method="POST" data-netlify="true" hidden>
+      <input type="text" name="type" />
+      <input type="text" name="studentName" />
+      <input type="email" name="studentEmail" />
+      <input type="text" name="studentPhone" />
+      <input type="text" name="enrollmentId" />
+      <input type="text" name="courseType" />
+      <input type="text" name="courseName" />
+      <input type="text" name="startDate" />
+      <input type="text" name="accessUrl" />
+      <input type="text" name="amount" />
+      <input type="text" name="paymentId" />
+      <input type="text" name="transactionId" />
+      <input type="text" name="timestamp" />
+    </form>
+    
+    <form name="contact-form" method="POST" data-netlify="true" hidden>
+      <input type="text" name="type" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="phone" />
+      <input type="text" name="subject" />
+      <textarea name="message"></textarea>
+      <input type="text" name="source" />
+      <input type="text" name="timestamp" />
+    </form>
+    
+    <form name="enrollment-inquiry" method="POST" data-netlify="true" hidden>
+      <input type="text" name="type" />
+      <input type="text" name="name" />
+      <input type="email" name="email" />
+      <input type="text" name="phone" />
+      <input type="text" name="course" />
+      <input type="text" name="experience" />
+      <textarea name="message"></textarea>
+      <input type="text" name="source" />
+      <input type="text" name="timestamp" />
+    </form>
+    
+    <form name="student-notifications" method="POST" data-netlify="true" hidden>
+      <input type="text" name="type" />
+      <input type="text" name="studentName" />
+      <input type="email" name="studentEmail" />
+      <input type="text" name="courseName" />
+      <input type="text" name="completionPercentage" />
+      <input type="text" name="achievementsUnlocked" />
+      <input type="text" name="nextMilestone" />
+      <input type="text" name="certificateId" />
+      <input type="text" name="completionDate" />
+      <input type="text" name="finalScore" />
+      <input type="text" name="certificateUrl" />
+      <input type="text" name="timestamp" />
+    </form>
+    
+    <form name="test-form" method="POST" data-netlify="true" hidden>
+      <input type="text" name="type" />
+      <input type="text" name="message" />
+      <input type="text" name="timestamp" />
+    </form>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

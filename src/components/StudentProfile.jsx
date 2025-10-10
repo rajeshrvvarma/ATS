@@ -15,7 +15,10 @@ import {
   Target,
   TrendingUp,
   Clock,
-  Star
+  Star,
+  Brain,
+  Trophy,
+  PlayCircle
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext.jsx';
 
@@ -46,7 +49,24 @@ export default function StudentProfile({ onNavigate, onClose }) {
     currentStreak: 0,
     longestStreak: 0,
     skillLevel: 'Beginner',
-    achievements: []
+    achievements: [],
+    quizzes: {
+      totalAttempted: 0,
+      totalCompleted: 0,
+      bestScore: 0,
+      averageScore: 0,
+      totalTime: 0
+    },
+    gamification: {
+      totalPoints: 0,
+      totalXP: 0,
+      level: 1,
+      levelTitle: 'Novice Explorer',
+      progressToNext: 0,
+      xpToNext: 0,
+      rank: null,
+      unlockedAchievements: []
+    }
   });
 
   const [achievements] = useState([
@@ -93,7 +113,7 @@ export default function StudentProfile({ onNavigate, onClose }) {
     loadProfileData();
   }, []);
 
-  const loadProfileData = () => {
+  const loadProfileData = async () => {
     // Load from localStorage or user data
     const savedProfile = localStorage.getItem('studentProfile');
     if (savedProfile) {
@@ -123,16 +143,114 @@ export default function StudentProfile({ onNavigate, onClose }) {
       }
     });
 
+    // Load quiz statistics
+    const quizStats = await loadQuizStats();
+    
+    // Load gamification data
+    const gamificationStats = await loadGamificationStats();
+
     setStats({
       totalCourses: enrollments.length,
       completedCourses,
       totalHours,
       certificates: certificates.length,
-      currentStreak: 0, // Would be calculated from learning history
-      longestStreak: 0,
+      currentStreak: gamificationStats.currentStreak || 0,
+      longestStreak: gamificationStats.longestStreak || 0,
       skillLevel: getSkillLevel(totalHours, completedCourses),
-      achievements: achievements.filter(a => a.earned)
+      achievements: achievements.filter(a => a.earned),
+      quizzes: quizStats,
+      gamification: gamificationStats
     });
+  };
+
+  const loadQuizStats = async () => {
+    try {
+      if (!user?.email) return {
+        totalAttempted: 0,
+        totalCompleted: 0,
+        bestScore: 0,
+        averageScore: 0,
+        totalTime: 0
+      };
+
+      const { getUserQuizProgress } = await import('@/services/quizService.js');
+      const result = await getUserQuizProgress(user.email);
+      
+      if (result.success && result.data) {
+        const progress = result.data;
+        return {
+          totalAttempted: progress.length,
+          totalCompleted: progress.filter(p => p.completed).length,
+          bestScore: progress.length > 0 ? Math.max(...progress.map(p => p.bestScore || 0)) : 0,
+          averageScore: progress.length > 0 ? 
+            Math.round(progress.reduce((sum, p) => sum + (p.bestScore || 0), 0) / progress.length) : 0,
+          totalTime: Math.round(progress.reduce((sum, p) => sum + (p.totalTimeSpent || 0), 0) / 60) // Convert to minutes
+        };
+      }
+    } catch (error) {
+      console.error('Error loading quiz stats:', error);
+    }
+    
+    return {
+      totalAttempted: 0,
+      totalCompleted: 0,
+      bestScore: 0,
+      averageScore: 0,
+      totalTime: 0
+    };
+  };
+
+  const loadGamificationStats = async () => {
+    try {
+      if (!user?.email) return {
+        totalPoints: 0,
+        totalXP: 0,
+        level: 1,
+        levelTitle: 'Novice Explorer',
+        progressToNext: 0,
+        xpToNext: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        rank: null,
+        unlockedAchievements: []
+      };
+
+      const { getUserStats, getLevelInfo } = await import('@/services/gamificationService.js');
+      const result = await getUserStats(user.email);
+      
+      if (result.success && result.data) {
+        const data = result.data;
+        const levelInfo = getLevelInfo(data.totalXP);
+        
+        return {
+          totalPoints: data.totalPoints || 0,
+          totalXP: data.totalXP || 0,
+          level: data.level || 1,
+          levelTitle: levelInfo.currentLevel?.title || 'Novice Explorer',
+          progressToNext: levelInfo.progressToNext || 0,
+          xpToNext: levelInfo.xpToNext || 0,
+          currentStreak: data.currentStreak || 0,
+          longestStreak: data.longestStreak || 0,
+          rank: data.rank,
+          unlockedAchievements: data.achievements || []
+        };
+      }
+    } catch (error) {
+      console.error('Error loading gamification stats:', error);
+    }
+    
+    return {
+      totalPoints: 0,
+      totalXP: 0,
+      level: 1,
+      levelTitle: 'Novice Explorer',
+      progressToNext: 0,
+      xpToNext: 0,
+      currentStreak: 0,
+      longestStreak: 0,
+      rank: null,
+      unlockedAchievements: []
+    };
   };
 
   const getSkillLevel = (hours, completed) => {
@@ -278,6 +396,101 @@ export default function StudentProfile({ onNavigate, onClose }) {
                   <div className="bg-slate-700 rounded-lg p-4 text-center">
                     <div className="text-2xl font-bold text-purple-400">{stats.certificates}</div>
                     <div className="text-slate-400 text-sm">Certificates</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quiz Statistics */}
+              <div className="bg-slate-800 rounded-lg p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-lg font-semibold text-white">Quiz Performance</h3>
+                  <button
+                    onClick={() => onNavigate && onNavigate('quiz-library')}
+                    className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2 text-sm"
+                  >
+                    <Brain className="w-4 h-4" />
+                    Take Quiz
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-700 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-indigo-400">{stats.quizzes.totalAttempted}</div>
+                    <div className="text-slate-400 text-sm">Quizzes Attempted</div>
+                  </div>
+                  <div className="bg-slate-700 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-green-400">{stats.quizzes.totalCompleted}</div>
+                    <div className="text-slate-400 text-sm">Completed</div>
+                  </div>
+                  <div className="bg-slate-700 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-yellow-400">{stats.quizzes.bestScore}%</div>
+                    <div className="text-slate-400 text-sm">Best Score</div>
+                  </div>
+                  <div className="bg-slate-700 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-orange-400">{stats.quizzes.averageScore}%</div>
+                    <div className="text-slate-400 text-sm">Average Score</div>
+                  </div>
+                </div>
+                {stats.quizzes.totalTime > 0 && (
+                  <div className="mt-4 p-3 bg-slate-700 rounded-lg text-center">
+                    <div className="text-lg font-bold text-cyan-400">{stats.quizzes.totalTime}m</div>
+                    <div className="text-slate-400 text-sm">Total Quiz Time</div>
+                  </div>
+                )}
+              </div>
+
+              {/* Gamification Stats */}
+              <div className="bg-slate-800 rounded-lg p-6">
+                <h3 className="text-lg font-semibold text-white mb-6">Level & Progress</h3>
+                
+                {/* Level Display */}
+                <div className="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-400/30 rounded-lg p-4 mb-6">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center">
+                        <Trophy className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <div className="text-xl font-bold text-white">Level {stats.gamification.level}</div>
+                        <div className="text-purple-300 text-sm">{stats.gamification.levelTitle}</div>
+                      </div>
+                    </div>
+                    {stats.gamification.rank && (
+                      <div className="text-right">
+                        <div className="text-sm text-slate-400">Rank</div>
+                        <div className="text-lg font-bold text-purple-400">#{stats.gamification.rank}</div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* XP Progress Bar */}
+                  <div className="mb-2">
+                    <div className="flex items-center justify-between text-sm text-slate-400 mb-1">
+                      <span>Progress to Next Level</span>
+                      <span>{stats.gamification.totalXP.toLocaleString()} XP</span>
+                    </div>
+                    <div className="bg-slate-700 rounded-full h-3">
+                      <div
+                        className="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full transition-all duration-500"
+                        style={{ width: `${Math.max(stats.gamification.progressToNext, 5)}%` }}
+                      />
+                    </div>
+                    {stats.gamification.xpToNext > 0 && (
+                      <div className="text-xs text-slate-500 mt-1 text-center">
+                        {stats.gamification.xpToNext} XP to next level
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Points Display */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-slate-700 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-yellow-400">{stats.gamification.totalPoints.toLocaleString()}</div>
+                    <div className="text-slate-400 text-sm">Total Points</div>
+                  </div>
+                  <div className="bg-slate-700 rounded-lg p-4 text-center">
+                    <div className="text-2xl font-bold text-orange-400">{stats.gamification.longestStreak}</div>
+                    <div className="text-slate-400 text-sm">Longest Streak</div>
                   </div>
                 </div>
               </div>

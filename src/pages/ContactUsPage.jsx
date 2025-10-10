@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import { sendContactForm } from '@/services/netlifyFormsService.js';
 
 export default function ContactUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function ContactUsPage({ onNavigate }) {
         message: ''
     });
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
 
     const handleInputChange = (e) => {
         setFormData({
@@ -21,11 +23,42 @@ export default function ContactUsPage({ onNavigate }) {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Form submission logic would go here
-        setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 5000);
+        setSubmitting(true);
+
+        try {
+            // Send contact form via Netlify Forms
+            const result = await sendContactForm({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                subject: formData.subject,
+                message: formData.message,
+                source: 'contact-page'
+            });
+
+            if (result.success) {
+                setSubmitted(true);
+                // Reset form
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    subject: '',
+                    category: 'general',
+                    message: ''
+                });
+                setTimeout(() => setSubmitted(false), 5000);
+            } else {
+                throw new Error(result.error || 'Failed to send message');
+            }
+        } catch (error) {
+            console.error('Contact form submission error:', error);
+            alert('Failed to send message. Please try again or contact us directly.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const contactMethods = [
@@ -252,10 +285,11 @@ export default function ContactUsPage({ onNavigate }) {
 
                                 <button
                                     type="submit"
-                                    className="w-full bg-sky-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-sky-700 transition-colors duration-300 flex items-center justify-center"
+                                    disabled={submitting}
+                                    className="w-full bg-sky-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 flex items-center justify-center"
                                 >
                                     <Send size={20} className="mr-2" />
-                                    Send Message
+                                    {submitting ? 'Sending...' : 'Send Message'}
                                 </button>
                             </form>
                         </div>

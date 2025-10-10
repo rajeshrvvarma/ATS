@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader, CreditCard, Mail, Phone, User } from 'lucide-react';
 import { enrollStudentInCourse } from '@/services/studentManagementService.js';
-import { sendWelcomeEmail, sendPaymentConfirmationEmail } from '@/services/emailService.js';
+import { sendWelcomeEmail, sendPaymentConfirmationEmail } from '@/services/netlifyFormsService.js';
 
 const EnhancedEnrollmentModal = ({ 
   isOpen, 

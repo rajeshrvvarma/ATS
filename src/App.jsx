@@ -42,6 +42,7 @@ const VideoLearningPage = React.lazy(() => import('@/pages/VideoLearningPage.jsx
 const StudentDashboard = React.lazy(() => import('@/pages/StudentDashboard.jsx'));
 const AdminDashboard = React.lazy(() => import('@/pages/AdminDashboard.jsx'));
 const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
+const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
 
 /**
  * App.jsx is the root component of the application.
@@ -163,6 +164,7 @@ export default function App() {
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
                             <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
                             <Route path="/video-learning" element={<ProtectedRoute roles={['student','admin']}><VideoLearningPage onNavigate={go} /></ProtectedRoute>} />
+                            <Route path="/quiz-library" element={<QuizLibrary onClose={() => go('/dashboard')} />} />
                             <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />

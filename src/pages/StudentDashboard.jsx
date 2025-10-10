@@ -17,13 +17,16 @@ import {
   ExternalLink,
   ChevronRight,
   GraduationCap,
-  X
+  X,
+  Brain,
+  Trophy
 } from 'lucide-react';
 import { loadCourses } from '@/services/courseService.js';
 import { downloadCertificate } from '@/services/certificateService.js';
 import { getStudentEnrollments, getStudentData } from '@/services/studentManagementService.js';
 import StudentProfile from '@/components/StudentProfile.jsx';
 import ProgressTracker from '@/components/ProgressTracker.jsx';
+import Leaderboard from '@/components/Leaderboard.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -52,6 +55,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [newEnrollment, setNewEnrollment] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
   const [showProgress, setShowProgress] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -310,6 +314,14 @@ export default function StudentDashboard({ onNavigate }) {
               
               {/* Enhanced action buttons */}
               <button
+                onClick={() => setShowLeaderboard(true)}
+                className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-6 py-3 rounded-lg hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 flex items-center gap-2 shadow-lg"
+              >
+                <Trophy className="w-5 h-5" />
+                Leaderboard
+              </button>
+              
+              <button
                 onClick={() => setShowProgress(true)}
                 className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
               >
@@ -398,7 +410,7 @@ export default function StudentDashboard({ onNavigate }) {
         )}
 
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
           <div className="bg-slate-800 rounded-lg p-6">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-lg">
@@ -443,6 +455,18 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <h3 className="text-slate-400 text-sm">Current Streak</h3>
             <p className="text-xs text-slate-500 mt-1">Days of continuous learning</p>
+          </div>
+
+          <div className="bg-slate-800 rounded-lg p-6 group hover:bg-slate-700 transition-colors cursor-pointer"
+               onClick={() => onNavigate('quiz-library')}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-indigo-500/20 rounded-lg group-hover:bg-indigo-500/30 transition-colors">
+                <Brain className="w-6 h-6 text-indigo-400" />
+              </div>
+              <span className="text-2xl font-bold text-white">0</span>
+            </div>
+            <h3 className="text-slate-400 text-sm group-hover:text-slate-300">Quiz Library</h3>
+            <p className="text-xs text-slate-500 mt-1 group-hover:text-slate-400">Test your knowledge</p>
           </div>
         </div>
 
@@ -675,6 +699,11 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Leaderboard Modal */}
+      {showLeaderboard && (
+        <Leaderboard onClose={() => setShowLeaderboard(false)} />
       )}
     </div>
   );

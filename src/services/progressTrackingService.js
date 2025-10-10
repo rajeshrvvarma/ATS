@@ -18,7 +18,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
 import { getCurrentUser, logActivity } from '@/services/firebaseAuthService.js';
-import { sendProgressUpdateEmail, sendCertificateEmail } from '@/services/emailService.js';
+import { sendProgressUpdateEmail, sendCertificateEmail } from '@/services/netlifyFormsService.js';
 
 /**
  * Track lesson completion and progress

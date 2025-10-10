@@ -3,6 +3,7 @@ import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCa
 import SectionTitle from '../components/SectionTitle';
 import { createOrder, processPayment, verifyPayment } from '@/services/razorpay.js';
 import { getBatchById, getActiveBatches, getBatchesByCourse, getUrgencyColor } from '@/data/activeBatches.js';
+import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
 
 export default function EnrollUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -55,6 +56,7 @@ export default function EnrollUsPage({ onNavigate }) {
         }
     }, []);
     const [submitted, setSubmitted] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [paymentMsg, setPaymentMsg] = useState('');
     const [lastOrderId, setLastOrderId] = useState('');
@@ -66,11 +68,47 @@ export default function EnrollUsPage({ onNavigate }) {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Form submission logic would go here
-        setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 5000);
+        setSubmitting(true);
+
+        try {
+            // Send enrollment inquiry via Netlify Forms
+            const result = await sendEnrollmentInquiry({
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                course: formData.course,
+                experience: formData.experience,
+                message: `Background: ${formData.background}\nGoals: ${formData.goals}\nPreferred Start Date: ${formData.startDate}`,
+                source: 'enrollment-page'
+            });
+
+            if (result.success) {
+                setSubmitted(true);
+                // Reset form
+                setFormData({
+                    name: '',
+                    email: '',
+                    phone: '',
+                    course: '',
+                    batchId: '',
+                    experience: 'beginner',
+                    background: '',
+                    goals: '',
+                    startDate: '',
+                    source: 'website'
+                });
+                setTimeout(() => setSubmitted(false), 5000);
+            } else {
+                throw new Error(result.error || 'Failed to submit inquiry');
+            }
+        } catch (error) {
+            console.error('Enrollment inquiry submission error:', error);
+            alert('Failed to submit inquiry. Please try again or contact us directly.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     const courses = [
@@ -347,10 +385,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                 Enrollment Form
                             </h2>
 
-                            <form action="https://formsubmit.co/santosh.m@agnidhra-technologies.com" method="POST" className="space-y-6">
-                                <input type="hidden" name="_subject" value="New Course Enrollment Request!" />
-                                <input type="hidden" name="_next" value="https://yourdomain.com/enrollment-success" />
-                                <input type="hidden" name="_captcha" value="false" />
+                            <form onSubmit={handleSubmit} className="space-y-6">
 
                                 {/* Personal Information */}
                                 <div className="grid md:grid-cols-2 gap-4">
@@ -609,10 +644,11 @@ export default function EnrollUsPage({ onNavigate }) {
                                 <div className="grid sm:grid-cols-2 gap-3">
                                     <button
                                         type="submit"
-                                        className="btn-primary w-full py-4 shadow-lg flex items-center justify-center"
+                                        disabled={submitting}
+                                        className="btn-primary w-full py-4 shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                                     >
                                         <Send size={20} className="mr-2" />
-                                        Submit Enrollment Request
+                                        {submitting ? 'Submitting...' : 'Submit Enrollment Request'}
                                     </button>
                                     <button
                                         type="button"
