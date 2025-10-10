@@ -5,9 +5,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
-    
-    // Debug log
-    console.log('Header rendering:', { currentPage, onNavigate: !!onNavigate });
     // Mobile navigation state
     const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
 
@@ -126,8 +123,9 @@ export default function Header({ onNavigate, currentPage }) {
     return (
         <header className="bg-slate-900/95 backdrop-blur-md shadow-lg shadow-black/20 sticky top-0 z-50 w-full">
             <nav className="container mx-auto px-6 py-4">
+                {/* Debug: Ensure nav has content */}
                 {/* Desktop Navigation - Clean & Professional */}
-                <div className="hidden md:flex items-center justify-between w-full">
+                <div className="flex items-center justify-between w-full">
                     {/* Left - Logo & Company Name */}
                     <div className="flex items-center space-x-3">
                         <button 
@@ -191,7 +189,7 @@ export default function Header({ onNavigate, currentPage }) {
                 </div>
                 
                 {/* Mobile Menu Button */}
-                <div className="md:hidden flex items-center justify-between">
+                <div className="hidden flex items-center justify-between">
                     <button 
                         onClick={() => onNavigate('home')} 
                         className="flex items-center space-x-3"
