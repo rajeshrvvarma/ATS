@@ -30,6 +30,7 @@ import ProgressTracker from '@/components/ProgressTracker.jsx';
 import Leaderboard from '@/components/Leaderboard.jsx';
 import StudentAnalytics from '@/components/StudentAnalytics.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+import CourseRecommendations from '@/components/CourseRecommendations.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -61,6 +62,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showCareerAdvisor, setShowCareerAdvisor] = useState(false);
+  const [showRecommendations, setShowRecommendations] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -493,6 +495,18 @@ export default function StudentDashboard({ onNavigate }) {
             <h3 className="text-white text-sm font-semibold group-hover:text-purple-100">Quiz Analytics</h3>
             <p className="text-xs text-purple-200/80 mt-1 group-hover:text-purple-100/90">Track your progress</p>
           </div>
+
+          <div className="bg-gradient-to-br from-green-500/20 to-teal-600/20 rounded-lg p-6 group hover:from-green-500/30 hover:to-teal-600/30 transition-all cursor-pointer border border-green-500/30"
+               onClick={() => setShowRecommendations(true)}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-green-500/20 rounded-lg group-hover:bg-green-500/30 transition-colors">
+                <Target className="w-6 h-6 text-green-400" />
+              </div>
+              <span className="text-lg font-bold text-green-300">✨</span>
+            </div>
+            <h3 className="text-white text-sm font-semibold group-hover:text-green-100">Smart Recommendations</h3>
+            <p className="text-xs text-green-200/80 mt-1 group-hover:text-green-100/90">AI-powered course suggestions</p>
+          </div>
         </div>
 
         {/* Main Content */}
@@ -674,6 +688,42 @@ export default function StudentDashboard({ onNavigate }) {
               </button>
             </div>
 
+            {/* Smart Course Recommendations */}
+            <div className="bg-gradient-to-br from-green-500/10 to-teal-600/10 border border-green-500/20 rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-green-500/20 rounded-lg">
+                  <Target className="w-6 h-6 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-white">Smart Recommendations</h3>
+                  <p className="text-green-200/80 text-sm">AI-powered course suggestions</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3 mb-4">
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <Brain className="w-4 h-4 text-cyan-400" />
+                  <span>6 advanced algorithms</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <TrendingUp className="w-4 h-4 text-blue-400" />
+                  <span>Performance-based matching</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-300">
+                  <Users className="w-4 h-4 text-purple-400" />
+                  <span>Peer collaborative filtering</span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowRecommendations(true)}
+                className="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold py-3 rounded-lg hover:from-green-700 hover:to-teal-700 transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                <Target className="w-4 h-4" />
+                Get Recommendations
+              </button>
+            </div>
+
             {/* Certificates */}
             <div className="bg-slate-800 rounded-lg p-6">
               <h3 className="text-lg font-semibold text-white mb-4">Certificates</h3>
@@ -777,6 +827,17 @@ export default function StudentDashboard({ onNavigate }) {
         <AiCareerAdvisor 
           isOpen={showCareerAdvisor}
           onClose={() => setShowCareerAdvisor(false)} 
+        />
+      )}
+
+      {/* Course Recommendations Modal */}
+      {showRecommendations && (
+        <CourseRecommendations 
+          onClose={() => setShowRecommendations(false)}
+          onCourseSelect={(course) => {
+            setShowRecommendations(false);
+            onNavigate('video-learning', course.id);
+          }}
         />
       )}
     </div>
