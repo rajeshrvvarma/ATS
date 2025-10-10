@@ -38,6 +38,7 @@ import CreateThreadModal from '@/components/CreateThreadModal.jsx';
 import ThreadDetailModal from '@/components/ThreadDetailModal.jsx';
 import PeerMentoring from '@/components/PeerMentoring.jsx';
 import StudyGroups from '@/components/StudyGroups.jsx';
+import KnowledgeBase from '@/components/KnowledgeBase.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -77,6 +78,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [preselectedThreadType, setPreselectedThreadType] = useState(null);
   const [showPeerMentoring, setShowPeerMentoring] = useState(false);
   const [showStudyGroups, setShowStudyGroups] = useState(false);
+  const [showKnowledgeBase, setShowKnowledgeBase] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -575,20 +577,17 @@ export default function StudentDashboard({ onNavigate }) {
               <p className="text-xs text-orange-200/80 mt-1 group-hover:text-orange-100/90">AI-powered mentor matching</p>
             </div>
 
-            {/* Knowledge Sharing */}
+            {/* Knowledge Base Wiki */}
             <div className="bg-gradient-to-br from-teal-500/20 to-emerald-600/20 rounded-lg p-6 group hover:from-teal-500/30 hover:to-emerald-600/30 transition-all cursor-pointer border border-teal-500/30"
-                 onClick={() => {
-                   setPreselectedThreadType('resource-share');
-                   setShowCreateThread(true);
-                 }}>
+                 onClick={() => setShowKnowledgeBase(true)}>
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-teal-500/20 rounded-lg group-hover:bg-teal-500/30 transition-colors">
                   <BookOpen className="w-6 h-6 text-teal-400" />
                 </div>
-                <span className="text-lg font-bold text-teal-300">📚</span>
+                <span className="text-lg font-bold text-teal-300">�</span>
               </div>
-              <h3 className="text-white text-sm font-semibold group-hover:text-teal-100">Knowledge Share</h3>
-              <p className="text-xs text-teal-200/80 mt-1 group-hover:text-teal-100/90">Share resources</p>
+              <h3 className="text-white text-sm font-semibold group-hover:text-teal-100">Knowledge Base</h3>
+              <p className="text-xs text-teal-200/80 mt-1 group-hover:text-teal-100/90">Collaborative wiki & resources</p>
             </div>
           </div>
         </div>
@@ -1036,6 +1035,32 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <div className="flex-1 overflow-hidden">
               <StudyGroups onClose={() => setShowStudyGroups(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Knowledge Base Modal */}
+      {showKnowledgeBase && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-7xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-teal-600 to-emerald-600 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <BookOpen className="h-6 w-6" />
+                  Knowledge Base Wiki
+                </h2>
+                <p className="text-teal-100">Collaborative documentation and resource sharing</p>
+              </div>
+              <button
+                onClick={() => setShowKnowledgeBase(false)}
+                className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <KnowledgeBase onClose={() => setShowKnowledgeBase(false)} />
             </div>
           </div>
         </div>
