@@ -36,6 +36,7 @@ import CourseRecommendations from '@/components/CourseRecommendations.jsx';
 import DiscussionForum from '@/components/DiscussionForum.jsx';
 import CreateThreadModal from '@/components/CreateThreadModal.jsx';
 import ThreadDetailModal from '@/components/ThreadDetailModal.jsx';
+import PeerMentoring from '@/components/PeerMentoring.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -73,6 +74,7 @@ export default function StudentDashboard({ onNavigate }) {
   const [showThreadDetail, setShowThreadDetail] = useState(false);
   const [selectedThreadId, setSelectedThreadId] = useState(null);
   const [preselectedThreadType, setPreselectedThreadType] = useState(null);
+  const [showPeerMentoring, setShowPeerMentoring] = useState(false);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -563,10 +565,7 @@ export default function StudentDashboard({ onNavigate }) {
 
             {/* Peer Mentoring */}
             <div className="bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-lg p-6 group hover:from-orange-500/30 hover:to-red-600/30 transition-all cursor-pointer border border-orange-500/30"
-                 onClick={() => {
-                   setPreselectedThreadType('peer-help');
-                   setShowCreateThread(true);
-                 }}>
+                 onClick={() => setShowPeerMentoring(true)}>
               <div className="flex items-center justify-between mb-4">
                 <div className="p-3 bg-orange-500/20 rounded-lg group-hover:bg-orange-500/30 transition-colors">
                   <User className="w-6 h-6 text-orange-400" />
@@ -574,7 +573,7 @@ export default function StudentDashboard({ onNavigate }) {
                 <span className="text-lg font-bold text-orange-300">🤝</span>
               </div>
               <h3 className="text-white text-sm font-semibold group-hover:text-orange-100">Peer Mentoring</h3>
-              <p className="text-xs text-orange-200/80 mt-1 group-hover:text-orange-100/90">Get & offer guidance</p>
+              <p className="text-xs text-orange-200/80 mt-1 group-hover:text-orange-100/90">AI-powered mentor matching</p>
             </div>
 
             {/* Knowledge Sharing */}
@@ -989,6 +988,32 @@ export default function StudentDashboard({ onNavigate }) {
             setSelectedThreadId(null);
           }}
         />
+      )}
+
+      {/* Peer Mentoring Modal */}
+      {showPeerMentoring && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-7xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-orange-600 to-red-600 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <Users className="h-6 w-6" />
+                  AI-Powered Peer Mentoring
+                </h2>
+                <p className="text-orange-100">Connect with experienced cybersecurity professionals</p>
+              </div>
+              <button
+                onClick={() => setShowPeerMentoring(false)}
+                className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <PeerMentoring onClose={() => setShowPeerMentoring(false)} />
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
