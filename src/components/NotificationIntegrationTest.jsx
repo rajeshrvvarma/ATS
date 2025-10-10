@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { CheckCircle, XCircle, Bell, MessageSquare, Heart, Plus, RefreshCw } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext.jsx';
-import { NotificationService } from '@/services/notificationService.js';
+import notificationService from '@/services/notificationService.js';
 import { useToast } from '@/context/ToastContext.jsx';
 
 const NotificationIntegrationTest = ({ onClose }) => {
@@ -31,13 +31,13 @@ const NotificationIntegrationTest = ({ onClose }) => {
 
   const testNotificationService = async () => {
     // Test if notification service is initialized
-    const isInitialized = NotificationService.isInitialized();
+    const isInitialized = notificationService.isInitialized();
     if (!isInitialized) {
       throw new Error('Notification service not initialized');
     }
     
     // Test sending a test notification
-    await NotificationService.sendNotification(
+    await notificationService.sendNotification(
       user.uid,
       'system_test',
       {
@@ -49,7 +49,7 @@ const NotificationIntegrationTest = ({ onClose }) => {
 
   const testForumNotifications = async () => {
     // Test forum reply notification structure
-    await NotificationService.sendNotification(
+    await notificationService.sendNotification(
       user.uid,
       'forum_reply',
       {
@@ -61,7 +61,7 @@ const NotificationIntegrationTest = ({ onClose }) => {
     );
     
     // Test forum like notification structure
-    await NotificationService.sendNotification(
+    await notificationService.sendNotification(
       user.uid,
       'forum_like',
       {
@@ -95,13 +95,13 @@ const NotificationIntegrationTest = ({ onClose }) => {
 
   const testNotificationPreferences = async () => {
     // Test preference loading
-    const prefs = await NotificationService.getPreferences(user.uid);
+    const prefs = await notificationService.getPreferences(user.uid);
     if (!prefs) {
       throw new Error('Could not load notification preferences');
     }
     
     // Test preference saving
-    await NotificationService.updatePreferences(user.uid, {
+    await notificationService.updatePreferences(user.uid, {
       forum_reply: true,
       forum_like: true,
       system_test: true

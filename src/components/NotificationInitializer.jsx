@@ -4,7 +4,7 @@
 
 import { useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
-import { NotificationService } from '@/services/notificationService.js';
+import notificationService from '@/services/notificationService.js';
 
 const NotificationInitializer = () => {
     const { user } = useAuth();
@@ -14,7 +14,7 @@ const NotificationInitializer = () => {
             if (user?.uid) {
                 try {
                     console.log('🔔 Initializing notification service for user:', user.uid);
-                    await NotificationService.initialize(user.uid);
+                    await notificationService.initialize(user.uid);
                     console.log('✅ Notification service initialized successfully');
                 } catch (error) {
                     console.error('❌ Failed to initialize notification service:', error);

@@ -28,7 +28,7 @@ import {
   toggleForumLike,
   POST_TYPES 
 } from '@/services/forumService.js';
-import { NotificationService } from '@/services/notificationService.js';
+import notificationService from '@/services/notificationService.js';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useToast } from '@/context/ToastContext.jsx';
 
@@ -125,7 +125,7 @@ const ThreadDetailModal = ({ isOpen, threadId, onClose }) => {
         // 🚀 NEW: Send notification to thread author
         if (threadData.authorId !== user.uid) {
           try {
-            await NotificationService.sendNotification(
+            await notificationService.sendNotification(
               threadData.authorId, // recipient
               'forum_reply', // type
               {
@@ -205,7 +205,7 @@ const ThreadDetailModal = ({ isOpen, threadId, onClose }) => {
           
           if (recipient && recipient !== user.uid) { // Don't notify self
             try {
-              await NotificationService.sendNotification(
+              await notificationService.sendNotification(
                 recipient,
                 'forum_like',
                 {

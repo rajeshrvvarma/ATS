@@ -11,7 +11,7 @@ import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import WhatsAppWidget from '@/components/WhatsAppWidget.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 import DashboardRouter from '@/components/DashboardRouter.jsx';
-import { NotificationService } from '@/services/notificationService.js';
+import notificationService from '@/services/notificationService.js';
 import NotificationInitializer from '@/components/NotificationInitializer.jsx';
 
 // Layout

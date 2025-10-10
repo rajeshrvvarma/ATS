@@ -21,7 +21,7 @@ import {
 import { createForumThread, FORUM_CATEGORIES, POST_TYPES } from '@/services/forumService.js';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useToast } from '@/context/ToastContext.jsx';
-import { NotificationService } from '@/services/notificationService.js';
+import notificationService from '@/services/notificationService.js';
 
 const CreateThreadModal = ({ isOpen, onClose, preselectedType = null, onThreadCreated }) => {
   // State management
@@ -176,7 +176,7 @@ const CreateThreadModal = ({ isOpen, onClose, preselectedType = null, onThreadCr
             
             // Optional: Send system announcement for important threads
             if (formData.type === POST_TYPES.ANNOUNCEMENT) {
-              await NotificationService.sendNotification(
+              await notificationService.sendNotification(
                 user.uid, // For now, just notify the creator as confirmation
                 'thread_published',
                 {
