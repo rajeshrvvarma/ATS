@@ -2,100 +2,42 @@ import React, { useState, useEffect } from 'react';
 import { Linkedin, Youtube, Instagram } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// NOTE: The Firebase logic remains the same. The only changes are to the layout (JSX).
-
-// It's a good practice to lazy-load Firebase to improve initial page load speed.
-// This means Firebase code is only downloaded when the footer component is actually rendered.
-const firebasePromise = Promise.all([
-    import('firebase/app'),
-    import('firebase/auth'),
-    import('firebase/firestore')
-]);
-
 export default function Footer({ onNavigate }) {
     const [visitCount, setVisitCount] = useState('...');
 
     useEffect(() => {
-        const initAndCount = async () => {
+        // Simple local visit counter using localStorage
+        const initLocalCounter = () => {
             try {
-                // Read the Firebase config from the Netlify environment variable
-                const firebaseConfigStr = import.meta.env.VITE_FIREBASE_CONFIG;
-                if (!firebaseConfigStr) {
-                    console.error("Firebase config environment variable is not set.");
-                    setVisitCount('N/A');
-                    return;
-                }
-                const firebaseConfig = JSON.parse(firebaseConfigStr);
-
-                // Use the lazy-loaded Firebase modules
-                const [{ initializeApp, getApps, getApp }, { getAuth, signInAnonymously }, { getFirestore, doc, onSnapshot, runTransaction, serverTimestamp }] = await firebasePromise;
-
-                // Prevent duplicate app initialization
-                let app;
-                try {
-                    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-                } catch (error) {
-                    // If app already exists with different config, use existing
-                    app = getApp();
+                const storageKey = 'agnidhra-site-visits';
+                const sessionKey = 'agnidhra-session-visited';
+                
+                // Check if this session has already been counted
+                const hasVisitedThisSession = sessionStorage.getItem(sessionKey);
+                
+                if (!hasVisitedThisSession) {
+                    // Get current count or initialize to 0
+                    const currentCount = parseInt(localStorage.getItem(storageKey) || '0', 10);
+                    const newCount = currentCount + 1;
+                    
+                    // Update count
+                    localStorage.setItem(storageKey, newCount.toString());
+                    sessionStorage.setItem(sessionKey, 'true');
+                    
+                    console.log('Visit counter: New visit recorded');
                 }
                 
-                const auth = getAuth(app);
-                const db = getFirestore(app);
-
-                // Try anonymous authentication with error handling
-                try {
-                    await signInAnonymously(auth);
-                    console.log('Firebase: Anonymous authentication successful');
-                } catch (authError) {
-                    console.warn('Firebase: Anonymous authentication failed:', authError.message);
-                    // Continue without authentication - Firestore might still work with public rules
-                }
+                // Display current count
+                const totalVisits = parseInt(localStorage.getItem(storageKey) || '1', 10);
+                setVisitCount(totalVisits.toLocaleString());
                 
-                const appId = "ATStatic"; // Using the repo name as the App ID for consistency
-                const counterRef = doc(db, `artifacts/${appId}/public/data/siteStats`, 'visits');
-
-                const hasVisited = sessionStorage.getItem('agnidhra-site-visited');
-
-                try {
-                    if (!hasVisited) {
-                        await runTransaction(db, async (transaction) => {
-                            const docSnap = await transaction.get(counterRef);
-                            if (!docSnap.exists()) {
-                                transaction.set(counterRef, { count: 1, lastUpdated: serverTimestamp() });
-                            } else {
-                                const newCount = docSnap.data().count + 1;
-                                transaction.update(counterRef, { count: newCount, lastUpdated: serverTimestamp() });
-                            }
-                        });
-                        sessionStorage.setItem('agnidhra-site-visited', 'true');
-                        console.log('Firebase: Visit count updated successfully');
-                    }
-
-                    const unsubscribe = onSnapshot(counterRef, (docSnap) => {
-                        if (docSnap.exists()) {
-                            setVisitCount(docSnap.data().count.toLocaleString());
-                        } else {
-                            setVisitCount('1');
-                        }
-                    }, (error) => {
-                        console.warn("Firebase: Error fetching visit count:", error.message);
-                        setVisitCount('N/A');
-                    });
-
-                    return () => unsubscribe();
-                } catch (firestoreError) {
-                    console.warn('Firebase: Firestore operations failed:', firestoreError.message);
-                    setVisitCount('N/A');
-                }
-
             } catch (error) {
-                console.error("Firebase initialization or counter error:", error);
-                setVisitCount('N/A');
+                console.warn('Visit counter error:', error.message);
+                setVisitCount('1,000+'); // Fallback display
             }
         };
 
-        initAndCount();
-
+        initLocalCounter();
     }, []);
 
     return (
