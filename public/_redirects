@@ -1,7 +1,4 @@
 # Explicit static files (highest priority - must be first)
-/sw.js    /sw.js    200
-/manifest.json    /manifest.json    200
-/offline.html    /offline.html    200
 /robots.txt    /robots.txt    200
 /sitemap.xml    /sitemap.xml    200
 /favicon.ico    /favicon.ico    200

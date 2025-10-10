@@ -6,38 +6,6 @@
   node_bundler = "esbuild"
   directory = "netlify/functions"
 
-# Headers for proper MIME types
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Content-Type = "application/javascript"
-    Cache-Control = "no-cache"
-
-[[headers]]
-  for = "/manifest.json"
-  [headers.values]
-    Content-Type = "application/manifest+json"
-    Cache-Control = "public, max-age=86400"
-
-# Explicit redirects for PWA files (backup to _redirects)
-[[redirects]]
-  from = "/sw.js"
-  to = "/sw.js"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/manifest.json"  
-  to = "/manifest.json"
-  status = 200
-  force = true
-
-[[redirects]]
-  from = "/offline.html"
-  to = "/offline.html"
-  status = 200
-  force = true
-
 [[redirects]]
   from = "/dashboard*"
   to = "/index.html"

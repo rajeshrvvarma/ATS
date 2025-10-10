@@ -9,7 +9,6 @@ import { ThemeProvider } from '@/context/ThemeContext.jsx';
 import { SettingsProvider } from '@/context/SettingsContext.jsx';
 import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import WhatsAppWidget from '@/components/WhatsAppWidget.jsx';
-import PWAInstallPrompt, { PWAStatusIndicator, registerPWA } from '@/components/PWAInstallPrompt.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 import DashboardRouter from '@/components/DashboardRouter.jsx';
 
@@ -51,11 +50,6 @@ const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
 export default function App() {
     const navigate = useNavigate();
     const location = useLocation();
-
-    // Register PWA service worker on app load
-    React.useEffect(() => {
-        registerPWA();
-    }, []);
 
     const pageToPath = useMemo(() => ({
         home: '/',
@@ -175,8 +169,6 @@ export default function App() {
                 <ToastContainer />
                 <SettingsDrawer />
                 <WhatsAppWidget />
-                <PWAInstallPrompt />
-                <PWAStatusIndicator />
         </div>
         </ToastProvider>
         </SettingsProvider>
