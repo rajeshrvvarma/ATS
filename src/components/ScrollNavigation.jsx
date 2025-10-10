@@ -1,25 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
+import { safeScrollMeasurement } from '@/utils/domUtils.js';
 
 const ScrollNavigation = () => {
     const [showScrollTop, setShowScrollTop] = useState(false);
     const [showScrollBottom, setShowScrollBottom] = useState(true);
 
     useEffect(() => {
+        let ticking = false;
+        
         const handleScroll = () => {
-            const scrollTop = window.pageYOffset;
-            const scrollHeight = document.documentElement.scrollHeight;
-            const clientHeight = document.documentElement.clientHeight;
-            
-            // Show scroll to top button when user has scrolled down
-            setShowScrollTop(scrollTop > 300);
-            
-            // Hide scroll to bottom button when near bottom of page
-            setShowScrollBottom(scrollTop < scrollHeight - clientHeight - 100);
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    const { scrollTop, scrollHeight, clientHeight } = safeScrollMeasurement();
+                    
+                    // Show scroll to top button when user has scrolled down
+                    setShowScrollTop(scrollTop > 300);
+                    
+                    // Hide scroll to bottom button when near bottom of page
+                    setShowScrollBottom(scrollTop < scrollHeight - clientHeight - 100);
+                    
+                    ticking = false;
+                });
+                ticking = true;
+            }
         };
 
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        // Add a small delay before initializing scroll listener to avoid early layout
+        const timer = setTimeout(() => {
+            window.addEventListener('scroll', handleScroll);
+            // Call once to set initial state
+            handleScroll();
+        }, 100);
+
+        return () => {
+            clearTimeout(timer);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     const scrollToTop = () => {
@@ -30,8 +47,9 @@ const ScrollNavigation = () => {
     };
 
     const scrollToBottom = () => {
+        const { scrollHeight } = safeScrollMeasurement();
         window.scrollTo({
-            top: document.documentElement.scrollHeight,
+            top: scrollHeight,
             behavior: 'smooth'
         });
     };
