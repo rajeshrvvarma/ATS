@@ -363,7 +363,9 @@ export function registerPWA() {
         // Fallback: Use inline service worker
         console.log('🔄 Registering inline service worker as fallback...');
         const inlineSwUrl = createInlineServiceWorker();
-        const registration = await navigator.serviceWorker.register(inlineSwUrl);
+        const registration = await navigator.serviceWorker.register(inlineSwUrl, {
+          scope: '/' // Explicitly set scope to root to avoid blob URL scope issues
+        });
         console.log('✅ Inline PWA Service Worker registered successfully:', registration.scope);
         
         // Clean up the blob URL after registration

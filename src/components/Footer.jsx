@@ -42,38 +42,51 @@ export default function Footer({ onNavigate }) {
                 const auth = getAuth(app);
                 const db = getFirestore(app);
 
-                await signInAnonymously(auth);
+                // Try anonymous authentication with error handling
+                try {
+                    await signInAnonymously(auth);
+                    console.log('Firebase: Anonymous authentication successful');
+                } catch (authError) {
+                    console.warn('Firebase: Anonymous authentication failed:', authError.message);
+                    // Continue without authentication - Firestore might still work with public rules
+                }
                 
                 const appId = "ATStatic"; // Using the repo name as the App ID for consistency
                 const counterRef = doc(db, `artifacts/${appId}/public/data/siteStats`, 'visits');
 
                 const hasVisited = sessionStorage.getItem('agnidhra-site-visited');
 
-                if (!hasVisited) {
-                    await runTransaction(db, async (transaction) => {
-                        const docSnap = await transaction.get(counterRef);
-                        if (!docSnap.exists()) {
-                            transaction.set(counterRef, { count: 1, lastUpdated: serverTimestamp() });
-                        } else {
-                            const newCount = docSnap.data().count + 1;
-                            transaction.update(counterRef, { count: newCount, lastUpdated: serverTimestamp() });
-                        }
-                    });
-                    sessionStorage.setItem('agnidhra-site-visited', 'true');
-                }
-
-                const unsubscribe = onSnapshot(counterRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        setVisitCount(docSnap.data().count.toLocaleString());
-                    } else {
-                        setVisitCount('1');
+                try {
+                    if (!hasVisited) {
+                        await runTransaction(db, async (transaction) => {
+                            const docSnap = await transaction.get(counterRef);
+                            if (!docSnap.exists()) {
+                                transaction.set(counterRef, { count: 1, lastUpdated: serverTimestamp() });
+                            } else {
+                                const newCount = docSnap.data().count + 1;
+                                transaction.update(counterRef, { count: newCount, lastUpdated: serverTimestamp() });
+                            }
+                        });
+                        sessionStorage.setItem('agnidhra-site-visited', 'true');
+                        console.log('Firebase: Visit count updated successfully');
                     }
-                }, (error) => {
-                    console.error("Error fetching visit count:", error);
-                    setVisitCount('N/A');
-                });
 
-                return () => unsubscribe();
+                    const unsubscribe = onSnapshot(counterRef, (docSnap) => {
+                        if (docSnap.exists()) {
+                            setVisitCount(docSnap.data().count.toLocaleString());
+                        } else {
+                            setVisitCount('1');
+                        }
+                    }, (error) => {
+                        console.warn("Firebase: Error fetching visit count:", error.message);
+                        setVisitCount('N/A');
+                    });
+
+                    return () => unsubscribe();
+                } catch (firestoreError) {
+                    console.warn('Firebase: Firestore operations failed:', firestoreError.message);
+                    setVisitCount('N/A');
+                }
 
             } catch (error) {
                 console.error("Firebase initialization or counter error:", error);
