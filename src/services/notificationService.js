@@ -159,25 +159,11 @@ class NotificationService {
   displayForegroundNotification(payload) {
     const { notification, data } = payload;
     
-    // Create custom notification element or use browser notification
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      // Use service worker to display notification
-      navigator.serviceWorker.ready.then(registration => {
-        registration.showNotification(notification.title, {
-          body: notification.body,
-          icon: '/icon-192x192.png',
-          badge: '/badge-72x72.png',
-          tag: data?.type || 'general',
-          data: data,
-          actions: this.getNotificationActions(data?.type),
-          requireInteraction: data?.priority === NOTIFICATION_PRIORITY.URGENT
-        });
-      });
-    } else {
-      // Fallback to browser notification
+    // Use browser notification (simplified, no service worker dependency)
+    if (Notification.permission === 'granted') {
       new Notification(notification.title, {
         body: notification.body,
-        icon: '/icon-192x192.png',
+        icon: '/logo.png',
         tag: data?.type || 'general'
       });
     }
