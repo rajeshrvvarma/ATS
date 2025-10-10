@@ -5,6 +5,9 @@ import { AnimatePresence, motion } from 'framer-motion';
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
+    
+    // Debug log
+    console.log('Header rendering:', { currentPage, onNavigate: !!onNavigate });
     // Mobile navigation state
     const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
 
@@ -66,20 +69,34 @@ export default function Header({ onNavigate, currentPage }) {
     };
 
     const scrollToSection = (id) => {
-        setActiveLink(id);
-        
-        // Handle different navigation scenarios
-        const targetId = id.toLowerCase().replace(/\s+/g, '-');
-        
-        // If we are not on the home page, navigate there first, then scroll
-        if (currentPage !== 'home') {
-            // Pass the section to scroll to via URL hash so Home can handle it after navigation
-            window.location.assign(`/${'#' + targetId}`);
-        } else {
-            // If we are already on the home page, just scroll
-            document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+        try {
+            setActiveLink(id);
+            
+            // Handle different navigation scenarios
+            const targetId = id.toLowerCase().replace(/\s+/g, '-');
+            
+            // If we are not on the home page, navigate there first, then scroll
+            if (currentPage !== 'home') {
+                // Pass the section to scroll to via URL hash so Home can handle it after navigation
+                onNavigate('home');
+                setTimeout(() => {
+                    const element = document.getElementById(targetId);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }, 100);
+            } else {
+                // If we are already on the home page, just scroll
+                const element = document.getElementById(targetId);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+            setIsOpen(false); // Close the mobile menu after clicking a link
+        } catch (error) {
+            console.error('Scroll error:', error);
+            setIsOpen(false);
         }
-        setIsOpen(false); // Close the mobile menu after clicking a link
     };
 
     const isLinkActive = (link) => {
@@ -107,7 +124,7 @@ export default function Header({ onNavigate, currentPage }) {
     };
 
     return (
-        <header className="bg-slate-900/80 backdrop-blur-md shadow-lg shadow-black/20 sticky top-0 z-50">
+        <header className="bg-slate-900/95 backdrop-blur-md shadow-lg shadow-black/20 sticky top-0 z-50 w-full">
             <nav className="container mx-auto px-6 py-4">
                 {/* Desktop Navigation - Clean & Professional */}
                 <div className="hidden md:flex items-center justify-between w-full">
