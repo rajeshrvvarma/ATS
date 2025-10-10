@@ -18,9 +18,11 @@ import {
 import NotificationBell from '../components/NotificationBell.jsx';
 import { useToasts, ToastContainer } from '../components/NotificationToast.jsx';
 import NotificationPreferences from '../components/NotificationPreferences.jsx';
+import NotificationIntegrationTest from '../components/NotificationIntegrationTest.jsx';
 
 const NotificationDemo = ({ userId = 'demo-user' }) => {
   const [showPreferences, setShowPreferences] = useState(false);
+  const [showIntegrationTest, setShowIntegrationTest] = useState(false);
   const { toasts, addToast, removeToast } = useToasts();
 
   useEffect(() => {
@@ -181,6 +183,13 @@ const NotificationDemo = ({ userId = 'demo-user' }) => {
                 className="px-4 py-2 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
               >
                 ⚙️ Notification Settings
+              </button>
+              
+              <button
+                onClick={() => setShowIntegrationTest(true)}
+                className="px-4 py-2 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              >
+                🧪 Test Integration
               </button>
               
               <NotificationBell userId={userId} />
@@ -392,6 +401,13 @@ await notificationService.requestPermission(userId);`}
         <NotificationPreferences
           userId={userId}
           onClose={() => setShowPreferences(false)}
+        />
+      )}
+
+      {/* Integration Test Modal */}
+      {showIntegrationTest && (
+        <NotificationIntegrationTest
+          onClose={() => setShowIntegrationTest(false)}
         />
       )}
     </div>

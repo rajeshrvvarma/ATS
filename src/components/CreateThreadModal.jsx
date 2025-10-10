@@ -21,6 +21,7 @@ import {
 import { createForumThread, FORUM_CATEGORIES, POST_TYPES } from '@/services/forumService.js';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useToast } from '@/context/ToastContext.jsx';
+import { NotificationService } from '@/services/notificationService.js';
 
 const CreateThreadModal = ({ isOpen, onClose, preselectedType = null, onThreadCreated }) => {
   // State management
@@ -160,6 +161,39 @@ const CreateThreadModal = ({ isOpen, onClose, preselectedType = null, onThreadCr
 
       if (result.success) {
         addToast('Thread created successfully!', 'success');
+        
+        // 🚀 NEW: Send notification for new thread (if it's a question or announcement)
+        if (formData.type === POST_TYPES.QUESTION || formData.type === POST_TYPES.ANNOUNCEMENT) {
+          try {
+            // For now, just log the notification (you could extend this to notify relevant users)
+            console.log('📢 New thread notification could be sent:', {
+              type: 'new_thread',
+              threadTitle: formData.title,
+              threadType: formData.type,
+              category: formData.category,
+              author: user.displayName || 'Anonymous'
+            });
+            
+            // Optional: Send system announcement for important threads
+            if (formData.type === POST_TYPES.ANNOUNCEMENT) {
+              await NotificationService.sendNotification(
+                user.uid, // For now, just notify the creator as confirmation
+                'thread_published',
+                {
+                  threadTitle: formData.title,
+                  threadType: formData.type,
+                  category: formData.category,
+                  threadId: result.data.id
+                }
+              );
+              console.log('✅ Thread publication notification sent');
+            }
+          } catch (notificationError) {
+            console.error('❌ Failed to send thread notification:', notificationError);
+            // Don't fail thread creation if notification fails
+          }
+        }
+        
         onThreadCreated(result.data);
         onClose();
       } else {

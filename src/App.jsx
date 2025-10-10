@@ -1,7 +1,7 @@
-import React, { Suspense, useMemo } from 'react';
+import React, { Suspense, useMemo, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AuthProvider } from '@/context/AuthContext.jsx';
+import { AuthProvider, useAuth } from '@/context/AuthContext.jsx';
 import { CourseAccessProvider } from '@/context/SafeCourseAccessContext.jsx';
 import { ToastProvider } from '@/context/ToastContext.jsx';
 import ToastContainer from '@/components/ToastContainer.jsx';
@@ -11,6 +11,8 @@ import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import WhatsAppWidget from '@/components/WhatsAppWidget.jsx';
 import ProtectedRoute from '@/components/ProtectedRoute.jsx';
 import DashboardRouter from '@/components/DashboardRouter.jsx';
+import { NotificationService } from '@/services/notificationService.js';
+import NotificationInitializer from '@/components/NotificationInitializer.jsx';
 
 // Layout
 import AnnouncementBanner from '@/components/AnnouncementBanner.jsx';
@@ -126,6 +128,9 @@ export default function App() {
         <SettingsProvider>
         <ToastProvider>
         <div className="bg-slate-900 antialiased">
+                {/* Initialize notification service for authenticated users */}
+                <NotificationInitializer />
+                
                 <AnnouncementBanner onNavigate={go} />
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>

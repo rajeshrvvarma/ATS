@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star, Users } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
+import NotificationBell from '@/components/NotificationBell.jsx';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
+    
+    // Get authentication state for notification bell
+    const { user } = useAuth();
     
     // Production debugging
     React.useEffect(() => {
@@ -185,6 +190,11 @@ export default function Header({ onNavigate, currentPage }) {
 
                     {/* Right - Actions */}
                     <div className="flex items-center space-x-4">
+                        {/* Notification Bell - Only show for authenticated users */}
+                        {user && (
+                            <NotificationBell userId={user.uid} />
+                        )}
+                        
                         <button 
                             onClick={() => onNavigate('enroll')} 
                             className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
@@ -193,10 +203,10 @@ export default function Header({ onNavigate, currentPage }) {
                         </button>
                         
                         <button
-                            onClick={() => onNavigate('login')}
+                            onClick={() => user ? onNavigate('dashboard') : onNavigate('login')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
                         >
-                            Login
+                            {user ? 'Dashboard' : 'Login'}
                         </button>
                     </div>
                 </div>

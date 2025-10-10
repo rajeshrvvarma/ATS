@@ -28,6 +28,7 @@ import {
   toggleForumLike,
   POST_TYPES 
 } from '@/services/forumService.js';
+import { NotificationService } from '@/services/notificationService.js';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useToast } from '@/context/ToastContext.jsx';
 
@@ -120,6 +121,26 @@ const ThreadDetailModal = ({ isOpen, threadId, onClose }) => {
           ...prev,
           replyCount: (prev.replyCount || 0) + 1
         }));
+
+        // 🚀 NEW: Send notification to thread author
+        if (threadData.authorId !== user.uid) {
+          try {
+            await NotificationService.sendNotification(
+              threadData.authorId, // recipient
+              'forum_reply', // type
+              {
+                threadTitle: threadData.title,
+                replyAuthor: user.displayName || 'Anonymous',
+                threadId: threadId,
+                replyContent: replyContent.substring(0, 100) + (replyContent.length > 100 ? '...' : '')
+              }
+            );
+            console.log('✅ Forum reply notification sent to thread author');
+          } catch (notificationError) {
+            console.error('❌ Failed to send reply notification:', notificationError);
+            // Don't fail the reply if notification fails
+          }
+        }
       } else {
         throw new Error(result.error || 'Failed to post reply');
       }
@@ -175,6 +196,32 @@ const ThreadDetailModal = ({ isOpen, threadId, onClose }) => {
                 }
               : reply
           ));
+        }
+
+        // 🚀 NEW: Send like notification (only for new likes, not unlikes)
+        if (result.data.isLiked) {
+          const recipient = itemType === 'thread' ? threadData.authorId : 
+            replies.find(r => r.id === itemId)?.authorId;
+          
+          if (recipient && recipient !== user.uid) { // Don't notify self
+            try {
+              await NotificationService.sendNotification(
+                recipient,
+                'forum_like',
+                {
+                  itemType: itemType,
+                  itemTitle: itemType === 'thread' ? threadData.title : 'your reply',
+                  likedBy: user.displayName || 'Someone',
+                  threadId: threadId,
+                  threadTitle: threadData.title
+                }
+              );
+              console.log(`✅ Forum ${itemType} like notification sent`);
+            } catch (notificationError) {
+              console.error('❌ Failed to send like notification:', notificationError);
+              // Don't fail the like if notification fails
+            }
+          }
         }
       }
     } catch (error) {
