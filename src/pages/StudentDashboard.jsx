@@ -20,7 +20,9 @@ import {
   X,
   Brain,
   Trophy,
-  Sparkles
+  Sparkles,
+  MessageSquare,
+  Users
 } from 'lucide-react';
 import { loadCourses } from '@/services/courseService.js';
 import { downloadCertificate } from '@/services/certificateService.js';
@@ -31,6 +33,9 @@ import Leaderboard from '@/components/Leaderboard.jsx';
 import StudentAnalytics from '@/components/StudentAnalytics.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import CourseRecommendations from '@/components/CourseRecommendations.jsx';
+import DiscussionForum from '@/components/DiscussionForum.jsx';
+import CreateThreadModal from '@/components/CreateThreadModal.jsx';
+import ThreadDetailModal from '@/components/ThreadDetailModal.jsx';
 
 /**
  * StudentDashboard - Main dashboard for students
@@ -63,6 +68,11 @@ export default function StudentDashboard({ onNavigate }) {
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showCareerAdvisor, setShowCareerAdvisor] = useState(false);
   const [showRecommendations, setShowRecommendations] = useState(false);
+  const [showForum, setShowForum] = useState(false);
+  const [showCreateThread, setShowCreateThread] = useState(false);
+  const [showThreadDetail, setShowThreadDetail] = useState(false);
+  const [selectedThreadId, setSelectedThreadId] = useState(null);
+  const [preselectedThreadType, setPreselectedThreadType] = useState(null);
   
   // Determine user type: authenticated student vs enrollment-based access
   const isAuthenticated = !!user;
@@ -509,6 +519,82 @@ export default function StudentDashboard({ onNavigate }) {
           </div>
         </div>
 
+        {/* Social Learning Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+                <MessageSquare className="h-7 w-7 text-blue-400" />
+                Social Learning Features
+              </h2>
+              <p className="text-slate-400 mt-1">Connect, discuss, and learn with your cybersecurity community</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Discussion Forum */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-cyan-600/20 rounded-lg p-6 group hover:from-blue-500/30 hover:to-cyan-600/30 transition-all cursor-pointer border border-blue-500/30"
+                 onClick={() => setShowForum(true)}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+                  <MessageSquare className="w-6 h-6 text-blue-400" />
+                </div>
+                <span className="text-lg font-bold text-blue-300">NEW</span>
+              </div>
+              <h3 className="text-white text-sm font-semibold group-hover:text-blue-100">Discussion Forum</h3>
+              <p className="text-xs text-blue-200/80 mt-1 group-hover:text-blue-100/90">Join conversations & get help</p>
+            </div>
+
+            {/* Study Groups */}
+            <div className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 rounded-lg p-6 group hover:from-purple-500/30 hover:to-pink-600/30 transition-all cursor-pointer border border-purple-500/30"
+                 onClick={() => {
+                   setPreselectedThreadType('study-group');
+                   setShowCreateThread(true);
+                 }}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors">
+                  <Users className="w-6 h-6 text-purple-400" />
+                </div>
+                <span className="text-lg font-bold text-purple-300">🎓</span>
+              </div>
+              <h3 className="text-white text-sm font-semibold group-hover:text-purple-100">Study Groups</h3>
+              <p className="text-xs text-purple-200/80 mt-1 group-hover:text-purple-100/90">Form learning groups</p>
+            </div>
+
+            {/* Peer Mentoring */}
+            <div className="bg-gradient-to-br from-orange-500/20 to-red-600/20 rounded-lg p-6 group hover:from-orange-500/30 hover:to-red-600/30 transition-all cursor-pointer border border-orange-500/30"
+                 onClick={() => {
+                   setPreselectedThreadType('peer-help');
+                   setShowCreateThread(true);
+                 }}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-orange-500/20 rounded-lg group-hover:bg-orange-500/30 transition-colors">
+                  <User className="w-6 h-6 text-orange-400" />
+                </div>
+                <span className="text-lg font-bold text-orange-300">🤝</span>
+              </div>
+              <h3 className="text-white text-sm font-semibold group-hover:text-orange-100">Peer Mentoring</h3>
+              <p className="text-xs text-orange-200/80 mt-1 group-hover:text-orange-100/90">Get & offer guidance</p>
+            </div>
+
+            {/* Knowledge Sharing */}
+            <div className="bg-gradient-to-br from-teal-500/20 to-emerald-600/20 rounded-lg p-6 group hover:from-teal-500/30 hover:to-emerald-600/30 transition-all cursor-pointer border border-teal-500/30"
+                 onClick={() => {
+                   setPreselectedThreadType('resource-share');
+                   setShowCreateThread(true);
+                 }}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="p-3 bg-teal-500/20 rounded-lg group-hover:bg-teal-500/30 transition-colors">
+                  <BookOpen className="w-6 h-6 text-teal-400" />
+                </div>
+                <span className="text-lg font-bold text-teal-300">📚</span>
+              </div>
+              <h3 className="text-white text-sm font-semibold group-hover:text-teal-100">Knowledge Share</h3>
+              <p className="text-xs text-teal-200/80 mt-1 group-hover:text-teal-100/90">Share resources</p>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Enrolled Courses */}
@@ -837,6 +923,70 @@ export default function StudentDashboard({ onNavigate }) {
           onCourseSelect={(course) => {
             setShowRecommendations(false);
             onNavigate('video-learning', course.id);
+          }}
+        />
+      )}
+
+      {/* Discussion Forum Modal */}
+      {showForum && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg w-full max-w-7xl h-[90vh] overflow-hidden flex flex-col">
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+                  <MessageSquare className="h-6 w-6" />
+                  Discussion Forum
+                </h2>
+                <p className="text-blue-100">Connect with your cybersecurity learning community</p>
+              </div>
+              <button
+                onClick={() => setShowForum(false)}
+                className="text-white hover:bg-white/20 p-2 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <DiscussionForum 
+                onCreateThread={(type = null) => {
+                  setPreselectedThreadType(type);
+                  setShowCreateThread(true);
+                }}
+                onViewThread={(threadId) => {
+                  setSelectedThreadId(threadId);
+                  setShowThreadDetail(true);
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create Thread Modal */}
+      {showCreateThread && (
+        <CreateThreadModal
+          isOpen={showCreateThread}
+          preselectedType={preselectedThreadType}
+          onClose={() => {
+            setShowCreateThread(false);
+            setPreselectedThreadType(null);
+          }}
+          onThreadCreated={(threadData) => {
+            setShowCreateThread(false);
+            setPreselectedThreadType(null);
+            // Optionally refresh forum data or show success message
+          }}
+        />
+      )}
+
+      {/* Thread Detail Modal */}
+      {showThreadDetail && selectedThreadId && (
+        <ThreadDetailModal
+          isOpen={showThreadDetail}
+          threadId={selectedThreadId}
+          onClose={() => {
+            setShowThreadDetail(false);
+            setSelectedThreadId(null);
           }}
         />
       )}
