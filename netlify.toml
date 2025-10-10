@@ -24,6 +24,23 @@
   to = "/index.html"
   status = 200
 
+# Exclude specific files from SPA redirect
+[[redirects]]
+  from = "/sw.js"
+  to = "/sw.js"
+  status = 200
+
+[[redirects]]
+  from = "/manifest.json"
+  to = "/manifest.json" 
+  status = 200
+
+[[redirects]]
+  from = "/offline.html"
+  to = "/offline.html"
+  status = 200
+
+# SPA fallback for everything else
 [[redirects]]
   from = "/*"
   to = "/index.html"

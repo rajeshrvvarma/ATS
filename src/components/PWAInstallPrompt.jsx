@@ -238,16 +238,16 @@ export function registerPWA() {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', async () => {
       try {
-        // Only register service worker in production or if sw.js exists
-        const isProduction = window.location.hostname !== 'localhost';
+        // Check if service worker file exists and has correct content
+        const swResponse = await fetch('/sw.js');
         
-        if (isProduction) {
-          // Check if service worker file exists first
-          const swResponse = await fetch('/sw.js', { method: 'HEAD' });
+        if (swResponse.ok) {
+          const swContent = await swResponse.text();
           
-          if (swResponse.ok && swResponse.headers.get('content-type')?.includes('javascript')) {
+          // Check if it's actual JavaScript content (not HTML redirect)
+          if (swContent.includes('CACHE_NAME') || swContent.includes('ServiceWorker') || swContent.includes('addEventListener')) {
             const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('PWA Service Worker registered:', registration);
+            console.log('PWA Service Worker registered successfully:', registration);
 
             // Check for updates
             registration.addEventListener('updatefound', () => {
@@ -264,14 +264,15 @@ export function registerPWA() {
               });
             });
           } else {
-            console.log('PWA Service Worker file not found or invalid, skipping registration');
+            console.warn('PWA Service Worker file contains HTML instead of JavaScript - likely a routing issue');
           }
         } else {
-          console.log('PWA Service Worker registration skipped in development');
+          console.warn('PWA Service Worker file not accessible:', swResponse.status);
         }
         
       } catch (error) {
         console.warn('PWA Service Worker registration failed:', error.message);
+        // Don't throw error - app should work without PWA
       }
     });
   } else {
