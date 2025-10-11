@@ -8,10 +8,10 @@ import { loadCourses } from '@/services/courseService.js';
 import { useToast } from '@/context/ToastContext.jsx';
 
 /**
- * VideoLearningPage - Main page for video-based learning
- * Displays available courses and manages course enrollment
+ * LearningManagementSystemPage - Main page for comprehensive learning management
+ * Displays available courses, manages course enrollment, and provides LMS functionality
  */
-export default function VideoLearningPage({ onNavigate }) {
+export default function LearningManagementSystemPage({ onNavigate }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [completedCourses, setCompletedCourses] = useState(new Set());
   const [list, setList] = useState(loadCourses());

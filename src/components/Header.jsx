@@ -29,7 +29,7 @@ export default function Header({ onNavigate, currentPage }) {
     const mobileNavItems = [
         { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
         { name: "About Us", action: () => scrollToSection('about') },
-        { name: "Our Learning Management System", action: () => onNavigate('video-learning') },
+        { name: "Learning Portal", action: () => onNavigate('video-learning') },
         { name: "Contact Us", action: () => onNavigate('contact') },
         { name: "Login", action: () => onNavigate('login') }
     ];
@@ -117,7 +117,7 @@ export default function Header({ onNavigate, currentPage }) {
     const isLinkActive = (link) => {
         // Map page routes to human-readable labels
         const routeMap = {
-            'video-learning': 'Our Learning Management System',
+            'video-learning': 'Learning Portal',
             'dashboard': 'Dashboard',
             'admin': 'Admin',
             'login': 'Login',
@@ -150,10 +150,10 @@ export default function Header({ onNavigate, currentPage }) {
         >
             <nav className="mx-auto px-6 py-4" style={{maxWidth: '1200px'}}>
                 {/* Desktop Navigation - Clean & Professional */}
-                <div className="flex items-center justify-between w-full"
+                <div className="flex items-center justify-between w-full relative"
                      style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                     {/* Left - Logo & Company Name */}
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-3 flex-shrink-0">
                         <button 
                             onClick={() => onNavigate('home')} 
                             className="flex items-center space-x-3 group"
@@ -174,41 +174,43 @@ export default function Header({ onNavigate, currentPage }) {
                     </div>
 
                     {/* Center - Main Navigation */}
-                    <nav className="flex items-center space-x-8">
-                        <MegaMenuPrograms 
-                            onNavigate={onNavigate} 
-                            scrollToSection={scrollToSection}
-                            coursePricing={coursePricing}
-                            pricingLoading={pricingLoading}
-                        />
-                        <button
-                            onClick={() => onNavigate('upcoming-batches')}
-                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                        >
-                            Upcoming Batches
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('about')}
-                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                        >
-                            About Us
-                        </button>
-                        <button
-                            onClick={() => onNavigate('video-learning')}
-                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                        >
-                            Our Learning Management System
-                        </button>
-                        <button
-                            onClick={() => onNavigate('contact')}
-                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
-                        >
-                            Contact Us
-                        </button>
+                    <nav className="absolute left-1/2 transform -translate-x-1/2">
+                        <div className="flex items-center space-x-6 lg:space-x-8">
+                            <MegaMenuPrograms 
+                                onNavigate={onNavigate} 
+                                scrollToSection={scrollToSection}
+                                coursePricing={coursePricing}
+                                pricingLoading={pricingLoading}
+                            />
+                            <button
+                                onClick={() => onNavigate('upcoming-batches')}
+                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                            >
+                                Upcoming Batches
+                            </button>
+                            <button
+                                onClick={() => scrollToSection('about')}
+                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                            >
+                                About Us
+                            </button>
+                            <button
+                                onClick={() => onNavigate('video-learning')}
+                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                            >
+                                Learning Portal
+                            </button>
+                            <button
+                                onClick={() => onNavigate('contact')}
+                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                            >
+                                Contact Us
+                            </button>
+                        </div>
                     </nav>
 
                     {/* Right - Actions: Enroll Now and Login/Username Dropdown */}
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-4 flex-shrink-0">
                         <button
                             onClick={() => onNavigate('enroll')}
                             className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"

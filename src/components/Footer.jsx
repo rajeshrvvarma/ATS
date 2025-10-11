@@ -187,7 +187,7 @@ export default function Footer({ onNavigate }) {
                                     onClick={() => onNavigate('video-learning')} 
                                     className="hover:text-blue-400 transition-colors duration-200 text-left"
                                 >
-                                    Our Learning Management System
+                                    Learning Portal
                                 </button>
                             </li>
                         </ul>
