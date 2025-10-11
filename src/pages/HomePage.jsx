@@ -366,38 +366,58 @@ const ProgramsShowcase = ({ onNavigate }) => {
         }
     };
 
-    // View selection interface
-    const StudentJobSelector = () => {
-        const { pricing, loading } = useCoursePricing();
-        
+    // Job exploration interface (non-clickable, informational)
+    const JobExplorationSection = () => {
         const jobOptions = [
+            // Cybersecurity Jobs
             {
                 id: 'cybersecurity-analyst',
                 title: '🛡️ Cybersecurity Analyst',
                 salary: '₹4-6 LPA',
                 demand: 'High Demand',
-                description: 'Protect companies from cyber threats',
-                course: '7-Day SOC Bootcamp',
-                priceKey: 'defensive-bootcamp',
+                description: 'Protect companies from cyber threats and incidents',
+                category: 'cybersecurity',
                 icon: Shield,
                 gradient: 'from-blue-600 to-cyan-600',
-                companies: 'TCS, Wipro, Infosys',
-                viewId: 'defensive-bootcamp',
-                targetPage: 'defensiveBootcampLanding'
+                companies: 'TCS, Wipro, Infosys, HDFC Bank',
+                skills: ['SIEM Management', 'Incident Response', 'Threat Analysis']
             },
+            {
+                id: 'ethical-hacker',
+                title: '🔍 Ethical Hacker',
+                salary: '₹5-7 LPA',
+                demand: 'Exciting',
+                description: 'Find security vulnerabilities and test systems',
+                category: 'cybersecurity',
+                icon: Sword,
+                gradient: 'from-red-600 to-pink-600',
+                companies: 'Security Firms, Banks, Fintech',
+                skills: ['Penetration Testing', 'Vulnerability Assessment', 'Web App Security']
+            },
+            {
+                id: 'security-consultant',
+                title: '🛡️ Security Consultant',
+                salary: '₹6-10 LPA',
+                demand: 'High Growth',
+                description: 'Advise organizations on security best practices',
+                category: 'cybersecurity',
+                icon: Award,
+                gradient: 'from-purple-600 to-blue-600',
+                companies: 'Deloitte, PwC, EY, KPMG',
+                skills: ['Risk Assessment', 'Compliance', 'Security Architecture']
+            },
+            // Technology Jobs  
             {
                 id: 'cloud-engineer',
                 title: '☁️ Cloud Engineer',
                 salary: '₹5-8 LPA',
                 demand: 'Growing Fast',
                 description: 'Build and manage cloud infrastructure',
-                course: 'Cloud Security Specialist',
-                priceKey: 'cloud-security',
+                category: 'technology',
                 icon: Cloud,
                 gradient: 'from-purple-600 to-blue-600',
-                companies: 'Amazon, Microsoft, Google',
-                viewId: 'cloud-security',
-                targetPage: 'technologyTraining'
+                companies: 'Amazon, Microsoft, Google, IBM',
+                skills: ['AWS/Azure', 'Kubernetes', 'DevOps', 'Infrastructure']
             },
             {
                 id: 'software-developer',
@@ -405,55 +425,60 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 salary: '₹3-5 LPA',
                 demand: 'Always Hiring',
                 description: 'Create websites and applications',
-                course: 'Full Stack Development',
-                priceKey: 'full-stack-development',
+                category: 'technology',
                 icon: Code,
                 gradient: 'from-green-600 to-blue-600',
                 companies: 'Zoho, Freshworks, Startups',
-                viewId: 'full-stack-development',
-                targetPage: 'technologyTraining'
+                skills: ['React/Angular', 'Node.js', 'Databases', 'API Development']
             },
             {
                 id: 'devops-engineer',
                 title: '🔧 DevOps Engineer',
                 salary: '₹6-9 LPA',
                 demand: 'Hot Skill',
-                description: 'Automate software delivery',
-                course: 'DevOps & Automation',
-                priceKey: 'devops-security',
+                description: 'Automate software delivery and operations',
+                category: 'technology',
                 icon: Server,
                 gradient: 'from-orange-600 to-red-600',
-                companies: 'Tech Mahindra, HCL, L&T',
-                viewId: 'devops-security',
-                targetPage: 'technologyTraining'
-            },
-            {
-                id: 'ethical-hacker',
-                title: '🔍 Ethical Hacker',
-                salary: '₹5-7 LPA',
-                demand: 'Exciting',
-                description: 'Find security vulnerabilities',
-                course: '7-Day Hacking Bootcamp',
-                priceKey: 'offensive-bootcamp',
-                icon: Sword,
-                gradient: 'from-red-600 to-pink-600',
-                companies: 'Security Firms, Banks',
-                viewId: 'offensive-bootcamp',
-                targetPage: 'offensiveBootcampLanding'
+                companies: 'Tech Mahindra, HCL, L&T, Accenture',
+                skills: ['CI/CD', 'Docker', 'Jenkins', 'Monitoring']
             },
             {
                 id: 'data-analyst',
-                title: '📊 Data Analyst',
+                title: '� Data Analyst',
                 salary: '₹4-6 LPA',
                 demand: 'Stable',
-                description: 'Turn data into insights',
-                course: 'AI & Data Science',
-                priceKey: 'data-science-ai',
+                description: 'Turn data into insights and business decisions',
+                category: 'technology',
                 icon: BrainCircuit,
                 gradient: 'from-indigo-600 to-purple-600',
-                companies: 'Accenture, Deloitte, EY',
-                viewId: 'data-science-ai',
-                targetPage: 'technologyTraining'
+                companies: 'Accenture, Deloitte, EY, Mu Sigma',
+                skills: ['Python/R', 'SQL', 'Machine Learning', 'Data Visualization']
+            },
+            // Specialized Jobs
+            {
+                id: 'digital-forensics',
+                title: '🔍 Digital Forensics Expert',
+                salary: '₹5-8 LPA',
+                demand: 'Niche',
+                description: 'Investigate cyber crimes and digital evidence',
+                category: 'specialized',
+                icon: Target,
+                gradient: 'from-cyan-600 to-blue-600',
+                companies: 'Law Enforcement, Legal Firms, Consultancies',
+                skills: ['Evidence Analysis', 'Investigation Tools', 'Legal Procedures']
+            },
+            {
+                id: 'compliance-officer',
+                title: '� Compliance Officer',
+                salary: '₹4-7 LPA',
+                demand: 'Growing',
+                description: 'Ensure regulatory compliance and governance',
+                category: 'specialized',
+                icon: CheckCircle,
+                gradient: 'from-teal-600 to-green-600',
+                companies: 'Banks, Insurance, Healthcare, IT',
+                skills: ['ISO 27001', 'GDPR', 'Risk Management', 'Audit']
             }
         ];
 
@@ -464,18 +489,16 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 exit={{ opacity: 0, y: -30 }}
                 transition={{ duration: 0.5 }}
             >
-                {/* Main Job Selection Grid */}
+                {/* Main Job Exploration Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-8">
                     {jobOptions.map((job, index) => (
-                        <motion.button
+                        <motion.div
                             key={job.id}
-                            onClick={() => handleJobSelection(job)}
                             whileHover={{ y: -5, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="bg-slate-900 border border-slate-700 rounded-xl p-6 text-left hover:border-slate-500 transition-all duration-300 group relative overflow-hidden"
+                            className="bg-slate-900 border border-slate-700 rounded-xl p-6 text-left hover:border-slate-500 transition-all duration-300 group relative overflow-hidden cursor-default"
                         >
                             {/* Background Gradient */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${job.gradient} opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
@@ -496,11 +519,15 @@ const ProgramsShowcase = ({ onNavigate }) => {
                                 <h4 className="text-lg font-semibold text-white mb-2">{job.title}</h4>
                                 <p className="text-slate-400 text-sm mb-4">{job.description}</p>
 
-                                {/* Course Info */}
+                                {/* Skills */}
                                 <div className="bg-slate-800/50 rounded-lg p-3 mb-3">
-                                    <div className="text-sm text-slate-300 font-medium">{job.course}</div>
-                                    <div className="text-xs text-slate-400 mt-1">
-                                        Starting {loading ? '₹...' : formatPrice(pricing[job.priceKey]?.finalPrice || 999)}
+                                    <div className="text-xs text-slate-400 mb-2">Key Skills:</div>
+                                    <div className="flex flex-wrap gap-1">
+                                        {job.skills.map((skill, idx) => (
+                                            <span key={idx} className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">
+                                                {skill}
+                                            </span>
+                                        ))}
                                     </div>
                                 </div>
 
@@ -510,11 +537,11 @@ const ProgramsShowcase = ({ onNavigate }) => {
                                     <span>Hiring: {job.companies}</span>
                                 </div>
                             </div>
-                        </motion.button>
+                        </motion.div>
                     ))}
                 </div>
 
-                {/* View All Courses Option */}
+                {/* Next Section Indicator */}
                 <motion.div 
                     className="text-center"
                     initial={{ opacity: 0 }}
@@ -523,21 +550,298 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 >
                     <div className="bg-slate-800/30 border border-slate-600/50 rounded-xl p-6 max-w-2xl mx-auto">
                         <h3 className="text-xl font-semibold text-white mb-3">
-                            🎯 Want to see all courses we offer?
+                            🎯 Ready to start your journey?
                         </h3>
                         <p className="text-slate-400 mb-4">
-                            Explore our complete catalog of 15+ courses across cybersecurity, programming, cloud, and more
+                            Explore our training programs designed to help you land these exciting roles
                         </p>
-                        <button
-                            onClick={() => handleViewSelection('complete')}
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 flex items-center gap-2 mx-auto group"
+                        <motion.div
+                            animate={{ y: [0, 5, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="text-slate-400"
                         >
-                            <Grid3X3 className="w-5 h-5" />
-                            <span>View All Courses</span>
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </button>
+                            ↓ Browse Our Course Programs ↓
+                        </motion.div>
                     </div>
                 </motion.div>
+            </motion.div>
+        );
+    };
+
+    // Course Programs Section with Tabs
+    const CourseProgramsSection = () => {
+        const { pricing, loading } = useCoursePricing();
+        const [activeTab, setActiveTab] = useState('defensive');
+        
+        const courseCategories = {
+            defensive: {
+                id: 'defensive',
+                title: 'Defensive Cybersecurity',
+                icon: Shield,
+                color: 'blue',
+                courses: [
+                    {
+                        id: 'defensive-bootcamp',
+                        title: '7-Day Defensive Security Bootcamp',
+                        subtitle: 'SOC Analyst Ready',
+                        duration: '7 Days',
+                        level: 'Beginner to Intermediate',
+                        priceKey: 'defensive-bootcamp',
+                        enrolled: '120+',
+                        features: ['SIEM Mastery', 'Incident Response', 'Live Labs', 'Certificate'],
+                        action: () => onNavigate('defensiveBootcampLanding'),
+                        popular: true
+                    },
+                    {
+                        id: 'defensive-mastery',
+                        title: '2-Month Defensive Security Mastery',
+                        subtitle: 'Advanced Professional Program',
+                        duration: '2 Months',
+                        level: 'All Levels',
+                        priceKey: 'defensive-mastery',
+                        enrolled: '18/20',
+                        features: ['Personal Mentor', '10+ Projects', 'Job Guarantee', 'Small Batch'],
+                        action: () => onNavigate('defensiveMastery')
+                    }
+                ]
+            },
+            offensive: {
+                id: 'offensive',
+                title: 'Offensive Cybersecurity',
+                icon: Sword,
+                color: 'red',
+                courses: [
+                    {
+                        id: 'offensive-bootcamp',
+                        title: '7-Day Ethical Hacking Bootcamp',
+                        subtitle: 'Penetration Testing Focused',
+                        duration: '7 Days',
+                        level: 'Beginner to Intermediate',
+                        priceKey: 'offensive-bootcamp',
+                        enrolled: '95+',
+                        features: ['Kali Linux', 'Web Pentesting', 'Network Hacking', 'Tools Mastery'],
+                        action: () => onNavigate('offensiveBootcampLanding'),
+                        popular: true
+                    },
+                    {
+                        id: 'offensive-mastery',
+                        title: '2-Month Offensive Security Mastery',
+                        subtitle: 'Advanced Red Team Operations',
+                        duration: '2 Months',
+                        level: 'Advanced',
+                        priceKey: 'offensive-mastery',
+                        enrolled: '12/15',
+                        features: ['Elite Training', 'Custom Exploits', 'Red Team Ops', 'Industry Mentors'],
+                        action: () => onNavigate('offensiveMastery')
+                    }
+                ]
+            },
+            specialized: {
+                id: 'specialized',
+                title: 'Specialized Cybersecurity',
+                icon: Target,
+                color: 'purple',
+                courses: [
+                    {
+                        id: 'digital-forensics',
+                        title: 'Digital Forensics & Investigation',
+                        subtitle: 'Cyber Crime Investigation',
+                        duration: '4 Weeks',
+                        level: 'Intermediate',
+                        priceKey: 'digital-forensics',
+                        enrolled: '25+',
+                        features: ['Evidence Analysis', 'Investigation Tools', 'Legal Procedures', 'Real Cases'],
+                        action: () => onNavigate('specializedCourses')
+                    },
+                    {
+                        id: 'compliance-governance',
+                        title: 'Compliance & Governance',
+                        subtitle: 'Regulatory & Risk Management',
+                        duration: '3 Weeks',
+                        level: 'Intermediate',
+                        priceKey: 'compliance-governance',
+                        enrolled: '30+',
+                        features: ['ISO 27001', 'GDPR Compliance', 'Risk Assessment', 'Audit Skills'],
+                        action: () => onNavigate('specializedCourses')
+                    }
+                ]
+            },
+            technology: {
+                id: 'technology',
+                title: 'Technology Courses',
+                icon: Code,
+                color: 'green',
+                courses: [
+                    {
+                        id: 'cloud-security',
+                        title: 'Cloud Security Specialist',
+                        subtitle: 'AWS, Azure & Multi-Cloud',
+                        duration: '4-6 Weeks',
+                        level: 'Intermediate',
+                        priceKey: 'cloud-security',
+                        enrolled: '65+',
+                        features: ['AWS Security', 'Azure Protection', 'Cloud Architecture', 'DevSecOps'],
+                        action: () => onNavigate('technologyTraining')
+                    },
+                    {
+                        id: 'full-stack-development',
+                        title: 'Full Stack Development',
+                        subtitle: 'Modern Web Development',
+                        duration: '8 Weeks',
+                        level: 'Beginner to Advanced',
+                        priceKey: 'full-stack-development',
+                        enrolled: '85+',
+                        features: ['React/Node.js', 'Database Design', 'API Development', 'Security Focus'],
+                        action: () => onNavigate('technologyTraining')
+                    },
+                    {
+                        id: 'devops-security',
+                        title: 'DevOps & Automation Security',
+                        subtitle: 'Secure CI/CD & Infrastructure',
+                        duration: '6 Weeks',
+                        level: 'Intermediate',
+                        priceKey: 'devops-security',
+                        enrolled: '40+',
+                        features: ['CI/CD Security', 'Container Security', 'Infrastructure as Code', 'Monitoring'],
+                        action: () => onNavigate('technologyTraining')
+                    },
+                    {
+                        id: 'data-science-ai',
+                        title: 'AI & Data Science',
+                        subtitle: 'Machine Learning & Analytics',
+                        duration: '6 Weeks',
+                        level: 'Intermediate',
+                        priceKey: 'data-science-ai',
+                        enrolled: '55+',
+                        features: ['Python/R', 'Machine Learning', 'Data Visualization', 'AI Security'],
+                        action: () => onNavigate('technologyTraining')
+                    }
+                ]
+            },
+            college: {
+                id: 'college',
+                title: 'College Training',
+                icon: Users,
+                color: 'orange',
+                courses: [
+                    {
+                        id: 'college-training',
+                        title: 'College Bulk Training Program',
+                        subtitle: 'Customized for Educational Institutions',
+                        duration: 'Custom',
+                        level: 'All Levels',
+                        priceKey: 'college-training',
+                        enrolled: '500+ Students',
+                        features: ['Bulk Pricing', 'Placement Support', 'Industry Certificates', 'College Partnerships'],
+                        action: () => onNavigate('collegeTraining')
+                    }
+                ]
+            }
+        };
+
+        const tabs = Object.values(courseCategories);
+        const currentCategory = courseCategories[activeTab];
+
+        return (
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-7xl mx-auto"
+            >
+                {/* Tab Navigation */}
+                <div className="flex flex-wrap justify-center gap-2 mb-8">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                                activeTab === tab.id
+                                    ? `bg-${tab.color}-600 text-white shadow-lg`
+                                    : 'text-slate-300 hover:text-white hover:bg-slate-700'
+                            }`}
+                        >
+                            <tab.icon className="w-4 h-4" />
+                            {tab.title}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Course Cards for Active Tab */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {currentCategory.courses.map((course, index) => {
+                        const coursePrice = pricing?.[course.priceKey];
+                        const displayPrice = loading ? '₹...' : (coursePrice ? formatPrice(coursePrice.finalPrice) : '₹999');
+                        const originalPrice = coursePrice ? formatPrice(coursePrice.originalPrice) : '';
+                        
+                        return (
+                            <motion.div
+                                key={course.id}
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className={`bg-slate-900 border border-slate-700 rounded-xl p-6 hover:border-${currentCategory.color}-500 transition-all duration-300 group relative overflow-hidden`}
+                            >
+                                {course.popular && (
+                                    <div className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+                                        POPULAR
+                                    </div>
+                                )}
+                                
+                                {/* Background Gradient */}
+                                <div className={`absolute inset-0 bg-gradient-to-br from-${currentCategory.color}-600 to-${currentCategory.color}-800 opacity-5 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                                
+                                <div className="relative z-10">
+                                    {/* Header */}
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className={`w-12 h-12 bg-gradient-to-br from-${currentCategory.color}-600 to-${currentCategory.color}-800 rounded-lg flex items-center justify-center`}>
+                                            <currentCategory.icon className="w-6 h-6 text-white" />
+                                        </div>
+                                        <div className="text-right">
+                                            <div className="text-sm font-medium text-green-400">{course.enrolled}</div>
+                                            <div className="text-xs text-slate-400">{course.level}</div>
+                                        </div>
+                                    </div>
+
+                                    {/* Course Info */}
+                                    <h4 className="text-lg font-semibold text-white mb-2">{course.title}</h4>
+                                    <p className="text-slate-400 text-sm mb-4">{course.subtitle}</p>
+
+                                    {/* Features */}
+                                    <div className="mb-4">
+                                        <div className="flex flex-wrap gap-1 mb-3">
+                                            {course.features.map((feature, idx) => (
+                                                <span key={idx} className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">
+                                                    {feature}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Pricing */}
+                                    <div className="flex items-center justify-between mb-4">
+                                        <div>
+                                            <div className="text-lg font-bold text-white">{displayPrice}</div>
+                                            {originalPrice && (
+                                                <div className="text-sm text-slate-400 line-through">{originalPrice}</div>
+                                            )}
+                                        </div>
+                                        <div className="text-xs text-slate-400">{course.duration}</div>
+                                    </div>
+
+                                    {/* CTA Button */}
+                                    <button
+                                        onClick={course.action}
+                                        className={`w-full bg-gradient-to-r from-${currentCategory.color}-600 to-${currentCategory.color}-700 text-white py-2 px-4 rounded-lg hover:from-${currentCategory.color}-700 hover:to-${currentCategory.color}-800 transition-all duration-300 flex items-center justify-center gap-2 group/btn`}
+                                    >
+                                        <span>Explore Course</span>
+                                        <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                                    </button>
+                                </div>
+                            </motion.div>
+                        );
+                    })}
+                </div>
             </motion.div>
         );
     };
@@ -596,7 +900,42 @@ const ProgramsShowcase = ({ onNavigate }) => {
 
                 <AnimatePresence mode="wait">
                     {!selectedView && !isTransitioning && (
-                        <StudentJobSelector />
+                        <>
+                            {/* Job Exploration Section */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="mb-20"
+                            >
+                                <div className="text-center mb-12">
+                                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                                        Which Career Path Interests You?
+                                    </h2>
+                                    <p className="text-slate-400 text-lg">
+                                        Explore high-demand tech careers and their requirements
+                                    </p>
+                                </div>
+                                <JobExplorationSection />
+                            </motion.div>
+
+                            {/* Course Programs Section */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: 0.3 }}
+                            >
+                                <div className="text-center mb-12">
+                                    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                                        Our Training Programs
+                                    </h2>
+                                    <p className="text-slate-400 text-lg">
+                                        Choose your specialization and start your learning journey
+                                    </p>
+                                </div>
+                                <CourseProgramsSection />
+                            </motion.div>
+                        </>
                     )}
 
                     {selectedView && !isTransitioning && (
