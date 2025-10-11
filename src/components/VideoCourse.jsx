@@ -3,7 +3,7 @@ import { Play, Lock, CheckCircle, Clock, Download, BookOpen } from 'lucide-react
 import VideoLesson from './VideoLesson';
 import { Award } from 'lucide-react';
 import { awardCourseCertificate } from '@/services/certificateService';
-import { createOrder, processPayment, verifyPayment } from '@/services/razorpay';
+import { initiatePayment, verifyPayment } from '@/services/phonepe';
 import { useToast } from '@/context/ToastContext.jsx';
 import { useSettings } from '@/context/SettingsContext.jsx';
 
@@ -125,30 +125,17 @@ const handleLessonComplete = async (lesson) => {
         return;
       }
 
-      // Create order on serverless function (amount in INR)
-      const order = await createOrder({ amount: numeric, currency: 'INR', receipt: `${course.id}-${Date.now()}` });
-
-      // Open Razorpay checkout
-      const paymentResult = await processPayment({
-        amount: order.amount,
-        currency: order.currency,
-        orderId: order.id,
-        description: course.title,
-        customerName: 'Student',
-        customerEmail: 'student@example.com',
-        customerPhone: '9999999999'
+      // Initiate PhonePe hosted pay page and redirect
+      const { redirectUrl } = await initiatePayment({
+        amount: numeric,
+        customer: { name: 'Student', email: 'student@example.com', phone: '9999999999' },
+        notes: { description: course.title }
       });
+      if (!redirectUrl) throw new Error('Failed to initiate payment');
+      window.location.href = redirectUrl;
 
-      // Verify payment signature via serverless function
-      const valid = await verifyPayment({
-        orderId: paymentResult.orderId,
-        paymentId: paymentResult.paymentId,
-        signature: paymentResult.signature
-      });
-
-      if (!valid) throw new Error('Payment verification failed');
-
-      // Persist enrollment
+      // After redirect and success, the success page will poll and you can mark enrollment there.
+      // Persist enrollment locally here only for free courses.
       setIsEnrolled(true);
       localStorage.setItem(`enrollment_${course.id}`, 'true');
       // Optionally store receipt for audit

@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { ArrowLeft, CreditCard, Shield, Users, Award, CheckCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
-import { processPayment, createOrder, PAYMENT_PLANS } from '../services/razorpay';
+const PAYMENT_PLANS = {
+  defensiveBootcamp: { name: 'Defensive Security Bootcamp', price: 2999, currency: 'INR', description: 'Defensive Bootcamp Enrollment' },
+  offensiveBootcamp: { name: 'Offensive Security Bootcamp', price: 2999, currency: 'INR', description: 'Offensive Bootcamp Enrollment' }
+};
+import { initiatePayment } from '../services/phonepe';
 
 export default function AccountActivationPage({ onNavigate, planType = 'defensiveBootcamp' }) {
     const [loading, setLoading] = useState(false);
@@ -24,45 +28,17 @@ export default function AccountActivationPage({ onNavigate, planType = 'defensiv
     const handlePayment = async (e) => {
         e.preventDefault();
         setLoading(true);
-
         try {
-            // Create order
-            const order = await createOrder({
+            const { redirectUrl } = await initiatePayment({
                 amount: plan.price,
-                currency: plan.currency,
-                receipt: `${planType}_${Date.now()}`
+                customer: { name: formData.name, email: formData.email, phone: formData.phone },
+                notes: { description: plan.description }
             });
-
-            // Process payment
-            const paymentResult = await processPayment({
-                orderId: order.id,
-                amount: order.amount,
-                currency: order.currency,
-                description: plan.description,
-                customerName: formData.name,
-                customerEmail: formData.email,
-                customerPhone: formData.phone
-            });
-
-            if (paymentResult.success) {
-                // Store payment details in localStorage for success page
-                localStorage.setItem('paymentDetails', JSON.stringify({
-                    ...paymentResult,
-                    planName: plan.name,
-                    customerName: formData.name,
-                    customerEmail: formData.email
-                }));
-                
-                onNavigate('paymentSuccess');
-            }
+            if (!redirectUrl) throw new Error('Failed to initiate payment');
+            window.location.href = redirectUrl;
         } catch (error) {
-            console.error('Payment failed:', error);
-            // Store error details for failure page
-            localStorage.setItem('paymentError', JSON.stringify({
-                message: error.message || 'Payment failed',
-                planName: plan.name
-            }));
-            
+            console.error('Payment initiation failed:', error);
+            localStorage.setItem('paymentError', JSON.stringify({ message: error.message || 'Payment failed', planName: plan.name }));
             onNavigate('paymentFailed');
         } finally {
             setLoading(false);

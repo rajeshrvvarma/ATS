@@ -26,7 +26,7 @@ const EnhancedEnrollmentModal = ({
     name: '',
     email: '',
     phone: '',
-    paymentMethod: 'razorpay', // razorpay, upi, bank_transfer
+    paymentMethod: 'phonepe', // phonepe, upi, bank_transfer
     agreeToTerms: false,
     marketingConsent: true
   });
@@ -83,83 +83,29 @@ const EnhancedEnrollmentModal = ({
     setStep(2); // Move to payment step
   };
 
-  const handleRazorpayPayment = async () => {
+  const handlePhonePePayment = async () => {
     setLoading(true);
     setError('');
 
     try {
-      // Import Razorpay services
-      const { createOrder, processPayment } = await import('@/services/razorpay.js');
+      // Import PhonePe services
+      const { initiatePayment } = await import('@/services/phonepe.js');
       
-      // First create an order
-      const orderData = {
+      // First create an order payload (for internal tracking only)
+
+      const { merchantTransactionId, redirectUrl } = await initiatePayment({
         amount: course.price,
-        currency: 'INR',
-        receipt: `receipt_${courseType}_${Date.now()}`,
-        notes: {
-          courseType,
-          studentName: formData.name,
-          studentEmail: formData.email,
-          studentPhone: formData.phone
-        }
-      };
+        customer: { name: formData.name, email: formData.email, phone: formData.phone },
+        notes: { courseType, description: `${course.name} - Enrollment` }
+      });
 
-      const order = await createOrder(orderData);
-      
-      if (!order.id) {
-        throw new Error('Failed to create payment order');
-      }
-
-      // Then process payment with the order
-      const paymentData = {
-        amount: course.price * 100, // Razorpay expects amount in paise
-        currency: 'INR',
-        orderId: order.id,
-        description: `${course.name} - Enrollment`,
-        customerName: formData.name,
-        customerEmail: formData.email,
-        customerPhone: formData.phone
-      };
-
-      const result = await processPayment(paymentData);
-      
-      console.log('Payment result received:', result);
-      
-      if (result.success) {
-        // Payment successful, proceed with enrollment
-        console.log('Processing enrollment after successful payment...');
-        await handleEnrollmentAfterPayment(result.paymentId);
-      } else {
-        throw new Error(result.error || 'Payment failed');
-      }
+      if (!redirectUrl) throw new Error('Failed to get payment redirect URL');
+      // Redirect to PhonePe hosted page
+      window.location.href = redirectUrl;
     } catch (error) {
       console.error('Payment error:', error);
       
-      // If order creation fails, try direct payment (test mode)
-      if (error.message.includes('Order creation failed') || error.message.includes('Server payment keys')) {
-        try {
-          console.log('Falling back to direct payment mode...');
-          
-          const { processPayment } = await import('@/services/razorpay.js');
-          const directPaymentData = {
-            amount: course.price * 100,
-            currency: 'INR',
-            description: `${course.name} - Enrollment`,
-            customerName: formData.name,
-            customerEmail: formData.email,
-            customerPhone: formData.phone
-          };
-
-          const result = await processPayment(directPaymentData);
-          
-          if (result.success) {
-            await handleEnrollmentAfterPayment(`test_${result.paymentId || Date.now()}`);
-            return;
-          }
-        } catch (fallbackError) {
-          console.error('Fallback payment also failed:', fallbackError);
-        }
-      }
+      // No fallback for PhonePe redirect; user will complete on hosted page
       
       setError(error.message || 'Payment failed. Please use UPI or Bank Transfer option below.');
     } finally {
@@ -170,13 +116,13 @@ const EnhancedEnrollmentModal = ({
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
-    // Handle Razorpay payment
-    if (formData.paymentMethod === 'razorpay') {
-      await handleRazorpayPayment();
+    // Handle PhonePe payment (redirect flow)
+    if (formData.paymentMethod === 'phonepe') {
+      await handlePhonePePayment();
       return;
     }
     
-    // Only require reference for non-Razorpay payment methods
+        // Only require reference for non-PhonePe manual payment methods
     if (!paymentData.reference.trim()) {
       setError('Please provide payment reference/transaction ID');
       return;
@@ -314,7 +260,7 @@ const EnhancedEnrollmentModal = ({
       name: '',
       email: '',
       phone: '',
-      paymentMethod: 'razorpay',
+      paymentMethod: 'phonepe',
       agreeToTerms: false,
       marketingConsent: true
     });
@@ -550,7 +496,7 @@ const EnhancedEnrollmentModal = ({
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'razorpay', label: 'Razorpay (Card/UPI/Net Banking)', recommended: true },
+                      { value: 'phonepe', label: 'PhonePe (UPI/Card/Net Banking)', recommended: true },
                       { value: 'upi', label: 'Direct UPI Transfer' },
                       { value: 'bank_transfer', label: 'Bank Transfer' }
                     ].map((method) => (
@@ -587,9 +533,9 @@ const EnhancedEnrollmentModal = ({
                 {/* Payment instructions */}
                 <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
                   <h5 className="text-blue-400 font-medium mb-2">Payment Instructions</h5>
-                  {formData.paymentMethod === 'razorpay' && (
+                  {formData.paymentMethod === 'phonepe' && (
                     <p className="text-blue-300 text-sm">
-                      After clicking "Make Payment", you'll be redirected to Razorpay to complete your secure payment using your preferred method.
+                      After clicking "Make Payment", you'll be redirected to PhonePe to complete your secure payment using your preferred method.
                     </p>
                   )}
                   {formData.paymentMethod === 'upi' && (
@@ -608,8 +554,8 @@ const EnhancedEnrollmentModal = ({
                   )}
                 </div>
 
-                {/* Payment reference (for non-Razorpay methods) */}
-                {formData.paymentMethod !== 'razorpay' && (
+                {/* Payment reference (for non-PhonePe methods) */}
+                {formData.paymentMethod !== 'phonepe' && (
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">
                       Payment Reference/Transaction ID *
@@ -640,7 +586,7 @@ const EnhancedEnrollmentModal = ({
                     className="flex-1 bg-sky-600 text-white py-3 px-6 rounded-lg hover:bg-sky-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading && <Loader className="w-5 h-5 animate-spin" />}
-                    {formData.paymentMethod === 'razorpay' ? 'Make Payment' : 'Complete Enrollment'}
+                    {formData.paymentMethod === 'phonepe' ? 'Make Payment' : 'Complete Enrollment'}
                   </button>
                 </div>
               </form>

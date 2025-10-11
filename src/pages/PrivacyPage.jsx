@@ -172,7 +172,7 @@ export default function PrivacyPage({ onNavigate }) {
                                 <div className="p-4 bg-green-900/30 rounded-lg border border-green-700">
                                     <h4 className="font-semibold text-green-300 mb-2">✓ We DO Share With:</h4>
                                     <ul className="text-green-100 text-sm space-y-1">
-                                        <li>• Payment processors (Razorpay) for transactions</li>
+                                        <li>• Payment processors (PhonePe) for transactions</li>
                                         <li>• Email services for course communications</li>
                                         <li>• Cloud providers for secure data storage</li>
                                         <li>• Analytics tools (anonymized data only)</li>

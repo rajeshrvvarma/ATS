@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCap, Target, Calendar, Users, Clock, Zap } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
-import { createOrder, processPayment, verifyPayment } from '@/services/razorpay.js';
+import { initiatePayment, verifyPayment } from '@/services/phonepe.js';
 import { getBatchById, getActiveBatches, getBatchesByCourse, getUrgencyColor } from '@/data/activeBatches.js';
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
 
@@ -233,50 +233,17 @@ export default function EnrollUsPage({ onNavigate }) {
                 return;
             }
 
-            const order = await createOrder({ amount: selectedCourse.razorpayPrice, currency: 'INR' });
-            setLastOrderId(order.id);
-
             const batchInfo = selectedBatch || (formData.batchId ? getBatchById(formData.batchId) : null);
-            const description = batchInfo 
-                ? `${selectedCourse.name} - ${batchInfo.batchName}`
-                : `Payment for ${selectedCourse.name}`;
+            const description = batchInfo ? `${selectedCourse.name} - ${batchInfo.batchName}` : `Payment for ${selectedCourse.name}`;
 
-            const paymentResult = await processPayment({
-                amount: order.amount,
-                currency: order.currency,
-                description: description,
-                orderId: order.id,
-                customerName: formData.name || 'Demo User',
-                customerEmail: formData.email || 'demo@example.com',
-                customerPhone: formData.phone || '9999999999'
+            const { redirectUrl, merchantTransactionId } = await initiatePayment({
+                amount: selectedCourse.razorpayPrice,
+                customer: { name: formData.name || 'Demo User', email: formData.email || 'demo@example.com', phone: formData.phone || '9999999999' },
+                notes: { description }
             });
-
-            const valid = await verifyPayment({
-                orderId: paymentResult.orderId,
-                paymentId: paymentResult.paymentId,
-                signature: paymentResult.signature
-            });
-
-            if (valid) {
-                const details = {
-                    paymentId: paymentResult.paymentId,
-                    orderId: paymentResult.orderId,
-                    planName: selectedCourse.name,
-                    customerName: formData.name || 'Demo User',
-                    customerEmail: formData.email || 'demo@example.com'
-                };
-                localStorage.setItem('paymentDetails', JSON.stringify(details));
-                setPaymentMsg('Payment successful and verified. Redirecting...');
-                setTimeout(() => onNavigate('paymentSuccess'), 600);
-            } else {
-                const err = {
-                    planName: selectedCourse.name,
-                    message: 'Signature verification failed'
-                };
-                localStorage.setItem('paymentError', JSON.stringify(err));
-                setPaymentMsg('Verification failed. Redirecting...');
-                setTimeout(() => onNavigate('paymentFailed'), 600);
-            }
+            setLastOrderId(merchantTransactionId);
+            if (!redirectUrl) throw new Error('Failed to initiate PhonePe payment');
+            window.location.href = redirectUrl;
         } catch (e) {
             setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
             const selectedCourse = courses.find(course => course.id === formData.course);
