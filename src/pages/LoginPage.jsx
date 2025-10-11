@@ -187,13 +187,13 @@ export default function LoginPage({ onNavigate, onLogin }) {
             Continue with Google
           </button>
 
-          {/* Demo Credentials */}
+          {/* Demo Credentials (match mock authService.js) */}
           <div className="mt-6 p-4 bg-slate-800 rounded-lg">
-            <h3 className="text-sm font-medium text-slate-300 mb-2">Demo Credentials:</h3>
+            <h3 className="text-sm font-medium text-slate-300 mb-2">Demo Credentials (Development Only):</h3>
             <div className="space-y-1 text-xs text-slate-400">
-              <div><strong>Admin:</strong> admin@agnidhra.com / admin123</div>
-              <div><strong>Instructor:</strong> instructor@agnidhra.com / instructor123</div>
-              <div><strong>Student:</strong> student@agnidhra.com / student123</div>
+              <div><strong>Admin:</strong> admin@agnidhra.com / SecureAdmin@2024!</div>
+              <div><strong>Owner (admin perms):</strong> owner@agnidhra.com / OwnerPass@2024!</div>
+              <div><strong>Student:</strong> student@agnidhra.com / StudentDemo@2024!</div>
             </div>
           </div>
         </form>

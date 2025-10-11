@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { getCurrentUser, login as svcLogin, logout as svcLogout, isAuthenticated } from '@/services/authService.js';
+import {
+    getCurrentUser,
+    loginStudent,
+    logoutStudent,
+    onAuthStateChange,
+    getStudentProfile,
+    ROLES
+} from '@/services/firebaseAuthService.js';
 
 const AuthContext = createContext({ user: null, loading: true });
 
@@ -8,23 +15,42 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const u = getCurrentUser();
-        if (u) setUser(u);
-        setLoading(false);
+        // Listen to Firebase auth state
+        const unsubscribe = onAuthStateChange(async (firebaseUser) => {
+            if (firebaseUser) {
+                // Try to get extended profile (role, etc.)
+                let profile = await getStudentProfile(firebaseUser.uid);
+                // If not found, fallback to basic user
+                if (!profile) profile = { email: firebaseUser.email, role: ROLES.STUDENT };
+                setUser({ ...firebaseUser, ...profile });
+            } else {
+                setUser(null);
+            }
+            setLoading(false);
+        });
+        return () => unsubscribe && unsubscribe();
     }, []);
 
+    // Login for all roles (admin, student, instructor)
     const login = async (email, password) => {
-        const result = await svcLogin(email, password);
-        if (result?.user) setUser(result.user);
+        const result = await loginStudent(email, password);
+        if (result?.user) {
+            // Get extended profile
+            let profile = await getStudentProfile(result.user.uid);
+            if (!profile) profile = { email: result.user.email, role: ROLES.STUDENT };
+            setUser({ ...result.user, ...profile });
+        }
         return result;
     };
 
-    const logout = () => {
-        svcLogout();
+    const logout = async () => {
+        await logoutStudent();
         setUser(null);
     };
 
-    const value = useMemo(() => ({ user, loading, login, logout, isAuthenticated: isAuthenticated() }), [user, loading]);
+    const isAuthenticated = () => !!user;
+
+    const value = useMemo(() => ({ user, loading, login, logout, isAuthenticated }), [user, loading]);
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
