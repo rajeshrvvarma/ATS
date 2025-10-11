@@ -5,12 +5,31 @@ import EnrollmentModal from '../components/EnrollmentModal';
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';
 import AnimatedBackground from '../components/AnimatedBackground';
+import { useCoursePricing, formatPrice } from '../hooks/useCoursePricing';
 
 const CollegeTrainingLandingPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(2847);
   const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
+  
+  // Load centralized pricing
+  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+
+  // Helper function to get pricing for college programs
+  const getCollegePricing = (courseId) => {
+    if (pricingLoading) {
+      return { finalPrice: '...', originalPrice: '...' };
+    }
+    if (coursePricing && coursePricing[courseId]) {
+      return {
+        finalPrice: formatPrice(coursePricing[courseId].finalPrice),
+        originalPrice: formatPrice(coursePricing[courseId].originalPrice)
+      };
+    }
+    // Fallback to hardcoded prices if not found
+    return null;
+  };
 
   useEffect(() => {
     // Simulate visitor count updates
@@ -131,13 +150,15 @@ const CollegeTrainingLandingPage = () => {
 
   const currentProgram = programData[selectedProgram];
 
+  // Dynamic pricing tiers using centralized pricing
   const pricingTiers = {
     cybersecurity: [
       {
         name: "Standard Batch",
-        students: "50-99 Students", 
-        price: "₹399",
-        originalPrice: "₹599",
+        students: "50-99 Students",
+        courseId: "college-cybersecurity-standard",
+        price: getCollegePricing('college-cybersecurity-standard')?.finalPrice || "₹399",
+        originalPrice: getCollegePricing('college-cybersecurity-standard')?.originalPrice || "₹599",
         features: [
           "8-week comprehensive training",
           "Cybersecurity curriculum",
@@ -149,8 +170,9 @@ const CollegeTrainingLandingPage = () => {
       {
         name: "Premium Batch",
         students: "100-149 Students",
-        price: "₹299", 
-        originalPrice: "₹499",
+        courseId: "college-cybersecurity-premium",
+        price: getCollegePricing('college-cybersecurity-premium')?.finalPrice || "₹299",
+        originalPrice: getCollegePricing('college-cybersecurity-premium')?.originalPrice || "₹499",
         popular: true,
         features: [
           "8-week intensive training",
@@ -164,8 +186,9 @@ const CollegeTrainingLandingPage = () => {
       {
         name: "Elite Batch",
         students: "150+ Students",
-        price: "₹199",
-        originalPrice: "₹399", 
+        courseId: "college-cybersecurity-elite",
+        price: getCollegePricing('college-cybersecurity-elite')?.finalPrice || "₹199",
+        originalPrice: getCollegePricing('college-cybersecurity-elite')?.originalPrice || "₹399",
         features: [
           "8-week comprehensive program",
           "Real-world project assignments",
@@ -180,9 +203,10 @@ const CollegeTrainingLandingPage = () => {
     technology: [
       {
         name: "Standard Batch",
-        students: "50-99 Students", 
-        price: "₹599",
-        originalPrice: "₹899",
+        students: "50-99 Students",
+        courseId: "college-technology-standard",
+        price: getCollegePricing('college-technology-standard')?.finalPrice || "₹599",
+        originalPrice: getCollegePricing('college-technology-standard')?.originalPrice || "₹899",
         features: [
           "12-week comprehensive training",
           "Multi-technology curriculum",
@@ -194,8 +218,9 @@ const CollegeTrainingLandingPage = () => {
       {
         name: "Premium Batch",
         students: "100-149 Students",
-        price: "₹499", 
-        originalPrice: "₹799",
+        courseId: "college-technology-premium",
+        price: getCollegePricing('college-technology-premium')?.finalPrice || "₹499",
+        originalPrice: getCollegePricing('college-technology-premium')?.originalPrice || "₹799",
         popular: true,
         features: [
           "12-week intensive training",
@@ -210,8 +235,9 @@ const CollegeTrainingLandingPage = () => {
       {
         name: "Elite Batch",
         students: "150+ Students",
-        price: "₹399",
-        originalPrice: "₹699", 
+        courseId: "college-technology-elite",
+        price: getCollegePricing('college-technology-elite')?.finalPrice || "₹399",
+        originalPrice: getCollegePricing('college-technology-elite')?.originalPrice || "₹699",
         features: [
           "12-week comprehensive program",
           "Real-world industry projects",

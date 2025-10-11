@@ -462,18 +462,95 @@ const defaultPricing = {
     category: 'enterprise',
     description: 'Customized training for educational institutions',
     lastUpdated: new Date().toISOString()
-    },
-    'team-skill-development': {
-      id: 'team-skill-development',
-      name: 'Team Skill Development',
-      originalPrice: 0,
-      discountPrice: 0,
-      finalPrice: 0,
-      isActive: true,
-      duration: 'Customizable',
-      category: 'enterprise',
-      description: 'Multi-technology training solutions',
-      lastUpdated: new Date().toISOString()
+  },
+  
+  // College Cybersecurity Training Variants
+  'college-cybersecurity-standard': {
+    id: 'college-cybersecurity-standard',
+    name: 'College Cybersecurity Training - Standard Batch (50-99 Students)',
+    originalPrice: 599,
+    discountPrice: 399,
+    finalPrice: 399,
+    isActive: true,
+    duration: '8 weeks',
+    category: 'college',
+    description: 'Cybersecurity training for 50-99 engineering students',
+    lastUpdated: new Date().toISOString()
+  },
+  'college-cybersecurity-premium': {
+    id: 'college-cybersecurity-premium',
+    name: 'College Cybersecurity Training - Premium Batch (100-149 Students)',
+    originalPrice: 499,
+    discountPrice: 299,
+    finalPrice: 299,
+    isActive: true,
+    duration: '8 weeks',
+    category: 'college',
+    description: 'Cybersecurity training for 100-149 engineering students',
+    lastUpdated: new Date().toISOString()
+  },
+  'college-cybersecurity-elite': {
+    id: 'college-cybersecurity-elite',
+    name: 'College Cybersecurity Training - Elite Batch (150+ Students)',
+    originalPrice: 399,
+    discountPrice: 199,
+    finalPrice: 199,
+    isActive: true,
+    duration: '8 weeks',
+    category: 'college',
+    description: 'Cybersecurity training for 150+ engineering students',
+    lastUpdated: new Date().toISOString()
+  },
+  
+  // College Technology Training Variants
+  'college-technology-standard': {
+    id: 'college-technology-standard',
+    name: 'College Technology Training - Standard Batch (50-99 Students)',
+    originalPrice: 899,
+    discountPrice: 599,
+    finalPrice: 599,
+    isActive: true,
+    duration: '12 weeks',
+    category: 'college',
+    description: 'Multi-technology training for 50-99 engineering students',
+    lastUpdated: new Date().toISOString()
+  },
+  'college-technology-premium': {
+    id: 'college-technology-premium',
+    name: 'College Technology Training - Premium Batch (100-149 Students)',
+    originalPrice: 799,
+    discountPrice: 499,
+    finalPrice: 499,
+    isActive: true,
+    duration: '12 weeks',
+    category: 'college',
+    description: 'Multi-technology training for 100-149 engineering students',
+    lastUpdated: new Date().toISOString()
+  },
+  'college-technology-elite': {
+    id: 'college-technology-elite',
+    name: 'College Technology Training - Elite Batch (150+ Students)',
+    originalPrice: 699,
+    discountPrice: 399,
+    finalPrice: 399,
+    isActive: true,
+    duration: '12 weeks',
+    category: 'college',
+    description: 'Multi-technology training for 150+ engineering students',
+    lastUpdated: new Date().toISOString()
+  },
+  
+  'team-skill-development': {
+    id: 'team-skill-development',
+    name: 'Team Skill Development',
+    originalPrice: 0,
+    discountPrice: 0,
+    finalPrice: 0,
+    isActive: true,
+    duration: 'Customizable',
+    category: 'enterprise',
+    description: 'Multi-technology training solutions',
+    lastUpdated: new Date().toISOString()
   }
 };
 
