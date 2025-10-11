@@ -13,8 +13,10 @@ const CollegeTrainingLandingPage = () => {
   const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   
-  // Load centralized pricing
-  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+  // Load centralized pricing with simpler pattern
+  const coursePricingData = useCoursePricing();
+  const coursePricing = coursePricingData?.pricing || {};
+  const pricingLoading = coursePricingData?.loading || false;
 
   // Helper function to get pricing for college programs
   const getCollegePricing = (courseId) => {
