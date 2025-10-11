@@ -30,6 +30,10 @@ function AdminDashboard({ onNavigate }) {
   const [refresh, setRefresh] = useState(false);
   const [showEditUser, setShowEditUser] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+  const [showUserProfile, setShowUserProfile] = useState(false);
+  const [profileUser, setProfileUser] = useState(null);
+  const [profileUserCourses, setProfileUserCourses] = useState([]);
+  const [profileUserLoading, setProfileUserLoading] = useState(false);
 
   // Course Management state
   const [courses, setCourses] = useState([]);
@@ -387,9 +391,182 @@ function AdminDashboard({ onNavigate }) {
                               {user.displayName ? user.displayName.split(" ").map(n => n[0]).join("") : "U"}
                             </div>
                             <div>
-                              <div className="font-semibold">{user.displayName || "Unknown"}</div>
+                              <button className="font-semibold text-sky-400 hover:underline" onClick={async () => {
+                                setProfileUserLoading(true);
+                                setProfileUser(user);
+                                setShowUserProfile(true);
+                                // Fetch user's courses
+                                try {
+                                  const coursesCol = collection(db, "courses");
+                                  const q = query(coursesCol, where("students", "array-contains", user.id));
+                                  const snap = await getDocs(q);
+                                  setProfileUserCourses(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+                                } catch (err) {
+                                  setProfileUserCourses([]);
+                                }
+                                setProfileUserLoading(false);
+                              }}>{user.displayName || "Unknown"}</button>
                               <div className="text-xs text-gray-400">{user.email}</div>
                             </div>
+            {/* User Profile Modal */}
+            {showUserProfile && profileUser && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-slate-800 rounded-lg p-6 w-full max-w-lg">
+                  <h3 className="text-lg font-semibold text-white mb-4">User Profile</h3>
+                  {profileUserLoading ? (
+                    <div className="text-slate-300">Loading...</div>
+                  ) : (
+                    <>
+                      <div className="mb-4">
+                        <div className="text-xl font-bold text-white">{profileUser.displayName}</div>
+                        <div className="text-slate-400">{profileUser.email}</div>
+                        <div className="text-slate-400 text-sm">Joined: {profileUser.joinDate || '-'}</div>
+                      </div>
+                      <div className="mb-4">
+                        <div className="font-semibold text-slate-300 mb-1">Courses Enrolled</div>
+                        {profileUserCourses.length === 0 ? (
+                          <div className="text-slate-500 text-sm">No courses found.</div>
+                        ) : (
+                          <ul className="list-disc pl-5 text-slate-200 text-sm">
+                            {profileUserCourses.map(c => (
+                              <li key={c.id}>{c.title || c.name || 'Untitled Course'} <span className="text-slate-400">(Fee Paid: ₹{c.feePaid || 0})</span></li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                      <div className="mb-4">
+                        <div className="font-semibold text-slate-300 mb-1">Progress</div>
+                        <div className="text-slate-200">{profileUser.progress || '-'}</div>
+                      </div>
+                      {/* Admin Actions */}
+                      <div className="flex flex-col gap-2 mt-6">
+                        <div className="flex gap-2 flex-wrap">
+                          {/* Deactivate/Activate */}
+                          <button
+                            onClick={async () => {
+                              if (!profileUser) return;
+                              const newStatus = profileUser.status === 'active' ? 'inactive' : 'active';
+                              try {
+                                await updateDoc(doc(db, 'users', profileUser.id), { status: newStatus });
+                                setProfileUser({ ...profileUser, status: newStatus });
+                                setRefresh(r => !r);
+                              } catch (err) {
+                                alert('Failed to update user status: ' + err.message);
+                              }
+                            }}
+                            className={`px-3 py-2 rounded-md text-white ${profileUser.status === 'active' ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
+                          >
+                            {profileUser.status === 'active' ? 'Deactivate User' : 'Activate User'}
+                          </button>
+                          {/* Promote/Demote Role */}
+                          <button
+                            onClick={async () => {
+                              if (!profileUser) return;
+                              const newRole = profileUser.role === 'student' ? 'instructor' : (profileUser.role === 'instructor' ? 'admin' : 'student');
+                              try {
+                                await updateDoc(doc(db, 'users', profileUser.id), { role: newRole });
+                                setProfileUser({ ...profileUser, role: newRole });
+                                setRefresh(r => !r);
+                              } catch (err) {
+                                alert('Failed to update user role: ' + err.message);
+                              }
+                            }}
+                            className="px-3 py-2 rounded-md text-white bg-yellow-600 hover:bg-yellow-700"
+                          >
+                            Promote/Demote Role
+                          </button>
+                          {/* Remove from Course */}
+                          <button
+                            onClick={async () => {
+                              if (!profileUser || profileUserCourses.length === 0) return;
+                              // Remove from first course as example
+                              const course = profileUserCourses[0];
+                              try {
+                                await updateDoc(doc(db, 'courses', course.id), {
+                                  students: (course.students || []).filter(id => id !== profileUser.id)
+                                });
+                                setProfileUserCourses(profileUserCourses.slice(1));
+                                setRefresh(r => !r);
+                              } catch (err) {
+                                alert('Failed to remove from course: ' + err.message);
+                              }
+                            }}
+                            className="px-3 py-2 rounded-md text-white bg-pink-600 hover:bg-pink-700"
+                            disabled={profileUserCourses.length === 0}
+                          >
+                            Remove from Course
+                          </button>
+                          {/* Reset Progress */}
+                          <button
+                            onClick={async () => {
+                              if (!profileUser) return;
+                              try {
+                                await updateDoc(doc(db, 'users', profileUser.id), { progress: 0 });
+                                setProfileUser({ ...profileUser, progress: 0 });
+                                setRefresh(r => !r);
+                              } catch (err) {
+                                alert('Failed to reset progress: ' + err.message);
+                              }
+                            }}
+                            className="px-3 py-2 rounded-md text-white bg-blue-600 hover:bg-blue-700"
+                          >
+                            Reset Progress
+                          </button>
+                          {/* Download User Data */}
+                          <button
+                            onClick={() => alert('Download as CSV/PDF coming soon!')}
+                            className="px-3 py-2 rounded-md text-white bg-slate-500 hover:bg-slate-600"
+                          >
+                            Download User Data
+                          </button>
+                          {/* Impersonate User */}
+                          <button
+                            onClick={() => alert('Impersonate user feature coming soon!')}
+                            className="px-3 py-2 rounded-md text-white bg-gray-700 hover:bg-gray-800"
+                          >
+                            Impersonate User
+                          </button>
+                          {/* Send Email */}
+                          <button
+                            onClick={() => alert('Send email feature coming soon!')}
+                            className="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                          >
+                            Send Email
+                          </button>
+                          {/* View Payment History */}
+                          <button
+                            onClick={() => alert('Payment history feature coming soon!')}
+                            className="px-3 py-2 rounded-md text-white bg-green-700 hover:bg-green-800"
+                          >
+                            View Payment History
+                          </button>
+                          {/* View Activity Log */}
+                          <button
+                            onClick={() => alert('Activity log feature coming soon!')}
+                            className="px-3 py-2 rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                          >
+                            View Activity Log
+                          </button>
+                          {/* Add Note */}
+                          <button
+                            onClick={() => alert('Add note feature coming soon!')}
+                            className="px-3 py-2 rounded-md text-white bg-slate-700 hover:bg-slate-800"
+                          >
+                            Add Note
+                          </button>
+                        </div>
+                        <button
+                          onClick={() => setShowUserProfile(false)}
+                          className="mt-4 px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-md"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
                           </td>
                           <td className="px-4 py-2">
                             <span className={`px-2 py-1 rounded text-xs font-semibold ${roleColors[(user.role || 'student').toLowerCase()] || "bg-gray-200 text-gray-700"}`}>
