@@ -541,9 +541,27 @@ const ProgramsShowcase = ({ onNavigate }) => {
 
     const handleJobSelection = (job) => {
         setIsTransitioning(true);
+        
+        // Map job viewId to corresponding course landing page keys
+        const jobToPageKeyMap = {
+            'cybersecurity': 'defensiveBootcampLanding',
+            'cloud': 'technologyTraining',
+            'development': 'technologyTraining',
+            'devops': 'technologyTraining', 
+            'hacking': 'offensiveBootcampLanding',
+            'data': 'technologyTraining'
+        };
+        
+        const targetPageKey = jobToPageKeyMap[job.viewId];
+        
         setTimeout(() => {
-            // For now, show the complete overview but could be enhanced to show job-specific courses
-            setSelectedView('complete');
+            if (targetPageKey && onNavigate) {
+                // Navigate to specific course landing page
+                onNavigate(targetPageKey);
+            } else {
+                // Fallback to complete courses view
+                setSelectedView('complete');
+            }
             setIsTransitioning(false);
         }, 200);
     };
