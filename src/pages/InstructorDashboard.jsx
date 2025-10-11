@@ -26,7 +26,7 @@ import {
   Brain,
   Activity
 } from 'lucide-react';
-import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import app from '@/config/firebase';
 
 const db = getFirestore(app);
@@ -176,7 +176,26 @@ export default function InstructorDashboard({ onNavigate }) {
   };
 
   const markNotesAsRead = async () => {
-    setShowNotesPopup(false);
+    // Mark all unread notes as read when popup is closed
+    try {
+      const unreadNotes = adminNotes.filter(note => !note.readByUser);
+      
+      // Update each unread note to mark as read
+      for (const note of unreadNotes) {
+        const noteRef = doc(db, 'users', user.uid, 'notes', note.id);
+        await updateDoc(noteRef, { readByUser: true });
+      }
+      
+      // Update local state
+      setAdminNotes(prevNotes => 
+        prevNotes.map(note => ({ ...note, readByUser: true }))
+      );
+      
+      setShowNotesPopup(false);
+    } catch (err) {
+      console.error('Failed to mark notes as read:', err);
+      setShowNotesPopup(false); // Close popup anyway
+    }
   };
 
   const tabs = [
