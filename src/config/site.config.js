@@ -5,7 +5,7 @@ const config = {
   supportEmail: 'santosh.m@agnidhra-technologies.com',
   supportPhone: '9160813700',
   // UPI settings (update these when ready)
-  upiId: 'yourupiid@bank',
+  upiId: 'paytmqr28100505010117p4h7sm9whv@paytm',
   upiPayeeName: 'Santosh Kumar Modekurty'
 };
 

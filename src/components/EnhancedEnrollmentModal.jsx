@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import siteConfig from '@/config/site.config.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader, CreditCard, Mail, Phone, User } from 'lucide-react';
+import UPIQRCode from './UPIQRCode.jsx';
 import { enrollStudentInCourse } from '@/services/studentManagementService.js';
 import { sendWelcomeEmail, sendPaymentConfirmationEmail } from '@/services/netlifyFormsService.js';
 
@@ -503,15 +504,17 @@ const EnhancedEnrollmentModal = ({
                     <div className="text-blue-300 text-sm">
                       <p>Transfer ₹{course.price} to:</p>
                       <p className="font-mono bg-slate-700 p-2 rounded mt-2">UPI ID: {siteConfig.upiId}</p>
-                      <div className="mt-3">
+                      <div className="mt-3 flex flex-col sm:flex-row gap-4 items-center">
                         <a
                           href={`upi://pay?pa=${encodeURIComponent(siteConfig.upiId)}&pn=${encodeURIComponent(siteConfig.upiPayeeName)}&am=${encodeURIComponent(course.price)}&cu=INR&tn=${encodeURIComponent(course.name + ' Enrollment')}`}
-                          className="inline-block bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded"
+                          className="inline-block bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded mb-2"
                         >
                           Pay via UPI App
                         </a>
+                        <UPIQRCode upiUrl={`upi://pay?pa=${encodeURIComponent(siteConfig.upiId)}&pn=${encodeURIComponent(siteConfig.upiPayeeName)}&am=${encodeURIComponent(course.price)}&cu=INR&tn=${encodeURIComponent(course.name + ' Enrollment')}`} />
                       </div>
                       <p className="mt-2">After payment, please enter the transaction reference/UTR below.</p>
+                      <p className="mt-2 text-xs text-yellow-300">Please verify the payee name is <span className="font-semibold">{siteConfig.upiPayeeName}</span> in your UPI app before confirming payment.</p>
                     </div>
                   )}
                   {formData.paymentMethod === 'bank_transfer' && (
