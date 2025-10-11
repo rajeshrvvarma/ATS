@@ -248,15 +248,15 @@ function AdminDashboard() {
         {tab === "user" && (
           <>
             <h2 className="text-2xl font-bold mb-4">User Management</h2>
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-row gap-2 mb-4 items-center">
               <input
-                className="border rounded px-3 py-2"
+                className="border rounded px-3 py-2 w-64"
                 placeholder="Search users..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
               <select
-                className="border rounded px-3 py-2"
+                className="border rounded px-3 py-2 w-40 bg-slate-900 text-white"
                 value={statusFilter}
                 onChange={e => setStatusFilter(e.target.value)}
               >

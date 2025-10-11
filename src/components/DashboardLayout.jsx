@@ -50,13 +50,13 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
       <header className="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            {/* Logo and Title */}
+            {/* Logo and Title for Admin */}
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-sky-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">AT</span>
+                <div className="w-9 h-9 bg-gradient-to-br from-sky-600 to-blue-800 rounded-lg flex items-center justify-center border-2 border-sky-400">
+                  <Shield className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-white font-semibold">AT-CS</span>
+                <span className="text-white font-bold text-lg tracking-wide">Admin Dashboard</span>
               </div>
               {title && (
                 <>
@@ -68,29 +68,19 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
 
             {/* User Info and Logout */}
             <div className="flex items-center space-x-4">
-              {/* User Profile */}
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <img
-                    src={user?.photoURL || user?.profile?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || user?.email || 'User')}&background=0ea5e9&color=fff`}
-                    alt="Profile"
-                    className="w-8 h-8 rounded-full border border-slate-600"
-                  />
-                  <div className="hidden sm:block">
-                    <div className="text-sm font-medium text-white">
-                      {user?.name || user?.displayName || user?.email?.split('@')[0] || 'User'}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border ${getRoleBadgeColor(user?.role)}`}>
-                        {getRoleIcon(user?.role)}
-                        {user?.role?.charAt(0).toUpperCase() + user?.role?.slice(1) || 'Student'}
-                      </span>
-                    </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-9 h-9 rounded-full bg-sky-700 flex items-center justify-center text-white font-bold border-2 border-sky-400">
+                  {user?.name ? user.name.split(' ').map(n => n[0]).join('') : (user?.displayName ? user.displayName.split(' ').map(n => n[0]).join('') : (user?.email ? user.email[0].toUpperCase() : 'A'))}
+                </div>
+                <div className="hidden sm:block">
+                  <div className="text-sm font-medium text-white">
+                    {user?.name || user?.displayName || user?.email?.split('@')[0] || 'Admin'}
                   </div>
+                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border border-red-500/30 bg-red-500/20 text-red-400">
+                    <Shield className="w-4 h-4" /> Admin
+                  </span>
                 </div>
               </div>
-
-              {/* Logout Button */}
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white transition-colors border border-slate-600 hover:border-slate-500"
