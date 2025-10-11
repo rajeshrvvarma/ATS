@@ -236,14 +236,8 @@ export default function EnrollUsPage({ onNavigate }) {
             const batchInfo = selectedBatch || (formData.batchId ? getBatchById(formData.batchId) : null);
             const description = batchInfo ? `${selectedCourse.name} - ${batchInfo.batchName}` : `Payment for ${selectedCourse.name}`;
 
-            const { redirectUrl, merchantTransactionId } = await initiatePayment({
-                amount: selectedCourse.razorpayPrice,
-                customer: { name: formData.name || 'Demo User', email: formData.email || 'demo@example.com', phone: formData.phone || '9999999999' },
-                notes: { description }
-            });
-            setLastOrderId(merchantTransactionId);
-            if (!redirectUrl) throw new Error('Failed to initiate PhonePe payment');
-            window.location.href = redirectUrl;
+            // UPI-first mode: redirect to payment failed page to inform user about UPI option
+            throw new Error('Please use the UPI payment option or contact support for enrollment assistance');
         } catch (e) {
             setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
             const selectedCourse = courses.find(course => course.id === formData.course);

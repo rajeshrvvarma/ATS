@@ -103,7 +103,10 @@ export default function PaymentFailedPage({ onNavigate }) {
                             </h3>
                             
                             <p className="text-slate-300 mb-6">
-                                Most payment issues are temporary. You can retry your payment with the same or different payment method.
+                                {errorDetails?.message?.includes('UPI') || errorDetails?.message?.includes('support') ? 
+                                    'We now accept UPI payments for easier enrollment. Please use the UPI option on our homepage.' :
+                                    'Most payment issues are temporary. You can retry your payment with the same or different payment method.'
+                                }
                             </p>
 
                             <div className="mb-6">
@@ -119,11 +122,12 @@ export default function PaymentFailedPage({ onNavigate }) {
                             </div>
 
                             <button
-                                onClick={handleRetryPayment}
+                                onClick={() => onNavigate('home')}
                                 className="w-full bg-sky-600 text-white font-semibold py-3 rounded-lg hover:bg-sky-700 transition-colors flex items-center justify-center"
                             >
                                 <RefreshCw size={20} className="mr-2" />
-                                Retry Payment
+                                {errorDetails?.message?.includes('UPI') || errorDetails?.message?.includes('support') ? 
+                                    'Go to Homepage (UPI Enrollment)' : 'Retry Payment'}
                             </button>
                         </div>
 
