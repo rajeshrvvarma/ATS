@@ -587,11 +587,9 @@ export default function InstructorDashboard({ onNavigate }) {
   );
 
   const renderSettings = () => (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white">Instructor Settings</h2>
-      
-      {/* Profile editing is now handled via the Profile page, accessible from the user menu. */}
-
+      <div className="space-y-6">
+        <h2 className="text-2xl font-bold text-white">Instructor Settings</h2>
+        {/* Profile editing is now handled via the Profile page, accessible from the user menu. */}
         {/* Notification Settings */}
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <h3 className="text-lg font-semibold text-white mb-4">Notification Preferences</h3>
@@ -623,8 +621,7 @@ export default function InstructorDashboard({ onNavigate }) {
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
 
   if (loading) {
     return (

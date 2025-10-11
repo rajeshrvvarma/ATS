@@ -455,29 +455,27 @@ export default function StudentDashboard({ onNavigate }) {
       <h2 className="text-2xl font-bold text-white">Account Settings</h2>
       
       {/* Profile editing is now handled via the Profile page, accessible from the user menu. */}
-
-        {/* Learning Preferences */}
-        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h3 className="text-lg font-semibold text-white mb-4">Learning Preferences</h3>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-slate-300">Email Notifications</span>
-              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
-                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
-              </button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-300">Dark Mode</span>
-              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
-                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
-              </button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-300">Progress Reminders</span>
-              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-600">
-                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-1"></span>
-              </button>
-            </div>
+      {/* Learning Preferences */}
+      <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-lg font-semibold text-white mb-4">Learning Preferences</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300">Email Notifications</span>
+            <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+              <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300">Dark Mode</span>
+            <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+              <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300">Progress Reminders</span>
+            <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-600">
+              <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-1"></span>
+            </button>
           </div>
         </div>
       </div>
