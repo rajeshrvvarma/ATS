@@ -495,13 +495,13 @@ export async function getAllCoursePricing() {
       }
     });
 
-    // Merge with defaults, prioritizing Firestore values
-    const mergedPricing = { ...defaultPricing };
-    Object.keys(pricing).forEach(key => {
-      mergedPricing[key] = pricing[key];
-    });
+    // Only return what's in Firestore to avoid admin duplicates
+    // If no pricing exists, use defaults
+    if (Object.keys(pricing).length === 0) {
+      return defaultPricing;
+    }
     
-    return mergedPricing;
+    return pricing;
   } catch (error) {
     console.error('Failed to fetch course pricing:', error);
     return defaultPricing;
