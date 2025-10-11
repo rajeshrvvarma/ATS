@@ -174,7 +174,12 @@ export default function Header({ onNavigate, currentPage }) {
 
                     {/* Center - Main Navigation */}
                     <nav className="flex items-center space-x-8">
-                        <MegaMenuPrograms onNavigate={onNavigate} scrollToSection={scrollToSection} />
+                        <MegaMenuPrograms 
+                            onNavigate={onNavigate} 
+                            scrollToSection={scrollToSection}
+                            coursePricing={coursePricing}
+                            pricingLoading={pricingLoading}
+                        />
                         <button
                             onClick={() => scrollToSection('about')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
@@ -327,7 +332,7 @@ export default function Header({ onNavigate, currentPage }) {
 }
 
 // Mega Menu Component for Programs
-const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
+const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingLoading }) => {
     const [isProgramsOpen, setIsProgramsOpen] = useState(false);
     const [activeCategory, setActiveCategory] = useState('foundation');
 
