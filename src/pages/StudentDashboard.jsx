@@ -23,7 +23,7 @@ import {
   Video,
   Book
 } from 'lucide-react';
-import { getFirestore, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp } from 'firebase/firestore';
 import app from '@/config/firebase';
 
 const db = getFirestore(app);
@@ -50,10 +50,15 @@ export default function StudentDashboard({ onNavigate }) {
   const [recentActivity, setRecentActivity] = useState([]);
   const [certificates, setCertificates] = useState([]);
   const [upcomingDeadlines, setUpcomingDeadlines] = useState([]);
+  const [adminNotes, setAdminNotes] = useState([]);
+  const [showNotesPopup, setShowNotesPopup] = useState(false);
+  const [replyingToNote, setReplyingToNote] = useState(null);
+  const [replyText, setReplyText] = useState('');
 
   useEffect(() => {
     if (user) {
       loadStudentData();
+      loadAdminNotes();
     }
   }, [user]);
 
@@ -135,6 +140,54 @@ export default function StudentDashboard({ onNavigate }) {
     setLoading(false);
   };
 
+  const loadAdminNotes = async () => {
+    if (!user) return;
+    
+    try {
+      // Fetch admin notes subcollection
+      const notesCol = collection(db, 'users', user.uid, 'notes');
+      const notesQuery = query(notesCol, orderBy('createdAt', 'desc'));
+      const notesSnap = await getDocs(notesQuery);
+      const notesList = notesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setAdminNotes(notesList);
+      
+      // Show popup if there are unread notes
+      const unreadNotes = notesList.filter(note => !note.readByUser);
+      if (unreadNotes.length > 0) {
+        setShowNotesPopup(true);
+      }
+    } catch (err) {
+      console.error('Failed to load admin notes:', err);
+    }
+  };
+
+  const handleReplyToNote = async (noteId) => {
+    if (!replyText.trim()) return;
+    
+    try {
+      const repliesCol = collection(db, 'users', user.uid, 'notes', noteId, 'replies');
+      await addDoc(repliesCol, {
+        reply: replyText,
+        userId: user.uid,
+        userName: user.displayName || user.email,
+        createdAt: serverTimestamp()
+      });
+      
+      setReplyText('');
+      setReplyingToNote(null);
+      loadAdminNotes(); // Refresh notes
+      alert('Reply sent to admin!');
+    } catch (err) {
+      alert('Failed to send reply: ' + err.message);
+    }
+  };
+
+  const markNotesAsRead = async () => {
+    // Mark all notes as read when popup is closed
+    setShowNotesPopup(false);
+    // In a real implementation, you'd update the readByUser field
+  };
+
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     { id: 'courses', label: 'My Courses', icon: BookOpen },
@@ -187,6 +240,62 @@ export default function StudentDashboard({ onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* Admin Notes Section */}
+      {adminNotes.length > 0 && (
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <FileText className="w-5 h-5 text-blue-400" />
+            Admin Notes
+          </h3>
+          <div className="space-y-4 max-h-60 overflow-y-auto">
+            {adminNotes.map(note => (
+              <div key={note.id} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                <div className="text-slate-200 mb-2">{note.note}</div>
+                {note.createdAt && (
+                  <div className="text-xs text-slate-400 mb-2">
+                    {note.createdAt.toDate ? note.createdAt.toDate().toLocaleString() : ''}
+                  </div>
+                )}
+                
+                {/* Reply Section */}
+                {replyingToNote === note.id ? (
+                  <div className="mt-3">
+                    <textarea
+                      className="w-full bg-slate-800 border border-slate-600 rounded px-3 py-2 text-white text-sm"
+                      placeholder="Type your reply..."
+                      value={replyText}
+                      onChange={(e) => setReplyText(e.target.value)}
+                      rows={3}
+                    />
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={() => handleReplyToNote(note.id)}
+                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm"
+                      >
+                        Send Reply
+                      </button>
+                      <button
+                        onClick={() => setReplyingToNote(null)}
+                        className="px-3 py-1 bg-slate-600 hover:bg-slate-700 text-white rounded text-sm"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setReplyingToNote(note.id)}
+                    className="text-blue-400 hover:text-blue-300 text-sm"
+                  >
+                    Reply to Admin
+                  </button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Recent Activity & Upcoming Deadlines */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -526,6 +635,38 @@ export default function StudentDashboard({ onNavigate }) {
       {activeTab === 'certificates' && renderCertificates()}
       {activeTab === 'progress' && renderProgress()}
       {activeTab === 'settings' && renderSettings()}
+
+      {/* Admin Notes Popup */}
+      {showNotesPopup && adminNotes.length > 0 && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-slate-800 rounded-lg p-6 w-full max-w-lg mx-4 max-h-96 overflow-y-auto">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-400" />
+              New Admin Notes
+            </h3>
+            <div className="space-y-4">
+              {adminNotes.filter(note => !note.readByUser).map(note => (
+                <div key={note.id} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                  <div className="text-slate-200 mb-2">{note.note}</div>
+                  {note.createdAt && (
+                    <div className="text-xs text-slate-400">
+                      {note.createdAt.toDate ? note.createdAt.toDate().toLocaleString() : ''}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={markNotesAsRead}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

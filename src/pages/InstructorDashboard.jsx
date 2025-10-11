@@ -26,7 +26,7 @@ import {
   Brain,
   Activity
 } from 'lucide-react';
-import { getFirestore, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp } from 'firebase/firestore';
 import app from '@/config/firebase';
 
 const db = getFirestore(app);
@@ -38,6 +38,8 @@ export default function InstructorDashboard({ onNavigate }) {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
+  const [adminNotes, setAdminNotes] = useState([]);
+  const [showNotesPopup, setShowNotesPopup] = useState(false);
   const [error, setError] = useState('');
 
   // Real data states
@@ -62,6 +64,7 @@ export default function InstructorDashboard({ onNavigate }) {
   useEffect(() => {
     if (user) {
       loadInstructorData();
+      loadAdminNotes();
     }
   }, [user]);
 
@@ -149,6 +152,31 @@ export default function InstructorDashboard({ onNavigate }) {
     }
     
     setLoading(false);
+  };
+
+  const loadAdminNotes = async () => {
+    if (!user) return;
+    
+    try {
+      // Fetch admin notes subcollection for instructor
+      const notesCol = collection(db, 'users', user.uid, 'notes');
+      const notesQuery = query(notesCol, orderBy('createdAt', 'desc'));
+      const notesSnap = await getDocs(notesQuery);
+      const notesList = notesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setAdminNotes(notesList);
+      
+      // Show popup if there are unread notes
+      const unreadNotes = notesList.filter(note => !note.readByUser);
+      if (unreadNotes.length > 0) {
+        setShowNotesPopup(true);
+      }
+    } catch (err) {
+      console.error('Failed to load admin notes:', err);
+    }
+  };
+
+  const markNotesAsRead = async () => {
+    setShowNotesPopup(false);
   };
 
   const tabs = [
@@ -291,6 +319,28 @@ export default function InstructorDashboard({ onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* Admin Notes Section */}
+      {adminNotes.length > 0 && (
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+            <FileText className="w-5 h-5 text-blue-400" />
+            Admin Notes
+          </h3>
+          <div className="space-y-4 max-h-60 overflow-y-auto">
+            {adminNotes.map(note => (
+              <div key={note.id} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                <div className="text-slate-200 mb-2">{note.note}</div>
+                {note.createdAt && (
+                  <div className="text-xs text-slate-400">
+                    {note.createdAt.toDate ? note.createdAt.toDate().toLocaleString() : ''}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -683,6 +733,38 @@ export default function InstructorDashboard({ onNavigate }) {
       {activeTab === 'analytics' && renderAnalytics()}
       {activeTab === 'earnings' && renderEarnings()}
       {activeTab === 'settings' && renderSettings()}
+
+      {/* Admin Notes Popup */}
+      {showNotesPopup && adminNotes.length > 0 && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-slate-800 rounded-lg p-6 w-full max-w-lg mx-4 max-h-96 overflow-y-auto">
+            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-400" />
+              New Admin Notes
+            </h3>
+            <div className="space-y-4">
+              {adminNotes.filter(note => !note.readByUser).map(note => (
+                <div key={note.id} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
+                  <div className="text-slate-200 mb-2">{note.note}</div>
+                  {note.createdAt && (
+                    <div className="text-xs text-slate-400">
+                      {note.createdAt.toDate ? note.createdAt.toDate().toLocaleString() : ''}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2 mt-6">
+              <button
+                onClick={markNotesAsRead}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+              >
+                Got it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }
