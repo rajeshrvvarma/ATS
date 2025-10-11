@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
-import EnrollmentModal from '../components/EnrollmentModal';
+import EnhancedEnrollmentModal from '../components/EnhancedEnrollmentModal';
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';
 import AnimatedBackground from '../components/AnimatedBackground';
 import { useCoursePricing, formatPrice } from '../hooks/useCoursePricing';
 
 const CollegeTrainingLandingPage = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(2847);
   const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   
   // Load centralized pricing
   const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
@@ -313,7 +313,11 @@ const CollegeTrainingLandingPage = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <motion.button 
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setEnrollmentModal({ 
+                  isOpen: true, 
+                  courseType: 'college-training', 
+                  courseName: `${currentProgram.title} - Bulk Training Program` 
+                })}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300"
@@ -448,7 +452,11 @@ const CollegeTrainingLandingPage = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsModalOpen(true)}
+                  onClick={() => setEnrollmentModal({ 
+                    isOpen: true, 
+                    courseType: tier.courseId, 
+                    courseName: `${currentProgram.title} - ${tier.name}` 
+                  })}
                   className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                     tier.popular 
                       ? 'bg-blue-600 hover:bg-blue-700 text-white' 
@@ -554,7 +562,11 @@ const CollegeTrainingLandingPage = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => setEnrollmentModal({ 
+                  isOpen: true, 
+                  courseType: 'college-training', 
+                  courseName: `${currentProgram.title} - College Training Program` 
+                })}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
               >
                 Start Your Program Today
@@ -576,10 +588,12 @@ const CollegeTrainingLandingPage = () => {
         </section>
       </AnimatedBackground>
 
-      <EnrollmentModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        preselectedCourse="collegeTraining"
+      <EnhancedEnrollmentModal 
+        isOpen={enrollmentModal.isOpen}
+        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+        courseType={enrollmentModal.courseType}
+        courseName={enrollmentModal.courseName}
+        coursePrice={pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
