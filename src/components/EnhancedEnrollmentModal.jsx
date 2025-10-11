@@ -73,6 +73,34 @@ const EnhancedEnrollmentModal = ({
         originalPrice: 9999,
         duration: '2 months',
         features: getDefaultFeatures('2-month-premium')
+      },
+      'defensive-bootcamp': {
+        name: '7-Day Defensive Security Bootcamp',
+        price: 499,
+        originalPrice: 2999,
+        duration: '7 days',
+        features: getDefaultFeatures('defensive-bootcamp')
+      },
+      'offensive-bootcamp': {
+        name: '7-Day Ethical Hacking Bootcamp',
+        price: 599,
+        originalPrice: 3999,
+        duration: '7 days',
+        features: getDefaultFeatures('offensive-bootcamp')
+      },
+      'defensive-mastery': {
+        name: '2-Month Defensive Security Mastery',
+        price: 5999,
+        originalPrice: 15999,
+        duration: '2 months',
+        features: getDefaultFeatures('defensive-mastery')
+      },
+      'offensive-mastery': {
+        name: '2-Month Offensive Security Mastery',
+        price: 7999,
+        originalPrice: 19999,
+        duration: '2 months',
+        features: getDefaultFeatures('offensive-mastery')
       }
     };
     
@@ -96,6 +124,38 @@ const EnhancedEnrollmentModal = ({
         'Industry-recognized certification',
         'Career guidance and placement',
         'Alumni network access'
+      ],
+      'defensive-bootcamp': [
+        'Live interactive sessions',
+        'Hands-on SOC labs',
+        'Mentorship from SOC Analysts',
+        'Certificate of completion',
+        'Lifetime access to materials',
+        'Job assistance'
+      ],
+      'offensive-bootcamp': [
+        'Live sessions with pentesters',
+        'Hands-on hacking labs',
+        'Exploit development basics',
+        'Certificate of completion',
+        'Lifetime access',
+        'Job assistance'
+      ],
+      'defensive-mastery': [
+        'Comprehensive SOC curriculum',
+        '1-on-1 mentoring',
+        'Real-world projects',
+        'Industry-recognized certification',
+        'Career guidance',
+        'Alumni network'
+      ],
+      'offensive-mastery': [
+        'Advanced offensive techniques',
+        '1-on-1 red team mentoring',
+        'Real-world red team projects',
+        'Ethical hacker certification',
+        'Career guidance & placement',
+        'Exclusive hacker community'
       ]
     };
     return features[type] || features['7-day-bootcamp'];

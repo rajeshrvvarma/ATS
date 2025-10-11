@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp, Sword, Zap, Code2 } from 'lucide-react';
-import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const OffensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(4); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+
+  // Centralized pricing for offensive-mastery
+  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -217,9 +221,9 @@ const OffensiveMasteryLandingPage = () => {
             >
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                  <div className="text-6xl font-bold text-red-300 mb-2">₹7,999</div>
-                  <div className="text-lg text-gray-300 mb-1 line-through">₹12,999</div>
-                  <div className="text-orange-400 font-semibold">Save ₹5,000 with full payment</div>
+                  <div className="text-6xl font-bold text-red-300 mb-2">{pricingLoading ? '₹—' : formatPrice(coursePricing?.['offensive-mastery']?.finalPrice)}</div>
+                  <div className="text-lg text-gray-300 mb-1 line-through">{pricingLoading ? '' : formatPrice(coursePricing?.['offensive-mastery']?.originalPrice)}</div>
+                  <div className="text-orange-400 font-semibold">{pricingLoading ? '' : `Save ${formatPrice((coursePricing?.['offensive-mastery']?.originalPrice || 0) - (coursePricing?.['offensive-mastery']?.finalPrice || 0))} with full payment`}</div>
                 </div>
                 
                 <div>
@@ -460,18 +464,18 @@ const OffensiveMasteryLandingPage = () => {
             className="bg-white text-red-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition-all duration-300"
             onClick={() => setIsEnrollmentModalOpen(true)}
           >
-            Reserve Elite Seat - ₹7,999
+            Reserve Elite Seat - {pricingLoading ? '₹—' : formatPrice(coursePricing?.['offensive-mastery']?.finalPrice)}
           </button>
         </div>
       </AnimatedBackground>
 
-      {/* Enrollment Modal */}
-      <EnrollmentModal
+      {/* Enhanced Enrollment Modal - centralized pricing */}
+      <EnhancedEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="premium"
-        courseTitle="2-Month Offensive Security Mastery"
-        price="₹7,999"
+        courseType="offensive-mastery"
+        courseName="2-Month Offensive Security Mastery"
+        coursePrice={pricingLoading ? undefined : (coursePricing?.['offensive-mastery']?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
