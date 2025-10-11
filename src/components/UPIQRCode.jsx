@@ -1,6 +1,6 @@
 // Simple React QR code component using 'qrcode.react' (to be installed)
 import React from 'react';
-import QRCode from 'qrcode.react';
+import { QRCode } from 'qrcode.react';
 
 export default function UPIQRCode({ upiUrl, size = 160 }) {
   if (!upiUrl) return null;
