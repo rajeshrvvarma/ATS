@@ -486,12 +486,10 @@ export async function getAllCoursePricing() {
       pricing[doc.id] = { id: doc.id, ...doc.data() };
     });
 
-    // If no pricing exists, use defaults
-    if (Object.keys(pricing).length === 0) {
-      return defaultPricing;
-    }
-    
-    return pricing;
+    // Merge defaults with Firestore entries so missing items still appear
+    // Firestore values override defaults
+    const mergedPricing = { ...defaultPricing, ...pricing };
+    return mergedPricing;
   } catch (error) {
     console.error('Failed to fetch course pricing:', error);
     return defaultPricing;
