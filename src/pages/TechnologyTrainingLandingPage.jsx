@@ -357,7 +357,8 @@ const TechnologyTrainingLandingPage = () => {
   };
 
   return (
-    <AnimatedBackground variant="specialized" className="min-h-screen text-white">
+    <div className="min-h-screen text-white">
+      <AnimatedBackground variant="specialized">
       {/* Hero Section */}
       <section className="relative py-20">
         <div className="container mx-auto px-6">
@@ -537,6 +538,7 @@ const TechnologyTrainingLandingPage = () => {
           </motion.div>
         </div>
       </section>
+      </AnimatedBackground>
 
       {/* Call to Action */}
       <AnimatedBackground variant="contact" className="py-16">
@@ -585,7 +587,7 @@ const TechnologyTrainingLandingPage = () => {
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
-    </AnimatedBackground>
+    </div>
   );
 };
 
