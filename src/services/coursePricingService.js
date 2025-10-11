@@ -1,5 +1,5 @@
 // Course Pricing Service - Centralized price management
-import { collection, doc, getDocs, setDoc, getDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
 
 const COLLECTION = 'course_pricing';
@@ -482,16 +482,26 @@ export async function getAllCoursePricing() {
     const snapshot = await getDocs(collection(db, COLLECTION));
     const pricing = {};
     
+    // Filter out old duplicate course IDs to prevent duplicates in admin
+    const legacyIds = [
+      '7-Day Cybersecurity Bootcamp',
+      '2-Month Premium Cybersecurity Program'
+    ];
+    
     snapshot.docs.forEach(doc => {
-      pricing[doc.id] = { id: doc.id, ...doc.data() };
+      // Skip legacy duplicate IDs
+      if (!legacyIds.includes(doc.id)) {
+        pricing[doc.id] = { id: doc.id, ...doc.data() };
+      }
     });
 
-    // Only return Firestore docs to avoid duplicates
-    // If no pricing exists, use defaults
-    if (Object.keys(pricing).length === 0) {
-      return defaultPricing;
-    }
-    return pricing;
+    // Merge with defaults, prioritizing Firestore values
+    const mergedPricing = { ...defaultPricing };
+    Object.keys(pricing).forEach(key => {
+      mergedPricing[key] = pricing[key];
+    });
+    
+    return mergedPricing;
   } catch (error) {
     console.error('Failed to fetch course pricing:', error);
     return defaultPricing;
@@ -526,6 +536,25 @@ export async function updateCoursePricing(courseId, pricingData) {
     return { success: true };
   } catch (error) {
     console.error('Failed to update course pricing:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function cleanupLegacyPricing() {
+  try {
+    const legacyIds = [
+      '7-Day Cybersecurity Bootcamp',
+      '2-Month Premium Cybersecurity Program'
+    ];
+    
+    for (const courseId of legacyIds) {
+      const docRef = doc(db, COLLECTION, courseId);
+      await deleteDoc(docRef);
+    }
+    
+    return { success: true, message: 'Legacy pricing documents cleaned up' };
+  } catch (error) {
+    console.error('Failed to cleanup legacy pricing:', error);
     return { success: false, error: error.message };
   }
 }

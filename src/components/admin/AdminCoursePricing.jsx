@@ -1,7 +1,7 @@
 // Admin Course Pricing Management Component
 import React, { useState, useEffect } from 'react';
-import { DollarSign, Edit2, Save, X, RefreshCw } from 'lucide-react';
-import { getAllCoursePricing, updateCoursePricing, initializeDefaultPricing } from '@/services/coursePricingService.js';
+import { DollarSign, Edit2, Save, X, RefreshCw, Trash2 } from 'lucide-react';
+import { getAllCoursePricing, updateCoursePricing, initializeDefaultPricing, cleanupLegacyPricing } from '@/services/coursePricingService.js';
 
 export default function AdminCoursePricing() {
   const [pricing, setPricing] = useState({});
@@ -48,6 +48,20 @@ export default function AdminCoursePricing() {
     setEditData({});
   };
 
+  const handleCleanup = async () => {
+    setSaving(true);
+    const result = await cleanupLegacyPricing();
+    if (result.success) {
+      await loadPricing();
+      setMessage('Legacy duplicate courses cleaned up successfully!');
+      setTimeout(() => setMessage(''), 3000);
+    } else {
+      setMessage(`Error: ${result.error}`);
+      setTimeout(() => setMessage(''), 5000);
+    }
+    setSaving(false);
+  };
+
   const handleInitialize = async () => {
     setSaving(true);
     const result = await initializeDefaultPricing();
@@ -78,13 +92,23 @@ export default function AdminCoursePricing() {
           <DollarSign className="w-6 h-6 text-sky-500 mr-3" />
           <h2 className="text-2xl font-bold text-white">Course Pricing Management</h2>
         </div>
-        <button
-          onClick={handleInitialize}
-          disabled={saving}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
-        >
-          Initialize Defaults
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleCleanup}
+            disabled={saving}
+            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 disabled:opacity-50 flex items-center gap-2"
+          >
+            <Trash2 className="w-4 h-4" />
+            Cleanup Duplicates
+          </button>
+          <button
+            onClick={handleInitialize}
+            disabled={saving}
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+          >
+            Initialize Defaults
+          </button>
+        </div>
       </div>
 
       {message && (
