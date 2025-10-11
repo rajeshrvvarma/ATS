@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye } from 'lucide-react';
-import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const SpecializedCoursesLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, course: '', price: '' });
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   const categories = [
@@ -267,12 +269,23 @@ const SpecializedCoursesLandingPage = () => {
     ? specializedCourses 
     : specializedCourses.filter(course => course.category === selectedCategory);
 
+  const titleToIdMap = {
+    'AWS Security Specialist': 'aws-security-specialist',
+    'Azure Security Engineer': 'azure-security-engineer',
+    'Multi-Cloud Security Architect': 'multi-cloud-security-architect',
+    'Digital Forensics Investigator': 'digital-forensics-investigator',
+    'Advanced Malware Forensics': 'advanced-malware-forensics',
+    'Malware Analysis Fundamentals': 'malware-analysis-fundamentals',
+    'Advanced Reverse Engineering': 'advanced-reverse-engineering',
+    'ISO 27001 Lead Implementer': 'iso-27001-lead-implementer',
+    'GRC Analyst Professional': 'grc-analyst-professional',
+    'Incident Response Specialist': 'incident-response-specialist',
+    'Advanced Threat Hunting': 'advanced-threat-hunting'
+  };
+
   const handleEnrollment = (course) => {
-    setEnrollmentModal({
-      isOpen: true,
-      course: course.title,
-      price: course.price
-    });
+    const courseType = titleToIdMap[course.title];
+    setEnrollmentModal({ isOpen: true, courseType, courseName: course.title });
   };
 
   return (
@@ -530,12 +543,12 @@ const SpecializedCoursesLandingPage = () => {
       </section>
 
       {/* Enrollment Modal */}
-      <EnrollmentModal
+      <EnhancedEnrollmentModal
         isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, course: '', price: '' })}
-        courseType="specialized"
-        courseTitle={enrollmentModal.course}
-        price={enrollmentModal.price}
+        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+        courseType={enrollmentModal.courseType}
+        courseName={enrollmentModal.courseName}
+        coursePrice={pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />

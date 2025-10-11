@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers } from 'lucide-react';
-import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const TechnologyTrainingLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, course: '', price: '' });
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   const categories = [
@@ -322,8 +324,25 @@ const TechnologyTrainingLandingPage = () => {
     ? technologyPrograms 
     : technologyPrograms.filter(program => program.category === selectedCategory);
 
-  const handleEnrollment = (course, price) => {
-    setEnrollmentModal({ isOpen: true, course, price });
+  const titleToIdMap = {
+    'MERN Stack Developer': 'mern-stack-developer',
+    'Full Stack Python Developer': 'full-stack-python-developer',
+    'Java Full Stack Developer': 'java-full-stack-developer',
+    'AWS Cloud Architect': 'aws-cloud-architect',
+    'DevOps Engineer Bootcamp': 'devops-engineer-bootcamp',
+    'Azure Cloud Solutions': 'azure-cloud-solutions',
+    'Data Science with Python': 'data-science-with-python',
+    'AI & Machine Learning Engineer': 'ai-ml-engineer',
+    'Business Intelligence Analyst': 'business-intelligence-analyst',
+    'Automation Testing Engineer': 'automation-testing-engineer',
+    'Manual Testing Specialist': 'manual-testing-specialist',
+    'React Native Developer': 'react-native-developer',
+    'Flutter App Developer': 'flutter-app-developer'
+  };
+
+  const handleEnrollment = (courseTitle) => {
+    const courseType = titleToIdMap[courseTitle];
+    setEnrollmentModal({ isOpen: true, courseType, courseName: courseTitle });
   };
 
   const getColorClasses = (color) => {
@@ -507,7 +526,7 @@ const TechnologyTrainingLandingPage = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => handleEnrollment(program.title, program.price)}
+                  onClick={() => handleEnrollment(program.title)}
                   className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
                   Enroll Now
@@ -556,12 +575,12 @@ const TechnologyTrainingLandingPage = () => {
       </AnimatedBackground>
 
       {/* Modals */}
-      <EnrollmentModal 
+      <EnhancedEnrollmentModal 
         isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, course: '', price: '' })}
-        courseTitle={enrollmentModal.course}
-        coursePrice={enrollmentModal.price}
-        courseType="technology"
+        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+        courseType={enrollmentModal.courseType}
+        courseName={enrollmentModal.courseName}
+        coursePrice={pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
