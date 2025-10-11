@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { XCircle, RefreshCw, Mail, Phone, Home, ArrowLeft } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import siteConfig from '@/config/site.config.js';
 
 export default function PaymentFailedPage({ onNavigate }) {
     const [errorDetails, setErrorDetails] = useState(null);
@@ -45,7 +46,7 @@ export default function PaymentFailedPage({ onNavigate }) {
     const paymentMethods = [
         'Credit/Debit Cards (Visa, Mastercard, RuPay)',
         'Net Banking (All major banks)',
-        'UPI (PhonePe, GPay, Paytm)',
+    'UPI (GPay, Paytm, etc.)',
         'Digital Wallets',
         'EMI Options (Selected cards)'
     ];
@@ -148,14 +149,14 @@ export default function PaymentFailedPage({ onNavigate }) {
                                 
                                 <div className="flex flex-col sm:flex-row gap-3">
                                     <a
-                                        href="mailto:payments@agnidhra.com"
+                                        href={`mailto:${siteConfig.supportEmail}`}
                                         className="flex items-center justify-center bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors text-sm"
                                     >
                                         <Mail size={16} className="mr-2" />
                                         Email Support
                                     </a>
                                     <a
-                                        href="tel:+91-9876543210"
+                                        href={`tel:${siteConfig.supportPhone}`}
                                         className="flex items-center justify-center bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors text-sm"
                                     >
                                         <Phone size={16} className="mr-2" />

@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import siteConfig from '@/config/site.config.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader, CreditCard, Mail, Phone, User } from 'lucide-react';
 import { enrollStudentInCourse } from '@/services/studentManagementService.js';
@@ -26,7 +27,7 @@ const EnhancedEnrollmentModal = ({
     name: '',
     email: '',
     phone: '',
-    paymentMethod: 'phonepe', // phonepe, upi, bank_transfer
+    paymentMethod: 'upi', // default to UPI for solo operator flow
     agreeToTerms: false,
     marketingConsent: true
   });
@@ -83,46 +84,12 @@ const EnhancedEnrollmentModal = ({
     setStep(2); // Move to payment step
   };
 
-  const handlePhonePePayment = async () => {
-    setLoading(true);
-    setError('');
-
-    try {
-      // Import PhonePe services
-      const { initiatePayment } = await import('@/services/phonepe.js');
-      
-      // First create an order payload (for internal tracking only)
-
-      const { merchantTransactionId, redirectUrl } = await initiatePayment({
-        amount: course.price,
-        customer: { name: formData.name, email: formData.email, phone: formData.phone },
-        notes: { courseType, description: `${course.name} - Enrollment` }
-      });
-
-      if (!redirectUrl) throw new Error('Failed to get payment redirect URL');
-      // Redirect to PhonePe hosted page
-      window.location.href = redirectUrl;
-    } catch (error) {
-      console.error('Payment error:', error);
-      
-      // No fallback for PhonePe redirect; user will complete on hosted page
-      
-      setError(error.message || 'Payment failed. Please use UPI or Bank Transfer option below.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // PhonePe redirect flow removed for UPI-first solo operator mode
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
     
-    // Handle PhonePe payment (redirect flow)
-    if (formData.paymentMethod === 'phonepe') {
-      await handlePhonePePayment();
-      return;
-    }
-    
-        // Only require reference for non-PhonePe manual payment methods
+    // Require reference for manual payment methods
     if (!paymentData.reference.trim()) {
       setError('Please provide payment reference/transaction ID');
       return;
@@ -260,7 +227,7 @@ const EnhancedEnrollmentModal = ({
       name: '',
       email: '',
       phone: '',
-      paymentMethod: 'phonepe',
+      paymentMethod: 'upi',
       agreeToTerms: false,
       marketingConsent: true
     });
@@ -496,8 +463,7 @@ const EnhancedEnrollmentModal = ({
                   </label>
                   <div className="space-y-2">
                     {[
-                      { value: 'phonepe', label: 'PhonePe (UPI/Card/Net Banking)', recommended: true },
-                      { value: 'upi', label: 'Direct UPI Transfer' },
+                      { value: 'upi', label: 'Direct UPI Transfer', recommended: true },
                       { value: 'bank_transfer', label: 'Bank Transfer' }
                     ].map((method) => (
                       <div 
@@ -533,18 +499,19 @@ const EnhancedEnrollmentModal = ({
                 {/* Payment instructions */}
                 <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
                   <h5 className="text-blue-400 font-medium mb-2">Payment Instructions</h5>
-                  {formData.paymentMethod === 'phonepe' && (
-                    <p className="text-blue-300 text-sm">
-                      After clicking "Make Payment", you'll be redirected to PhonePe to complete your secure payment using your preferred method.
-                    </p>
-                  )}
                   {formData.paymentMethod === 'upi' && (
                     <div className="text-blue-300 text-sm">
                       <p>Transfer ₹{course.price} to:</p>
-                      <p className="font-mono bg-slate-700 p-2 rounded mt-2">
-                        UPI ID: agnidhra@paytm
-                      </p>
-                      <p className="mt-2">Please enter the transaction ID below after payment.</p>
+                      <p className="font-mono bg-slate-700 p-2 rounded mt-2">UPI ID: {siteConfig.upiId}</p>
+                      <div className="mt-3">
+                        <a
+                          href={`upi://pay?pa=${encodeURIComponent(siteConfig.upiId)}&pn=${encodeURIComponent(siteConfig.upiPayeeName)}&am=${encodeURIComponent(course.price)}&cu=INR&tn=${encodeURIComponent(course.name + ' Enrollment')}`}
+                          className="inline-block bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded"
+                        >
+                          Pay via UPI App
+                        </a>
+                      </div>
+                      <p className="mt-2">After payment, please enter the transaction reference/UTR below.</p>
                     </div>
                   )}
                   {formData.paymentMethod === 'bank_transfer' && (
@@ -554,8 +521,8 @@ const EnhancedEnrollmentModal = ({
                   )}
                 </div>
 
-                {/* Payment reference (for non-PhonePe methods) */}
-                {formData.paymentMethod !== 'phonepe' && (
+                {/* Payment reference */}
+                {true && (
                   <div>
                     <label className="block text-sm font-medium text-slate-300 mb-2">
                       Payment Reference/Transaction ID *
@@ -586,7 +553,7 @@ const EnhancedEnrollmentModal = ({
                     className="flex-1 bg-sky-600 text-white py-3 px-6 rounded-lg hover:bg-sky-700 transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {loading && <Loader className="w-5 h-5 animate-spin" />}
-                    {formData.paymentMethod === 'phonepe' ? 'Make Payment' : 'Complete Enrollment'}
+                    Complete Enrollment
                   </button>
                 </div>
               </form>

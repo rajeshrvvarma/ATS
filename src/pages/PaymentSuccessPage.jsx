@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { CheckCircle, Download, Mail, Calendar, Home } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import SectionTitle from '../components/SectionTitle';
+import siteConfig from '@/config/site.config.js';
 import { pollPaymentStatus } from '@/services/payments.js';
 
 export default function PaymentSuccessPage({ onNavigate }) {
@@ -46,8 +47,8 @@ export default function PaymentSuccessPage({ onNavigate }) {
 
     const handleDownloadReceipt = () => {
         if (!paymentDetails) return;
-        const receiptContent = `
-PAYMENT RECEIPT\n===============\n\nPayment ID: ${paymentDetails.paymentId}\nOrder ID: ${paymentDetails.orderId}\nCourse: ${paymentDetails.planName}\nStudent: ${paymentDetails.customerName}\nEmail: ${paymentDetails.customerEmail}\nAmount: ₹${paymentDetails.amount || ''}\nDate: ${new Date().toLocaleDateString()}\nStatus: PAID\n\nThank you for your enrollment!\nAgnidhra Technologies Pvt Ltd\n`;
+    const receiptContent = `
+${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paymentDetails.paymentId}\nOrder ID: ${paymentDetails.orderId}\nCourse: ${paymentDetails.planName}\nStudent: ${paymentDetails.customerName}\nEmail: ${paymentDetails.customerEmail}\nAmount: ₹${paymentDetails.amount || ''}\nDate: ${new Date().toLocaleDateString()}\nStatus: PAID\n\nThank you for your enrollment!\n${siteConfig.legalName}\nSupport: ${siteConfig.supportEmail} | ${siteConfig.supportPhone}\n`;
         const element = document.createElement('a');
         const file = new Blob([receiptContent], { type: 'text/plain' });
         element.href = URL.createObjectURL(file);
@@ -145,10 +146,10 @@ PAYMENT RECEIPT\n===============\n\nPayment ID: ${paymentDetails.paymentId}\nOrd
 
                     <div className="bg-gradient-to-r from-sky-600 to-blue-600 p-6 rounded-lg mb-8">
                         <h4 className="text-xl font-bold mb-2">Need Help?</h4>
-                        <p className="text-sky-100 mb-4">Our support team is here to help you get started. Contact us if you have any questions.</p>
+                        <p className="text-sky-100 mb-4">We're here to help you get started. Contact us if you have any questions.</p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href="mailto:support@agnidhra.com" className="bg-white text-sky-600 px-6 py-2 rounded-lg font-semibold hover:bg-sky-50 transition-colors">Email Support</a>
-                            <a href="tel:+91-9876543210" className="bg-sky-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-sky-800 transition-colors">Call Support</a>
+                            <a href={`mailto:${siteConfig.supportEmail}`} className="bg-white text-sky-600 px-6 py-2 rounded-lg font-semibold hover:bg-sky-50 transition-colors">Email Support</a>
+                            <a href={`tel:${siteConfig.supportPhone}`} className="bg-sky-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-sky-800 transition-colors">Call Support</a>
                         </div>
                     </div>
 

@@ -2,6 +2,8 @@
 
 Quick reference for setting up all required environment variables in Netlify.
 
+Note: For the default UPI-only flow, you don’t need any payment gateway API keys. Students pay to your UPI ID and provide the UTR in the form. The PhonePe variables below are optional and only required if/when you enable gateway checkout later.
+
 ## Netlify Dashboard Setup
 
 1. Go to your Netlify site dashboard
