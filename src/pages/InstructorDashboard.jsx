@@ -163,7 +163,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Total Students</p>
-              <p className="text-2xl font-bold text-white">{dashboardData.stats.totalStudents}</p>
+              <p className="text-2xl font-bold text-white">{instructorStats.totalStudents}</p>
             </div>
             <Users className="w-8 h-8 text-green-400" />
           </div>
@@ -173,7 +173,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Total Earnings</p>
-              <p className="text-2xl font-bold text-white">${dashboardData.stats.totalEarnings.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">${instructorStats.totalEarnings.toLocaleString()}</p>
             </div>
             <Award className="w-8 h-8 text-yellow-400" />
           </div>
