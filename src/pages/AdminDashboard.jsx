@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { Eye, Pencil, Trash2 } from "lucide-react";
-import DashboardLayout from "../components/DashboardLayout";
-import { app } from "../config/firebase";
+import DashboardLayout from "@/components/DashboardLayout";
+import app from "@/config/firebase";
 
 const db = getFirestore(app);
 const statusColors = {

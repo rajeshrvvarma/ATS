@@ -24,7 +24,7 @@ import {
   Book
 } from 'lucide-react';
 import { getFirestore, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
-import { app } from '@/config/firebase';
+import app from '@/config/firebase';
 
 const db = getFirestore(app);
 
