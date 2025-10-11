@@ -4,6 +4,8 @@ import { Eye, Pencil, Trash2, BarChart2, Settings, BookOpen, Plus, Edit, Trash }
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/context/AuthContext.jsx";
 import app from "@/config/firebase";
+import AdminCoursePricing from "@/components/admin/AdminCoursePricing.jsx";
+import AdminUPIReferences from "@/components/admin/AdminUPIReferences.jsx";
 
 const db = getFirestore(app);
 const statusColors = {
@@ -265,6 +267,8 @@ function AdminDashboard({ onNavigate }) {
     { key: "overview", label: "Overview" },
     { key: "user", label: "User Management" },
     { key: "course", label: "Course Management" },
+    { key: "pricing", label: "Course Pricing" },
+    { key: "upi", label: "UPI References" },
     { key: "analytics", label: "Analytics" },
     { key: "system", label: "System" },
   ];
@@ -808,6 +812,10 @@ function AdminDashboard({ onNavigate }) {
             )}
           </>
         )}
+
+        {tab === "pricing" && <AdminCoursePricing />}
+
+        {tab === "upi" && <AdminUPIReferences />}
 
         {tab === "analytics" && (
           <>

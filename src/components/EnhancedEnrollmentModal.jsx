@@ -3,7 +3,7 @@
  * Integrates with Firebase backend and email automation
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import siteConfig from '@/config/site.config.js';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader, CreditCard, Mail, Phone, User } from 'lucide-react';
@@ -11,6 +11,7 @@ import UPIQRCode from './UPIQRCode.jsx';
 import { enrollStudentInCourse } from '@/services/studentManagementService.js';
 import { saveUPIReference } from '@/services/upiReferenceService.js';
 import { sendWelcomeEmail, sendPaymentConfirmationEmail } from '@/services/netlifyFormsService.js';
+import { useCoursePricing } from '@/hooks/useCoursePricing.js';
 
 const EnhancedEnrollmentModal = ({ 
   isOpen, 
@@ -24,6 +25,9 @@ const EnhancedEnrollmentModal = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [enrollmentResult, setEnrollmentResult] = useState(null);
+  
+  // Load centralized pricing
+  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
   
   const [formData, setFormData] = useState({
     name: '',
@@ -41,27 +45,51 @@ const EnhancedEnrollmentModal = ({
     paymentScreenshot: null
   });
 
-  const courseDetails = {
-    '7-day-bootcamp': {
-      name: '7-Day Cybersecurity Bootcamp',
-      price: 2999,
-      originalPrice: 4999,
-      duration: '7 days',
-      features: [
+  // Get course details from centralized pricing or fallback
+  const getCourseDetails = () => {
+    if (coursePricing && coursePricing[courseType]) {
+      const pricing = coursePricing[courseType];
+      return {
+        name: pricing.name,
+        price: pricing.finalPrice,
+        originalPrice: pricing.originalPrice,
+        duration: pricing.duration,
+        features: getDefaultFeatures(courseType)
+      };
+    }
+    
+    // Fallback for loading state or missing data
+    const fallbackDetails = {
+      '7-day-bootcamp': {
+        name: '7-Day Cybersecurity Bootcamp',
+        price: 2999,
+        originalPrice: 4999,
+        duration: '7 days',
+        features: getDefaultFeatures('7-day-bootcamp')
+      },
+      '2-month-premium': {
+        name: '2-Month Premium Cybersecurity Program',
+        price: 5999,
+        originalPrice: 9999,
+        duration: '2 months',
+        features: getDefaultFeatures('2-month-premium')
+      }
+    };
+    
+    return fallbackDetails[courseType] || fallbackDetails['7-day-bootcamp'];
+  };
+
+  const getDefaultFeatures = (type) => {
+    const features = {
+      '7-day-bootcamp': [
         'Live interactive sessions',
         'Hands-on labs and exercises',
         'Industry expert mentorship',
         'Course completion certificate',
         'Lifetime access to materials',
         'Job placement assistance'
-      ]
-    },
-    '2-month-premium': {
-      name: '2-Month Premium Cybersecurity Program',
-      price: 5999,
-      originalPrice: 9999,
-      duration: '2 months',
-      features: [
+      ],
+      '2-month-premium': [
         'Comprehensive curriculum',
         '1-on-1 mentoring sessions',
         'Real-world project experience',
@@ -69,10 +97,11 @@ const EnhancedEnrollmentModal = ({
         'Career guidance and placement',
         'Alumni network access'
       ]
-    }
+    };
+    return features[type] || features['7-day-bootcamp'];
   };
 
-  const course = courseDetails[courseType] || courseDetails['7-day-bootcamp'];
+  const course = getCourseDetails();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
