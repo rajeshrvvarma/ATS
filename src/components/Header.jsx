@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star, Users } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import NotificationBell from '@/components/NotificationBell.jsx';
+import UserMenu from '@/components/UserMenu.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 
 export default function Header({ onNavigate, currentPage }) {
@@ -9,7 +10,7 @@ export default function Header({ onNavigate, currentPage }) {
     const [activeLink, setActiveLink] = useState('');
     
     // Get authentication state for notification bell
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     
     // Production debugging
     React.useEffect(() => {
@@ -197,7 +198,7 @@ export default function Header({ onNavigate, currentPage }) {
                             Enroll Now
                         </button>
                         {user ? (
-                            <UserMenu user={user} onProfile={() => onNavigate('profile')} onLogout={() => { if (typeof user.logout === 'function') user.logout(); else window.location.href = '/logout'; }} />
+                            <UserMenu user={user} onProfile={() => onNavigate('profile')} onLogout={logout} />
                         ) : (
                             <button
                                 onClick={() => onNavigate('login')}
