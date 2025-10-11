@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
-import { getFirestore, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import app from '@/config/firebase';
 
 const db = getFirestore(app);
@@ -8,25 +8,33 @@ const db = getFirestore(app);
 export default function Profile({ onNavigate }) {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [adminNotes, setAdminNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    async function fetchProfile() {
+    async function fetchProfileAndNotes() {
       setLoading(true);
       setError('');
       try {
         const ref = doc(db, 'users', user.uid);
         const snap = await getDoc(ref);
         setProfile(snap.exists() ? snap.data() : {});
+        // Fetch admin notes subcollection
+        const notesCol = collection(db, 'users', user.uid, 'notes');
+        const notesSnap = await getDocs(notesCol);
+        const notesList = notesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Sort by createdAt descending
+        notesList.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
+        setAdminNotes(notesList);
       } catch (err) {
         setError('Failed to load profile: ' + err.message);
       }
       setLoading(false);
     }
-    if (user?.uid) fetchProfile();
+    if (user?.uid) fetchProfileAndNotes();
   }, [user]);
 
   async function handleSave(e) {
@@ -84,9 +92,24 @@ export default function Profile({ onNavigate }) {
             </div>
           </>
         )}
-        {user?.role === 'admin' && (
+        {/* Show all admin notes from subcollection */}
+        {adminNotes.length > 0 && (
           <div>
             <label className="block text-slate-300 mb-1">Admin Notes</label>
+            <ul className="bg-slate-900 border rounded px-3 py-2 text-white space-y-2">
+              {adminNotes.map(note => (
+                <li key={note.id} className="border-b border-slate-700 pb-2 mb-2 last:border-b-0 last:pb-0 last:mb-0">
+                  <div>{note.note}</div>
+                  {note.createdAt && <div className="text-xs text-slate-400 mt-1">{note.createdAt.toDate ? note.createdAt.toDate().toLocaleString() : ''}</div>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {/* Only admins can edit the main notes field */}
+        {user?.role === 'admin' && (
+          <div>
+            <label className="block text-slate-300 mb-1">(Admin-only) Notes Field</label>
             <textarea className="w-full border rounded px-3 py-2 bg-slate-900 text-white" value={profile?.notes || ''} onChange={e => setProfile(p => ({ ...p, notes: e.target.value }))} />
           </div>
         )}
