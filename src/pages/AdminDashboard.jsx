@@ -17,18 +17,18 @@ const roleColors = {
 
 
 function AdminDashboard() {
-  const [tab, setTab] = useState("user");
-  // User Management state
+  const [tab, setTab] = useState("overview");
+  // Shared user state for all tabs
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  // User Management state
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [refresh, setRefresh] = useState(false);
 
-  // Fetch users from Firestore
+  // Fetch users from Firestore (for all tabs)
   useEffect(() => {
-    if (tab !== "user") return;
     async function fetchUsers() {
       setLoading(true);
       setError("");
@@ -43,7 +43,7 @@ function AdminDashboard() {
       setLoading(false);
     }
     fetchUsers();
-  }, [refresh, tab]);
+  }, [refresh]);
 
   // Delete user from Firestore
   async function handleDelete(userId) {
@@ -101,8 +101,83 @@ function AdminDashboard() {
           ))}
         </div>
 
+
         {tab === "overview" && (
-          <div className="py-12 text-center text-slate-400 text-lg">Overview section coming soon.</div>
+          <>
+            <h2 className="text-2xl font-bold mb-6">Admin Overview</h2>
+            {loading ? (
+              <div>Loading overview...</div>
+            ) : error ? (
+              <div className="text-red-600">{error}</div>
+            ) : (
+              <>
+                {/* Stats cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                  <div className="bg-slate-800 rounded-lg p-6 flex flex-col items-center">
+                    <div className="text-3xl font-bold text-sky-400">{users.length}</div>
+                    <div className="text-slate-400 mt-2">Total Users</div>
+                  </div>
+                  <div className="bg-slate-800 rounded-lg p-6 flex flex-col items-center">
+                    <div className="text-3xl font-bold text-green-400">{users.filter(u => u.status === 'active').length}</div>
+                    <div className="text-slate-400 mt-2">Active Users</div>
+                  </div>
+                  <div className="bg-slate-800 rounded-lg p-6 flex flex-col items-center">
+                    <div className="text-3xl font-bold text-purple-400">{users.filter(u => u.role === 'instructor').length}</div>
+                    <div className="text-slate-400 mt-2">Instructors</div>
+                  </div>
+                  <div className="bg-slate-800 rounded-lg p-6 flex flex-col items-center">
+                    <div className="text-3xl font-bold text-blue-400">{users.filter(u => u.role === 'student').length}</div>
+                    <div className="text-slate-400 mt-2">Students</div>
+                  </div>
+                </div>
+                {/* Recent activity */}
+                <div className="bg-slate-800 rounded-lg p-6">
+                  <div className="text-lg font-semibold mb-4 text-white">Recent User Activity</div>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full">
+                      <thead>
+                        <tr className="text-left text-slate-400">
+                          <th className="px-4 py-2">USER</th>
+                          <th className="px-4 py-2">ROLE</th>
+                          <th className="px-4 py-2">STATUS</th>
+                          <th className="px-4 py-2">JOIN DATE</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {users
+                          .slice()
+                          .sort((a, b) => (b.joinDate || '').localeCompare(a.joinDate || ''))
+                          .slice(0, 5)
+                          .map(user => (
+                            <tr key={user.id} className="border-b border-slate-700 hover:bg-slate-700/30">
+                              <td className="px-4 py-2 flex items-center gap-2">
+                                <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
+                                  {user.displayName ? user.displayName.split(' ').map(n => n[0]).join('') : 'U'}
+                                </div>
+                                <div>
+                                  <div className="font-semibold">{user.displayName || 'Unknown'}</div>
+                                  <div className="text-xs text-slate-400">{user.email}</div>
+                                </div>
+                              </td>
+                              <td className="px-4 py-2">
+                                <span className={`px-2 py-1 rounded text-xs font-semibold ${roleColors[user.role] || 'bg-gray-200 text-gray-700'}`}>{user.role}</span>
+                              </td>
+                              <td className="px-4 py-2">
+                                <span className={`px-2 py-1 rounded text-xs font-semibold ${statusColors[user.status] || 'bg-gray-200 text-gray-700'}`}>{user.status}</span>
+                              </td>
+                              <td className="px-4 py-2">{user.joinDate || '-'}</td>
+                            </tr>
+                          ))}
+                        {users.length === 0 && (
+                          <tr><td colSpan={4} className="text-center py-4 text-slate-400">No recent activity.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
         )}
 
         {tab === "user" && (
