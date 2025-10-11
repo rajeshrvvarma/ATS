@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, CheckCircle, AlertCircle, Loader, CreditCard, Mail, Phone, User } from 'lucide-react';
 import UPIQRCode from './UPIQRCode.jsx';
 import { enrollStudentInCourse } from '@/services/studentManagementService.js';
+import { saveUPIReference } from '@/services/upiReferenceService.js';
 import { sendWelcomeEmail, sendPaymentConfirmationEmail } from '@/services/netlifyFormsService.js';
 
 const EnhancedEnrollmentModal = ({ 
@@ -187,7 +188,8 @@ const EnhancedEnrollmentModal = ({
       setEnrollmentResult(finalResult);
       setStep(3); // Move to confirmation step
 
-      // Save enrollment receipt for dashboard access
+
+      // Save UPI reference to Firestore and localStorage for backup
       const enrollmentReceipt = {
         enrollmentId: finalResult.enrollmentId,
         courseType,
@@ -195,17 +197,17 @@ const EnhancedEnrollmentModal = ({
         studentName: formData.name,
         studentPhone: formData.phone,
         paymentId: paymentReference,
-        amount: courseType === 'bootcamp' ? 2999 : 9999,
+        amount: course.price,
         timestamp: new Date().toISOString(),
         ts: Date.now()
       };
-      
+      // Firestore backup
+      saveUPIReference(enrollmentReceipt);
+      // Local backup
       const existingReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
       existingReceipts.push(enrollmentReceipt);
       localStorage.setItem('enrollment_receipts', JSON.stringify(existingReceipts));
-      console.log('✅ Enrollment receipt saved for dashboard access:', enrollmentReceipt.enrollmentId);
-      console.log('📊 All enrollment receipts:', existingReceipts);
-      console.log('🔗 Dashboard URL will be:', `/dashboard?enrollmentId=${finalResult.enrollmentId}`);
+      console.log('✅ UPI reference saved to Firestore and localStorage:', enrollmentReceipt.enrollmentId);
 
       console.log('Enrollment process completed successfully');
 

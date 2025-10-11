@@ -1,13 +1,25 @@
 // Admin UPI References Review (simple table, can be expanded)
 import React, { useEffect, useState } from 'react';
+import { getAllUPIReferences } from '@/services/upiReferenceService.js';
 
 export default function AdminUPIReferences() {
   const [receipts, setReceipts] = useState([]);
 
   useEffect(() => {
-    // For demo: load from localStorage (replace with Firestore in production)
-    const data = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
-    setReceipts(data.reverse());
+    // Try Firestore first, fallback to localStorage
+    (async () => {
+      let refs = [];
+      try {
+        refs = await getAllUPIReferences();
+      } catch (e) {
+        refs = [];
+      }
+      if (!refs || refs.length === 0) {
+        // fallback to localStorage
+        refs = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]').reverse();
+      }
+      setReceipts(refs);
+    })();
   }, []);
 
   return (
