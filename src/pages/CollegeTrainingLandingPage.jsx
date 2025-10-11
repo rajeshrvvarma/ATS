@@ -394,6 +394,75 @@ const CollegeTrainingLandingPage = () => {
         </section>
       </AnimatedBackground>
 
+      {/* Pricing Section */}
+      <AnimatedBackground variant="premium" className="py-16">
+        <section className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-12 max-w-5xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Flexible Pricing for Every College</h2>
+            <p className="text-slate-300 text-lg">Choose the perfect plan based on your student batch size</p>
+          </motion.div>
+          
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {currentPricingTiers.map((tier, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`relative bg-slate-800/50 rounded-xl p-6 border transition-all duration-300 backdrop-blur-sm ${
+                  tier.popular 
+                    ? 'border-blue-500 scale-105 shadow-lg shadow-blue-500/25' 
+                    : 'border-slate-700 hover:border-blue-500/50'
+                }`}
+              >
+                {tier.popular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                    Most Popular
+                  </div>
+                )}
+                
+                <div className="text-center mb-6">
+                  <h3 className="text-xl font-semibold mb-2">{tier.name}</h3>
+                  <div className="text-slate-400 text-sm mb-3">{tier.students}</div>
+                  <div className="flex items-baseline justify-center gap-2">
+                    <span className="text-3xl font-bold text-white">{tier.price}</span>
+                    <span className="text-slate-400 line-through">{tier.originalPrice}</span>
+                    <span className="text-slate-400 text-sm">/student</span>
+                  </div>
+                </div>
+                
+                <ul className="space-y-3 mb-6">
+                  {tier.features.map((feature, featureIndex) => (
+                    <li key={featureIndex} className="flex items-start gap-2">
+                      <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span className="text-slate-300 text-sm">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setIsModalOpen(true)}
+                  className={`w-full py-3 rounded-lg font-semibold transition-colors ${
+                    tier.popular 
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                      : 'border border-slate-600 hover:border-blue-500 text-slate-300'
+                  }`}
+                >
+                  Get Quote for {tier.students}
+                </motion.button>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      </AnimatedBackground>
+
       {/* Benefits Section */}
       <AnimatedBackground variant="specialized" className="py-16">
         <section className="container mx-auto px-6">
@@ -461,75 +530,6 @@ const CollegeTrainingLandingPage = () => {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      </AnimatedBackground>
-
-      {/* Pricing Section */}
-      <AnimatedBackground variant="premium" className="py-16">
-        <section className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12 max-w-5xl mx-auto"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Flexible Pricing for Every College</h2>
-            <p className="text-slate-300 text-lg">Choose the perfect plan based on your student batch size</p>
-          </motion.div>
-          
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {currentPricingTiers.map((tier, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`relative bg-slate-800/50 rounded-xl p-6 border transition-all duration-300 backdrop-blur-sm ${
-                  tier.popular 
-                    ? 'border-blue-500 scale-105 shadow-lg shadow-blue-500/25' 
-                    : 'border-slate-700 hover:border-blue-500/50'
-                }`}
-              >
-                {tier.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                    Most Popular
-                  </div>
-                )}
-                
-                <div className="text-center mb-6">
-                  <h3 className="text-xl font-semibold mb-2">{tier.name}</h3>
-                  <div className="text-slate-400 text-sm mb-3">{tier.students}</div>
-                  <div className="flex items-baseline justify-center gap-2">
-                    <span className="text-3xl font-bold text-white">{tier.price}</span>
-                    <span className="text-slate-400 line-through">{tier.originalPrice}</span>
-                    <span className="text-slate-400 text-sm">/student</span>
-                  </div>
-                </div>
-                
-                <ul className="space-y-3 mb-6">
-                  {tier.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-start gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-slate-300 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setIsModalOpen(true)}
-                  className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                    tier.popular 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                      : 'border border-slate-600 hover:border-blue-500 text-slate-300'
-                  }`}
-                >
-                  Get Quote for {tier.students}
-                </motion.button>
               </motion.div>
             ))}
           </div>
