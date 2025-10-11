@@ -1,0 +1,671 @@
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext.jsx';
+import DashboardLayout from '@/components/DashboardLayout.jsx';
+import { 
+  BookOpen, 
+  Users, 
+  Award, 
+  TrendingUp, 
+  Settings, 
+  BarChart3,
+  Plus,
+  Edit,
+  Eye,
+  Calendar,
+  Clock,
+  CheckCircle,
+  Star,
+  MessageSquare,
+  FileText,
+  Video,
+  PlayCircle,
+  Download,
+  Upload,
+  Target,
+  Lightbulb,
+  Brain,
+  Activity
+} from 'lucide-react';
+import { getStudentProfile } from '@/services/firebaseAuthService';
+
+/**
+ * InstructorDashboard - Comprehensive instructor panel for course management and student tracking
+ */
+export default function InstructorDashboard({ onNavigate }) {
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('overview');
+  const [loading, setLoading] = useState(true);
+
+  // Mock data - replace with actual Firebase data
+  const [dashboardData, setDashboardData] = useState({
+    stats: {
+      coursesCreated: 8,
+      totalStudents: 324,
+      totalEarnings: 12560,
+      avgRating: 4.7,
+      hoursTeaching: 156,
+      certificatesIssued: 87
+    },
+    recentActivity: [
+      { id: 1, type: 'student_complete', title: 'Student completed: React Fundamentals', time: '2 hours ago', icon: CheckCircle, color: 'text-green-400' },
+      { id: 2, type: 'new_enrollment', title: 'New enrollment in JavaScript Course', time: '4 hours ago', icon: Users, color: 'text-blue-400' },
+      { id: 3, type: 'question_asked', title: 'New question in discussion forum', time: '6 hours ago', icon: MessageSquare, color: 'text-yellow-400' },
+      { id: 4, type: 'course_review', title: 'New 5-star review received', time: '1 day ago', icon: Star, color: 'text-purple-400' }
+    ],
+    myCourses: [
+      {
+        id: 1,
+        title: 'React Development Masterclass',
+        students: 89,
+        completion: 76,
+        rating: 4.8,
+        earnings: 4450,
+        status: 'published',
+        lastUpdated: '2024-10-01',
+        totalLessons: 24,
+        totalHours: 12
+      },
+      {
+        id: 2,
+        title: 'Advanced JavaScript Concepts',
+        students: 67,
+        completion: 82,
+        rating: 4.6,
+        earnings: 3350,
+        status: 'published',
+        lastUpdated: '2024-09-15',
+        totalLessons: 18,
+        totalHours: 9
+      },
+      {
+        id: 3,
+        title: 'Node.js Backend Development',
+        students: 0,
+        completion: 0,
+        rating: 0,
+        earnings: 0,
+        status: 'draft',
+        lastUpdated: '2024-10-05',
+        totalLessons: 0,
+        totalHours: 0
+      }
+    ],
+    students: [
+      {
+        id: 1,
+        name: 'John Doe',
+        email: 'john@email.com',
+        course: 'React Masterclass',
+        progress: 85,
+        lastActive: '2 hours ago',
+        joinDate: '2024-09-10'
+      },
+      {
+        id: 2,
+        name: 'Sarah Wilson',
+        email: 'sarah@email.com',
+        course: 'JavaScript Concepts',
+        progress: 92,
+        lastActive: '1 day ago',
+        joinDate: '2024-08-25'
+      },
+      {
+        id: 3,
+        name: 'Mike Chen',
+        email: 'mike@email.com',
+        course: 'React Masterclass',
+        progress: 45,
+        lastActive: '3 days ago',
+        joinDate: '2024-09-20'
+      }
+    ],
+    earnings: {
+      thisMonth: 2340,
+      lastMonth: 1890,
+      thisYear: 12560,
+      pending: 450
+    },
+    analytics: {
+      courseViews: [120, 145, 132, 158, 167, 145, 189],
+      enrollments: [12, 18, 15, 22, 25, 19, 28],
+      completions: [8, 12, 10, 15, 18, 14, 20]
+    }
+  });
+
+  useEffect(() => {
+    loadInstructorData();
+  }, [user]);
+
+  const loadInstructorData = async () => {
+    // Load real data from Firebase here
+    setLoading(false);
+  };
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'courses', label: 'My Courses', icon: BookOpen },
+    { id: 'students', label: 'Students', icon: Users },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'earnings', label: 'Earnings', icon: Award },
+    { id: 'settings', label: 'Settings', icon: Settings }
+  ];
+
+  const renderOverview = () => (
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Courses Created</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.coursesCreated}</p>
+            </div>
+            <BookOpen className="w-8 h-8 text-blue-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Total Students</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.totalStudents}</p>
+            </div>
+            <Users className="w-8 h-8 text-green-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Total Earnings</p>
+              <p className="text-2xl font-bold text-white">${dashboardData.stats.totalEarnings.toLocaleString()}</p>
+            </div>
+            <Award className="w-8 h-8 text-yellow-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Average Rating</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.avgRating}</p>
+            </div>
+            <Star className="w-8 h-8 text-purple-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Teaching Hours</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.hoursTeaching}h</p>
+            </div>
+            <Clock className="w-8 h-8 text-emerald-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Certificates</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.certificatesIssued}</p>
+            </div>
+            <Target className="w-8 h-8 text-sky-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity & Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
+          <div className="space-y-3">
+            {dashboardData.recentActivity.map((activity) => {
+              const IconComponent = activity.icon;
+              return (
+                <div key={activity.id} className="flex items-center space-x-3 p-3 bg-slate-700/50 rounded-lg">
+                  <IconComponent className={`w-5 h-5 ${activity.color}`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">{activity.title}</p>
+                    <p className="text-xs text-slate-400">{activity.time}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <button className="flex items-center justify-center space-x-2 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
+              <Plus className="w-4 h-4" />
+              <span className="text-sm">New Course</span>
+            </button>
+            <button className="flex items-center justify-center space-x-2 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+              <Video className="w-4 h-4" />
+              <span className="text-sm">Add Lesson</span>
+            </button>
+            <button className="flex items-center justify-center space-x-2 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+              <MessageSquare className="w-4 h-4" />
+              <span className="text-sm">View Q&A</span>
+            </button>
+            <button className="flex items-center justify-center space-x-2 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg transition-colors">
+              <BarChart3 className="w-4 h-4" />
+              <span className="text-sm">Analytics</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCourses = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">My Courses</h2>
+        <button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center space-x-2">
+          <Plus className="w-4 h-4" />
+          <span>Create New Course</span>
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {dashboardData.myCourses.map((course) => (
+          <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">{course.title}</h3>
+              <span className={`px-2 py-1 text-xs rounded-full ${
+                course.status === 'published' ? 'bg-green-500/20 text-green-400' :
+                course.status === 'draft' ? 'bg-yellow-500/20 text-yellow-400' :
+                'bg-red-500/20 text-red-400'
+              }`}>
+                {course.status}
+              </span>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Students Enrolled</span>
+                <span className="text-white font-medium">{course.students}</span>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Completion Rate</span>
+                <span className="text-white font-medium">{course.completion}%</span>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Rating</span>
+                <div className="flex items-center space-x-1">
+                  <Star className="w-4 h-4 text-yellow-400" />
+                  <span className="text-white font-medium">{course.rating || 'N/A'}</span>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Earnings</span>
+                <span className="text-white font-medium">${course.earnings.toLocaleString()}</span>
+              </div>
+              
+              <div className="pt-3 border-t border-slate-700 flex items-center space-x-2">
+                <button className="flex-1 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm flex items-center justify-center space-x-2">
+                  <Eye className="w-4 h-4" />
+                  <span>View</span>
+                </button>
+                <button className="flex-1 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors text-sm flex items-center justify-center space-x-2">
+                  <Edit className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderStudents = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Student Progress</h2>
+        <div className="flex items-center space-x-2 text-slate-400">
+          <Users className="w-5 h-5" />
+          <span>{dashboardData.students.length} active students</span>
+        </div>
+      </div>
+
+      {/* Students Table */}
+      <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-700">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Student</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Course</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Progress</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Last Active</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Join Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700">
+              {dashboardData.students.map((student) => (
+                <tr key={student.id} className="hover:bg-slate-700/50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 h-10 w-10">
+                        <img
+                          className="h-10 w-10 rounded-full"
+                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=0ea5e9&color=fff`}
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-white">{student.name}</div>
+                        <div className="text-sm text-slate-400">{student.email}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                    {student.course}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="w-16 bg-slate-700 rounded-full h-2 mr-2">
+                        <div 
+                          className="bg-sky-500 h-2 rounded-full" 
+                          style={{ width: `${student.progress}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-sm text-white">{student.progress}%</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                    {student.lastActive}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                    {student.joinDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <button className="text-sky-400 hover:text-sky-300">
+                        <MessageSquare className="w-4 h-4" />
+                      </button>
+                      <button className="text-green-400 hover:text-green-300">
+                        <Eye className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAnalytics = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-white">Teaching Analytics</h2>
+      
+      {/* Analytics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Course Views</p>
+              <p className="text-2xl font-bold text-white">1,234</p>
+              <p className="text-green-400 text-sm">+12% from last week</p>
+            </div>
+            <Eye className="w-8 h-8 text-blue-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">New Enrollments</p>
+              <p className="text-2xl font-bold text-white">89</p>
+              <p className="text-green-400 text-sm">+8% from last week</p>
+            </div>
+            <Users className="w-8 h-8 text-green-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Completion Rate</p>
+              <p className="text-2xl font-bold text-white">78%</p>
+              <p className="text-red-400 text-sm">-2% from last week</p>
+            </div>
+            <CheckCircle className="w-8 h-8 text-purple-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Student Satisfaction</p>
+              <p className="text-2xl font-bold text-white">4.7/5</p>
+              <p className="text-green-400 text-sm">+0.1 from last month</p>
+            </div>
+            <Star className="w-8 h-8 text-yellow-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Charts placeholder */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Enrollment Trends</h3>
+          <div className="h-64 flex items-center justify-center text-slate-400">
+            <TrendingUp className="w-16 h-16" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Course Performance</h3>
+          <div className="h-64 flex items-center justify-center text-slate-400">
+            <BarChart3 className="w-16 h-16" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderEarnings = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-white">Earnings Dashboard</h2>
+      
+      {/* Earnings Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">This Month</p>
+              <p className="text-2xl font-bold text-white">${dashboardData.earnings.thisMonth.toLocaleString()}</p>
+            </div>
+            <TrendingUp className="w-8 h-8 text-green-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Last Month</p>
+              <p className="text-2xl font-bold text-white">${dashboardData.earnings.lastMonth.toLocaleString()}</p>
+            </div>
+            <Calendar className="w-8 h-8 text-blue-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">This Year</p>
+              <p className="text-2xl font-bold text-white">${dashboardData.earnings.thisYear.toLocaleString()}</p>
+            </div>
+            <Award className="w-8 h-8 text-yellow-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Pending</p>
+              <p className="text-2xl font-bold text-white">${dashboardData.earnings.pending.toLocaleString()}</p>
+            </div>
+            <Clock className="w-8 h-8 text-orange-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Payout Options */}
+      <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+        <h3 className="text-lg font-semibold text-white mb-4">Payout Settings</h3>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300">Auto Payout</span>
+            <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+              <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+            </button>
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-slate-300">Minimum Threshold: $100</span>
+            <button className="px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white rounded text-sm transition-colors">
+              Change
+            </button>
+          </div>
+          <button className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+            Request Payout
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSettings = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-white">Instructor Settings</h2>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Profile Settings */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Profile Information</h3>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+              <input
+                type="text"
+                value={user?.name || user?.displayName || ''}
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                readOnly
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+              <input
+                type="email"
+                value={user?.email || ''}
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+                readOnly
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">Bio</label>
+              <textarea
+                rows={3}
+                placeholder="Tell students about yourself..."
+                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Notification Settings */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Notification Preferences</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">New Student Enrollments</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Course Reviews</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Q&A Messages</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-1"></span>
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Payout Notifications</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-sky-500"></div>
+          <p className="text-slate-400 mt-4">Loading instructor dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <DashboardLayout title="Instructor Dashboard" user={user} onNavigate={onNavigate}>
+      {/* Tab Navigation */}
+      <div className="mb-6">
+        <div className="border-b border-slate-700">
+          <nav className="-mb-px flex space-x-8">
+            {tabs.map((tab) => {
+              const IconComponent = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === tab.id
+                      ? 'border-sky-500 text-sky-400'
+                      : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
+                  }`}
+                >
+                  <IconComponent className="w-5 h-5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'overview' && renderOverview()}
+      {activeTab === 'courses' && renderCourses()}
+      {activeTab === 'students' && renderStudents()}
+      {activeTab === 'analytics' && renderAnalytics()}
+      {activeTab === 'earnings' && renderEarnings()}
+      {activeTab === 'settings' && renderSettings()}
+    </DashboardLayout>
+  );
+}

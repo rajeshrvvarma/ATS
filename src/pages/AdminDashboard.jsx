@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext.jsx';
+import DashboardLayout from '@/components/DashboardLayout.jsx';
 import { 
   Users, 
   BookOpen, 
@@ -16,423 +18,545 @@ import {
   Calendar,
   Clock,
   CheckCircle,
-  XCircle
+  XCircle,
+  Shield,
+  Database,
+  Activity,
+  AlertCircle,
+  Plus,
+  FileText,
+  Star,
+  MessageSquare
 } from 'lucide-react';
-import { loadCourses, addCourse, updateCourse, deleteCourse, addLesson, updateLesson, deleteLesson, moveLesson, exportCourses, importCourses } from '@/services/courseService.js';
-import EnhancedCourseCreator from '@/components/EnhancedCourseCreator.jsx';
-import EnhancedAnalyticsDashboard from '@/components/EnhancedAnalyticsDashboard.jsx';
-import CourseContentManagementSystem from '@/components/CourseContentManagementSystem.jsx';
+import { getStudentProfile } from '@/services/firebaseAuthService';
 
 /**
- * AdminDashboard - Complete admin panel for LMS management
+ * AdminDashboard - Comprehensive admin panel for LMS management
  */
 export default function AdminDashboard({ onNavigate }) {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
-  const [students, setStudents] = useState([]);
-  const [enrollments, setEnrollments] = useState([]);
-  const [certificates, setCertificates] = useState([]);
-  const [receipts, setReceipts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [showCourseModal, setShowCourseModal] = useState(false);
-  const [editingCourse, setEditingCourse] = useState(null);
-  const [courseForm, setCourseForm] = useState({ title: '', description: '', duration: '1 hour', category: 'defensive' });
-  const [courseList, setCourseList] = useState([]);
-  const [lessonModal, setLessonModal] = useState({ open: false, courseId: null, lesson: null });
-  const [lessonForm, setLessonForm] = useState({ title: '', type: 'youtube', videoId: '', videoUrl: '', duration: '10:00' });
 
-  // Load data from localStorage
-  useEffect(() => {
-    loadAdminData();
-  }, []);
-
-  const loadAdminData = () => {
-    // Load students (mock data - in real app, this would come from API)
-    const mockStudents = [
-      { id: 1, name: 'John Doe', email: 'john@example.com', joinDate: '2024-01-15', status: 'active', courses: 3 },
-      { id: 2, name: 'Jane Smith', email: 'jane@example.com', joinDate: '2024-01-20', status: 'active', courses: 2 },
-      { id: 3, name: 'Mike Johnson', email: 'mike@example.com', joinDate: '2024-02-01', status: 'inactive', courses: 1 },
-    ];
-    setStudents(mockStudents);
-
-    // Load courses
-    const list = loadCourses();
-    setCourseList(list);
-
-    // Load enrollments
-    const allEnrollments = [];
-    list.forEach(course => {
-      const enrollment = localStorage.getItem(`enrollment_${course.id}`);
-      if (enrollment === 'true') {
-        const progress = localStorage.getItem(`course_progress_${course.id}`);
-        const progressData = progress ? JSON.parse(progress) : { courseProgress: 0, completedLessons: [] };
-        allEnrollments.push({
-          courseId: course.id,
-          courseName: course.title,
-          studentName: 'Student Name',
-          progress: progressData.courseProgress,
-          enrolledDate: '2024-01-15',
-          status: progressData.courseProgress >= 100 ? 'completed' : 'in-progress'
-        });
+  // Mock data - replace with actual Firebase data
+  const [dashboardData, setDashboardData] = useState({
+    stats: {
+      totalUsers: 1248,
+      totalCourses: 24,
+      activeLearners: 892,
+      certificatesIssued: 346,
+      revenue: 45670,
+      avgCompletion: 73
+    },
+    recentActivity: [
+      { id: 1, type: 'user_register', title: 'New user registered: john@email.com', time: '2 hours ago', icon: UserPlus, color: 'text-green-400' },
+      { id: 2, type: 'course_complete', title: 'Course completed: React Fundamentals', time: '3 hours ago', icon: CheckCircle, color: 'text-blue-400' },
+      { id: 3, type: 'certificate_issued', title: 'Certificate issued to sarah@email.com', time: '5 hours ago', icon: Award, color: 'text-yellow-400' },
+      { id: 4, type: 'course_created', title: 'New course: Advanced Node.js', time: '1 day ago', icon: BookOpen, color: 'text-purple-400' }
+    ],
+    users: [
+      {
+        id: 1,
+        name: 'John Doe',
+        email: 'john@email.com',
+        role: 'student',
+        status: 'active',
+        joinDate: '2024-09-15',
+        coursesEnrolled: 3,
+        progress: 65
+      },
+      {
+        id: 2,
+        name: 'Sarah Johnson',
+        email: 'sarah@email.com',
+        role: 'instructor',
+        status: 'active',
+        joinDate: '2024-08-20',
+        coursesCreated: 5,
+        studentsCount: 120
+      },
+      {
+        id: 3,
+        name: 'Mike Chen',
+        email: 'mike@email.com',
+        role: 'student',
+        status: 'inactive',
+        joinDate: '2024-07-10',
+        coursesEnrolled: 1,
+        progress: 25
       }
-    });
-    setEnrollments(allEnrollments);
-
-    // Load certificates
-    const savedCertificates = JSON.parse(localStorage.getItem('certificates') || '[]');
-    setCertificates(savedCertificates);
-    // Load receipts
-    const savedReceipts = JSON.parse(localStorage.getItem('enrollment_receipts') || '[]');
-    setReceipts(savedReceipts.sort((a,b)=> b.ts - a.ts));
-  };
-
-  // Calculate statistics
-  const stats = {
-    totalStudents: students.length,
-    activeStudents: students.filter(s => s.status === 'active').length,
-    totalCourses: courseList.length,
-    totalEnrollments: enrollments.length,
-    completedCourses: enrollments.filter(e => e.status === 'completed').length,
-    totalCertificates: certificates.length,
-    revenue: 125000, // Mock revenue
-    completionRate: enrollments.length > 0 ? (enrollments.filter(e => e.status === 'completed').length / enrollments.length) * 100 : 0
-  };
-
-  // Filter students
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         student.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterStatus === 'all' || student.status === filterStatus;
-    return matchesSearch && matchesFilter;
+    ],
+    courses: [
+      {
+        id: 1,
+        title: 'React Development Bootcamp',
+        instructor: 'Sarah Johnson',
+        students: 45,
+        completion: 78,
+        status: 'active',
+        created: '2024-08-15',
+        revenue: 4500
+      },
+      {
+        id: 2,
+        title: 'Advanced JavaScript',
+        instructor: 'Mike Wilson',
+        students: 32,
+        completion: 85,
+        status: 'active',
+        created: '2024-07-20',
+        revenue: 3200
+      },
+      {
+        id: 3,
+        title: 'Web Design Fundamentals',
+        instructor: 'Emma Davis',
+        students: 28,
+        completion: 92,
+        status: 'draft',
+        created: '2024-09-01',
+        revenue: 0
+      }
+    ],
+    systemHealth: {
+      serverStatus: 'online',
+      dbStatus: 'healthy',
+      apiLatency: '120ms',
+      uptime: '99.9%',
+      activeConnections: 234
+    }
   });
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString();
+  useEffect(() => {
+    loadAdminData();
+  }, [user]);
+
+  const loadAdminData = async () => {
+    // Load real data from Firebase here
+    setLoading(false);
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'active': return 'text-green-400 bg-green-500/20';
-      case 'inactive': return 'text-red-400 bg-red-500/20';
-      case 'completed': return 'text-blue-400 bg-blue-500/20';
-      case 'in-progress': return 'text-yellow-400 bg-yellow-500/20';
-      default: return 'text-gray-400 bg-gray-500/20';
-    }
-  };
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'users', label: 'User Management', icon: Users },
+    { id: 'courses', label: 'Course Management', icon: BookOpen },
+    { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'system', label: 'System', icon: Settings }
+  ];
 
-  return (
-    <div className="min-h-screen bg-slate-900 py-8">
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <div className="mb-8">
+  const renderOverview = () => (
+    <div className="space-y-6">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6">
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">Admin Dashboard</h1>
-              <p className="text-slate-400">Manage your LMS platform</p>
+              <p className="text-slate-400 text-sm">Total Users</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.totalUsers.toLocaleString()}</p>
             </div>
-            <div className="flex items-center gap-4">
-              <button className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2">
-                <UserPlus className="w-5 h-5" />
-                Add Student
-              </button>
-              <button className="bg-slate-700 text-white px-4 py-3 rounded-lg hover:bg-slate-600 transition-colors">
-                <Settings className="w-5 h-5" />
-              </button>
+            <Users className="w-8 h-8 text-blue-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Total Courses</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.totalCourses}</p>
             </div>
+            <BookOpen className="w-8 h-8 text-green-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Active Learners</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.activeLearners.toLocaleString()}</p>
+            </div>
+            <Activity className="w-8 h-8 text-purple-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Certificates</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.certificatesIssued}</p>
+            </div>
+            <Award className="w-8 h-8 text-yellow-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Revenue</p>
+              <p className="text-2xl font-bold text-white">${dashboardData.stats.revenue.toLocaleString()}</p>
+            </div>
+            <TrendingUp className="w-8 h-8 text-emerald-400" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Avg Completion</p>
+              <p className="text-2xl font-bold text-white">{dashboardData.stats.avgCompletion}%</p>
+            </div>
+            <CheckCircle className="w-8 h-8 text-sky-400" />
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity & System Status */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
+          <div className="space-y-3">
+            {dashboardData.recentActivity.map((activity) => {
+              const IconComponent = activity.icon;
+              return (
+                <div key={activity.id} className="flex items-center space-x-3 p-3 bg-slate-700/50 rounded-lg">
+                  <IconComponent className={`w-5 h-5 ${activity.color}`} />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">{activity.title}</p>
+                    <p className="text-xs text-slate-400">{activity.time}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="mb-8">
-          <div className="flex space-x-1 bg-slate-800 p-1 rounded-lg">
-            {[
-              { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'students', label: 'Students', icon: Users },
-              { id: 'courses', label: 'Courses', icon: BookOpen },
-              { id: 'certificates', label: 'Certificates', icon: Award },
-              { id: 'analytics', label: 'Analytics', icon: TrendingUp }
-            ].map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md transition-colors ${
-                  activeTab === tab.id
-                    ? 'bg-sky-600 text-white'
-                    : 'text-slate-400 hover:text-white hover:bg-slate-700'
-                }`}
-              >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <div className="space-y-8">
-            {/* Stats Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-slate-800 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-blue-500/20 rounded-lg">
-                    <Users className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <span className="text-2xl font-bold text-white">{stats.totalStudents}</span>
-                </div>
-                <h3 className="text-slate-400 text-sm">Total Students</h3>
-                <p className="text-xs text-slate-500 mt-1">{stats.activeStudents} active</p>
-              </div>
-
-              <div className="bg-slate-800 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-green-500/20 rounded-lg">
-                    <BookOpen className="w-6 h-6 text-green-400" />
-                  </div>
-                  <span className="text-2xl font-bold text-white">{stats.totalCourses}</span>
-                </div>
-                <h3 className="text-slate-400 text-sm">Total Courses</h3>
-                <p className="text-xs text-slate-500 mt-1">{stats.totalEnrollments} enrollments</p>
-              </div>
-
-              <div className="bg-slate-800 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-yellow-500/20 rounded-lg">
-                    <Award className="w-6 h-6 text-yellow-400" />
-                  </div>
-                  <span className="text-2xl font-bold text-white">{stats.totalCertificates}</span>
-                </div>
-                <h3 className="text-slate-400 text-sm">Certificates Issued</h3>
-                <p className="text-xs text-slate-500 mt-1">{stats.completedCourses} completed</p>
-              </div>
-
-              <div className="bg-slate-800 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="p-3 bg-purple-500/20 rounded-lg">
-                    <TrendingUp className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <span className="text-2xl font-bold text-white">{Math.round(stats.completionRate)}%</span>
-                </div>
-                <h3 className="text-slate-400 text-sm">Completion Rate</h3>
-                <p className="text-xs text-slate-500 mt-1">Course completion</p>
-              </div>
-            </div>
-
-            {/* Recent Activity */}
-            <div className="grid lg:grid-cols-2 gap-8">
-              <div className="bg-slate-800 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Recent Enrollments</h3>
-                <div className="space-y-3">
-                  {enrollments.slice(0, 5).map((enrollment, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                      <div>
-                        <p className="text-white font-medium">{enrollment.studentName}</p>
-                        <p className="text-slate-400 text-sm">{enrollment.courseName}</p>
-                      </div>
-                      <div className="text-right">
-                        <span className={`px-2 py-1 rounded text-xs ${getStatusColor(enrollment.status)}`}>
-                          {enrollment.status}
-                        </span>
-                        <p className="text-slate-400 text-xs mt-1">{enrollment.progress}%</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="bg-slate-800 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Recent Certificates</h3>
-                <div className="space-y-3">
-                  {certificates.slice(0, 5).map((cert, index) => (
-                    <div key={index} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                      <div>
-                        <p className="text-white font-medium">{cert.studentName}</p>
-                        <p className="text-slate-400 text-sm">{cert.courseName}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-slate-400 text-xs">{formatDate(cert.earnedDate)}</p>
-                        <button className="text-sky-400 hover:text-sky-300">
-                          <Download className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="bg-slate-800 rounded-lg p-6 lg:col-span-2">
-                <h3 className="text-lg font-semibold text-white mb-4">Recent Payment Receipts</h3>
-                <div className="space-y-3">
-                  {receipts.length === 0 ? (
-                    <p className="text-slate-400 text-sm">No receipts yet</p>
-                  ) : (
-                    receipts.slice(0, 8).map((r, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-slate-700 rounded-lg">
-                        <div>
-                          <p className="text-white text-sm font-medium">{r.courseId}</p>
-                          <p className="text-slate-400 text-xs">Order: <span className="font-mono">{r.orderId}</span> • Payment: <span className="font-mono">{r.paymentId}</span></p>
-                        </div>
-                        <div className="text-right text-slate-400 text-xs">{new Date(r.ts).toLocaleString()}</div>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Students Tab */}
-        {activeTab === 'students' && (
-          <div className="space-y-6">
-            {/* Search and Filter */}
-            <div className="flex items-center gap-4">
-              <div className="relative flex-1">
-                <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search students..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500"
-                />
-              </div>
-              <select
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500"
-              >
-                <option value="all">All Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-            </div>
-
-            {/* Students Table */}
-            <div className="bg-slate-800 rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-slate-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Student</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Email</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Join Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Courses</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700">
-                    {filteredStudents.map((student) => (
-                      <tr key={student.id} className="hover:bg-slate-700">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="flex items-center">
-                            <div className="w-10 h-10 bg-sky-600 rounded-full flex items-center justify-center text-white font-semibold">
-                              {student.name.charAt(0)}
-                            </div>
-                            <div className="ml-4">
-                              <div className="text-sm font-medium text-white">{student.name}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{student.email}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{formatDate(student.joinDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{student.courses}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(student.status)}`}>
-                            {student.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex items-center gap-2">
-                            <button className="text-sky-400 hover:text-sky-300">
-                              <Eye className="w-4 h-4" />
-                            </button>
-                            <button className="text-yellow-400 hover:text-yellow-300">
-                              <Edit className="w-4 h-4" />
-                            </button>
-                            <button className="text-red-400 hover:text-red-300">
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Enhanced Courses Tab */}
-        {activeTab === 'courses' && (
-          <div className="p-0 -m-6">
-            <CourseContentManagementSystem />
-          </div>
-        )}
-
-        {/* Certificates Tab */}
-        {activeTab === 'certificates' && (
-          <div className="space-y-6">
+        {/* System Health */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">System Health</h3>
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">Certificate Management</h3>
-              <button className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2">
-                <Award className="w-4 h-4" />
-                Generate Certificate
-              </button>
-            </div>
-
-            <div className="bg-slate-800 rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-slate-700">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Student</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Course</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Certificate ID</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Date</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-700">
-                    {certificates.map((cert, index) => (
-                      <tr key={index} className="hover:bg-slate-700">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{cert.studentName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{cert.courseName}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300 font-mono">{cert.certificateId}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">{formatDate(cert.earnedDate)}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="px-2 py-1 rounded-full text-xs font-medium text-green-400 bg-green-500/20">
-                            Verified
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                          <div className="flex items-center gap-2">
-                            <button className="text-sky-400 hover:text-sky-300">
-                              <Eye className="w-4 h-4" />
-                            </button>
-                            <button className="text-green-400 hover:text-green-300">
-                              <Download className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <span className="text-slate-300">Server Status</span>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-green-400 text-sm">Online</span>
               </div>
             </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Database</span>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-green-400 text-sm">Healthy</span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">API Latency</span>
+              <span className="text-slate-400 text-sm">{dashboardData.systemHealth.apiLatency}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Uptime</span>
+              <span className="text-slate-400 text-sm">{dashboardData.systemHealth.uptime}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Active Connections</span>
+              <span className="text-slate-400 text-sm">{dashboardData.systemHealth.activeConnections}</span>
+            </div>
           </div>
-        )}
-
-        {/* Enhanced Analytics Tab */}
-        {activeTab === 'analytics' && (
-          <div className="p-0 -m-6">
-            <EnhancedAnalyticsDashboard />
-          </div>
-        )}
+        </div>
       </div>
     </div>
+  );
+
+  const renderUsers = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">User Management</h2>
+        <button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center space-x-2">
+          <UserPlus className="w-4 h-4" />
+          <span>Add User</span>
+        </button>
+      </div>
+
+      {/* Search and Filter */}
+      <div className="flex items-center space-x-4">
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+          />
+        </div>
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="px-3 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+        >
+          <option value="all">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      {/* Users Table */}
+      <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-slate-700">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">User</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Join Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Progress</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700">
+              {dashboardData.users.map((user) => (
+                <tr key={user.id} className="hover:bg-slate-700/50">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 h-10 w-10">
+                        <img
+                          className="h-10 w-10 rounded-full"
+                          src={`https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=0ea5e9&color=fff`}
+                          alt=""
+                        />
+                      </div>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-white">{user.name}</div>
+                        <div className="text-sm text-slate-400">{user.email}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      user.role === 'admin' ? 'bg-red-100 text-red-800' :
+                      user.role === 'instructor' ? 'bg-blue-100 text-blue-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {user.role}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {user.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                    {user.joinDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
+                    {user.progress ? `${user.progress}%` : 'N/A'}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
+                      <button className="text-sky-400 hover:text-sky-300">
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button className="text-yellow-400 hover:text-yellow-300">
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button className="text-red-400 hover:text-red-300">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderCourses = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Course Management</h2>
+        <button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center space-x-2">
+          <Plus className="w-4 h-4" />
+          <span>Create Course</span>
+        </button>
+      </div>
+
+      {/* Courses Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {dashboardData.courses.map((course) => (
+          <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">{course.title}</h3>
+              <span className={`px-2 py-1 text-xs rounded-full ${
+                course.status === 'active' ? 'bg-green-500/20 text-green-400' :
+                course.status === 'draft' ? 'bg-yellow-500/20 text-yellow-400' :
+                'bg-red-500/20 text-red-400'
+              }`}>
+                {course.status}
+              </span>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Instructor</span>
+                <span className="text-white">{course.instructor}</span>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Students</span>
+                <span className="text-white">{course.students}</span>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Completion Rate</span>
+                <span className="text-white">{course.completion}%</span>
+              </div>
+              
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-400">Revenue</span>
+                <span className="text-white">${course.revenue.toLocaleString()}</span>
+              </div>
+              
+              <div className="pt-3 border-t border-slate-700 flex items-center space-x-2">
+                <button className="flex-1 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm">
+                  View Details
+                </button>
+                <button className="px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
+                  <Edit className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  const renderAnalytics = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-white">Analytics Dashboard</h2>
+      
+      {/* Analytics placeholder */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">User Growth</h3>
+          <div className="h-64 flex items-center justify-center text-slate-400">
+            <BarChart3 className="w-16 h-16" />
+          </div>
+        </div>
+        
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Course Completion Rates</h3>
+          <div className="h-64 flex items-center justify-center text-slate-400">
+            <TrendingUp className="w-16 h-16" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderSystem = () => (
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-white">System Settings</h2>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* System Configuration */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">System Configuration</h3>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">User Registration</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Email Notifications</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-sky-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-6"></span>
+              </button>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-slate-300">Maintenance Mode</span>
+              <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-slate-600">
+                <span className="inline-block h-4 w-4 transform rounded-full bg-white transition translate-x-1"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Backup & Export */}
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <h3 className="text-lg font-semibold text-white mb-4">Data Management</h3>
+          <div className="space-y-3">
+            <button className="w-full flex items-center justify-center space-x-2 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+              <Download className="w-4 h-4" />
+              <span>Export User Data</span>
+            </button>
+            <button className="w-full flex items-center justify-center space-x-2 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+              <Database className="w-4 h-4" />
+              <span>Backup Database</span>
+            </button>
+            <button className="w-full flex items-center justify-center space-x-2 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+              <AlertCircle className="w-4 h-4" />
+              <span>Reset System</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-sky-500"></div>
+          <p className="text-slate-400 mt-4">Loading admin dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <DashboardLayout title="Admin Dashboard" user={user} onNavigate={onNavigate}>
+      {/* Tab Navigation */}
+      <div className="mb-6">
+        <div className="border-b border-slate-700">
+          <nav className="-mb-px flex space-x-8">
+            {tabs.map((tab) => {
+              const IconComponent = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === tab.id
+                      ? 'border-sky-500 text-sky-400'
+                      : 'border-transparent text-slate-400 hover:text-slate-300 hover:border-slate-300'
+                  }`}
+                >
+                  <IconComponent className="w-5 h-5" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+      </div>
+
+      {/* Tab Content */}
+      {activeTab === 'overview' && renderOverview()}
+      {activeTab === 'users' && renderUsers()}
+      {activeTab === 'courses' && renderCourses()}
+      {activeTab === 'analytics' && renderAnalytics()}
+      {activeTab === 'system' && renderSystem()}
+    </DashboardLayout>
   );
 }

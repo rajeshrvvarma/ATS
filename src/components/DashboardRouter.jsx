@@ -3,11 +3,13 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext.jsx';
 import StudentDashboard from '@/pages/StudentDashboard.jsx';
 import AdminDashboard from '@/pages/AdminDashboard.jsx';
+import InstructorDashboard from '@/pages/InstructorDashboard.jsx';
 
 /**
  * DashboardRouter - Routes users to appropriate dashboard based on role
  * Students -> StudentDashboard
- * Admin/Owner/Instructor -> AdminDashboard
+ * Instructors -> InstructorDashboard
+ * Admin/Owner -> AdminDashboard
  */
 export default function DashboardRouter({ onNavigate }) {
   const { user, loading } = useAuth();
@@ -42,10 +44,12 @@ export default function DashboardRouter({ onNavigate }) {
   switch (user.role) {
     case 'student':
       return <StudentDashboard onNavigate={onNavigate} />;
+    case 'instructor':
+      return <InstructorDashboard onNavigate={onNavigate} />;
     case 'admin':
       return <AdminDashboard onNavigate={onNavigate} />;
     default:
-      // Fallback for unknown roles
-      return <Navigate to="/" replace />;
+      // Fallback for unknown roles or no role - default to student
+      return <StudentDashboard onNavigate={onNavigate} />;
   }
 }

@@ -54,7 +54,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
           <div className="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-white">Welcome to AT-CS</h2>
+          <h2 className="text-3xl font-bold text-white">Welcome to Agnidhra Technologies</h2>
           <p className="mt-2 text-slate-400">
             Sign in with your Google account to access the learning platform
           </p>
