@@ -514,42 +514,76 @@ function AdminDashboard({ onNavigate }) {
                           </button>
                           {/* Download User Data */}
                           <button
-                            onClick={() => alert('Download as CSV/PDF coming soon!')}
+                            onClick={async () => {
+                              // Download user data as CSV
+                              const { exportToCSV } = await import('@/services/reportingService.js');
+                              const userData = [{ ...profileUser, courses: profileUserCourses.map(c => c.title).join('; ') }];
+                              exportToCSV(userData, `${profileUser.displayName || profileUser.email}-data.csv`);
+                            }}
                             className="px-3 py-2 rounded-md text-white bg-slate-500 hover:bg-slate-600"
                           >
                             Download User Data
                           </button>
                           {/* Impersonate User */}
                           <button
-                            onClick={() => alert('Impersonate user feature coming soon!')}
+                            onClick={() => {
+                              // Set impersonation in localStorage/session (simple demo)
+                              localStorage.setItem('impersonateUserId', profileUser.id);
+                              window.location.reload();
+                            }}
                             className="px-3 py-2 rounded-md text-white bg-gray-700 hover:bg-gray-800"
                           >
                             Impersonate User
                           </button>
                           {/* Send Email */}
                           <button
-                            onClick={() => alert('Send email feature coming soon!')}
+                            onClick={async () => {
+                              const { sendWelcomeEmail } = await import('@/services/emailService.js');
+                              const result = await sendWelcomeEmail({ name: profileUser.displayName, email: profileUser.email }, { enrollmentId: 'ADMIN', courseType: 'admin', startDate: new Date(), accessUrl: window.location.origin });
+                              alert(result.success ? 'Email sent!' : 'Failed: ' + result.error);
+                            }}
                             className="px-3 py-2 rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
                           >
                             Send Email
                           </button>
                           {/* View Payment History */}
                           <button
-                            onClick={() => alert('Payment history feature coming soon!')}
+                            onClick={async () => {
+                              // Query payments for this user (example: from Firestore 'payments' collection)
+                              const { getFirestore, collection, query, where, getDocs } = await import('firebase/firestore');
+                              const db = getFirestore();
+                              const q = query(collection(db, 'payments'), where('userId', '==', profileUser.id));
+                              const snap = await getDocs(q);
+                              if (snap.empty) return alert('No payment history found.');
+                              const payments = snap.docs.map(d => d.data());
+                              alert(payments.map(p => `₹${p.amount} on ${p.date || p.createdAt}`).join('\n'));
+                            }}
                             className="px-3 py-2 rounded-md text-white bg-green-700 hover:bg-green-800"
                           >
                             View Payment History
                           </button>
                           {/* View Activity Log */}
                           <button
-                            onClick={() => alert('Activity log feature coming soon!')}
+                            onClick={async () => {
+                              // Get forum and analytics activity
+                              const { getUserForumStats } = await import('@/services/forumService.js');
+                              const forumStats = await getUserForumStats(profileUser.id);
+                              alert(forumStats.success ? `Threads: ${forumStats.data.threadsCreated}\nReplies: ${forumStats.data.repliesPosted}\nReputation: ${forumStats.data.reputation}` : 'No forum activity.');
+                            }}
                             className="px-3 py-2 rounded-md text-white bg-orange-600 hover:bg-orange-700"
                           >
                             View Activity Log
                           </button>
                           {/* Add Note */}
                           <button
-                            onClick={() => alert('Add note feature coming soon!')}
+                            onClick={async () => {
+                              const note = prompt('Enter note for this user:');
+                              if (!note) return;
+                              const { getFirestore, collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+                              const db = getFirestore();
+                              await addDoc(collection(db, `users/${profileUser.id}/notes`), { note, createdAt: serverTimestamp() });
+                              alert('Note added!');
+                            }}
                             className="px-3 py-2 rounded-md text-white bg-slate-700 hover:bg-slate-800"
                           >
                             Add Note
