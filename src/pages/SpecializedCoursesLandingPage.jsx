@@ -10,7 +10,9 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 const SpecializedCoursesLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
-  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+  const coursePricingData = useCoursePricing();
+  const coursePricing = coursePricingData?.pricing || {};
+  const pricingLoading = coursePricingData?.loading || false;
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Mapping from course titles to centralized pricing IDs

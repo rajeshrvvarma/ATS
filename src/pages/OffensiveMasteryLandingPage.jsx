@@ -14,7 +14,9 @@ const OffensiveMasteryLandingPage = () => {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Centralized pricing for offensive-mastery
-  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+  const coursePricingData = useCoursePricing();
+  const coursePricing = coursePricingData?.pricing || {};
+  const pricingLoading = coursePricingData?.loading || false;
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {

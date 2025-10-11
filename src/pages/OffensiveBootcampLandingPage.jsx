@@ -14,7 +14,9 @@ const OffensiveBootcampLandingPage = () => {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   
   // Get centralized pricing
-  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+  const coursePricingData = useCoursePricing();
+  const coursePricing = coursePricingData?.pricing || {};
+  const pricingLoading = coursePricingData?.loading || false;
 
   // Simulate real-time enrollment updates
   useEffect(() => {

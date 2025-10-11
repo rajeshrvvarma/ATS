@@ -14,7 +14,9 @@ export default function Header({ onNavigate, currentPage }) {
     const { user, logout } = useAuth();
     
     // Load centralized pricing
-    const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+    const coursePricingData = useCoursePricing();
+    const coursePricing = coursePricingData?.pricing || {};
+    const pricingLoading = coursePricingData?.loading || false;
     
     // Production debugging
     React.useEffect(() => {

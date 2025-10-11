@@ -27,7 +27,9 @@ const EnhancedEnrollmentModal = ({
   const [enrollmentResult, setEnrollmentResult] = useState(null);
   
   // Load centralized pricing
-  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+  const coursePricingData = useCoursePricing();
+  const coursePricing = coursePricingData?.pricing || {};
+  const pricingLoading = coursePricingData?.loading || false;
   
   const [formData, setFormData] = useState({
     name: '',

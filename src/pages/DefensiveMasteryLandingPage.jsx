@@ -14,7 +14,9 @@ const DefensiveMasteryLandingPage = () => {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Load centralized pricing for defensive-mastery
-  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
+  const coursePricingData = useCoursePricing();
+  const coursePricing = coursePricingData?.pricing || {};
+  const pricingLoading = coursePricingData?.loading || false;
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
