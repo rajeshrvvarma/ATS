@@ -57,7 +57,17 @@ function AdminDashboard({ onNavigate }) {
       try {
         const usersCol = collection(db, "users");
         const snapshot = await getDocs(usersCol);
-        const userList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const userList = snapshot.docs.map(d => {
+          const data = d.data() || {};
+          return {
+            id: d.id,
+            ...data,
+            displayName: data.displayName || data.name || data.fullName || data.email?.split('@')[0] || 'User',
+            email: data.email || '',
+            role: (data.role || 'student').toLowerCase(),
+            status: (data.status || 'active').toLowerCase(),
+          };
+        });
         setUsers(userList);
       } catch (err) {
         setError("Failed to fetch users: " + err.message);
@@ -382,13 +392,13 @@ function AdminDashboard({ onNavigate }) {
                             </div>
                           </td>
                           <td className="px-4 py-2">
-                            <span className={`px-2 py-1 rounded text-xs font-semibold ${roleColors[user.role] || "bg-gray-200 text-gray-700"}`}>
-                              {user.role}
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${roleColors[(user.role || 'student').toLowerCase()] || "bg-gray-200 text-gray-700"}`}>
+                              {(user.role || 'student')}
                             </span>
                           </td>
                           <td className="px-4 py-2">
-                            <span className={`px-2 py-1 rounded text-xs font-semibold ${statusColors[user.status] || "bg-gray-200 text-gray-700"}`}>
-                              {user.status}
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${statusColors[(user.status || 'active').toLowerCase()] || "bg-gray-200 text-gray-700"}`}>
+                              {(user.status || 'active')}
                             </span>
                           </td>
                           <td className="px-4 py-2">{user.joinDate || "-"}</td>

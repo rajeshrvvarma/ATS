@@ -52,6 +52,12 @@ export default function InstructorDashboard({ onNavigate }) {
   const [myCourses, setMyCourses] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
   const [students, setStudents] = useState([]);
+  const [instructorEarnings, setInstructorEarnings] = useState({
+    thisMonth: 0,
+    lastMonth: 0,
+    thisYear: 0,
+    pending: 0,
+  });
 
   useEffect(() => {
     if (user) {
@@ -119,13 +125,22 @@ export default function InstructorDashboard({ onNavigate }) {
         : 0;
       const certificatesIssued = allStudents.filter(s => s.certificateEarned).length;
 
-      setInstructorStats({
+      const stats = {
         coursesCreated: courses.length,
         totalStudents,
         totalEarnings,
         avgRating: Math.round(avgRating * 10) / 10,
         hoursTeaching: courses.reduce((sum, course) => sum + (course.totalHours || 0), 0),
         certificatesIssued
+      };
+      setInstructorStats(stats);
+
+      // Basic earnings breakdown (placeholder logic using totals)
+      setInstructorEarnings({
+        thisMonth: Math.round((stats.totalEarnings || 0) * 0.2),
+        lastMonth: Math.round((stats.totalEarnings || 0) * 0.18),
+        thisYear: Math.round((stats.totalEarnings || 0)),
+        pending: Math.max(0, Math.round((stats.totalEarnings || 0) * 0.05)),
       });
 
     } catch (err) {
