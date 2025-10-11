@@ -1,6 +1,7 @@
 import React from 'react';
-import { LogOut, User, Shield, GraduationCap } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext.jsx';
+import UserMenu from '@/components/UserMenu.jsx';
 
 /**
  * DashboardLayout - Shared layout for all dashboard types
@@ -12,7 +13,7 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
   const handleLogout = async () => {
     try {
       await logout();
-      onNavigate('home');
+      onNavigate && onNavigate('home');
     } catch (error) {
       console.error('Logout error:', error);
     }
@@ -66,30 +67,8 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
               )}
             </div>
 
-            {/* User Info and Logout */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-9 h-9 rounded-full bg-sky-700 flex items-center justify-center text-white font-bold border-2 border-sky-400">
-                  {user?.name ? user.name.split(' ').map(n => n[0]).join('') : (user?.displayName ? user.displayName.split(' ').map(n => n[0]).join('') : (user?.email ? user.email[0].toUpperCase() : 'A'))}
-                </div>
-                <div className="hidden sm:block">
-                  <div className="text-sm font-medium text-white">
-                    {user?.name || user?.displayName || user?.email?.split('@')[0] || 'Admin'}
-                  </div>
-                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium border border-red-500/30 bg-red-500/20 text-red-400">
-                    <Shield className="w-4 h-4" /> Admin
-                  </span>
-                </div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white transition-colors border border-slate-600 hover:border-slate-500"
-                title="Logout"
-              >
-                <LogOut className="w-4 h-4" />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
-            </div>
+            {/* User Menu Dropdown */}
+            <UserMenu user={user} onLogout={handleLogout} roleLabel="Admin" />
           </div>
         </div>
       </header>
