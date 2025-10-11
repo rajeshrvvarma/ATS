@@ -642,39 +642,17 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 icon: Target,
                 color: 'purple',
                 courses: [
-                    {
-                        id: 'cloud-security',
-                        title: 'Cloud Security Specialist',
-                        subtitle: 'AWS, Azure & Multi-Cloud Security',
-                        duration: '4-6 Weeks',
-                        level: 'Intermediate',
-                        priceKey: 'cloud-security',
-                        enrolled: '65+',
-                        features: ['AWS Security', 'Azure Protection', 'Cloud Architecture', 'DevSecOps'],
-                        action: () => onNavigate('specializedCourses')
-                    },
-                    {
-                        id: 'digital-forensics',
-                        title: 'Digital Forensics Expert',
-                        subtitle: 'Digital Evidence & Malware Forensics',
-                        duration: '5 Weeks',
-                        level: 'Intermediate',
-                        priceKey: 'digital-forensics',
-                        enrolled: '25+',
-                        features: ['Evidence Analysis', 'Investigation Tools', 'Legal Procedures', 'Real Cases'],
-                        action: () => onNavigate('specializedCourses')
-                    },
-                    {
-                        id: 'compliance-governance',
-                        title: 'GRC & Compliance',
-                        subtitle: 'ISO 27001 & Risk Management',
-                        duration: '4-5 Weeks',
-                        level: 'Intermediate',
-                        priceKey: 'compliance-governance',
-                        enrolled: '30+',
-                        features: ['ISO 27001', 'GDPR Compliance', 'Risk Assessment', 'Audit Skills'],
-                        action: () => onNavigate('specializedCourses')
-                    }
+                    { id: 'aws-security-specialist', title: 'AWS Security Specialist', subtitle: 'AWS security services, IAM & cloud-native tools', duration: '4 Weeks', level: 'Intermediate', priceKey: 'aws-security-specialist', enrolled: '23+', features: ['AWS Security', 'Cloud IAM', 'Compliance', 'Incident Response'], action: () => onNavigate('specializedCourses') },
+                    { id: 'azure-security-engineer', title: 'Azure Security Engineer', subtitle: 'Azure security implementation & management', duration: '4 Weeks', level: 'Intermediate', priceKey: 'azure-security-engineer', enrolled: '18+', features: ['Azure Security Center', 'Azure AD', 'Key Vault', 'Sentinel SIEM'], action: () => onNavigate('specializedCourses') },
+                    { id: 'multi-cloud-security-architect', title: 'Multi-Cloud Security Architect', subtitle: 'Advanced multi-cloud security architecture', duration: '6 Weeks', level: 'Advanced', priceKey: 'multi-cloud-security-architect', enrolled: '12+', features: ['Multi-Cloud Design', 'Identity Management', 'Automation', 'DevSecOps'], action: () => onNavigate('specializedCourses') },
+                    { id: 'digital-forensics-investigator', title: 'Digital Forensics Investigator', subtitle: 'Digital evidence collection and analysis', duration: '5 Weeks', level: 'Beginner to Intermediate', priceKey: 'digital-forensics-investigator', enrolled: '15+', features: ['Evidence Collection', 'File Forensics', 'Network Forensics', 'Mobile Forensics'], action: () => onNavigate('specializedCourses') },
+                    { id: 'advanced-malware-forensics', title: 'Advanced Malware Forensics', subtitle: 'Malware reverse engineering & analysis', duration: '4 Weeks', level: 'Advanced', priceKey: 'advanced-malware-forensics', enrolled: '8+', features: ['Malware Analysis', 'Reverse Engineering', 'Sandboxing', 'Memory Forensics'], action: () => onNavigate('specializedCourses') },
+                    { id: 'malware-analysis-fundamentals', title: 'Malware Analysis Fundamentals', subtitle: 'Intro to malware analysis & tooling', duration: '3 Weeks', level: 'Beginner', priceKey: 'malware-analysis-fundamentals', enrolled: '32+', features: ['Malware Types', 'Static Analysis', 'Dynamic Analysis', 'Behavioral Analysis'], action: () => onNavigate('specializedCourses') },
+                    { id: 'advanced-reverse-engineering', title: 'Advanced Reverse Engineering', subtitle: 'Exploit analysis & advanced RE', duration: '6 Weeks', level: 'Advanced', priceKey: 'advanced-reverse-engineering', enrolled: '9+', features: ['Assembly', 'Debugging', 'Exploit Dev', 'Custom Tools'], action: () => onNavigate('specializedCourses') },
+                    { id: 'iso-27001-lead-implementer', title: 'ISO 27001 Lead Implementer', subtitle: 'Complete ISO 27001 implementation', duration: '4 Weeks', level: 'Intermediate', priceKey: 'iso-27001-lead-implementer', enrolled: '28+', features: ['ISO 27001', 'Risk Management', 'ISMS Docs', 'Audit Techniques'], action: () => onNavigate('specializedCourses') },
+                    { id: 'grc-analyst-professional', title: 'GRC Analyst Professional', subtitle: 'Governance, risk and compliance', duration: '5 Weeks', level: 'Intermediate', priceKey: 'grc-analyst-professional', enrolled: '21+', features: ['GRC Framework', 'Risk Assessment', 'Compliance Mgmt', 'GRC Tools'], action: () => onNavigate('specializedCourses') },
+                    { id: 'incident-response-specialist', title: 'Incident Response Specialist', subtitle: 'End-to-end incident response', duration: '4 Weeks', level: 'Intermediate', priceKey: 'incident-response-specialist', enrolled: '19+', features: ['IR Lifecycle', 'Forensics', 'Threat Hunting', 'Crisis Mgmt'], action: () => onNavigate('specializedCourses') },
+                    { id: 'advanced-threat-hunting', title: 'Advanced Threat Hunting', subtitle: 'Proactive detection & hunting', duration: '5 Weeks', level: 'Advanced', priceKey: 'advanced-threat-hunting', enrolled: '11+', features: ['Threat Hunting', 'Analytics', 'Threat Intel', 'Automation'], action: () => onNavigate('specializedCourses') }
                 ]
             },
             technology: {
@@ -683,61 +661,19 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 icon: Code,
                 color: 'green',
                 courses: [
-                    {
-                        id: 'cloud-security',
-                        title: 'Cloud Security Specialist',
-                        subtitle: 'AWS, Azure & Multi-Cloud',
-                        duration: '4-6 Weeks',
-                        level: 'Intermediate',
-                        priceKey: 'cloud-security',
-                        enrolled: '65+',
-                        features: ['AWS Security', 'Azure Protection', 'Cloud Architecture', 'DevSecOps'],
-                        action: () => onNavigate('technologyTraining')
-                    },
-                    {
-                        id: 'full-stack-development',
-                        title: 'Full Stack Development',
-                        subtitle: 'Modern Web Development',
-                        duration: '8 Weeks',
-                        level: 'Beginner to Advanced',
-                        priceKey: 'full-stack-development',
-                        enrolled: '85+',
-                        features: ['React/Node.js', 'Database Design', 'API Development', 'Security Focus'],
-                        action: () => onNavigate('technologyTraining')
-                    },
-                    {
-                        id: 'devops-security',
-                        title: 'DevOps & Automation Security',
-                        subtitle: 'Secure CI/CD & Infrastructure',
-                        duration: '6 Weeks',
-                        level: 'Intermediate',
-                        priceKey: 'devops-security',
-                        enrolled: '40+',
-                        features: ['CI/CD Security', 'Container Security', 'Infrastructure as Code', 'Monitoring'],
-                        action: () => onNavigate('technologyTraining')
-                    },
-                    {
-                        id: 'data-science-ai',
-                        title: 'AI & Data Science',
-                        subtitle: 'Machine Learning & Analytics',
-                        duration: '6 Weeks',
-                        level: 'Intermediate',
-                        priceKey: 'data-science-ai',
-                        enrolled: '55+',
-                        features: ['Python/R', 'Machine Learning', 'Data Visualization', 'AI Security'],
-                        action: () => onNavigate('technologyTraining')
-                    },
-                    {
-                        id: 'software-testing',
-                        title: 'Software Testing',
-                        subtitle: 'Manual & Automation Testing',
-                        duration: 'Flexible',
-                        level: 'Beginner to Intermediate',
-                        priceKey: 'software-testing',
-                        enrolled: '35+',
-                        features: ['Manual Testing', 'Automation Testing', 'Test Planning', 'Quality Assurance'],
-                        action: () => onNavigate('technologyTraining')
-                    }
+                    { id: 'mern-stack-developer', title: 'MERN Stack Developer', subtitle: 'MongoDB, Express, React, Node', duration: '6 Months', level: 'Beginner to Advanced', priceKey: 'mern-stack-developer', enrolled: '45+', features: ['React.js', 'Node.js', 'MongoDB', 'API Dev'], action: () => onNavigate('technologyTraining') },
+                    { id: 'full-stack-python-developer', title: 'Full Stack Python Developer', subtitle: 'Python, Django/Flask, PostgreSQL', duration: '6 Months', level: 'Beginner to Advanced', priceKey: 'full-stack-python-developer', enrolled: '38+', features: ['Python', 'Django', 'Flask', 'PostgreSQL'], action: () => onNavigate('technologyTraining') },
+                    { id: 'java-full-stack-developer', title: 'Java Full Stack Developer', subtitle: 'Java, Spring Boot, Angular/React', duration: '7 Months', level: 'Beginner to Advanced', priceKey: 'java-full-stack-developer', enrolled: '52+', features: ['Java', 'Spring Boot', 'Angular/React', 'Microservices'], action: () => onNavigate('technologyTraining') },
+                    { id: 'aws-cloud-architect', title: 'AWS Cloud Architect', subtitle: 'AWS services & architecture', duration: '4 Months', level: 'Intermediate to Advanced', priceKey: 'aws-cloud-architect', enrolled: '34+', features: ['AWS', 'Terraform', 'ECS/EKS', 'Security'], action: () => onNavigate('technologyTraining') },
+                    { id: 'devops-engineer-bootcamp', title: 'DevOps Engineer Bootcamp', subtitle: 'CI/CD, Docker, Kubernetes', duration: '5 Months', level: 'Intermediate', priceKey: 'devops-engineer-bootcamp', enrolled: '41+', features: ['CI/CD', 'Docker', 'Kubernetes', 'Jenkins'], action: () => onNavigate('technologyTraining') },
+                    { id: 'azure-cloud-solutions', title: 'Azure Cloud Solutions', subtitle: 'Azure services & enterprise solutions', duration: '4 Months', level: 'Intermediate', priceKey: 'azure-cloud-solutions', enrolled: '28+', features: ['Azure', 'AD', 'DevOps', 'Security Center'], action: () => onNavigate('technologyTraining') },
+                    { id: 'data-science-with-python', title: 'Data Science with Python', subtitle: 'Data analysis & machine learning', duration: '5 Months', level: 'Beginner to Advanced', priceKey: 'data-science-with-python', enrolled: '56+', features: ['Python', 'ML', 'TensorFlow', 'Visualization'], action: () => onNavigate('technologyTraining') },
+                    { id: 'ai-ml-engineer', title: 'AI & Machine Learning Engineer', subtitle: 'Deep learning & model deployment', duration: '6 Months', level: 'Intermediate to Advanced', priceKey: 'ai-ml-engineer', enrolled: '23+', features: ['ML', 'Deep Learning', 'NLP', 'MLOps'], action: () => onNavigate('technologyTraining') },
+                    { id: 'business-intelligence-analyst', title: 'Business Intelligence Analyst', subtitle: 'Power BI, Tableau and SQL', duration: '3 Months', level: 'Beginner to Intermediate', priceKey: 'business-intelligence-analyst', enrolled: '47+', features: ['SQL', 'Power BI', 'Tableau', 'Analytics'], action: () => onNavigate('technologyTraining') },
+                    { id: 'automation-testing-engineer', title: 'Automation Testing Engineer', subtitle: 'Selenium, API & performance testing', duration: '4 Months', level: 'Beginner to Advanced', priceKey: 'automation-testing-engineer', enrolled: '39+', features: ['Selenium', 'API Testing', 'Performance', 'CI/CD'], action: () => onNavigate('technologyTraining') },
+                    { id: 'manual-testing-specialist', title: 'Manual Testing Specialist', subtitle: 'Manual QA foundations', duration: '2 Months', level: 'Beginner', priceKey: 'manual-testing-specialist', enrolled: '61+', features: ['Manual Testing', 'Bug Tracking', 'Agile', 'Web/Mobile'], action: () => onNavigate('technologyTraining') },
+                    { id: 'react-native-developer', title: 'React Native Developer', subtitle: 'Cross-platform mobile apps', duration: '4 Months', level: 'Intermediate', priceKey: 'react-native-developer', enrolled: '31+', features: ['React Native', 'State Mgmt', 'Native Modules', 'App Store'], action: () => onNavigate('technologyTraining') },
+                    { id: 'flutter-app-developer', title: 'Flutter App Developer', subtitle: 'Flutter & Dart mobile apps', duration: '4 Months', level: 'Beginner to Intermediate', priceKey: 'flutter-app-developer', enrolled: '26+', features: ['Flutter', 'Dart', 'Firebase', 'UI'], action: () => onNavigate('technologyTraining') }
                 ]
             },
             college: {
