@@ -75,21 +75,12 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo and Title for Role */}
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-9 h-9 bg-gradient-to-br from-sky-600 to-blue-800 rounded-lg flex items-center justify-center border-2 border-sky-400">
-                  {dashboardIcon}
-                </div>
-                <span className="text-white font-bold text-lg tracking-wide">{dashboardLabel}</span>
+            <div className="flex items-center space-x-2">
+              <div className="w-9 h-9 bg-gradient-to-br from-sky-600 to-blue-800 rounded-lg flex items-center justify-center border-2 border-sky-400">
+                {dashboardIcon}
               </div>
-              {title && (
-                <>
-                  <div className="h-6 w-px bg-slate-600"></div>
-                  <h1 className="text-xl font-semibold text-white">{title}</h1>
-                </>
-              )}
+              <span className="text-white font-bold text-lg tracking-wide">{dashboardLabel}</span>
             </div>
-
             {/* User Menu Dropdown */}
             <UserMenu user={user} onLogout={handleLogout} onProfile={handleProfile} roleLabel={roleLabel} />
           </div>
