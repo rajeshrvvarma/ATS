@@ -27,8 +27,9 @@ export default function Header({ onNavigate, currentPage }) {
 
     // Mobile navigation items
     const mobileNavItems = [
+        { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
         { name: "About Us", action: () => scrollToSection('about') },
-        { name: "Video Learning", action: () => onNavigate('video-learning') },
+        { name: "Our Learning Management System", action: () => onNavigate('video-learning') },
         { name: "Contact Us", action: () => onNavigate('contact') },
         { name: "Login", action: () => onNavigate('login') }
     ];
@@ -116,7 +117,7 @@ export default function Header({ onNavigate, currentPage }) {
     const isLinkActive = (link) => {
         // Map page routes to human-readable labels
         const routeMap = {
-            'video-learning': 'Video Learning',
+            'video-learning': 'Our Learning Management System',
             'dashboard': 'Dashboard',
             'admin': 'Admin',
             'login': 'Login',
@@ -181,6 +182,12 @@ export default function Header({ onNavigate, currentPage }) {
                             pricingLoading={pricingLoading}
                         />
                         <button
+                            onClick={() => onNavigate('upcoming-batches')}
+                            className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
+                        >
+                            Upcoming Batches
+                        </button>
+                        <button
                             onClick={() => scrollToSection('about')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
                         >
@@ -190,7 +197,7 @@ export default function Header({ onNavigate, currentPage }) {
                             onClick={() => onNavigate('video-learning')}
                             className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200"
                         >
-                            Video Learning
+                            Our Learning Management System
                         </button>
                         <button
                             onClick={() => onNavigate('contact')}

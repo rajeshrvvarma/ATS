@@ -66,7 +66,7 @@ export default function VideoLearningPage({ onNavigate }) {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-6">
-            <h1 className="text-4xl font-bold text-white">Video Learning Center</h1>
+            <h1 className="text-4xl font-bold text-white">Our Learning Management System</h1>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowTranscriptManager(true)}
@@ -163,7 +163,7 @@ export default function VideoLearningPage({ onNavigate }) {
 
         {/* Features Section */}
         <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose Our Video Learning?</h2>
+          <h2 className="text-2xl font-bold text-white text-center mb-8">Why Choose Our Learning Management System?</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="bg-sky-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">

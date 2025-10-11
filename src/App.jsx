@@ -46,6 +46,7 @@ const AdminDashboard = React.lazy(() => import('@/pages/AdminDashboard.jsx'));
 const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
 const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
 const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
+const UpcomingBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
 
 /**
  * App.jsx is the root component of the application.
@@ -67,6 +68,7 @@ export default function App() {
         specializedCourses: '/specialized-courses',
         technologyTraining: '/technology-training',
         collegeTraining: '/college-bulk-training',
+        'upcoming-batches': '/upcoming-batches',
         terms: '/terms',
         disclaimer: '/disclaimer',
         'accountActivation-defensive': '/activate/defensive',
@@ -98,6 +100,7 @@ export default function App() {
         '/specialized-courses': 'specializedCourses',
         '/technology-training': 'technologyTraining',
         '/college-bulk-training': 'collegeTraining',
+        '/upcoming-batches': 'upcoming-batches',
         '/terms': 'terms',
         '/disclaimer': 'disclaimer',
         '/activate/defensive': 'accountActivation-defensive',
@@ -159,6 +162,7 @@ export default function App() {
                             <Route path="/specialized-courses" element={<SpecializedCoursesLandingPage onNavigate={go} />} />
                             <Route path="/technology-training" element={<TechnologyTrainingLandingPage onNavigate={go} />} />
                             <Route path="/college-bulk-training" element={<CollegeTrainingLandingPage onNavigate={go} />} />
+                            <Route path="/upcoming-batches" element={<UpcomingBatchesPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
                             <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
