@@ -6,6 +6,7 @@ import { sendContactForm } from '@/services/netlifyFormsService.js';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 // Animated Background Component
 const AnimatedBackground = ({ variant = 'default', children, className = '' }) => {
@@ -367,6 +368,8 @@ const ProgramsShowcase = ({ onNavigate }) => {
 
     // View selection interface
     const StudentJobSelector = () => {
+        const { pricing, loading } = useCoursePricing();
+        
         const jobOptions = [
             {
                 id: 'cybersecurity-analyst',
@@ -375,11 +378,12 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 demand: 'High Demand',
                 description: 'Protect companies from cyber threats',
                 course: '7-Day SOC Bootcamp',
-                price: '₹499',
+                priceKey: 'defensive-bootcamp',
                 icon: Shield,
                 gradient: 'from-blue-600 to-cyan-600',
                 companies: 'TCS, Wipro, Infosys',
-                viewId: 'cybersecurity'
+                viewId: 'defensive-bootcamp',
+                targetPage: 'defensiveBootcampLanding'
             },
             {
                 id: 'cloud-engineer',
@@ -388,11 +392,12 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 demand: 'Growing Fast',
                 description: 'Build and manage cloud infrastructure',
                 course: 'Cloud Security Specialist',
-                price: '₹3,999',
+                priceKey: 'cloud-security',
                 icon: Cloud,
                 gradient: 'from-purple-600 to-blue-600',
                 companies: 'Amazon, Microsoft, Google',
-                viewId: 'cloud'
+                viewId: 'cloud-security',
+                targetPage: 'technologyTraining'
             },
             {
                 id: 'software-developer',
@@ -401,11 +406,12 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 demand: 'Always Hiring',
                 description: 'Create websites and applications',
                 course: 'Full Stack Development',
-                price: '₹4,999',
+                priceKey: 'full-stack-development',
                 icon: Code,
                 gradient: 'from-green-600 to-blue-600',
                 companies: 'Zoho, Freshworks, Startups',
-                viewId: 'development'
+                viewId: 'full-stack-development',
+                targetPage: 'technologyTraining'
             },
             {
                 id: 'devops-engineer',
@@ -414,11 +420,12 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 demand: 'Hot Skill',
                 description: 'Automate software delivery',
                 course: 'DevOps & Automation',
-                price: '₹5,499',
+                priceKey: 'devops-security',
                 icon: Server,
                 gradient: 'from-orange-600 to-red-600',
                 companies: 'Tech Mahindra, HCL, L&T',
-                viewId: 'devops'
+                viewId: 'devops-security',
+                targetPage: 'technologyTraining'
             },
             {
                 id: 'ethical-hacker',
@@ -427,11 +434,12 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 demand: 'Exciting',
                 description: 'Find security vulnerabilities',
                 course: '7-Day Hacking Bootcamp',
-                price: '₹599',
+                priceKey: 'offensive-bootcamp',
                 icon: Sword,
                 gradient: 'from-red-600 to-pink-600',
                 companies: 'Security Firms, Banks',
-                viewId: 'hacking'
+                viewId: 'offensive-bootcamp',
+                targetPage: 'offensiveBootcampLanding'
             },
             {
                 id: 'data-analyst',
@@ -440,11 +448,12 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 demand: 'Stable',
                 description: 'Turn data into insights',
                 course: 'AI & Data Science',
-                price: '₹3,999',
+                priceKey: 'data-science-ai',
                 icon: BrainCircuit,
                 gradient: 'from-indigo-600 to-purple-600',
                 companies: 'Accenture, Deloitte, EY',
-                viewId: 'data'
+                viewId: 'data-science-ai',
+                targetPage: 'technologyTraining'
             }
         ];
 
@@ -490,7 +499,9 @@ const ProgramsShowcase = ({ onNavigate }) => {
                                 {/* Course Info */}
                                 <div className="bg-slate-800/50 rounded-lg p-3 mb-3">
                                     <div className="text-sm text-slate-300 font-medium">{job.course}</div>
-                                    <div className="text-xs text-slate-400 mt-1">Starting {job.price}</div>
+                                    <div className="text-xs text-slate-400 mt-1">
+                                        Starting {loading ? '₹...' : formatPrice(pricing[job.priceKey]?.finalPrice || 999)}
+                                    </div>
                                 </div>
 
                                 {/* Companies */}
@@ -542,22 +553,10 @@ const ProgramsShowcase = ({ onNavigate }) => {
     const handleJobSelection = (job) => {
         setIsTransitioning(true);
         
-        // Map job viewId to corresponding course landing page keys
-        const jobToPageKeyMap = {
-            'cybersecurity': 'defensiveBootcampLanding',
-            'cloud': 'technologyTraining',
-            'development': 'technologyTraining',
-            'devops': 'technologyTraining', 
-            'hacking': 'offensiveBootcampLanding',
-            'data': 'technologyTraining'
-        };
-        
-        const targetPageKey = jobToPageKeyMap[job.viewId];
-        
         setTimeout(() => {
-            if (targetPageKey && onNavigate) {
-                // Navigate to specific course landing page
-                onNavigate(targetPageKey);
+            if (job.targetPage && onNavigate) {
+                // Navigate to specific course landing page based on job selection
+                onNavigate(job.targetPage);
             } else {
                 // Fallback to complete courses view
                 setSelectedView('complete');

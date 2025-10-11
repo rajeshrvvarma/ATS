@@ -5,12 +5,16 @@ import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const DefensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(23); // Dynamic counter
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 8, minutes: 42 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+  
+  // Get centralized pricing
+  const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
 
   // Simulate real-time enrollment updates
   useEffect(() => {
@@ -101,6 +105,19 @@ const DefensiveBootcampLandingPage = () => {
   ];
 
   const getCurrentPrice = () => {
+    // Use centralized pricing if available, otherwise fallback to tiered pricing
+    const defensiveBootcampPrice = coursePricing?.['defensive-bootcamp'];
+    
+    if (defensiveBootcampPrice && !pricingLoading) {
+      return {
+        price: formatPrice(defensiveBootcampPrice.finalPrice),
+        label: 'Current Price',
+        savings: `Save ${formatPrice(defensiveBootcampPrice.originalPrice - defensiveBootcampPrice.finalPrice)}!`,
+        originalPrice: formatPrice(defensiveBootcampPrice.originalPrice)
+      };
+    }
+    
+    // Fallback to tiered pricing logic
     if (currentEnrolled < 50) return { price: '₹499', label: 'Early Bird Special', savings: 'Save ₹500!' };
     if (currentEnrolled < 90) return { price: '₹799', label: 'Regular Price', savings: 'Save ₹200!' };
     return { price: '₹999', label: 'Final Price', savings: 'Last chance!' };
