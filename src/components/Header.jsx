@@ -397,27 +397,22 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
             icon: Target,
             color: 'purple',
             courses: [
-                {
-                    title: 'Cloud Security Specialist',
-                    duration: '4-6 Weeks',
-                    price: 'Starting ₹3,999',
-                    description: 'AWS, Azure, and multi-cloud security',
-                    action: () => onNavigate('specializedCourses')
-                },
-                {
-                    title: 'Digital Forensics Expert',
-                    duration: '5 Weeks',
-                    price: 'Starting ₹4,999',
-                    description: 'Digital evidence and malware forensics',
-                    action: () => onNavigate('specializedCourses')
-                },
-                {
-                    title: 'GRC & Compliance',
-                    duration: '4-5 Weeks',
-                    price: 'Starting ₹3,499',
-                    description: 'ISO 27001 and risk management',
-                    action: () => onNavigate('specializedCourses')
-                }
+                // Cloud Security
+                { title: 'AWS Security Specialist', duration: '4 Weeks', price: '₹3,999', description: 'AWS security services, IAM & cloud-native tools', action: () => onNavigate('specializedCourses') },
+                { title: 'Azure Security Engineer', duration: '4 Weeks', price: '₹3,999', description: 'Azure security implementation & management', action: () => onNavigate('specializedCourses') },
+                { title: 'Multi-Cloud Security Architect', duration: '6 Weeks', price: '₹5,999', description: 'Advanced multi-cloud security architecture', action: () => onNavigate('specializedCourses') },
+
+                // Digital Forensics & Malware
+                { title: 'Digital Forensics Investigator', duration: '5 Weeks', price: '₹4,999', description: 'Digital evidence collection and analysis', action: () => onNavigate('specializedCourses') },
+                { title: 'Advanced Malware Forensics', duration: '4 Weeks', price: '₹4,499', description: 'Malware reverse engineering & analysis', action: () => onNavigate('specializedCourses') },
+                { title: 'Malware Analysis Fundamentals', duration: '3 Weeks', price: '₹2,999', description: 'Intro to malware analysis & tooling', action: () => onNavigate('specializedCourses') },
+                { title: 'Advanced Reverse Engineering', duration: '6 Weeks', price: '₹5,499', description: 'Exploit analysis & advanced RE', action: () => onNavigate('specializedCourses') },
+
+                // Compliance & Incident Response
+                { title: 'ISO 27001 Lead Implementer', duration: '4 Weeks', price: '₹3,499', description: 'Complete ISO 27001 implementation', action: () => onNavigate('specializedCourses') },
+                { title: 'GRC Analyst Professional', duration: '5 Weeks', price: '₹4,299', description: 'Governance, risk and compliance', action: () => onNavigate('specializedCourses') },
+                { title: 'Incident Response Specialist', duration: '4 Weeks', price: '₹3,999', description: 'End-to-end incident response', action: () => onNavigate('specializedCourses') },
+                { title: 'Advanced Threat Hunting', duration: '5 Weeks', price: '₹4,799', description: 'Proactive detection & hunting', action: () => onNavigate('specializedCourses') }
             ]
         },
         technology: {
@@ -425,34 +420,28 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection }) => {
             icon: Laptop,
             color: 'indigo',
             courses: [
-                {
-                    title: 'Full Stack Web Development',
-                    duration: 'Flexible',
-                    price: '₹30,000',
-                    description: 'Frontend, backend, and database development',
-                    action: () => onNavigate('technologyTraining')
-                },
-                {
-                    title: 'Cloud Computing & DevOps',
-                    duration: 'Flexible',
-                    price: '₹25,000',
-                    description: 'AWS, Docker, Kubernetes, CI/CD',
-                    action: () => onNavigate('technologyTraining')
-                },
-                {
-                    title: 'AI & Data Science',
-                    duration: 'Flexible',
-                    price: '₹20,000',
-                    description: 'Machine learning and data analytics',
-                    action: () => onNavigate('technologyTraining')
-                },
-                {
-                    title: 'Software Testing',
-                    duration: 'Flexible',
-                    price: '₹18,000',
-                    description: 'Manual and automation testing',
-                    action: () => onNavigate('technologyTraining')
-                }
+                // Full Stack Development
+                { title: 'MERN Stack Developer', duration: '6 Months', price: '₹30,000', description: 'MongoDB, Express, React, Node', action: () => onNavigate('technologyTraining') },
+                { title: 'Full Stack Python Developer', duration: '6 Months', price: '₹28,000', description: 'Python, Django/Flask, PostgreSQL', action: () => onNavigate('technologyTraining') },
+                { title: 'Java Full Stack Developer', duration: '7 Months', price: '₹32,000', description: 'Java, Spring Boot, Angular/React', action: () => onNavigate('technologyTraining') },
+
+                // Cloud & DevOps
+                { title: 'AWS Cloud Architect', duration: '4 Months', price: '₹25,000', description: 'AWS services & architecture', action: () => onNavigate('technologyTraining') },
+                { title: 'DevOps Engineer Bootcamp', duration: '5 Months', price: '₹27,000', description: 'CI/CD, Docker, Kubernetes', action: () => onNavigate('technologyTraining') },
+                { title: 'Azure Cloud Solutions', duration: '4 Months', price: '₹24,000', description: 'Azure services & enterprise solutions', action: () => onNavigate('technologyTraining') },
+
+                // AI & Data
+                { title: 'Data Science with Python', duration: '5 Months', price: '₹20,000', description: 'Data analysis & machine learning', action: () => onNavigate('technologyTraining') },
+                { title: 'AI & Machine Learning Engineer', duration: '6 Months', price: '₹35,000', description: 'Deep learning & model deployment', action: () => onNavigate('technologyTraining') },
+                { title: 'Business Intelligence Analyst', duration: '3 Months', price: '₹18,000', description: 'Power BI, Tableau and SQL', action: () => onNavigate('technologyTraining') },
+
+                // Testing
+                { title: 'Automation Testing Engineer', duration: '4 Months', price: '₹18,000', description: 'Selenium, API & performance testing', action: () => onNavigate('technologyTraining') },
+                { title: 'Manual Testing Specialist', duration: '2 Months', price: '₹12,000', description: 'Manual QA foundations', action: () => onNavigate('technologyTraining') },
+
+                // Mobile
+                { title: 'React Native Developer', duration: '4 Months', price: '₹22,000', description: 'Cross-platform mobile apps', action: () => onNavigate('technologyTraining') },
+                { title: 'Flutter App Developer', duration: '4 Months', price: '₹20,000', description: 'Flutter & Dart mobile apps', action: () => onNavigate('technologyTraining') }
             ]
         },
         college: {
