@@ -2,6 +2,8 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from '
 import {
     getCurrentUser,
     loginStudent,
+    loginWithGoogle,
+    getGoogleRedirectResult,
     logoutStudent,
     onAuthStateChange,
     getStudentProfile,
@@ -28,6 +30,16 @@ export function AuthProvider({ children }) {
             }
             setLoading(false);
         });
+
+        // Check for Google redirect result on app load
+        const checkRedirectResult = async () => {
+            const result = await getGoogleRedirectResult();
+            if (result && result.success) {
+                setUser({ ...result.user, ...result.userData });
+            }
+        };
+        checkRedirectResult();
+
         return () => unsubscribe && unsubscribe();
     }, []);
 
@@ -43,6 +55,15 @@ export function AuthProvider({ children }) {
         return result;
     };
 
+    // Google login
+    const loginGoogle = async () => {
+        const result = await loginWithGoogle();
+        if (result?.user) {
+            setUser({ ...result.user, ...result.userData });
+        }
+        return result;
+    };
+
     const logout = async () => {
         await logoutStudent();
         setUser(null);
@@ -50,7 +71,14 @@ export function AuthProvider({ children }) {
 
     const isAuthenticated = () => !!user;
 
-    const value = useMemo(() => ({ user, loading, login, logout, isAuthenticated }), [user, loading]);
+    const value = useMemo(() => ({ 
+        user, 
+        loading, 
+        login, 
+        loginGoogle, 
+        logout, 
+        isAuthenticated 
+    }), [user, loading]);
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
