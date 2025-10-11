@@ -70,23 +70,6 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
 
   return (
     <div className="min-h-screen bg-slate-900">
-      {/* Header */}
-      <header className="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-sky-600 to-blue-800 rounded-lg flex items-center justify-center border-2 border-sky-400">
-                <img src="/logo.png" alt="AT Logo" className="w-7 h-7 rounded" />
-              </div>
-              <span className="text-white font-bold text-lg tracking-wide">Agnidhra Technologies</span>
-            </div>
-            {/* User Menu Dropdown */}
-            <UserMenu user={user} onLogout={handleLogout} onProfile={handleProfile} roleLabel={roleLabel} />
-          </div>
-        </div>
-      </header>
-
       {/* Welcome Banner */}
       <section className="bg-slate-900 border-b border-slate-800 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

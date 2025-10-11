@@ -197,28 +197,7 @@ export default function Header({ onNavigate, currentPage }) {
                             Enroll Now
                         </button>
                         {user ? (
-                            <div className="relative group">
-                                <button
-                                    className="flex items-center space-x-2 bg-slate-800 px-4 py-2 rounded-lg text-white font-semibold hover:bg-slate-700 transition-colors"
-                                >
-                                    <span>{user.displayName || user.email || 'User'}</span>
-                                    <ChevronDown className="w-4 h-4" />
-                                </button>
-                                <div className="absolute right-0 mt-2 w-40 bg-slate-800 rounded-lg shadow-lg py-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity z-50">
-                                    <button
-                                        onClick={() => onNavigate('profile')}
-                                        className="block w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white"
-                                    >
-                                        Profile
-                                    </button>
-                                    <button
-                                        onClick={() => { if (typeof user.logout === 'function') user.logout(); else window.location.href = '/logout'; }}
-                                        className="block w-full text-left px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-white"
-                                    >
-                                        Logout
-                                    </button>
-                                </div>
-                            </div>
+                            <UserMenu user={user} onProfile={() => onNavigate('profile')} onLogout={() => { if (typeof user.logout === 'function') user.logout(); else window.location.href = '/logout'; }} />
                         ) : (
                             <button
                                 onClick={() => onNavigate('login')}
