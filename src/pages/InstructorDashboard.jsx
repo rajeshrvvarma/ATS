@@ -183,7 +183,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Average Rating</p>
-              <p className="text-2xl font-bold text-white">{dashboardData.stats.avgRating}</p>
+              <p className="text-2xl font-bold text-white">{instructorStats.avgRating}</p>
             </div>
             <Star className="w-8 h-8 text-purple-400" />
           </div>
@@ -193,7 +193,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Teaching Hours</p>
-              <p className="text-2xl font-bold text-white">{dashboardData.stats.hoursTeaching}h</p>
+              <p className="text-2xl font-bold text-white">{instructorStats.hoursTeaching}h</p>
             </div>
             <Clock className="w-8 h-8 text-emerald-400" />
           </div>
@@ -203,7 +203,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Certificates</p>
-              <p className="text-2xl font-bold text-white">{dashboardData.stats.certificatesIssued}</p>
+              <p className="text-2xl font-bold text-white">{instructorStats.certificatesIssued}</p>
             </div>
             <Target className="w-8 h-8 text-sky-400" />
           </div>
@@ -216,18 +216,40 @@ export default function InstructorDashboard({ onNavigate }) {
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <h3 className="text-lg font-semibold text-white mb-4">Recent Activity</h3>
           <div className="space-y-3">
-            {dashboardData.recentActivity.map((activity) => {
-              const IconComponent = activity.icon;
-              return (
-                <div key={activity.id} className="flex items-center space-x-3 p-3 bg-slate-700/50 rounded-lg">
-                  <IconComponent className={`w-5 h-5 ${activity.color}`} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{activity.title}</p>
-                    <p className="text-xs text-slate-400">{activity.time}</p>
+            {recentActivity.length === 0 ? (
+              <p className="text-slate-400 text-center py-4">No recent activity</p>
+            ) : (
+              recentActivity.map((activity) => {
+                const getActivityIcon = (type) => {
+                  switch (type) {
+                    case 'student_complete': return CheckCircle;
+                    case 'new_enrollment': return Users;
+                    case 'question_asked': return MessageSquare;
+                    case 'course_review': return Star;
+                    default: return Activity;
+                  }
+                };
+                const getActivityColor = (type) => {
+                  switch (type) {
+                    case 'student_complete': return 'text-green-400';
+                    case 'new_enrollment': return 'text-blue-400';
+                    case 'question_asked': return 'text-yellow-400';
+                    case 'course_review': return 'text-purple-400';
+                    default: return 'text-gray-400';
+                  }
+                };
+                const IconComponent = getActivityIcon(activity.type);
+                return (
+                  <div key={activity.id} className="flex items-center space-x-3 p-3 bg-slate-700/50 rounded-lg">
+                    <IconComponent className={`w-5 h-5 ${getActivityColor(activity.type)}`} />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{activity.title}</p>
+                      <p className="text-xs text-slate-400">{activity.time || 'Recently'}</p>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </div>
 
@@ -268,8 +290,17 @@ export default function InstructorDashboard({ onNavigate }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {dashboardData.myCourses.map((course) => (
-          <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+        {myCourses.length === 0 ? (
+          <div className="col-span-full text-center py-12">
+            <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+            <p className="text-slate-400 text-lg">No courses created yet</p>
+            <button className="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
+              Create Your First Course
+            </button>
+          </div>
+        ) : (
+          myCourses.map((course) => (
+            <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700">
             <div className="flex items-start justify-between mb-4">
               <h3 className="text-lg font-semibold text-white">{course.title}</h3>
               <span className={`px-2 py-1 text-xs rounded-full ${
@@ -316,8 +347,9 @@ export default function InstructorDashboard({ onNavigate }) {
                 </button>
               </div>
             </div>
-          </div>
-        ))}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
@@ -328,7 +360,7 @@ export default function InstructorDashboard({ onNavigate }) {
         <h2 className="text-2xl font-bold text-white">Student Progress</h2>
         <div className="flex items-center space-x-2 text-slate-400">
           <Users className="w-5 h-5" />
-          <span>{dashboardData.students.length} active students</span>
+          <span>{students.length} active students</span>
         </div>
       </div>
 
@@ -347,7 +379,16 @@ export default function InstructorDashboard({ onNavigate }) {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-700">
-              {dashboardData.students.map((student) => (
+              {students.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-6 py-12 text-center">
+                    <Users className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                    <p className="text-slate-400 text-lg">No students enrolled yet</p>
+                    <p className="text-slate-500 text-sm mt-2">Students will appear here when they enroll in your courses</p>
+                  </td>
+                </tr>
+              ) : (
+                students.map((student) => (
                 <tr key={student.id} className="hover:bg-slate-700/50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
@@ -395,7 +436,8 @@ export default function InstructorDashboard({ onNavigate }) {
                     </div>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -483,7 +525,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">This Month</p>
-              <p className="text-2xl font-bold text-white">${dashboardData.earnings.thisMonth.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">${instructorEarnings.thisMonth.toLocaleString()}</p>
             </div>
             <TrendingUp className="w-8 h-8 text-green-400" />
           </div>
@@ -493,7 +535,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Last Month</p>
-              <p className="text-2xl font-bold text-white">${dashboardData.earnings.lastMonth.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">${instructorEarnings.lastMonth.toLocaleString()}</p>
             </div>
             <Calendar className="w-8 h-8 text-blue-400" />
           </div>
@@ -503,7 +545,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">This Year</p>
-              <p className="text-2xl font-bold text-white">${dashboardData.earnings.thisYear.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">${instructorEarnings.thisYear.toLocaleString()}</p>
             </div>
             <Award className="w-8 h-8 text-yellow-400" />
           </div>
@@ -513,7 +555,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Pending</p>
-              <p className="text-2xl font-bold text-white">${dashboardData.earnings.pending.toLocaleString()}</p>
+              <p className="text-2xl font-bold text-white">${instructorEarnings.pending.toLocaleString()}</p>
             </div>
             <Clock className="w-8 h-8 text-orange-400" />
           </div>
