@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { Eye, Pencil, Trash2, BarChart2, Settings, BookOpen, Plus, Edit, Trash } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import app from "@/config/firebase";
 
@@ -27,6 +27,24 @@ function AdminDashboard() {
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [refresh, setRefresh] = useState(false);
 
+  // Course Management state
+  const [courses, setCourses] = useState([]);
+  const [courseLoading, setCourseLoading] = useState(true);
+  const [courseError, setCourseError] = useState("");
+  const [courseSearch, setCourseSearch] = useState("");
+  const [showAddCourse, setShowAddCourse] = useState(false);
+  const [newCourse, setNewCourse] = useState({ title: "", instructor: "", status: "active" });
+  const [courseRefresh, setCourseRefresh] = useState(false);
+
+  // Analytics state
+  const [analytics, setAnalytics] = useState({ userGrowth: [], enrollments: [] });
+  const [analyticsLoading, setAnalyticsLoading] = useState(true);
+  const [analyticsError, setAnalyticsError] = useState("");
+
+  // System state
+  const [logs, setLogs] = useState([]);
+  const [settings, setSettings] = useState({ maintenance: false });
+
   // Fetch users from Firestore (for all tabs)
   useEffect(() => {
     async function fetchUsers() {
@@ -44,6 +62,53 @@ function AdminDashboard() {
     }
     fetchUsers();
   }, [refresh]);
+
+  // Fetch courses from Firestore
+  useEffect(() => {
+    async function fetchCourses() {
+      setCourseLoading(true);
+      setCourseError("");
+      try {
+        const coursesCol = collection(db, "courses");
+        const snapshot = await getDocs(coursesCol);
+        const courseList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setCourses(courseList);
+      } catch (err) {
+        setCourseError("Failed to fetch courses: " + err.message);
+      }
+      setCourseLoading(false);
+    }
+    fetchCourses();
+  }, [courseRefresh]);
+
+  // Fetch analytics (mocked for now, but structure ready for real data)
+  useEffect(() => {
+    async function fetchAnalytics() {
+      setAnalyticsLoading(true);
+      setAnalyticsError("");
+      try {
+        // Example: userGrowth = [{date: '2025-10-01', count: 10}, ...]
+        // You can replace this with real Firestore queries for analytics
+        setAnalytics({
+          userGrowth: users.map((u, i) => ({ date: u.joinDate || `2025-10-${i+1}` , count: i+1 })),
+          enrollments: courses.map((c, i) => ({ title: c.title, count: c.enrolled || 0 })),
+        });
+      } catch (err) {
+        setAnalyticsError("Failed to fetch analytics: " + err.message);
+      }
+      setAnalyticsLoading(false);
+    }
+    fetchAnalytics();
+  }, [users, courses]);
+
+  // Fetch system logs/settings (mocked for now, structure ready for Firestore)
+  useEffect(() => {
+    setLogs([
+      { id: 1, message: "User admin logged in", date: "2025-10-10" },
+      { id: 2, message: "Course 'React Basics' created", date: "2025-10-09" },
+    ]);
+    setSettings({ maintenance: false });
+  }, []);
 
   // Delete user from Firestore
   async function handleDelete(userId) {
@@ -262,13 +327,152 @@ function AdminDashboard() {
         )}
 
         {tab === "course" && (
-          <div className="py-12 text-center text-slate-400 text-lg">Course management section coming soon.</div>
+          <>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold">Course Management</h2>
+              <button className="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg" onClick={() => setShowAddCourse(true)}>
+                <Plus className="w-4 h-4" /> Add Course
+              </button>
+            </div>
+            <input
+              className="border rounded px-3 py-2 mb-4 w-full max-w-md"
+              placeholder="Search courses..."
+              value={courseSearch}
+              onChange={e => setCourseSearch(e.target.value)}
+            />
+            {courseLoading ? (
+              <div>Loading courses...</div>
+            ) : courseError ? (
+              <div className="text-red-600">{courseError}</div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-gray-800 rounded-lg">
+                  <thead>
+                    <tr className="text-left text-gray-400">
+                      <th className="px-4 py-2">TITLE</th>
+                      <th className="px-4 py-2">INSTRUCTOR</th>
+                      <th className="px-4 py-2">STATUS</th>
+                      <th className="px-4 py-2">ENROLLED</th>
+                      <th className="px-4 py-2">ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {courses.filter(c => c.title?.toLowerCase().includes(courseSearch.toLowerCase())).length === 0 ? (
+                      <tr><td colSpan={5} className="text-center py-4 text-gray-400">No courses found.</td></tr>
+                    ) : (
+                      courses.filter(c => c.title?.toLowerCase().includes(courseSearch.toLowerCase())).map(course => (
+                        <tr key={course.id} className="border-b border-gray-700 hover:bg-gray-700/30">
+                          <td className="px-4 py-2">{course.title}</td>
+                          <td className="px-4 py-2">{course.instructor || '-'}</td>
+                          <td className="px-4 py-2">
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${course.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{course.status}</span>
+                          </td>
+                          <td className="px-4 py-2">{course.enrolled || 0}</td>
+                          <td className="px-4 py-2 flex gap-2">
+                            <button title="Edit" className="hover:text-yellow-400"><Edit size={18} /></button>
+                            <button title="Delete" className="hover:text-red-400" onClick={async () => {
+                              if (window.confirm('Delete this course?')) {
+                                await deleteDoc(doc(db, 'courses', course.id));
+                                setCourseRefresh(r => !r);
+                              }
+                            }}><Trash size={18} /></button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {/* Add Course Modal */}
+            {showAddCourse && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                <div className="bg-slate-900 p-8 rounded-lg w-full max-w-md">
+                  <h3 className="text-xl font-bold mb-4">Add New Course</h3>
+                  <input className="border rounded px-3 py-2 mb-2 w-full" placeholder="Title" value={newCourse.title} onChange={e => setNewCourse(c => ({ ...c, title: e.target.value }))} />
+                  <input className="border rounded px-3 py-2 mb-2 w-full" placeholder="Instructor" value={newCourse.instructor} onChange={e => setNewCourse(c => ({ ...c, instructor: e.target.value }))} />
+                  <select className="border rounded px-3 py-2 mb-4 w-full" value={newCourse.status} onChange={e => setNewCourse(c => ({ ...c, status: e.target.value }))}>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                  </select>
+                  <div className="flex gap-2 justify-end">
+                    <button className="px-4 py-2 bg-slate-700 text-white rounded" onClick={() => setShowAddCourse(false)}>Cancel</button>
+                    <button className="px-4 py-2 bg-sky-600 text-white rounded" onClick={async () => {
+                      if (!newCourse.title) return alert('Title required');
+                      await addDoc(collection(db, 'courses'), { ...newCourse, enrolled: 0 });
+                      setShowAddCourse(false);
+                      setNewCourse({ title: "", instructor: "", status: "active" });
+                      setCourseRefresh(r => !r);
+                    }}>Add</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
+
         {tab === "analytics" && (
-          <div className="py-12 text-center text-slate-400 text-lg">Analytics section coming soon.</div>
+          <>
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2"><BarChart2 className="w-6 h-6" /> Analytics</h2>
+            {analyticsLoading ? (
+              <div>Loading analytics...</div>
+            ) : analyticsError ? (
+              <div className="text-red-600">{analyticsError}</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* User Growth Chart (simple bar) */}
+                <div className="bg-slate-800 rounded-lg p-6">
+                  <div className="font-semibold mb-2 text-white">User Growth</div>
+                  <div className="flex items-end gap-2 h-32">
+                    {analytics.userGrowth.slice(-14).map((d, i) => (
+                      <div key={i} className="flex flex-col items-center justify-end" style={{ width: 18 }}>
+                        <div className="bg-sky-500" style={{ height: `${d.count * 6}px`, minHeight: 4, width: 12, borderRadius: 4 }}></div>
+                        <div className="text-xs text-slate-400 mt-1">{d.date.slice(5)}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {/* Course Enrollments Chart (simple bar) */}
+                <div className="bg-slate-800 rounded-lg p-6">
+                  <div className="font-semibold mb-2 text-white">Course Enrollments</div>
+                  <div className="flex items-end gap-2 h-32">
+                    {analytics.enrollments.slice(0, 10).map((c, i) => (
+                      <div key={i} className="flex flex-col items-center justify-end" style={{ width: 18 }}>
+                        <div className="bg-green-500" style={{ height: `${c.count * 6}px`, minHeight: 4, width: 12, borderRadius: 4 }}></div>
+                        <div className="text-xs text-slate-400 mt-1 truncate w-12">{c.title?.slice(0, 8) || '-'}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
+
         {tab === "system" && (
-          <div className="py-12 text-center text-slate-400 text-lg">System settings section coming soon.</div>
+          <>
+            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2"><Settings className="w-6 h-6" /> System Settings</h2>
+            <div className="mb-6">
+              <label className="flex items-center gap-2">
+                <input type="checkbox" checked={settings.maintenance} onChange={e => setSettings(s => ({ ...s, maintenance: e.target.checked }))} />
+                <span className="text-slate-200">Maintenance Mode</span>
+              </label>
+            </div>
+            <div className="bg-slate-800 rounded-lg p-6">
+              <div className="font-semibold mb-2 text-white">System Logs</div>
+              <ul className="text-slate-400 text-sm space-y-2">
+                {logs.length === 0 ? (
+                  <li>No logs found.</li>
+                ) : (
+                  logs.map(log => (
+                    <li key={log.id}>
+                      <span className="text-slate-300">[{log.date}]</span> {log.message}
+                    </li>
+                  ))
+                )}
+              </ul>
+            </div>
+          </>
         )}
       </div>
     </DashboardLayout>
