@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
-import EnhancedEnrollmentModal from '../components/EnhancedEnrollmentModal';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';
 import AnimatedBackground from '../components/AnimatedBackground';
-import { useCoursePricing, formatPrice } from '../hooks/useCoursePricing';
+import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const CollegeTrainingLandingPage = () => {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
