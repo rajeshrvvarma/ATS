@@ -13,6 +13,37 @@ const SpecializedCoursesLandingPage = () => {
   const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
+  // Mapping from course titles to centralized pricing IDs
+  const titleToIdMap = {
+    'AWS Security Specialist': 'aws-security-specialist',
+    'Azure Security Engineer': 'azure-security-engineer',
+    'Multi-Cloud Security Architect': 'multi-cloud-security-architect',
+    'Digital Forensics Investigator': 'digital-forensics-investigator',
+    'Advanced Malware Forensics': 'advanced-malware-forensics',
+    'Malware Analysis Fundamentals': 'malware-analysis-fundamentals',
+    'Advanced Reverse Engineering': 'advanced-reverse-engineering',
+    'ISO 27001 Lead Implementer': 'iso-27001-lead-implementer',
+    'GRC Analyst Professional': 'grc-analyst-professional',
+    'Incident Response Specialist': 'incident-response-specialist',
+    'Advanced Threat Hunting': 'advanced-threat-hunting'
+  };
+
+  // Helper function to get pricing info
+  const getPricing = (title) => {
+    const courseId = titleToIdMap[title];
+    if (pricingLoading) {
+      return { finalPrice: '...', originalPrice: '...' };
+    }
+    if (coursePricing && courseId && coursePricing[courseId]) {
+      return {
+        finalPrice: formatPrice(coursePricing[courseId].finalPrice),
+        originalPrice: formatPrice(coursePricing[courseId].originalPrice)
+      };
+    }
+    // Fallback to hardcoded prices if not found
+    return null;
+  };
+
   const categories = [
     { id: 'all', name: 'All Courses', icon: Target },
     { id: 'cloud', name: 'Cloud Security', icon: Server },
@@ -269,20 +300,6 @@ const SpecializedCoursesLandingPage = () => {
     ? specializedCourses 
     : specializedCourses.filter(course => course.category === selectedCategory);
 
-  const titleToIdMap = {
-    'AWS Security Specialist': 'aws-security-specialist',
-    'Azure Security Engineer': 'azure-security-engineer',
-    'Multi-Cloud Security Architect': 'multi-cloud-security-architect',
-    'Digital Forensics Investigator': 'digital-forensics-investigator',
-    'Advanced Malware Forensics': 'advanced-malware-forensics',
-    'Malware Analysis Fundamentals': 'malware-analysis-fundamentals',
-    'Advanced Reverse Engineering': 'advanced-reverse-engineering',
-    'ISO 27001 Lead Implementer': 'iso-27001-lead-implementer',
-    'GRC Analyst Professional': 'grc-analyst-professional',
-    'Incident Response Specialist': 'incident-response-specialist',
-    'Advanced Threat Hunting': 'advanced-threat-hunting'
-  };
-
   const handleEnrollment = (course) => {
     const courseType = titleToIdMap[course.title];
     setEnrollmentModal({ isOpen: true, courseType, courseName: course.title });
@@ -454,8 +471,20 @@ const SpecializedCoursesLandingPage = () => {
                   <div className="border-t border-gray-700 pt-6">
                     <div className="flex items-center justify-between mb-4">
                       <div>
-                        <div className={`text-2xl font-bold text-${course.color}-400`}>{course.price}</div>
-                        <div className="text-sm text-gray-500 line-through">{course.originalPrice}</div>
+                        {(() => {
+                          const dynamicPricing = getPricing(course.title);
+                          return dynamicPricing ? (
+                            <>
+                              <div className={`text-2xl font-bold text-${course.color}-400`}>{dynamicPricing.finalPrice}</div>
+                              <div className="text-sm text-gray-500 line-through">{dynamicPricing.originalPrice}</div>
+                            </>
+                          ) : (
+                            <>
+                              <div className={`text-2xl font-bold text-${course.color}-400`}>{course.price}</div>
+                              <div className="text-sm text-gray-500 line-through">{course.originalPrice}</div>
+                            </>
+                          );
+                        })()}
                       </div>
                       <div className="text-right">
                         <div className="text-sm text-gray-400">Starts Soon</div>

@@ -13,6 +13,39 @@ const TechnologyTrainingLandingPage = () => {
   const { pricing: coursePricing, loading: pricingLoading } = useCoursePricing();
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
+  // Mapping from course titles to centralized pricing IDs
+  const titleToIdMap = {
+    'MERN Stack Developer': 'mern-stack-developer',
+    'Full Stack Python Developer': 'full-stack-python-developer',
+    'Java Full Stack Developer': 'java-full-stack-developer',
+    'AWS Cloud Architect': 'aws-cloud-architect',
+    'DevOps Engineer Bootcamp': 'devops-engineer-bootcamp',
+    'Azure Cloud Solutions': 'azure-cloud-solutions',
+    'Data Science with Python': 'data-science-with-python',
+    'AI & Machine Learning Engineer': 'ai-ml-engineer',
+    'Business Intelligence Analyst': 'business-intelligence-analyst',
+    'Automation Testing Engineer': 'automation-testing-engineer',
+    'Manual Testing Specialist': 'manual-testing-specialist',
+    'React Native Developer': 'react-native-developer',
+    'Flutter App Developer': 'flutter-app-developer'
+  };
+
+  // Helper function to get pricing info
+  const getPricing = (title) => {
+    const courseId = titleToIdMap[title];
+    if (pricingLoading) {
+      return { finalPrice: '...', originalPrice: '...' };
+    }
+    if (coursePricing && courseId && coursePricing[courseId]) {
+      return {
+        finalPrice: formatPrice(coursePricing[courseId].finalPrice),
+        originalPrice: formatPrice(coursePricing[courseId].originalPrice)
+      };
+    }
+    // Fallback to hardcoded prices if not found
+    return null;
+  };
+
   const categories = [
     { id: 'all', name: 'All Programs', icon: Target },
     { id: 'fullstack', name: 'Full Stack Development', icon: Code },
@@ -30,8 +63,9 @@ const TechnologyTrainingLandingPage = () => {
       title: 'MERN Stack Developer',
       duration: '6 months',
       level: 'Beginner to Advanced',
-      price: '₹30,000',
-      originalPrice: '₹45,000',
+      priceKey: 'mern-stack-developer', // Add priceKey for dynamic pricing
+      price: '₹30,000', // Fallback price
+      originalPrice: '₹45,000', // Fallback original price
       description: 'Master full-stack development with MongoDB, Express.js, React, and Node.js.',
       features: [
         'React.js Frontend Development',
@@ -324,22 +358,6 @@ const TechnologyTrainingLandingPage = () => {
     ? technologyPrograms 
     : technologyPrograms.filter(program => program.category === selectedCategory);
 
-  const titleToIdMap = {
-    'MERN Stack Developer': 'mern-stack-developer',
-    'Full Stack Python Developer': 'full-stack-python-developer',
-    'Java Full Stack Developer': 'java-full-stack-developer',
-    'AWS Cloud Architect': 'aws-cloud-architect',
-    'DevOps Engineer Bootcamp': 'devops-engineer-bootcamp',
-    'Azure Cloud Solutions': 'azure-cloud-solutions',
-    'Data Science with Python': 'data-science-with-python',
-    'AI & Machine Learning Engineer': 'ai-ml-engineer',
-    'Business Intelligence Analyst': 'business-intelligence-analyst',
-    'Automation Testing Engineer': 'automation-testing-engineer',
-    'Manual Testing Specialist': 'manual-testing-specialist',
-    'React Native Developer': 'react-native-developer',
-    'Flutter App Developer': 'flutter-app-developer'
-  };
-
   const handleEnrollment = (courseTitle) => {
     const courseType = titleToIdMap[courseTitle];
     setEnrollmentModal({ isOpen: true, courseType, courseName: courseTitle });
@@ -454,8 +472,20 @@ const TechnologyTrainingLandingPage = () => {
                       {program.level}
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-white">{program.price}</div>
-                      <div className="text-sm text-gray-400 line-through">{program.originalPrice}</div>
+                      {(() => {
+                        const dynamicPricing = getPricing(program.title);
+                        return dynamicPricing ? (
+                          <>
+                            <div className="text-2xl font-bold text-white">{dynamicPricing.finalPrice}</div>
+                            <div className="text-sm text-gray-400 line-through">{dynamicPricing.originalPrice}</div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="text-2xl font-bold text-white">{program.price}</div>
+                            <div className="text-sm text-gray-400 line-through">{program.originalPrice}</div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                   
