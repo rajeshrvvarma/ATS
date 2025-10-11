@@ -26,7 +26,10 @@ import {
   Brain,
   Activity
 } from 'lucide-react';
-import { getStudentProfile } from '@/services/firebaseAuthService';
+import { getFirestore, collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { app } from '@/config/firebase';
+
+const db = getFirestore(app);
 
 /**
  * InstructorDashboard - Comprehensive instructor panel for course management and student tracking
@@ -35,109 +38,101 @@ export default function InstructorDashboard({ onNavigate }) {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  // Mock data - replace with actual Firebase data
-  const [dashboardData, setDashboardData] = useState({
-    stats: {
-      coursesCreated: 8,
-      totalStudents: 324,
-      totalEarnings: 12560,
-      avgRating: 4.7,
-      hoursTeaching: 156,
-      certificatesIssued: 87
-    },
-    recentActivity: [
-      { id: 1, type: 'student_complete', title: 'Student completed: React Fundamentals', time: '2 hours ago', icon: CheckCircle, color: 'text-green-400' },
-      { id: 2, type: 'new_enrollment', title: 'New enrollment in JavaScript Course', time: '4 hours ago', icon: Users, color: 'text-blue-400' },
-      { id: 3, type: 'question_asked', title: 'New question in discussion forum', time: '6 hours ago', icon: MessageSquare, color: 'text-yellow-400' },
-      { id: 4, type: 'course_review', title: 'New 5-star review received', time: '1 day ago', icon: Star, color: 'text-purple-400' }
-    ],
-    myCourses: [
-      {
-        id: 1,
-        title: 'React Development Masterclass',
-        students: 89,
-        completion: 76,
-        rating: 4.8,
-        earnings: 4450,
-        status: 'published',
-        lastUpdated: '2024-10-01',
-        totalLessons: 24,
-        totalHours: 12
-      },
-      {
-        id: 2,
-        title: 'Advanced JavaScript Concepts',
-        students: 67,
-        completion: 82,
-        rating: 4.6,
-        earnings: 3350,
-        status: 'published',
-        lastUpdated: '2024-09-15',
-        totalLessons: 18,
-        totalHours: 9
-      },
-      {
-        id: 3,
-        title: 'Node.js Backend Development',
-        students: 0,
-        completion: 0,
-        rating: 0,
-        earnings: 0,
-        status: 'draft',
-        lastUpdated: '2024-10-05',
-        totalLessons: 0,
-        totalHours: 0
-      }
-    ],
-    students: [
-      {
-        id: 1,
-        name: 'John Doe',
-        email: 'john@email.com',
-        course: 'React Masterclass',
-        progress: 85,
-        lastActive: '2 hours ago',
-        joinDate: '2024-09-10'
-      },
-      {
-        id: 2,
-        name: 'Sarah Wilson',
-        email: 'sarah@email.com',
-        course: 'JavaScript Concepts',
-        progress: 92,
-        lastActive: '1 day ago',
-        joinDate: '2024-08-25'
-      },
-      {
-        id: 3,
-        name: 'Mike Chen',
-        email: 'mike@email.com',
-        course: 'React Masterclass',
-        progress: 45,
-        lastActive: '3 days ago',
-        joinDate: '2024-09-20'
-      }
-    ],
-    earnings: {
-      thisMonth: 2340,
-      lastMonth: 1890,
-      thisYear: 12560,
-      pending: 450
-    },
-    analytics: {
-      courseViews: [120, 145, 132, 158, 167, 145, 189],
-      enrollments: [12, 18, 15, 22, 25, 19, 28],
-      completions: [8, 12, 10, 15, 18, 14, 20]
-    }
+  // Real data states
+  const [instructorStats, setInstructorStats] = useState({
+    coursesCreated: 0,
+    totalStudents: 0,
+    totalEarnings: 0,
+    avgRating: 0,
+    hoursTeaching: 0,
+    certificatesIssued: 0
   });
+  const [myCourses, setMyCourses] = useState([]);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
-    loadInstructorData();
+    if (user) {
+      loadInstructorData();
+    }
   }, [user]);
 
   const loadInstructorData = async () => {
-    // Load real data from Firebase here
+    if (!user) return;
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Load instructor's courses
+      const coursesQuery = query(
+        collection(db, 'courses'),
+        where('instructorId', '==', user.uid)
+      );
+      const coursesSnapshot = await getDocs(coursesQuery);
+      const courses = coursesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setMyCourses(courses);
+
+      // Load students enrolled in instructor's courses
+      const courseIds = courses.map(c => c.id);
+      const allStudents = [];
+      
+      if (courseIds.length > 0) {
+        for (const courseId of courseIds) {
+          const enrollmentsQuery = query(
+            collection(db, 'enrollments'),
+            where('courseId', '==', courseId)
+          );
+          const enrollmentsSnapshot = await getDocs(enrollmentsQuery);
+          const enrollments = enrollmentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          
+          // Add course info to each student
+          enrollments.forEach(enrollment => {
+            const course = courses.find(c => c.id === courseId);
+            allStudents.push({
+              ...enrollment,
+              courseName: course?.title || 'Unknown Course'
+            });
+          });
+        }
+      }
+      setStudents(allStudents);
+
+      // Load recent activity
+      const activityQuery = query(
+        collection(db, 'instructorActivity'),
+        where('instructorId', '==', user.uid),
+        orderBy('timestamp', 'desc'),
+        limit(10)
+      );
+      const activitySnapshot = await getDocs(activityQuery);
+      const activities = activitySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setRecentActivity(activities);
+
+      // Calculate stats
+      const totalStudents = allStudents.length;
+      const totalEarnings = courses.reduce((sum, course) => sum + (course.earnings || 0), 0);
+      const avgRating = courses.length > 0 
+        ? courses.reduce((sum, course) => sum + (course.rating || 0), 0) / courses.length 
+        : 0;
+      const certificatesIssued = allStudents.filter(s => s.certificateEarned).length;
+
+      setInstructorStats({
+        coursesCreated: courses.length,
+        totalStudents,
+        totalEarnings,
+        avgRating: Math.round(avgRating * 10) / 10,
+        hoursTeaching: courses.reduce((sum, course) => sum + (course.totalHours || 0), 0),
+        certificatesIssued
+      });
+
+    } catch (err) {
+      console.error('Error loading instructor data:', err);
+      setError('Failed to load dashboard data');
+    }
+    
     setLoading(false);
   };
 
@@ -158,7 +153,7 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-slate-400 text-sm">Courses Created</p>
-              <p className="text-2xl font-bold text-white">{dashboardData.stats.coursesCreated}</p>
+              <p className="text-2xl font-bold text-white">{instructorStats.coursesCreated}</p>
             </div>
             <BookOpen className="w-8 h-8 text-blue-400" />
           </div>
