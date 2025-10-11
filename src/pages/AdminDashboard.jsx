@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { Eye, Pencil, Trash2, BarChart2, Settings, BookOpen, Plus, Edit, Trash } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
+import { useAuth } from "@/context/AuthContext.jsx";
 import app from "@/config/firebase";
 
 const db = getFirestore(app);
@@ -16,7 +17,8 @@ const roleColors = {
 };
 
 
-function AdminDashboard() {
+function AdminDashboard({ onNavigate }) {
+  const { user } = useAuth();
   const [tab, setTab] = useState("overview");
   // Shared user state for all tabs
   const [users, setUsers] = useState([]);
@@ -26,6 +28,8 @@ function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All Status");
   const [refresh, setRefresh] = useState(false);
+  const [showEditUser, setShowEditUser] = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
 
   // Course Management state
   const [courses, setCourses] = useState([]);
@@ -122,11 +126,23 @@ function AdminDashboard() {
   }
 
   // Edit user (for now, just toggles status as a demo)
-  async function handleEdit(user) {
-    const newStatus = user.status === "active" ? "inactive" : "active";
+  function handleEdit(user) {
+    setEditingUser(user);
+    setShowEditUser(true);
+  }
+
+  async function handleSaveUser() {
+    if (!editingUser) return;
     try {
-      await updateDoc(doc(db, "users", user.id), { status: newStatus });
+      await updateDoc(doc(db, "users", editingUser.id), {
+        displayName: editingUser.displayName,
+        email: editingUser.email,
+        role: editingUser.role,
+        status: editingUser.status
+      });
       setRefresh(r => !r);
+      setShowEditUser(false);
+      setEditingUser(null);
     } catch (err) {
       alert("Failed to update user: " + err.message);
     }
@@ -152,7 +168,7 @@ function AdminDashboard() {
   ];
 
   return (
-    <DashboardLayout>
+    <DashboardLayout user={user} onNavigate={onNavigate}>
       <div className="p-6">
         <div className="flex gap-6 border-b border-slate-700 mb-6">
           {tabs.map(t => (
@@ -241,6 +257,72 @@ function AdminDashboard() {
                   </div>
                 </div>
               </>
+            )}
+
+            {/* Edit User Modal */}
+            {showEditUser && editingUser && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-slate-800 rounded-lg p-6 w-96 max-w-md">
+                  <h3 className="text-lg font-semibold text-white mb-4">Edit User</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Display Name</label>
+                      <input
+                        type="text"
+                        value={editingUser.displayName || ''}
+                        onChange={(e) => setEditingUser({...editingUser, displayName: e.target.value})}
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
+                      <input
+                        type="email"
+                        value={editingUser.email || ''}
+                        onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Role</label>
+                      <select
+                        value={editingUser.role || 'student'}
+                        onChange={(e) => setEditingUser({...editingUser, role: e.target.value})}
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                      >
+                        <option value="student">Student</option>
+                        <option value="instructor">Instructor</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-300 mb-1">Status</label>
+                      <select
+                        value={editingUser.status || 'active'}
+                        onChange={(e) => setEditingUser({...editingUser, status: e.target.value})}
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-md text-white"
+                      >
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex gap-3 mt-6">
+                    <button
+                      onClick={handleSaveUser}
+                      className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-md"
+                    >
+                      Save Changes
+                    </button>
+                    <button
+                      onClick={() => {setShowEditUser(false); setEditingUser(null);}}
+                      className="px-4 py-2 bg-slate-600 hover:bg-slate-700 text-white rounded-md"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
             )}
           </>
         )}

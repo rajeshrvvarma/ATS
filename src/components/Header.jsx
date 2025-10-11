@@ -198,7 +198,12 @@ export default function Header({ onNavigate, currentPage }) {
                             Enroll Now
                         </button>
                         {user ? (
-                            <UserMenu user={user} onProfile={() => onNavigate('profile')} onLogout={logout} />
+                            <UserMenu 
+                                user={user} 
+                                onProfile={() => onNavigate('profile')} 
+                                onDashboard={() => onNavigate('dashboard')}
+                                onLogout={logout} 
+                            />
                         ) : (
                             <button
                                 onClick={() => onNavigate('login')}

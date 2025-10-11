@@ -44,6 +44,7 @@ const VideoLearningPage = React.lazy(() => import('@/pages/VideoLearningPage.jsx
 const StudentDashboard = React.lazy(() => import('@/pages/StudentDashboard.jsx'));
 const AdminDashboard = React.lazy(() => import('@/pages/AdminDashboard.jsx'));
 const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
+const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
 const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
 
 /**
@@ -79,6 +80,7 @@ export default function App() {
         contact: '/contact',
         enroll: '/enroll',
         'video-learning': '/video-learning',
+        profile: '/profile',
         dashboard: '/dashboard',
         admin: '/admin',
         login: '/login',
@@ -107,11 +109,12 @@ export default function App() {
         '/shipping': 'shipping',
         '/privacy': 'privacy',
         '/contact': 'contact',
-        '/enroll': 'enroll',
-        '/video-learning': 'video-learning',
-        '/dashboard': 'dashboard',
-        '/admin': 'admin',
-        '/login': 'login',
+    '/enroll': 'enroll',
+    '/video-learning': 'video-learning',
+    '/profile': 'profile',
+    '/dashboard': 'dashboard',
+    '/admin': 'admin',
+    '/login': 'login',
     }), []);
 
     const currentPage = pathToPage[location.pathname] || 'home';
@@ -169,6 +172,7 @@ export default function App() {
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
                             <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
                             <Route path="/video-learning" element={<ProtectedRoute roles={['student','admin']}><VideoLearningPage onNavigate={go} /></ProtectedRoute>} />
+                            <Route path="/profile" element={<ProtectedRoute roles={['student','instructor','admin']}><Profile onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/quiz-library" element={<QuizLibrary onClose={() => go('/dashboard')} />} />
                             <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
