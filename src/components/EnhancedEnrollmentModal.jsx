@@ -502,19 +502,23 @@ const EnhancedEnrollmentModal = ({
                   <h5 className="text-blue-400 font-medium mb-2">Payment Instructions</h5>
                   {formData.paymentMethod === 'upi' && (
                     <div className="text-blue-300 text-sm">
-                      <p>Transfer ₹{course.price} to:</p>
-                      <p className="font-mono bg-slate-700 p-2 rounded mt-2">UPI ID: {siteConfig.upiId}</p>
-                      <div className="mt-3 flex flex-col sm:flex-row gap-4 items-center">
+                      <p>Transfer <span className="font-semibold">₹{course.price}</span> to:</p>
+                      <p className="font-mono bg-slate-700 p-2 rounded mt-2 text-base">{siteConfig.upiId}</p>
+                      <div className="mt-4 flex flex-col sm:flex-row gap-6 items-center justify-start">
                         <a
                           href={`upi://pay?pa=${encodeURIComponent(siteConfig.upiId)}&pn=${encodeURIComponent(siteConfig.upiPayeeName)}&am=${encodeURIComponent(course.price)}&cu=INR&tn=${encodeURIComponent(course.name + ' Enrollment')}`}
-                          className="inline-block bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded mb-2"
+                          className="inline-block bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded font-semibold shadow"
+                          aria-label="Pay via UPI App"
                         >
                           Pay via UPI App
                         </a>
-                        <UPIQRCode upiUrl={`upi://pay?pa=${encodeURIComponent(siteConfig.upiId)}&pn=${encodeURIComponent(siteConfig.upiPayeeName)}&am=${encodeURIComponent(course.price)}&cu=INR&tn=${encodeURIComponent(course.name + ' Enrollment')}`} />
+                        <div className="flex flex-col items-center">
+                          <UPIQRCode upiUrl={`upi://pay?pa=${encodeURIComponent(siteConfig.upiId)}&pn=${encodeURIComponent(siteConfig.upiPayeeName)}&am=${encodeURIComponent(course.price)}&cu=INR&tn=${encodeURIComponent(course.name + ' Enrollment')}`} size={128} />
+                          <span className="text-xs text-slate-400 mt-1">Scan QR with any UPI app</span>
+                        </div>
                       </div>
-                      <p className="mt-2">After payment, please enter the transaction reference/UTR below.</p>
-                      <p className="mt-2 text-xs text-yellow-300">Please verify the payee name is <span className="font-semibold">{siteConfig.upiPayeeName}</span> in your UPI app before confirming payment.</p>
+                      <p className="mt-3 text-xs text-yellow-300 font-medium">⚠️ Please verify the payee name is <span className="font-semibold">{siteConfig.upiPayeeName}</span> in your UPI app before confirming payment.</p>
+                      <p className="mt-2">After payment, enter the transaction reference/UTR below.</p>
                     </div>
                   )}
                   {formData.paymentMethod === 'bank_transfer' && (
