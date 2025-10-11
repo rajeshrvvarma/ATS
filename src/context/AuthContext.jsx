@@ -67,6 +67,10 @@ export function AuthProvider({ children }) {
     const logout = async () => {
         await logoutStudent();
         setUser(null);
+        // Redirect to homepage after logout
+        if (typeof window !== 'undefined') {
+            window.location.href = '/';
+        }
     };
 
     const isAuthenticated = () => !!user;
