@@ -487,12 +487,20 @@ export async function getAllCoursePricing() {
       '7-Day Cybersecurity Bootcamp',
       '2-Month Premium Cybersecurity Program'
     ];
+    // Also filter by legacy names in case IDs differ
+    const legacyNames = [
+      '7-Day Cybersecurity Bootcamp',
+      '2-Month Premium Cybersecurity Program'
+    ];
     
     snapshot.docs.forEach(doc => {
+      const data = doc.data();
       // Skip legacy duplicate IDs
-      if (!legacyIds.includes(doc.id)) {
-        pricing[doc.id] = { id: doc.id, ...doc.data() };
-      }
+      if (legacyIds.includes(doc.id)) return;
+      // Skip by name match too (covers cases where id != display name)
+      if (data?.name && legacyNames.includes(String(data.name).trim())) return;
+
+      pricing[doc.id] = { id: doc.id, ...data };
     });
 
     // Only return what's in Firestore to avoid admin duplicates
@@ -510,6 +518,42 @@ export async function getAllCoursePricing() {
 
 export async function getCoursePricing(courseId) {
   try {
+    // Handle legacy course types/IDs used by older flows (e.g., payment page)
+    // 1) If called with legacy type keys, prefer the legacy Firestore doc the user edited
+    // 2) Else, map to canonical IDs
+    const legacyTypeToLegacyDocId = {
+      '7-day-bootcamp': '7-Day Cybersecurity Bootcamp',
+      '2-month-premium': '2-Month Premium Cybersecurity Program'
+    };
+    const legacyDocIds = ['7-Day Cybersecurity Bootcamp', '2-Month Premium Cybersecurity Program'];
+    const legacyTypeToCanonical = {
+      '7-day-bootcamp': 'defensive-bootcamp',
+      '2-month-premium': 'defensive-mastery'
+    };
+
+    // If the request comes with a legacy type (slug), try returning the legacy doc first
+    if (legacyTypeToLegacyDocId[courseId]) {
+      const legacyDocRef = doc(db, COLLECTION, legacyTypeToLegacyDocId[courseId]);
+      const legacySnap = await getDoc(legacyDocRef);
+      if (legacySnap.exists()) {
+        return { id: legacySnap.id, ...legacySnap.data() };
+      }
+      // Fall back to canonical if legacy not present
+      courseId = legacyTypeToCanonical[courseId] || courseId;
+    }
+
+    // If the request directly references a legacy display-name ID, return it
+    if (legacyDocIds.includes(courseId)) {
+      const legacyByNameRef = doc(db, COLLECTION, courseId);
+      const legacyByNameSnap = await getDoc(legacyByNameRef);
+      if (legacyByNameSnap.exists()) {
+        return { id: legacyByNameSnap.id, ...legacyByNameSnap.data() };
+      }
+      // If not found, try mapping to canonical
+      const mapped = courseId === '7-Day Cybersecurity Bootcamp' ? 'defensive-bootcamp' : 'defensive-mastery';
+      courseId = mapped;
+    }
+
     const docRef = doc(db, COLLECTION, courseId);
     const docSnap = await getDoc(docRef);
     
@@ -546,11 +590,22 @@ export async function cleanupLegacyPricing() {
       '7-Day Cybersecurity Bootcamp',
       '2-Month Premium Cybersecurity Program'
     ];
-    
-    for (const courseId of legacyIds) {
-      const docRef = doc(db, COLLECTION, courseId);
-      await deleteDoc(docRef);
-    }
+    const legacyNames = [
+      '7-Day Cybersecurity Bootcamp',
+      '2-Month Premium Cybersecurity Program'
+    ];
+
+    // Fetch all docs and remove any that match legacy IDs or names
+    const snapshot = await getDocs(collection(db, COLLECTION));
+    const deletions = [];
+    snapshot.docs.forEach(d => {
+      const shouldDeleteById = legacyIds.includes(d.id);
+      const shouldDeleteByName = legacyNames.includes(String(d.data()?.name || '').trim());
+      if (shouldDeleteById || shouldDeleteByName) {
+        deletions.push(deleteDoc(doc(db, COLLECTION, d.id)));
+      }
+    });
+    await Promise.all(deletions);
     
     return { success: true, message: 'Legacy pricing documents cleaned up' };
   } catch (error) {

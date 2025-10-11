@@ -446,9 +446,9 @@ const DefensiveBootcampLandingPage = () => {
       <EnhancedEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="bootcamp"
-        courseTitle="7-Day Intensive Cybersecurity Bootcamp"
-        price={pricing.price}
+        courseType="defensive-bootcamp"
+        courseName="7-Day Intensive Cybersecurity Bootcamp"
+        coursePrice={pricingLoading ? undefined : (coursePricing?.['defensive-bootcamp']?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />

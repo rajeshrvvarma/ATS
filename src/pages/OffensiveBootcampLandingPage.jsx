@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target, Sword, Zap, Shield } from 'lucide-react';
-import EnrollmentModal from '@/components/EnrollmentModal.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
@@ -384,13 +384,13 @@ const OffensiveBootcampLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* Enrollment Modal */}
-      <EnrollmentModal
+      {/* Enrollment Modal - centralized pricing */}
+      <EnhancedEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="bootcamp"
-        courseTitle="7-Day Ethical Hacking Bootcamp"
-        price={pricing.price}
+        courseType="offensive-bootcamp"
+        courseName="7-Day Ethical Hacking Bootcamp"
+        coursePrice={pricingLoading ? undefined : (coursePricing?.['offensive-bootcamp']?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
