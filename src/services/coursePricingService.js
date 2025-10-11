@@ -74,9 +74,9 @@ const defaultPricing = {
   'devops-security': {
     id: 'devops-security',
     name: 'DevOps & Automation Security',
-    originalPrice: 8999,
-    discountPrice: 5499,
-    finalPrice: 5499,
+      originalPrice: 35000,
+      discountPrice: 25000,
+      finalPrice: 25000,
     isActive: true,
     duration: '6 weeks',
     category: 'technology',
@@ -86,11 +86,11 @@ const defaultPricing = {
   'full-stack-development': {
     id: 'full-stack-development',
     name: 'Full Stack Development',
-    originalPrice: 9999,
-    discountPrice: 4999,
-    finalPrice: 4999,
+      originalPrice: 45000,
+      discountPrice: 30000,
+      finalPrice: 30000,
     isActive: true,
-    duration: '8 weeks',
+      duration: 'Flexible',
     category: 'technology',
     description: 'Modern web development with security focus',
     lastUpdated: new Date().toISOString()
@@ -98,9 +98,9 @@ const defaultPricing = {
   'data-science-ai': {
     id: 'data-science-ai',
     name: 'AI & Data Science',
-    originalPrice: 8999,
-    discountPrice: 3999,
-    finalPrice: 3999,
+      originalPrice: 30000,
+      discountPrice: 20000,
+      finalPrice: 20000,
     isActive: true,
     duration: '6 weeks',
     category: 'technology',
@@ -125,26 +125,38 @@ const defaultPricing = {
   // Specialized Courses
   'digital-forensics': {
     id: 'digital-forensics',
-    name: 'Digital Forensics & Investigation',
+      name: 'Digital Forensics Expert',
     originalPrice: 6999,
     discountPrice: 4999,
     finalPrice: 4999,
     isActive: true,
-    duration: '4 weeks',
+      duration: '5 weeks',
     category: 'specialized',
-    description: 'Incident investigation and digital evidence',
+      description: 'Digital evidence and malware forensics',
     lastUpdated: new Date().toISOString()
   },
   'compliance-governance': {
     id: 'compliance-governance',
-    name: 'Compliance & Governance',
+      name: 'GRC & Compliance',
     originalPrice: 5999,
-    discountPrice: 3999,
-    finalPrice: 3999,
+      discountPrice: 3499,
+      finalPrice: 3499,
     isActive: true,
-    duration: '3 weeks',
+      duration: '4-5 weeks',
     category: 'specialized',
-    description: 'ISO 27001, NIST, and regulatory compliance',
+      description: 'ISO 27001 and risk management',
+      lastUpdated: new Date().toISOString()
+    },
+    'software-testing': {
+      id: 'software-testing',
+      name: 'Software Testing',
+      originalPrice: 25000,
+      discountPrice: 18000,
+      finalPrice: 18000,
+      isActive: true,
+      duration: 'Flexible',
+      category: 'technology',
+      description: 'Manual and automation testing',
     lastUpdated: new Date().toISOString()
   },
   
@@ -160,6 +172,18 @@ const defaultPricing = {
     category: 'enterprise',
     description: 'Customized training for educational institutions',
     lastUpdated: new Date().toISOString()
+    },
+    'team-skill-development': {
+      id: 'team-skill-development',
+      name: 'Team Skill Development',
+      originalPrice: 0,
+      discountPrice: 0,
+      finalPrice: 0,
+      isActive: true,
+      duration: 'Customizable',
+      category: 'enterprise',
+      description: 'Multi-technology training solutions',
+      lastUpdated: new Date().toISOString()
   }
 };
 

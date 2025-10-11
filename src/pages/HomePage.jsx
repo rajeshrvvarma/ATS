@@ -643,10 +643,21 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 color: 'purple',
                 courses: [
                     {
+                        id: 'cloud-security',
+                        title: 'Cloud Security Specialist',
+                        subtitle: 'AWS, Azure & Multi-Cloud Security',
+                        duration: '4-6 Weeks',
+                        level: 'Intermediate',
+                        priceKey: 'cloud-security',
+                        enrolled: '65+',
+                        features: ['AWS Security', 'Azure Protection', 'Cloud Architecture', 'DevSecOps'],
+                        action: () => onNavigate('specializedCourses')
+                    },
+                    {
                         id: 'digital-forensics',
-                        title: 'Digital Forensics & Investigation',
-                        subtitle: 'Cyber Crime Investigation',
-                        duration: '4 Weeks',
+                        title: 'Digital Forensics Expert',
+                        subtitle: 'Digital Evidence & Malware Forensics',
+                        duration: '5 Weeks',
                         level: 'Intermediate',
                         priceKey: 'digital-forensics',
                         enrolled: '25+',
@@ -655,9 +666,9 @@ const ProgramsShowcase = ({ onNavigate }) => {
                     },
                     {
                         id: 'compliance-governance',
-                        title: 'Compliance & Governance',
-                        subtitle: 'Regulatory & Risk Management',
-                        duration: '3 Weeks',
+                        title: 'GRC & Compliance',
+                        subtitle: 'ISO 27001 & Risk Management',
+                        duration: '4-5 Weeks',
                         level: 'Intermediate',
                         priceKey: 'compliance-governance',
                         enrolled: '30+',
@@ -715,6 +726,17 @@ const ProgramsShowcase = ({ onNavigate }) => {
                         enrolled: '55+',
                         features: ['Python/R', 'Machine Learning', 'Data Visualization', 'AI Security'],
                         action: () => onNavigate('technologyTraining')
+                    },
+                    {
+                        id: 'software-testing',
+                        title: 'Software Testing',
+                        subtitle: 'Manual & Automation Testing',
+                        duration: 'Flexible',
+                        level: 'Beginner to Intermediate',
+                        priceKey: 'software-testing',
+                        enrolled: '35+',
+                        features: ['Manual Testing', 'Automation Testing', 'Test Planning', 'Quality Assurance'],
+                        action: () => onNavigate('technologyTraining')
                     }
                 ]
             },
@@ -734,6 +756,17 @@ const ProgramsShowcase = ({ onNavigate }) => {
                         enrolled: '500+ Students',
                         features: ['Bulk Pricing', 'Placement Support', 'Industry Certificates', 'College Partnerships'],
                         action: () => onNavigate('collegeTraining')
+                        },
+                        {
+                            id: 'team-skill-development',
+                            title: 'Team Skill Development',
+                            subtitle: 'Multi-technology Training Solutions',
+                            duration: 'Customizable',
+                            level: 'All Levels',
+                            priceKey: 'team-skill-development',
+                            enrolled: 'Contact Us',
+                            features: ['Custom Curriculum', 'Team Training', 'Skill Assessment', 'Progress Tracking'],
+                            action: () => onNavigate('contact')
                     }
                 ]
             }
@@ -771,7 +804,7 @@ const ProgramsShowcase = ({ onNavigate }) => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {currentCategory.courses.map((course, index) => {
                         const coursePrice = pricing?.[course.priceKey];
-                        const displayPrice = loading ? '₹...' : (coursePrice ? formatPrice(coursePrice.finalPrice) : '₹999');
+                            const displayPrice = loading ? '₹...' : (coursePrice ? (coursePrice.finalPrice === 0 ? 'Contact Us' : formatPrice(coursePrice.finalPrice)) : '₹999');
                         const originalPrice = coursePrice ? formatPrice(coursePrice.originalPrice) : '';
                         
                         return (
