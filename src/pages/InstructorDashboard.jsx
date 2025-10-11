@@ -590,39 +590,7 @@ export default function InstructorDashboard({ onNavigate }) {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-white">Instructor Settings</h2>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Profile Settings */}
-        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
-          <h3 className="text-lg font-semibold text-white mb-4">Profile Information</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Name</label>
-              <input
-                type="text"
-                value={user?.name || user?.displayName || ''}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
-                readOnly
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
-              <input
-                type="email"
-                value={user?.email || ''}
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
-                readOnly
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Bio</label>
-              <textarea
-                rows={3}
-                placeholder="Tell students about yourself..."
-                className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
-              />
-            </div>
-          </div>
-        </div>
+      {/* Profile editing is now handled via the Profile page, accessible from the user menu. */}
 
         {/* Notification Settings */}
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
