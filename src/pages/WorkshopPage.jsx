@@ -1,9 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Target } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
+import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
 
 export default function FreeWorkshopPage({ onNavigate }) {
+    const [formData, setFormData] = useState({ name: '', email: '' });
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            const res = await sendEnrollmentInquiry({
+                name: formData.name,
+                email: formData.email,
+                course: 'free-workshop',
+                source: 'workshop-page'
+            });
+            if (res.success) {
+                setSubmitted(true);
+                setFormData({ name: '', email: '' });
+                setTimeout(() => setSubmitted(false), 5000);
+            } else {
+                throw new Error(res.error || 'Submission failed');
+            }
+        } catch (err) {
+            console.error('Workshop registration failed:', err);
+            alert('Could not submit. Please try again later.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
     return (
         <AnimatedBackground variant="workshop" className="text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
@@ -24,20 +58,24 @@ export default function FreeWorkshopPage({ onNavigate }) {
                             <li className="flex items-start"><Target size={16} className="text-sky-400 mr-3 mt-1 flex-shrink-0" /><span>Live Q&A session with our expert trainers.</span></li>
                         </ul>
                     </div>
-                     <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
+                    <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                          <h3 className="text-2xl font-bold text-white mb-6 text-center">Register Now</h3>
-                         <form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="space-y-4">
-                            <input type="hidden" name="_subject" value="New FREE WORKSHOP Registration!" />
+                         {submitted && (
+                           <div className="mb-4 p-3 rounded bg-green-900/30 border border-green-700 text-green-200 text-sm">
+                             Thank you! Your registration has been received.
+                           </div>
+                         )}
+                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label htmlFor="ws-name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
-                                <input type="text" id="ws-name" name="name" required className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" />
+                                <input type="text" id="ws-name" name="name" required value={formData.name} onChange={handleChange} className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" />
                             </div>
                             <div>
                                 <label htmlFor="ws-email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
-                                <input type="email" id="ws-email" name="email" required className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" />
+                                <input type="email" id="ws-email" name="email" required value={formData.email} onChange={handleChange} className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" />
                             </div>
-                            <button type="submit" className="w-full bg-sky-500 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-sky-600 transition-colors duration-300">
-                                Claim Your Spot
+                            <button type="submit" disabled={submitting} className="w-full bg-sky-500 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-sky-600 transition-colors duration-300 disabled:opacity-50">
+                                {submitting ? 'Submitting...' : 'Claim Your Spot'}
                             </button>
                         </form>
                     </div>

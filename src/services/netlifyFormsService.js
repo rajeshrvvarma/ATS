@@ -74,6 +74,7 @@ export const sendContactForm = async (contactData) => {
     email: contactData.email,
     phone: contactData.phone || '',
     subject: contactData.subject,
+    category: contactData.category || 'general',
     message: contactData.message,
     source: contactData.source || 'website',
     timestamp: new Date().toISOString()

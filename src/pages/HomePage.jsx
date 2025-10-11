@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, DollarSign, BookOpen, Globe, Zap, Grid3X3, Layers, Map, Eye, RotateCcw, Laptop, Cloud, Database, TestTube } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SectionTitle from '@/components/SectionTitle.jsx';
+import { sendContactForm } from '@/services/netlifyFormsService.js';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
@@ -1045,7 +1046,44 @@ const Testimonials = () => {
 };
 
 // Contact Section
-const Contact = ({ onNavigate }) => ( 
+const Contact = ({ onNavigate }) => { 
+    const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+    const [submitting, setSubmitting] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setSubmitting(true);
+        try {
+            const res = await sendContactForm({
+                name: formData.name,
+                email: formData.email,
+                subject: 'General inquiry',
+                category: 'general',
+                message: formData.message,
+                source: 'homepage'
+            });
+            if (res.success) {
+                setSubmitted(true);
+                setFormData({ name: '', email: '', message: '' });
+                setTimeout(() => setSubmitted(false), 5000);
+            } else {
+                throw new Error(res.error || 'Submission failed');
+            }
+        } catch (err) {
+            console.error('Contact form error:', err);
+            alert('Could not send your message. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
+    };
+
+    return (
     <AnimatedBackground variant="contact" className="py-20">
         <section id="contact" className="container mx-auto px-6">
             <SectionTitle>Get In Touch</SectionTitle>
@@ -1070,15 +1108,18 @@ const Contact = ({ onNavigate }) => (
                             <h3 className="text-xl font-bold text-white">General Inquiry</h3>
                             <p className="text-blue-200 text-sm mt-2">We'd love to hear from you!</p>
                         </div>
-                        <form action="https://formsubmit.co/9209e4394cef0efacaef254750017022" method="POST" className="space-y-6">
-                            <input type="hidden" name="_next" value="https://atstatic.netlify.app/thank-you" />
-                            <input type="hidden" name="_subject" value="New Cyber Security Inquiry!" />
+                        {submitted && (
+                          <div className="p-3 rounded bg-green-900/30 border border-green-700 text-green-200 text-sm">Thank you! We'll get back to you shortly.</div>
+                        )}
+                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
                                 <input 
                                     type="text" 
                                     id="name" 
                                     name="name" 
+                                    value={formData.name}
+                                    onChange={handleChange}
                                     required 
                                     className="block w-full bg-slate-700 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500" 
                                 />
@@ -1089,6 +1130,8 @@ const Contact = ({ onNavigate }) => (
                                     type="email" 
                                     id="email" 
                                     name="email" 
+                                    value={formData.email}
+                                    onChange={handleChange}
                                     required 
                                     className="block w-full bg-slate-700 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500" 
                                 />
@@ -1100,15 +1143,18 @@ const Contact = ({ onNavigate }) => (
                                     name="message" 
                                     rows="4" 
                                     required 
+                                    value={formData.message}
+                                    onChange={handleChange}
                                     placeholder="Ask us about our programs, schedules, or anything else!" 
                                     className="block w-full bg-slate-700 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500"
                                 ></textarea>
                             </div>
                             <button 
                                 type="submit" 
-                                className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-green-700 transition-all duration-300 transform hover:scale-105"
+                                disabled={submitting}
+                                className="w-full bg-gradient-to-r from-blue-600 to-green-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:from-blue-700 hover:to-green-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50"
                             >
-                                Send Message
+                                {submitting ? 'Sending...' : 'Send Message'}
                             </button>
                         </form>
                     </motion.div>
@@ -1157,7 +1203,8 @@ const Contact = ({ onNavigate }) => (
             </div>
         </section>
     </AnimatedBackground>
-);
+    );
+};
 
 // Main HomePage Component
 const HomePage = ({ onNavigate }) => {

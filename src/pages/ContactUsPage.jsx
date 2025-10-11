@@ -34,6 +34,7 @@ export default function ContactUsPage({ onNavigate }) {
                 email: formData.email,
                 phone: formData.phone,
                 subject: formData.subject,
+                category: formData.category,
                 message: formData.message,
                 source: 'contact-page'
             });
@@ -181,10 +182,7 @@ export default function ContactUsPage({ onNavigate }) {
                                 </div>
                             )}
 
-                            <form action="https://formsubmit.co/support@agnidhra-technologies.com" method="POST" className="space-y-4">
-                                <input type="hidden" name="_subject" value="Support Request from Website" />
-                                <input type="hidden" name="_next" value="https://yourdomain.com/support-success" />
-                                <input type="hidden" name="_captcha" value="false" />
+                            <form onSubmit={handleSubmit} className="space-y-4">
                                 <div className="grid md:grid-cols-2 gap-4">
                                     <div>
                                         <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">
