@@ -1,0 +1,1365 @@
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Eye,
+  Upload,
+  Play,
+  FileText,
+  Clock,
+  Users,
+  BookOpen,
+  Save,
+  X,
+  ChevronDown,
+  ChevronRight,
+  Settings,
+  Cloud,
+  Video,
+  Image,
+  Link,
+  Calendar,
+  Target,
+  Award,
+  Filter,
+  Search,
+  Grid,
+  List,
+  MoreVertical,
+  Copy,
+  Archive,
+  AlertCircle,
+  CheckCircle,
+  HardDrive,
+  CloudUpload,
+  File,
+  Progress
+} from 'lucide-react';
+import { loadCourses, addCourse, updateCourse, deleteCourse, addLesson, updateLesson, deleteLesson } from '@/services/courseService.js';
+import { 
+  uploadCourseVideo, 
+  uploadCourseDocument, 
+  formatFileSize, 
+  getFileTypeIcon,
+  cloudConfig 
+} from '@/services/googleCloudStorage.js';
+
+const InstructorContentManagement = () => {
+  // Core state
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'published', 'draft', 'coming-soon'
+  const [sortBy, setSortBy] = useState('recent'); // 'recent', 'title', 'students'
+
+  // Modal states
+  const [showCourseModal, setShowCourseModal] = useState(false);
+  const [showLessonModal, setShowLessonModal] = useState(false);
+  const [editingCourse, setEditingCourse] = useState(null);
+  const [editingLesson, setEditingLesson] = useState(null);
+  const [selectedCourse, setSelectedCourse] = useState(null);
+
+  // Form states
+  const [courseForm, setCourseForm] = useState({
+    title: '',
+    description: '',
+    shortDescription: '',
+    category: 'technology',
+    level: 'beginner',
+    duration: '',
+    price: 0,
+    thumbnail: '',
+    status: 'draft', // 'draft', 'published', 'coming-soon'
+    tags: [],
+    objectives: [''],
+    prerequisites: [''],
+    targetAudience: '',
+    certificate: false
+  });
+
+  const [lessonForm, setLessonForm] = useState({
+    title: '',
+    description: '',
+    type: 'video', // 'video', 'document', 'quiz', 'assignment'
+    content: '', // URL for video, file path for documents
+    duration: '',
+    order: 0,
+    isPreview: false,
+    resources: []
+  });
+
+  // File upload states
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+
+  // Load courses on component mount
+  useEffect(() => {
+    loadCoursesData();
+  }, []);
+
+  const loadCoursesData = async () => {
+    try {
+      setLoading(true);
+      const coursesData = loadCourses();
+      setCourses(coursesData);
+    } catch (error) {
+      console.error('Error loading courses:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter and sort courses
+  const filteredCourses = courses
+    .filter(course => {
+      const matchesSearch = course.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           course.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = filterStatus === 'all' || course.status === filterStatus;
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'title':
+          return a.title?.localeCompare(b.title) || 0;
+        case 'students':
+          return (b.enrolledStudents || 0) - (a.enrolledStudents || 0);
+        case 'recent':
+        default:
+          return new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0);
+      }
+    });
+
+  // Course CRUD operations
+  const handleCreateCourse = async () => {
+    try {
+      const newCourse = {
+        ...courseForm,
+        id: `course_${Date.now()}`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lessons: [],
+        enrolledStudents: 0
+      };
+      
+      addCourse(newCourse);
+      await loadCoursesData();
+      setShowCourseModal(false);
+      resetCourseForm();
+    } catch (error) {
+      console.error('Error creating course:', error);
+    }
+  };
+
+  const handleUpdateCourse = async () => {
+    try {
+      const updatedCourse = {
+        ...courseForm,
+        updatedAt: new Date().toISOString()
+      };
+      
+      updateCourse(editingCourse.id, updatedCourse);
+      await loadCoursesData();
+      setShowCourseModal(false);
+      setEditingCourse(null);
+      resetCourseForm();
+    } catch (error) {
+      console.error('Error updating course:', error);
+    }
+  };
+
+  const handleDeleteCourse = async (courseId) => {
+    if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
+      try {
+        deleteCourse(courseId);
+        await loadCoursesData();
+      } catch (error) {
+        console.error('Error deleting course:', error);
+      }
+    }
+  };
+
+  const handleDuplicateCourse = async (course) => {
+    try {
+      const duplicatedCourse = {
+        ...course,
+        id: `course_${Date.now()}`,
+        title: `${course.title} (Copy)`,
+        status: 'draft',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        enrolledStudents: 0
+      };
+      
+      addCourse(duplicatedCourse);
+      await loadCoursesData();
+    } catch (error) {
+      console.error('Error duplicating course:', error);
+    }
+  };
+
+  // Lesson CRUD operations
+  const handleCreateLesson = async () => {
+    try {
+      const newLesson = {
+        ...lessonForm,
+        id: `lesson_${Date.now()}`,
+        courseId: selectedCourse.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      
+      addLesson(selectedCourse.id, newLesson);
+      await loadCoursesData();
+      setShowLessonModal(false);
+      resetLessonForm();
+    } catch (error) {
+      console.error('Error creating lesson:', error);
+    }
+  };
+
+  const handleUpdateLesson = async () => {
+    try {
+      const updatedLesson = {
+        ...lessonForm,
+        updatedAt: new Date().toISOString()
+      };
+      
+      updateLesson(selectedCourse.id, editingLesson.id, updatedLesson);
+      await loadCoursesData();
+      setShowLessonModal(false);
+      setEditingLesson(null);
+      resetLessonForm();
+    } catch (error) {
+      console.error('Error updating lesson:', error);
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId) => {
+    if (window.confirm('Are you sure you want to delete this lesson?')) {
+      try {
+        deleteLesson(selectedCourse.id, lessonId);
+        await loadCoursesData();
+      } catch (error) {
+        console.error('Error deleting lesson:', error);
+      }
+    }
+  };
+
+  // Form helpers
+  const resetCourseForm = () => {
+    setCourseForm({
+      title: '',
+      description: '',
+      shortDescription: '',
+      category: 'technology',
+      level: 'beginner',
+      duration: '',
+      price: 0,
+      thumbnail: '',
+      status: 'draft',
+      tags: [],
+      objectives: [''],
+      prerequisites: [''],
+      targetAudience: '',
+      certificate: false
+    });
+  };
+
+  const resetLessonForm = () => {
+    setLessonForm({
+      title: '',
+      description: '',
+      type: 'video',
+      content: '',
+      duration: '',
+      order: 0,
+      isPreview: false,
+      resources: []
+    });
+    setUploadProgress(0);
+    setIsUploading(false);
+    setUploadedFiles([]);
+  };
+
+  // File upload handlers
+  const handleFileUpload = async (file, courseId, lessonId = null) => {
+    setIsUploading(true);
+    setUploadProgress(0);
+
+    try {
+      let result;
+      if (file.type.startsWith('video/')) {
+        result = await uploadCourseVideo(file, courseId, lessonId || 'temp', (progress) => {
+          setUploadProgress(progress);
+        });
+      } else {
+        result = await uploadCourseDocument(file, courseId, lessonId);
+      }
+
+      if (result.success) {
+        const fileData = {
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          url: result.videoUrl || result.documentUrl,
+          uploadedAt: new Date().toISOString()
+        };
+
+        setUploadedFiles(prev => [...prev, fileData]);
+
+        // Update lesson form with file URL
+        if (lessonForm.type === 'video' && file.type.startsWith('video/')) {
+          setLessonForm(prev => ({ ...prev, content: fileData.url }));
+        } else if (lessonForm.type === 'document') {
+          setLessonForm(prev => ({ ...prev, content: fileData.url }));
+        }
+
+        console.log('File uploaded successfully:', fileData);
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed: ' + error.message);
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, courseId, lessonId) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    if (files.length > 0) {
+      handleFileUpload(files[0], courseId, lessonId);
+    }
+  };
+
+  const openCourseModal = (course = null) => {
+    if (course) {
+      setEditingCourse(course);
+      setCourseForm({ ...course });
+    } else {
+      setEditingCourse(null);
+      resetCourseForm();
+    }
+    setShowCourseModal(true);
+  };
+
+  const openLessonModal = (course, lesson = null) => {
+    setSelectedCourse(course);
+    if (lesson) {
+      setEditingLesson(lesson);
+      setLessonForm({ ...lesson });
+    } else {
+      setEditingLesson(null);
+      resetLessonForm();
+    }
+    setShowLessonModal(true);
+  };
+
+  // Status badge component
+  const StatusBadge = ({ status }) => {
+    const statusConfig = {
+      published: { color: 'bg-green-100 text-green-800', label: 'Published' },
+      draft: { color: 'bg-gray-100 text-gray-800', label: 'Draft' },
+      'coming-soon': { color: 'bg-blue-100 text-blue-800', label: 'Coming Soon' }
+    };
+    
+    const config = statusConfig[status] || statusConfig.draft;
+    
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+        {config.label}
+      </span>
+    );
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading courses...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-3">
+          <BookOpen className="h-6 w-6 text-blue-600" />
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">Content Management</h2>
+            <p className="text-gray-600">Create and manage your courses and lessons</p>
+          </div>
+        </div>
+        <button
+          onClick={() => openCourseModal()}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+        >
+          <Plus className="h-4 w-4" />
+          New Course
+        </button>
+      </div>
+
+      {/* Filters and Search */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="flex-1">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <input
+              type="text"
+              placeholder="Search courses..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+        
+        <div className="flex gap-2">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="all">All Status</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="coming-soon">Coming Soon</option>
+          </select>
+          
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="recent">Most Recent</option>
+            <option value="title">Title A-Z</option>
+            <option value="students">Most Students</option>
+          </select>
+          
+          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+            <button
+              onClick={() => setViewMode('grid')}
+              className={`p-2 ${viewMode === 'grid' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <Grid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode('list')}
+              className={`p-2 ${viewMode === 'list' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Courses Grid/List */}
+      {filteredCourses.length === 0 ? (
+        <div className="text-center py-12">
+          <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
+          <p className="text-gray-600 mb-6">
+            {searchTerm || filterStatus !== 'all' 
+              ? 'Try adjusting your search or filters'
+              : 'Get started by creating your first course'
+            }
+          </p>
+          {!searchTerm && filterStatus === 'all' && (
+            <button
+              onClick={() => openCourseModal()}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
+            >
+              <Plus className="h-4 w-4" />
+              Create Your First Course
+            </button>
+          )}
+        </div>
+      ) : (
+        <div className={viewMode === 'grid' 
+          ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' 
+          : 'space-y-4'
+        }>
+          {filteredCourses.map((course) => (
+            <CourseCard
+              key={course.id}
+              course={course}
+              viewMode={viewMode}
+              onEdit={() => openCourseModal(course)}
+              onDelete={() => handleDeleteCourse(course.id)}
+              onDuplicate={() => handleDuplicateCourse(course)}
+              onManageLessons={() => openLessonModal(course)}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Course Modal */}
+      <AnimatePresence>
+        {showCourseModal && (
+          <CourseModal
+            isOpen={showCourseModal}
+            onClose={() => {
+              setShowCourseModal(false);
+              setEditingCourse(null);
+              resetCourseForm();
+            }}
+            courseForm={courseForm}
+            setCourseForm={setCourseForm}
+            onSave={editingCourse ? handleUpdateCourse : handleCreateCourse}
+            isEditing={!!editingCourse}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Lesson Modal */}
+      <AnimatePresence>
+        {showLessonModal && selectedCourse && (
+          <LessonModal
+            isOpen={showLessonModal}
+            onClose={() => {
+              setShowLessonModal(false);
+              setEditingLesson(null);
+              setSelectedCourse(null);
+              resetLessonForm();
+            }}
+            course={selectedCourse}
+            lessonForm={lessonForm}
+            setLessonForm={setLessonForm}
+            onSave={editingLesson ? handleUpdateLesson : handleCreateLesson}
+            onDeleteLesson={handleDeleteLesson}
+            isEditing={!!editingLesson}
+          />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+// Course Card Component
+const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageLessons }) => {
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  if (viewMode === 'list') {
+    return (
+      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 flex-1">
+            <img
+              src={course.thumbnail || '/api/placeholder/80/60'}
+              alt={course.title}
+              className="w-20 h-15 object-cover rounded-lg"
+            />
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-gray-900">{course.title}</h3>
+                <StatusBadge status={course.status} />
+              </div>
+              <p className="text-gray-600 text-sm mb-2 line-clamp-2">{course.shortDescription || course.description}</p>
+              <div className="flex items-center gap-4 text-xs text-gray-500">
+                <span className="flex items-center gap-1">
+                  <Clock className="h-3 w-3" />
+                  {course.duration || 'Not set'}
+                </span>
+                <span className="flex items-center gap-1">
+                  <BookOpen className="h-3 w-3" />
+                  {course.lessons?.length || 0} lessons
+                </span>
+                <span className="flex items-center gap-1">
+                  <Users className="h-3 w-3" />
+                  {course.enrolledStudents || 0} students
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onManageLessons}
+              className="text-blue-600 hover:text-blue-700 p-2 rounded"
+              title="Manage Lessons"
+            >
+              <BookOpen className="h-4 w-4" />
+            </button>
+            <button
+              onClick={onEdit}
+              className="text-gray-600 hover:text-gray-700 p-2 rounded"
+              title="Edit Course"
+            >
+              <Edit className="h-4 w-4" />
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowDropdown(!showDropdown)}
+                className="text-gray-600 hover:text-gray-700 p-2 rounded"
+              >
+                <MoreVertical className="h-4 w-4" />
+              </button>
+              {showDropdown && (
+                <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                  <button
+                    onClick={onDuplicate}
+                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <Copy className="h-3 w-3" />
+                    Duplicate
+                  </button>
+                  <button
+                    onClick={onDelete}
+                    className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+    >
+      <div className="relative">
+        <img
+          src={course.thumbnail || '/api/placeholder/400/200'}
+          alt={course.title}
+          className="w-full h-48 object-cover"
+        />
+        <div className="absolute top-2 right-2">
+          <StatusBadge status={course.status} />
+        </div>
+      </div>
+      
+      <div className="p-4">
+        <h3 className="font-semibold text-gray-900 mb-2">{course.title}</h3>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{course.shortDescription || course.description}</p>
+        
+        <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {course.duration || 'Not set'}
+          </span>
+          <span className="flex items-center gap-1">
+            <BookOpen className="h-3 w-3" />
+            {course.lessons?.length || 0} lessons
+          </span>
+          <span className="flex items-center gap-1">
+            <Users className="h-3 w-3" />
+            {course.enrolledStudents || 0} students
+          </span>
+        </div>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <button
+              onClick={onManageLessons}
+              className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded text-sm hover:bg-blue-100 transition-colors flex items-center gap-1"
+            >
+              <BookOpen className="h-3 w-3" />
+              Lessons
+            </button>
+            <button
+              onClick={onEdit}
+              className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
+              title="Edit"
+            >
+              <Edit className="h-3 w-3" />
+            </button>
+          </div>
+          
+          <div className="relative">
+            <button
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
+            >
+              <MoreVertical className="h-3 w-3" />
+            </button>
+            {showDropdown && (
+              <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                <button
+                  onClick={onDuplicate}
+                  className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <Copy className="h-3 w-3" />
+                  Duplicate
+                </button>
+                <button
+                  onClick={onDelete}
+                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                >
+                  <Trash2 className="h-3 w-3" />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+// Course Modal Component
+const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEditing }) => {
+  const updateField = (field, value) => {
+    setCourseForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateArrayField = (field, index, value) => {
+    setCourseForm(prev => ({
+      ...prev,
+      [field]: prev[field].map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  const addArrayItem = (field) => {
+    setCourseForm(prev => ({
+      ...prev,
+      [field]: [...prev[field], '']
+    }));
+  };
+
+  const removeArrayItem = (field, index) => {
+    setCourseForm(prev => ({
+      ...prev,
+      [field]: prev[field].filter((_, i) => i !== index)
+    }));
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+      >
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <BookOpen className="h-6 w-6" />
+              <div>
+                <h2 className="text-xl font-bold">
+                  {isEditing ? 'Edit Course' : 'Create New Course'}
+                </h2>
+                <p className="text-blue-100 text-sm">
+                  {isEditing ? 'Update course information' : 'Build engaging learning experiences'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-gray-200 p-1"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column */}
+            <div className="space-y-6">
+              {/* Basic Information */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Course Title*</label>
+                    <input
+                      type="text"
+                      value={courseForm.title}
+                      onChange={(e) => updateField('title', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter course title..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Short Description</label>
+                    <input
+                      type="text"
+                      value={courseForm.shortDescription}
+                      onChange={(e) => updateField('shortDescription', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Brief course description for cards..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
+                    <textarea
+                      value={courseForm.description}
+                      onChange={(e) => updateField('description', e.target.value)}
+                      rows={4}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Detailed course description..."
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <select
+                        value={courseForm.category}
+                        onChange={(e) => updateField('category', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="technology">Technology</option>
+                        <option value="cybersecurity">Cybersecurity</option>
+                        <option value="data-science">Data Science</option>
+                        <option value="cloud">Cloud Computing</option>
+                        <option value="programming">Programming</option>
+                        <option value="devops">DevOps</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Level</label>
+                      <select
+                        value={courseForm.level}
+                        onChange={(e) => updateField('level', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      >
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                        <option value="expert">Expert</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                      <input
+                        type="text"
+                        value={courseForm.duration}
+                        onChange={(e) => updateField('duration', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., 8 weeks, 40 hours"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Price (₹)</label>
+                      <input
+                        type="number"
+                        value={courseForm.price}
+                        onChange={(e) => updateField('price', Number(e.target.value))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select
+                      value={courseForm.status}
+                      onChange={(e) => updateField('status', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="coming-soon">Coming Soon</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* Learning Objectives */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Learning Objectives</h3>
+                <div className="space-y-2">
+                  {courseForm.objectives.map((objective, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Target className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                      <input
+                        type="text"
+                        value={objective}
+                        onChange={(e) => updateArrayField('objectives', index, e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="What will students learn?"
+                      />
+                      {courseForm.objectives.length > 1 && (
+                        <button
+                          onClick={() => removeArrayItem('objectives', index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addArrayItem('objectives')}
+                    className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1"
+                  >
+                    <Plus className="h-3 w-3" />
+                    Add objective
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Course Thumbnail */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Course Thumbnail</h3>
+                <div className="space-y-4">
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                    {courseForm.thumbnail ? (
+                      <img
+                        src={courseForm.thumbnail}
+                        alt="Course thumbnail"
+                        className="w-full h-32 object-cover rounded-lg mb-2"
+                      />
+                    ) : (
+                      <div className="text-gray-400">
+                        <Image className="w-12 h-12 mx-auto mb-2" />
+                        <p>Upload course thumbnail</p>
+                        <p className="text-sm">Recommended: 400x200 pixels</p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="url"
+                    value={courseForm.thumbnail}
+                    onChange={(e) => updateField('thumbnail', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Thumbnail URL or click to upload..."
+                  />
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <HardDrive className="h-4 w-4" />
+                    <span>Files will be stored in Google Cloud Storage</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Prerequisites */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Prerequisites</h3>
+                <div className="space-y-2">
+                  {courseForm.prerequisites.map((prerequisite, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                      <input
+                        type="text"
+                        value={prerequisite}
+                        onChange={(e) => updateArrayField('prerequisites', index, e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="What should students know beforehand?"
+                      />
+                      {courseForm.prerequisites.length > 1 && (
+                        <button
+                          onClick={() => removeArrayItem('prerequisites', index)}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addArrayItem('prerequisites')}
+                    className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1"
+                  >
+                    <Plus className="h-3 w-3" />
+                    Add prerequisite
+                  </button>
+                </div>
+              </div>
+
+              {/* Additional Settings */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Settings</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+                    <textarea
+                      value={courseForm.targetAudience}
+                      onChange={(e) => updateField('targetAudience', e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Who is this course designed for?"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="certificate"
+                      checked={courseForm.certificate}
+                      onChange={(e) => updateField('certificate', e.target.checked)}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                    <label htmlFor="certificate" className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                      <Award className="h-4 w-4" />
+                      Offer completion certificate
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            {isEditing ? 'Update your course information' : 'Create engaging content for your students'}
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onSave}
+              disabled={!courseForm.title.trim()}
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
+            >
+              <Save className="h-4 w-4" />
+              {isEditing ? 'Update Course' : 'Create Course'}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+// Lesson Modal Component
+const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSave, onDeleteLesson, isEditing }) => {
+  const updateField = (field, value) => {
+    setLessonForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const lessonTypes = [
+    { value: 'video', label: 'Video Content', icon: Video },
+    { value: 'document', label: 'Document/PDF', icon: FileText },
+    { value: 'quiz', label: 'Quiz/Assessment', icon: CheckCircle },
+    { value: 'assignment', label: 'Assignment', icon: Edit }
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+      >
+        <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Play className="h-6 w-6" />
+              <div>
+                <h2 className="text-xl font-bold">
+                  {isEditing ? 'Edit Lesson' : 'Add New Lesson'}
+                </h2>
+                <p className="text-green-100 text-sm">
+                  Course: {course.title}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className="text-white hover:text-gray-200 p-1"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="p-6 space-y-6">
+          {/* Lesson List */}
+          {course.lessons && course.lessons.length > 0 && (
+            <div className="bg-gray-50 rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 mb-3">Course Lessons ({course.lessons.length})</h3>
+              <div className="grid gap-2 max-h-32 overflow-y-auto">
+                {course.lessons.map((lesson, index) => (
+                  <div key={lesson.id} className="flex items-center justify-between bg-white p-2 rounded border">
+                    <div className="flex items-center gap-2">
+                      <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded text-xs flex items-center justify-center font-medium">
+                        {index + 1}
+                      </span>
+                      <span className="text-sm">{lesson.title}</span>
+                      {lesson.type === 'video' && <Video className="h-3 w-3 text-gray-400" />}
+                      {lesson.type === 'document' && <FileText className="h-3 w-3 text-gray-400" />}
+                    </div>
+                    <button
+                      onClick={() => onDeleteLesson(lesson.id)}
+                      className="text-red-500 hover:text-red-700 p-1"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Lesson Form */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Lesson Title*</label>
+                <input
+                  type="text"
+                  value={lessonForm.title}
+                  onChange={(e) => updateField('title', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Enter lesson title..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <textarea
+                  value={lessonForm.description}
+                  onChange={(e) => updateField('description', e.target.value)}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder="Lesson description..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Content Type</label>
+                <select
+                  value={lessonForm.type}
+                  onChange={(e) => updateField('type', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  {lessonTypes.map(type => (
+                    <option key={type.value} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  {lessonForm.type === 'video' ? 'Video URL or File' : 'Content URL or File'}
+                </label>
+                <input
+                  type="text"
+                  value={lessonForm.content}
+                  onChange={(e) => updateField('content', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  placeholder={lessonForm.type === 'video' ? 'Video URL or upload path...' : 'Content URL or file path...'}
+                />
+                <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                  <Cloud className="h-4 w-4" />
+                  <span>Files will be uploaded to Google Cloud Storage</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                  <input
+                    type="text"
+                    value={lessonForm.duration}
+                    onChange={(e) => updateField('duration', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    placeholder="e.g., 15 mins"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Order</label>
+                  <input
+                    type="number"
+                    value={lessonForm.order}
+                    onChange={(e) => updateField('order', Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    min="0"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="isPreview"
+                  checked={lessonForm.isPreview}
+                  onChange={(e) => updateField('isPreview', e.target.checked)}
+                  className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <label htmlFor="isPreview" className="text-sm font-medium text-gray-700">
+                  Allow preview (visible to non-enrolled students)
+                </label>
+              </div>
+            </div>
+          </div>
+
+          {/* Content Upload Area */}
+          <div className="bg-blue-50 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <CloudUpload className="h-5 w-5 text-blue-600" />
+              <h4 className="font-medium text-blue-900">Content Upload</h4>
+            </div>
+            <p className="text-sm text-blue-700 mb-3">
+              Upload to Google Cloud Storage: {cloudConfig.bucketName}
+            </p>
+            
+            {/* File Upload Zone */}
+            <div 
+              className="border-2 border-dashed border-blue-300 rounded-lg p-6 text-center transition-colors hover:border-blue-400"
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, course.id, editingLesson?.id)}
+            >
+              {isUploading ? (
+                <div className="space-y-2">
+                  <CloudUpload className="h-8 w-8 text-blue-500 mx-auto animate-bounce" />
+                  <p className="text-blue-600 font-medium">Uploading...</p>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-blue-500 text-sm">{Math.round(uploadProgress)}% complete</p>
+                </div>
+              ) : (
+                <div>
+                  <HardDrive className="h-8 w-8 text-blue-400 mx-auto mb-2" />
+                  <p className="text-blue-600 font-medium mb-1">
+                    {lessonForm.type === 'video' ? 'Upload Video File' : 'Upload Document/File'}
+                  </p>
+                  <p className="text-blue-500 text-sm mb-3">
+                    Drag & drop or click to select
+                  </p>
+                  <input
+                    type="file"
+                    accept={lessonForm.type === 'video' ? 'video/*' : '*'}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        handleFileUpload(file, course.id, editingLesson?.id);
+                      }
+                    }}
+                    className="hidden"
+                    id="fileUpload"
+                  />
+                  <label
+                    htmlFor="fileUpload"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer inline-flex items-center gap-2"
+                  >
+                    <Upload className="h-4 w-4" />
+                    Choose File
+                  </label>
+                </div>
+              )}
+            </div>
+
+            {/* Uploaded Files List */}
+            {uploadedFiles.length > 0 && (
+              <div className="mt-4">
+                <h5 className="text-sm font-medium text-blue-900 mb-2">Uploaded Files</h5>
+                <div className="space-y-2">
+                  {uploadedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between bg-white p-2 rounded border">
+                      <div className="flex items-center gap-2">
+                        {file.type.startsWith('video/') && <Video className="h-4 w-4 text-blue-500" />}
+                        {file.type.includes('pdf') && <FileText className="h-4 w-4 text-red-500" />}
+                        {!file.type.startsWith('video/') && !file.type.includes('pdf') && <File className="h-4 w-4 text-gray-500" />}
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{file.name}</p>
+                          <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                          ✓ Uploaded
+                        </span>
+                        <button
+                          onClick={() => {
+                            setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Storage Info */}
+            <div className="mt-3 text-xs text-blue-600 bg-blue-100 p-2 rounded">
+              <div className="flex items-center gap-1">
+                <Cloud className="h-3 w-3" />
+                <span>Files stored in: {cloudConfig.region} | CDN: Global</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            Add engaging content for your students
+          </div>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onSave}
+              disabled={!lessonForm.title.trim()}
+              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
+            >
+              <Save className="h-4 w-4" />
+              {isEditing ? 'Update Lesson' : 'Add Lesson'}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export default InstructorContentManagement;
