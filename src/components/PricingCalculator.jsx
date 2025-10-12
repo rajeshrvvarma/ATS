@@ -145,10 +145,16 @@ const PricingCalculator = () => {
             Content Size (GB)
           </label>
           <input
-            type="number"
+            type="text"
             value={contentGB}
-            onChange={(e) => setContentGB(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={(e) => {
+              const value = e.target.value.replace(/[^0-9]/g, '');
+              if (value === '' || (Number(value) >= 1 && Number(value) <= 2000)) {
+                setContentGB(value === '' ? '' : Number(value));
+              }
+            }}
+            placeholder="Enter GB"
+            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             min="1"
             max="2000"
           />
@@ -159,10 +165,16 @@ const PricingCalculator = () => {
             Number of Students
           </label>
           <input
-            type="number"
+            type="text"
             value={students}
-            onChange={(e) => setStudents(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={(e) => {
+              const value = e.target.value.replace(/[^0-9]/g, '');
+              if (value === '' || (Number(value) >= 1 && Number(value) <= 10000)) {
+                setStudents(value === '' ? '' : Number(value));
+              }
+            }}
+            placeholder="Enter student count"
+            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             min="1"
             max="10000"
           />
@@ -173,10 +185,16 @@ const PricingCalculator = () => {
             Duration (Months)
           </label>
           <input
-            type="number"
+            type="text"
             value={months}
-            onChange={(e) => setMonths(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={(e) => {
+              const value = e.target.value.replace(/[^0-9]/g, '');
+              if (value === '' || (Number(value) >= 1 && Number(value) <= 24)) {
+                setMonths(value === '' ? '' : Number(value));
+              }
+            }}
+            placeholder="Enter months"
+            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             min="1"
             max="24"
           />
@@ -187,10 +205,16 @@ const PricingCalculator = () => {
             Content Access (%)
           </label>
           <input
-            type="number"
+            type="text"
             value={contentAccessPercentage}
-            onChange={(e) => setContentAccessPercentage(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            onChange={(e) => {
+              const value = e.target.value.replace(/[^0-9]/g, '');
+              if (value === '' || (Number(value) >= 10 && Number(value) <= 100)) {
+                setContentAccessPercentage(value === '' ? '' : Number(value));
+              }
+            }}
+            placeholder="Enter percentage"
+            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             min="10"
             max="100"
           />
