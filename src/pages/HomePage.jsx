@@ -9,6 +9,69 @@ import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
+// Hero Section using shared AnimatedBackground
+const HeroSection = ({ onNavigate }) => {
+    return (
+        <AnimatedBackground variant="programs" intensity="high" speedMultiplier={1.25} enableSquares enablePlus className="py-20">
+            <section className="container mx-auto px-6">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center max-w-4xl mx-auto"
+                >
+                    <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                        Launch your cybersecurity and tech career
+                    </h1>
+                    <p className="text-lg md:text-xl text-slate-300 mb-10">
+                        Hands-on programs, expert mentors, and job-focused training from foundation to elite levels.
+                    </p>
+
+                    {/* Key Stats */}
+                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-10 text-center">
+                        <div className="flex items-center gap-2 bg-slate-800/50 px-5 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                            <Users className="w-5 h-5 text-blue-400" />
+                            <span className="text-white font-semibold">1000+ Students</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-slate-800/50 px-5 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                            <span className="text-white font-semibold">85% Placement</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-slate-800/50 px-5 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                            <Star className="w-5 h-5 text-yellow-400" />
+                            <span className="text-white font-semibold">4.8/5 Rating</span>
+                        </div>
+                    </div>
+
+                    {/* CTAs */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })}
+                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-2"
+                        >
+                            <BookOpen className="w-5 h-5" />
+                            Explore Programs
+                            <ArrowRight className="w-5 h-5" />
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => onNavigate('enroll')}
+                            className="bg-slate-700/80 text-white font-semibold px-8 py-4 rounded-lg border border-slate-600 hover:bg-slate-600 transition-all duration-300 flex items-center gap-2"
+                        >
+                            <Sparkles className="w-5 h-5" />
+                            Talk to an Advisor
+                        </motion.button>
+                    </div>
+                </motion.div>
+            </section>
+        </AnimatedBackground>
+    );
+};
+
 // Using shared AnimatedBackground (imported above) for the entire page
 
 // Interactive Programs Showcase Section
