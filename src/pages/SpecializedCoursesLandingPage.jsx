@@ -968,7 +968,7 @@ const SpecializedCoursesLandingPage = () => {
               </div>
               <button
                 onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
-                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+                className="p-2 hover:bg-slate-700/40 rounded-lg transition-colors"
               >
                 <X size={20} />
               </button>
@@ -985,8 +985,8 @@ const SpecializedCoursesLandingPage = () => {
                   </h4>
                   <ul className="space-y-2">
                     {courseDetailsModal.course?.highlights?.map((highlight, index) => (
-                      <li key={index} className="flex items-start gap-2 text-slate-700">
-                        <ArrowRight size={14} className="text-blue-600 mt-1 flex-shrink-0" />
+                      <li key={index} className="flex items-start gap-2 text-slate-300">
+                        <ArrowRight size={14} className="text-sky-400 mt-1 flex-shrink-0" />
                         {highlight}
                       </li>
                     ))}
@@ -999,8 +999,8 @@ const SpecializedCoursesLandingPage = () => {
                     <h4 className="font-semibold text-white mb-3">Prerequisites</h4>
                     <ul className="space-y-2">
                       {courseDetailsModal.course.prerequisites.map((prereq, index) => (
-                        <li key={index} className="flex items-start gap-2 text-slate-700">
-                          <ArrowRight size={14} className="text-orange-600 mt-1 flex-shrink-0" />
+                        <li key={index} className="flex items-start gap-2 text-slate-300">
+                          <ArrowRight size={14} className="text-orange-400 mt-1 flex-shrink-0" />
                           {prereq}
                         </li>
                       ))}
@@ -1014,8 +1014,8 @@ const SpecializedCoursesLandingPage = () => {
                     <h4 className="font-semibold text-white mb-3">Career Outcomes</h4>
                     <ul className="space-y-2">
                       {courseDetailsModal.course.careerOutcomes.map((outcome, index) => (
-                        <li key={index} className="flex items-start gap-2 text-slate-700">
-                          <ArrowRight size={14} className="text-green-600 mt-1 flex-shrink-0" />
+                        <li key={index} className="flex items-start gap-2 text-slate-300">
+                          <ArrowRight size={14} className="text-emerald-400 mt-1 flex-shrink-0" />
                           {outcome}
                         </li>
                       ))}
@@ -1032,7 +1032,7 @@ const SpecializedCoursesLandingPage = () => {
                 </h4>
                 <div className="space-y-3">
                   {courseDetailsModal.course?.curriculum?.map((module, index) => (
-                    <div key={index} className="border border-slate-200 rounded-lg p-4">
+                    <div key={index} className="border border-slate-700 rounded-lg p-4 bg-slate-800/50">
                       <h5 className="font-medium text-white mb-2">
                         Module {index + 1}: {module.title}
                       </h5>

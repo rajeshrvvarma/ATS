@@ -508,23 +508,23 @@ const InstructorContentManagement = forwardRef((props, ref) => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto min-w-[160px]"
+            className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-transparent w-full sm:w-auto min-w-[160px]"
           >
             <option value="recent">Most Recent</option>
             <option value="title">Title A-Z</option>
             <option value="students">Most Students</option>
           </select>
           
-          <div className="flex border border-gray-300 rounded-lg overflow-hidden shrink-0">
+          <div className="flex border border-slate-600 rounded-lg overflow-hidden shrink-0">
             <button
               onClick={() => setViewMode('grid')}
-              className={`p-2 ${viewMode === 'grid' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
+              className={`p-2 ${viewMode === 'grid' ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
             >
               <Grid className="h-4 w-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 ${viewMode === 'list' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
+              className={`p-2 ${viewMode === 'list' ? 'bg-sky-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
             >
               <List className="h-4 w-4" />
             </button>
@@ -535,9 +535,9 @@ const InstructorContentManagement = forwardRef((props, ref) => {
       {/* Courses Grid/List */}
       {filteredCourses.length === 0 ? (
         <div className="text-center py-12">
-          <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No courses found</h3>
-          <p className="text-gray-600 mb-6">
+          <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-white mb-2">No courses found</h3>
+          <p className="text-slate-300 mb-6">
             {searchTerm || filterStatus !== 'all' 
               ? 'Try adjusting your search or filters'
               : 'Get started by creating your first course'
@@ -546,7 +546,7 @@ const InstructorContentManagement = forwardRef((props, ref) => {
           {!searchTerm && filterStatus === 'all' && (
             <button
               onClick={() => openCourseModal()}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 mx-auto"
+              className="bg-sky-600 text-white px-6 py-3 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2 mx-auto"
             >
               <Plus className="h-4 w-4" />
               Create Your First Course
@@ -617,15 +617,13 @@ const InstructorContentManagement = forwardRef((props, ref) => {
 // Status badge component
 const StatusBadge = ({ status }) => {
   const statusConfig = {
-    published: { color: 'bg-green-100 text-green-800', label: 'Published' },
-    draft: { color: 'bg-gray-100 text-gray-800', label: 'Draft' },
-    'coming-soon': { color: 'bg-blue-100 text-blue-800', label: 'Coming Soon' }
+    published: { classes: 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30', label: 'Published' },
+    draft: { classes: 'bg-slate-600/40 text-slate-200 border border-slate-500/40', label: 'Draft' },
+    'coming-soon': { classes: 'bg-sky-500/15 text-sky-300 border border-sky-500/30', label: 'Coming Soon' }
   };
-  
   const config = statusConfig[status] || statusConfig.draft;
-  
   return (
-    <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.classes}`}>
       {config.label}
     </span>
   );
@@ -654,11 +652,11 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             />
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h3 className="font-semibold text-gray-900">{course.title}</h3>
+                <h3 className="font-semibold text-white">{course.title}</h3>
                 <StatusBadge status={course.status} />
               </div>
-              <p className="text-gray-600 text-sm mb-2 line-clamp-2">{course.shortDescription || course.description}</p>
-              <div className="flex items-center gap-4 text-xs text-gray-500">
+              <p className="text-slate-300 text-sm mb-2 line-clamp-2">{course.shortDescription || course.description}</p>
+              <div className="flex items-center gap-4 text-xs text-slate-400">
                 <span className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
                   {course.duration || 'Not set'}
@@ -677,7 +675,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
           <div className="flex items-center gap-2">
             <button
               onClick={onManageLessons}
-              className="text-blue-600 hover:text-blue-700 p-2 rounded"
+              className="bg-sky-600 text-white hover:bg-sky-700 px-3 py-1.5 rounded"
               title="Manage Lessons"
             >
               <BookOpen className="h-4 w-4" />
@@ -685,7 +683,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             {canEdit && (
               <button
                 onClick={onEdit}
-                className="text-gray-600 hover:text-gray-700 p-2 rounded"
+                className="text-slate-300 hover:text-white p-2 rounded"
                 title="Edit Course"
               >
                 <Edit className="h-4 w-4" />
@@ -693,14 +691,14 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             )}
             {/* Show course owner indicator for instructors */}
             {isInstructor() && course.instructorId === user?.uid && (
-              <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded text-xs text-blue-600">
+              <div className="flex items-center gap-1 px-2 py-1 bg-sky-500/10 rounded text-xs text-sky-300">
                 <UserCheck className="h-3 w-3" />
                 <span>Your Course</span>
               </div>
             )}
             {/* Admin can see course owner */}
             {isAdmin() && course.instructorName && (
-              <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded text-xs text-gray-600">
+              <div className="flex items-center gap-1 px-2 py-1 bg-slate-600/30 rounded text-xs text-slate-200">
                 <UserCheck className="h-3 w-3" />
                 <span>{course.instructorName}</span>
               </div>
@@ -708,15 +706,15 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             <div className="relative">
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
-                className="text-gray-600 hover:text-gray-700 p-2 rounded"
+                className="text-slate-300 hover:text-white p-2 rounded"
               >
                 <MoreVertical className="h-4 w-4" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                <div className="absolute right-0 mt-1 w-40 bg-slate-800 rounded-md shadow-lg border border-slate-700 z-10">
                   <button
                     onClick={onDuplicate}
-                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    className="w-full text-left px-3 py-2 text-sm text-slate-200 hover:bg-slate-700 flex items-center gap-2"
                   >
                     <Copy className="h-3 w-3" />
                     Duplicate
@@ -724,8 +722,8 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
                   {showDeleteOption && (
                     <button
                       onClick={onDelete}
-                      className={`w-full text-left px-3 py-2 text-sm hover:bg-red-50 flex items-center gap-2 ${
-                        canDelete ? 'text-red-600' : 'text-orange-600'
+                      className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 ${
+                        canDelete ? 'text-red-400 hover:bg-red-950/20' : 'text-orange-300 hover:bg-orange-950/20'
                       }`}
                       title={canDelete ? 'Delete course' : 'Request deletion (requires admin approval)'}
                     >
@@ -734,7 +732,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
                     </button>
                   )}
                   {!canEdit && !showDeleteOption && (
-                    <div className="px-3 py-2 text-xs text-gray-400 flex items-center gap-2">
+                    <div className="px-3 py-2 text-xs text-slate-400 flex items-center gap-2">
                       <Shield className="h-3 w-3" />
                       Read Only
                     </div>
@@ -768,10 +766,10 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
       </div>
       
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 mb-2">{course.title}</h3>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{course.shortDescription || course.description}</p>
+        <h3 className="font-semibold text-white mb-2">{course.title}</h3>
+        <p className="text-slate-300 text-sm mb-3 line-clamp-2">{course.shortDescription || course.description}</p>
         
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-4">
+        <div className="flex items-center justify-between text-xs text-slate-400 mb-4">
           <span className="flex items-center gap-1">
             <Clock className="h-3 w-3" />
             {course.duration || 'Not set'}
@@ -790,7 +788,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             <div className="flex items-center gap-1">
               <button
                 onClick={onManageLessons}
-                className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded text-sm hover:bg-blue-100 transition-colors flex items-center gap-1"
+                className="bg-sky-600 text-white px-3 py-1.5 rounded text-sm hover:bg-sky-700 transition-colors flex items-center gap-1"
               >
                 <BookOpen className="h-3 w-3" />
                 Lessons
@@ -798,7 +796,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
               {canEdit && (
                 <button
                   onClick={onEdit}
-                  className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
+                  className="text-slate-300 hover:text-white p-1.5 rounded"
                   title="Edit"
                 >
                   <Edit className="h-3 w-3" />
@@ -809,13 +807,13 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             {/* Course ownership indicator */}
             <div className="flex items-center gap-2">
               {isInstructor() && course.instructorId === user?.uid && (
-                <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded text-xs text-blue-600">
+                <div className="flex items-center gap-1 px-2 py-1 bg-sky-500/10 rounded text-xs text-sky-300">
                   <UserCheck className="h-3 w-3" />
                   <span>Your Course</span>
                 </div>
               )}
               {isAdmin() && course.instructorName && (
-                <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded text-xs text-gray-600">
+                <div className="flex items-center gap-1 px-2 py-1 bg-slate-600/30 rounded text-xs text-slate-200">
                   <UserCheck className="h-3 w-3" />
                   <span>{course.instructorName}</span>
                 </div>
@@ -824,15 +822,15 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
               <div className="relative">
                 <button
                   onClick={() => setShowDropdown(!showDropdown)}
-                  className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
+                  className="text-slate-300 hover:text-white p-1.5 rounded"
                 >
                   <MoreVertical className="h-3 w-3" />
                 </button>
                 {showDropdown && (
-                  <div className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                  <div className="absolute right-0 mt-1 w-40 bg-slate-800 rounded-md shadow-lg border border-slate-700 z-10">
                     <button
                       onClick={onDuplicate}
-                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                      className="w-full text-left px-3 py-2 text-sm text-slate-200 hover:bg-slate-700 flex items-center gap-2"
                     >
                       <Copy className="h-3 w-3" />
                       Duplicate
@@ -840,8 +838,8 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
                     {showDeleteOption && (
                       <button
                         onClick={onDelete}
-                        className={`w-full text-left px-3 py-2 text-sm hover:bg-red-50 flex items-center gap-2 ${
-                          canDelete ? 'text-red-600' : 'text-orange-600'
+                        className={`w-full text-left px-3 py-2 text-sm flex items-center gap-2 ${
+                          canDelete ? 'text-red-400 hover:bg-red-950/20' : 'text-orange-300 hover:bg-orange-950/20'
                         }`}
                         title={canDelete ? 'Delete course' : 'Request deletion (requires admin approval)'}
                       >
@@ -850,7 +848,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
                       </button>
                     )}
                     {!canEdit && !showDeleteOption && (
-                      <div className="px-3 py-2 text-xs text-gray-400 flex items-center gap-2">
+                      <div className="px-3 py-2 text-xs text-slate-400 flex items-center gap-2">
                         <Shield className="h-3 w-3" />
                         Read Only
                       </div>
@@ -933,48 +931,48 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
             <div className="space-y-6">
               {/* Basic Information */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Basic Information</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Course Title*</label>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">Course Title*</label>
                     <input
                       type="text"
                       value={courseForm.title}
                       onChange={(e) => updateField('title', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       placeholder="Enter course title..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Short Description</label>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">Short Description</label>
                     <input
                       type="text"
                       value={courseForm.shortDescription}
                       onChange={(e) => updateField('shortDescription', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       placeholder="Brief course description for cards..."
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">Full Description</label>
                     <textarea
                       value={courseForm.description}
                       onChange={(e) => updateField('description', e.target.value)}
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       placeholder="Detailed course description..."
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                      <label className="block text-sm font-medium text-slate-200 mb-2">Category</label>
                       <select
                         value={courseForm.category}
                         onChange={(e) => updateField('category', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       >
                         <option value="technology">Technology</option>
                         <option value="cybersecurity">Cybersecurity</option>
@@ -986,11 +984,11 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Level</label>
+                      <label className="block text-sm font-medium text-slate-200 mb-2">Level</label>
                       <select
                         value={courseForm.level}
                         onChange={(e) => updateField('level', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       >
                         <option value="beginner">Beginner</option>
                         <option value="intermediate">Intermediate</option>
@@ -1002,34 +1000,34 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                      <label className="block text-sm font-medium text-slate-200 mb-2">Duration</label>
                       <input
                         type="text"
                         value={courseForm.duration}
                         onChange={(e) => updateField('duration', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                         placeholder="e.g., 8 weeks, 40 hours"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Price (₹)</label>
+                      <label className="block text-sm font-medium text-slate-200 mb-2">Price (₹)</label>
                       <input
                         type="number"
                         value={courseForm.price}
                         onChange={(e) => updateField('price', Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                         min="0"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">Status</label>
                     <select
                       value={courseForm.status}
                       onChange={(e) => updateField('status', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                     >
                       <option value="draft">Draft</option>
                       <option value="published">Published</option>
@@ -1041,22 +1039,22 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
 
               {/* Learning Objectives */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Learning Objectives</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Learning Objectives</h3>
                 <div className="space-y-2">
                   {courseForm.objectives.map((objective, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <Target className="h-4 w-4 text-blue-500 flex-shrink-0" />
+                      <Target className="h-4 w-4 text-sky-400 flex-shrink-0" />
                       <input
                         type="text"
                         value={objective}
                         onChange={(e) => updateArrayField('objectives', index, e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                         placeholder="What will students learn?"
                       />
                       {courseForm.objectives.length > 1 && (
                         <button
                           onClick={() => removeArrayItem('objectives', index)}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-400 hover:text-red-300"
                         >
                           <X className="h-4 w-4" />
                         </button>
@@ -1065,7 +1063,7 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
                   ))}
                   <button
                     onClick={() => addArrayItem('objectives')}
-                    className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1"
+                    className="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1"
                   >
                     <Plus className="h-3 w-3" />
                     Add objective
@@ -1078,9 +1076,9 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
             <div className="space-y-6">
               {/* Course Thumbnail */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Course Thumbnail</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Course Thumbnail</h3>
                 <div className="space-y-4">
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                  <div className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center">
                     {courseForm.thumbnail ? (
                       <img
                         src={courseForm.thumbnail}
@@ -1088,7 +1086,7 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
                         className="w-full h-32 object-cover rounded-lg mb-2"
                       />
                     ) : (
-                      <div className="text-gray-400">
+                      <div className="text-slate-400">
                         <Image className="w-12 h-12 mx-auto mb-2" />
                         <p>Upload course thumbnail</p>
                         <p className="text-sm">Recommended: 400x200 pixels</p>
@@ -1099,10 +1097,10 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
                     type="url"
                     value={courseForm.thumbnail}
                     onChange={(e) => updateField('thumbnail', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                     placeholder="Thumbnail URL or click to upload..."
                   />
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 text-sm text-slate-300">
                     <HardDrive className="h-4 w-4" />
                     <span>Files will be stored in Google Cloud Storage</span>
                   </div>
@@ -1111,22 +1109,22 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
 
               {/* Prerequisites */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Prerequisites</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Prerequisites</h3>
                 <div className="space-y-2">
                   {courseForm.prerequisites.map((prerequisite, index) => (
                     <div key={index} className="flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                      <CheckCircle className="h-4 w-4 text-emerald-400 flex-shrink-0" />
                       <input
                         type="text"
                         value={prerequisite}
                         onChange={(e) => updateArrayField('prerequisites', index, e.target.value)}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="flex-1 px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                         placeholder="What should students know beforehand?"
                       />
                       {courseForm.prerequisites.length > 1 && (
                         <button
                           onClick={() => removeArrayItem('prerequisites', index)}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-red-400 hover:text-red-300"
                         >
                           <X className="h-4 w-4" />
                         </button>
@@ -1135,7 +1133,7 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
                   ))}
                   <button
                     onClick={() => addArrayItem('prerequisites')}
-                    className="text-blue-600 hover:text-blue-700 text-sm flex items-center gap-1"
+                    className="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1"
                   >
                     <Plus className="h-3 w-3" />
                     Add prerequisite
@@ -1145,15 +1143,15 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
 
               {/* Additional Settings */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Settings</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Additional Settings</h3>
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Target Audience</label>
+                    <label className="block text-sm font-medium text-slate-200 mb-2">Target Audience</label>
                     <textarea
                       value={courseForm.targetAudience}
                       onChange={(e) => updateField('targetAudience', e.target.value)}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
                       placeholder="Who is this course designed for?"
                     />
                   </div>
@@ -1164,10 +1162,10 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
                       id="certificate"
                       checked={courseForm.certificate}
                       onChange={(e) => updateField('certificate', e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-slate-600 bg-slate-700 text-sky-500 focus:ring-sky-500"
                     />
-                    <label htmlFor="certificate" className="text-sm font-medium text-gray-700 flex items-center gap-2">
-                      <Award className="h-4 w-4" />
+                    <label htmlFor="certificate" className="text-sm font-medium text-slate-200 flex items-center gap-2">
+                      <Award className="h-4 w-4 text-sky-400" />
                       Offer completion certificate
                     </label>
                   </div>
@@ -1177,21 +1175,21 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
           </div>
         </div>
 
-        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+        <div className="bg-slate-900/50 border-t border-slate-700 px-6 py-4 flex items-center justify-between">
+          <div className="text-sm text-slate-300">
             {isEditing ? 'Update your course information' : 'Create engaging content for your students'}
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+              className="px-4 py-2 text-slate-300 hover:text-white font-medium"
             >
               Cancel
             </button>
             <button
               onClick={onSave}
               disabled={!courseForm.title.trim()}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
+              className="bg-sky-600 text-white px-6 py-2 rounded-lg hover:bg-sky-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
             >
               <Save className="h-4 w-4" />
               {isEditing ? 'Update Course' : 'Create Course'}
@@ -1255,22 +1253,22 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
         <div className="p-6 space-y-6">
           {/* Lesson List */}
           {course.lessons && course.lessons.length > 0 && (
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="font-semibold text-gray-900 mb-3">Course Lessons ({course.lessons.length})</h3>
+            <div className="bg-slate-700/40 border border-slate-600 rounded-lg p-4">
+              <h3 className="font-semibold text-white mb-3">Course Lessons ({course.lessons.length})</h3>
               <div className="grid gap-2 max-h-32 overflow-y-auto">
                 {course.lessons.map((lesson, index) => (
-                  <div key={lesson.id} className="flex items-center justify-between bg-white p-2 rounded border">
+                  <div key={lesson.id} className="flex items-center justify-between bg-slate-800 p-2 rounded border border-slate-700">
                     <div className="flex items-center gap-2">
-                      <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded text-xs flex items-center justify-center font-medium">
+                      <span className="w-6 h-6 bg-sky-500/10 text-sky-300 rounded text-xs flex items-center justify-center font-medium">
                         {index + 1}
                       </span>
-                      <span className="text-sm">{lesson.title}</span>
-                      {lesson.type === 'video' && <Video className="h-3 w-3 text-gray-400" />}
-                      {lesson.type === 'document' && <FileText className="h-3 w-3 text-gray-400" />}
+                      <span className="text-sm text-slate-200">{lesson.title}</span>
+                      {lesson.type === 'video' && <Video className="h-3 w-3 text-slate-400" />}
+                      {lesson.type === 'document' && <FileText className="h-3 w-3 text-slate-400" />}
                     </div>
                     <button
                       onClick={() => onDeleteLesson(lesson.id)}
-                      className="text-red-500 hover:text-red-700 p-1"
+                      className="text-red-400 hover:text-red-300 p-1"
                     >
                       <Trash2 className="h-3 w-3" />
                     </button>
@@ -1284,33 +1282,33 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Lesson Title*</label>
+                <label className="block text-sm font-medium text-slate-200 mb-2">Lesson Title*</label>
                 <input
                   type="text"
                   value={lessonForm.title}
                   onChange={(e) => updateField('title', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="Enter lesson title..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <label className="block text-sm font-medium text-slate-200 mb-2">Description</label>
                 <textarea
                   value={lessonForm.description}
                   onChange={(e) => updateField('description', e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="Lesson description..."
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Content Type</label>
+                <label className="block text-sm font-medium text-slate-200 mb-2">Content Type</label>
                 <select
                   value={lessonForm.type}
                   onChange={(e) => updateField('type', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                 >
                   {lessonTypes.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
@@ -1321,17 +1319,17 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-slate-200 mb-2">
                   {lessonForm.type === 'video' ? 'Video URL or File' : 'Content URL or File'}
                 </label>
                 <input
                   type="text"
                   value={lessonForm.content}
                   onChange={(e) => updateField('content', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder={lessonForm.type === 'video' ? 'Video URL or upload path...' : 'Content URL or file path...'}
                 />
-                <div className="flex items-center gap-2 mt-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2 mt-2 text-sm text-slate-300">
                   <Cloud className="h-4 w-4" />
                   <span>Files will be uploaded to Google Cloud Storage</span>
                 </div>
@@ -1339,23 +1337,23 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                  <label className="block text-sm font-medium text-slate-200 mb-2">Duration</label>
                   <input
                     type="text"
                     value={lessonForm.duration}
                     onChange={(e) => updateField('duration', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     placeholder="e.g., 15 mins"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Order</label>
+                  <label className="block text-sm font-medium text-slate-200 mb-2">Order</label>
                   <input
                     type="number"
                     value={lessonForm.order}
                     onChange={(e) => updateField('order', Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     min="0"
                   />
                 </div>
@@ -1367,9 +1365,9 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
                   id="isPreview"
                   checked={lessonForm.isPreview}
                   onChange={(e) => updateField('isPreview', e.target.checked)}
-                  className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  className="rounded border-slate-600 bg-slate-700 text-emerald-500 focus:ring-emerald-500"
                 />
-                <label htmlFor="isPreview" className="text-sm font-medium text-gray-700">
+                <label htmlFor="isPreview" className="text-sm font-medium text-slate-200">
                   Allow preview (visible to non-enrolled students)
                 </label>
               </div>
@@ -1377,40 +1375,40 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
           </div>
 
           {/* Content Upload Area */}
-          <div className="bg-blue-50 rounded-lg p-4">
+          <div className="bg-slate-700/40 border border-slate-600 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <CloudUpload className="h-5 w-5 text-blue-600" />
-              <h4 className="font-medium text-blue-900">Content Upload</h4>
+              <CloudUpload className="h-5 w-5 text-sky-400" />
+              <h4 className="font-medium text-white">Content Upload</h4>
             </div>
-            <p className="text-sm text-blue-700 mb-3">
+            <p className="text-sm text-slate-300 mb-3">
               Upload to Google Cloud Storage: {cloudConfig.bucketName}
             </p>
             
             {/* File Upload Zone */}
             <div 
-              className="border-2 border-dashed border-blue-300 rounded-lg p-6 text-center transition-colors hover:border-blue-400"
+              className="border-2 border-dashed border-slate-600 rounded-lg p-6 text-center transition-colors hover:border-sky-500/50"
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, course.id, editingLesson?.id)}
             >
               {isUploading ? (
                 <div className="space-y-2">
-                  <CloudUpload className="h-8 w-8 text-blue-500 mx-auto animate-bounce" />
-                  <p className="text-blue-600 font-medium">Uploading...</p>
-                  <div className="w-full bg-blue-200 rounded-full h-2">
+                  <CloudUpload className="h-8 w-8 text-sky-400 mx-auto animate-bounce" />
+                  <p className="text-sky-300 font-medium">Uploading...</p>
+                  <div className="w-full bg-slate-600 rounded-full h-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                      className="bg-sky-600 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${uploadProgress}%` }}
                     ></div>
                   </div>
-                  <p className="text-blue-500 text-sm">{Math.round(uploadProgress)}% complete</p>
+                  <p className="text-sky-300 text-sm">{Math.round(uploadProgress)}% complete</p>
                 </div>
               ) : (
                 <div>
-                  <HardDrive className="h-8 w-8 text-blue-400 mx-auto mb-2" />
-                  <p className="text-blue-600 font-medium mb-1">
+                  <HardDrive className="h-8 w-8 text-sky-400 mx-auto mb-2" />
+                  <p className="text-sky-300 font-medium mb-1">
                     {lessonForm.type === 'video' ? 'Upload Video File' : 'Upload Document/File'}
                   </p>
-                  <p className="text-blue-500 text-sm mb-3">
+                  <p className="text-slate-300 text-sm mb-3">
                     Drag & drop or click to select
                   </p>
                   <input
@@ -1427,7 +1425,7 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
                   />
                   <label
                     htmlFor="fileUpload"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 cursor-pointer inline-flex items-center gap-2"
+                    className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 cursor-pointer inline-flex items-center gap-2"
                   >
                     <Upload className="h-4 w-4" />
                     Choose File
@@ -1439,28 +1437,28 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
             {/* Uploaded Files List */}
             {uploadedFiles.length > 0 && (
               <div className="mt-4">
-                <h5 className="text-sm font-medium text-blue-900 mb-2">Uploaded Files</h5>
+                <h5 className="text-sm font-medium text-white mb-2">Uploaded Files</h5>
                 <div className="space-y-2">
                   {uploadedFiles.map((file, index) => (
-                    <div key={index} className="flex items-center justify-between bg-white p-2 rounded border">
+                    <div key={index} className="flex items-center justify-between bg-slate-800 p-2 rounded border border-slate-700">
                       <div className="flex items-center gap-2">
-                        {file.type.startsWith('video/') && <Video className="h-4 w-4 text-blue-500" />}
-                        {file.type.includes('pdf') && <FileText className="h-4 w-4 text-red-500" />}
-                        {!file.type.startsWith('video/') && !file.type.includes('pdf') && <File className="h-4 w-4 text-gray-500" />}
+                        {file.type.startsWith('video/') && <Video className="h-4 w-4 text-sky-400" />}
+                        {file.type.includes('pdf') && <FileText className="h-4 w-4 text-red-400" />}
+                        {!file.type.startsWith('video/') && !file.type.includes('pdf') && <File className="h-4 w-4 text-slate-400" />}
                         <div>
-                          <p className="text-sm font-medium text-gray-900">{file.name}</p>
-                          <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
+                          <p className="text-sm font-medium text-slate-200">{file.name}</p>
+                          <p className="text-xs text-slate-400">{formatFileSize(file.size)}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded">
+                        <span className="text-xs text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-1 rounded">
                           ✓ Uploaded
                         </span>
                         <button
                           onClick={() => {
                             setUploadedFiles(prev => prev.filter((_, i) => i !== index));
                           }}
-                          className="text-red-500 hover:text-red-700 p-1"
+                          className="text-red-400 hover:text-red-300 p-1"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -1472,7 +1470,7 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
             )}
 
             {/* Storage Info */}
-            <div className="mt-3 text-xs text-blue-600 bg-blue-100 p-2 rounded">
+            <div className="mt-3 text-xs text-sky-300 bg-sky-500/10 p-2 rounded border border-sky-500/20">
               <div className="flex items-center gap-1">
                 <Cloud className="h-3 w-3" />
                 <span>Files stored in: {cloudConfig.region} | CDN: Global</span>
@@ -1481,21 +1479,21 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
           </div>
         </div>
 
-        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
+        <div className="bg-slate-900/50 border-t border-slate-700 px-6 py-4 flex items-center justify-between">
+          <div className="text-sm text-slate-300">
             Add engaging content for your students
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium"
+              className="px-4 py-2 text-slate-300 hover:text-white font-medium"
             >
               Cancel
             </button>
             <button
               onClick={onSave}
               disabled={!lessonForm.title.trim()}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
+              className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center gap-2"
             >
               <Save className="h-4 w-4" />
               {isEditing ? 'Update Lesson' : 'Add Lesson'}
