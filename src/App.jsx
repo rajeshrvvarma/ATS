@@ -81,7 +81,6 @@ export default function App() {
         privacy: '/privacy',
         contact: '/contact',
         enroll: '/enroll',
-        'video-learning': '/video-learning',
         profile: '/profile',
         dashboard: '/dashboard',
         admin: '/admin',
@@ -113,7 +112,6 @@ export default function App() {
         '/privacy': 'privacy',
         '/contact': 'contact',
     '/enroll': 'enroll',
-    '/video-learning': 'video-learning',
     '/profile': 'profile',
     '/dashboard': 'dashboard',
     '/admin': 'admin',
@@ -182,7 +180,7 @@ export default function App() {
                             <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
                             <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
-                            <Route path="/video-learning" element={<LearningManagementSystemPage onNavigate={go} />} />
+                            <Route path="/video-learning" element={<Navigate to="/dashboard" replace />} />
                             <Route path="/profile" element={<ProtectedRoute roles={['student','instructor','admin']}><Profile onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/quiz-library" element={<QuizLibrary onClose={() => go('/dashboard')} />} />
                             <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />

@@ -25,11 +25,14 @@ export default function Header({ onNavigate, currentPage }) {
     // Mobile navigation state
     const [expandedMobileCategory, setExpandedMobileCategory] = useState(null);
 
-    // Mobile navigation items
+    // Mobile navigation items - dynamic based on user status
     const mobileNavItems = [
         { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
         { name: "About Us", action: () => scrollToSection('about') },
-        { name: "Learning Portal", action: () => onNavigate('video-learning') },
+        ...(user && user.enrolledCourses && user.enrolledCourses.length > 0 
+            ? [{ name: "My Learning", action: () => onNavigate('dashboard') }] 
+            : []
+        ),
         { name: "Contact Us", action: () => onNavigate('contact') },
         { name: "Login", action: () => onNavigate('login') }
     ];
@@ -194,12 +197,15 @@ export default function Header({ onNavigate, currentPage }) {
                             >
                                 About Us
                             </button>
-                            <button
-                                onClick={() => onNavigate('video-learning')}
-                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
-                            >
-                                Learning Portal
-                            </button>
+                            {/* Only show Learning Portal for enrolled students */}
+                            {user && user.enrolledCourses && user.enrolledCourses.length > 0 && (
+                                <button
+                                    onClick={() => onNavigate('dashboard')}
+                                    className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                                >
+                                    My Learning
+                                </button>
+                            )}
                             <button
                                 onClick={() => onNavigate('contact')}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"

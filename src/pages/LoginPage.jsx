@@ -28,9 +28,9 @@ export default function LoginPage({ onNavigate, onLogin }) {
           const returnUrl = localStorage.getItem('returnUrl');
           if (returnUrl) {
             localStorage.removeItem('returnUrl');
-            // Navigate using the path directly
-            if (returnUrl === '/video-learning') {
-              onNavigate('video-learning');
+            // All learning-related URLs now go to dashboard
+            if (returnUrl === '/video-learning' || returnUrl.includes('course=')) {
+              onNavigate('dashboard');
             } else {
               onNavigate('dashboard');
             }
@@ -54,12 +54,8 @@ export default function LoginPage({ onNavigate, onLogin }) {
     const returnUrl = localStorage.getItem('returnUrl');
     if (returnUrl) {
       localStorage.removeItem('returnUrl');
-      // Navigate using the path directly
-      if (returnUrl === '/video-learning') {
-        onNavigate('video-learning');
-      } else {
-        onNavigate('dashboard');
-      }
+      // All learning-related URLs now go to dashboard
+      onNavigate('dashboard');
     } else {
       onNavigate('dashboard');
     }

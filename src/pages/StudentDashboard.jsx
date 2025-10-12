@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
+import VideoCourse from '@/components/VideoCourse.jsx';
+import { loadCourses } from '@/services/courseService.js';
 import { 
   BookOpen, 
   Award, 
@@ -21,7 +23,10 @@ import {
   Users,
   FileText,
   Video,
-  Book
+  Book,
+  ShoppingCart,
+  ArrowLeft,
+  Lock
 } from 'lucide-react';
 import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import app from '@/config/firebase';
@@ -36,6 +41,11 @@ export default function StudentDashboard({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  
+  // LMS Integration states
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [allCourses, setAllCourses] = useState([]);
+  const [cart, setCart] = useState([]);
   
   // Real data states
   const [studentStats, setStudentStats] = useState({
@@ -60,6 +70,8 @@ export default function StudentDashboard({ onNavigate }) {
       loadStudentData();
       loadAdminNotes();
     }
+    // Load all courses for browsing
+    setAllCourses(loadCourses());
   }, [user]);
 
   const loadStudentData = async () => {
@@ -207,7 +219,8 @@ export default function StudentDashboard({ onNavigate }) {
 
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
-    { id: 'courses', label: 'My Courses', icon: BookOpen },
+    { id: 'courses', label: 'My Learning', icon: Play },
+    { id: 'browse', label: 'Browse Courses', icon: BookOpen },
     { id: 'certificates', label: 'Certificates', icon: Award },
     { id: 'progress', label: 'Progress', icon: TrendingUp },
     { id: 'settings', label: 'Settings', icon: Settings }
@@ -220,9 +233,14 @@ export default function StudentDashboard({ onNavigate }) {
         <div className="flex items-start space-x-3">
           <Video className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
           <div>
-            <h3 className="text-sm font-semibold text-white">Dashboard & Learning Portal</h3>
+            <h3 className="text-sm font-semibold text-white">
+              {enrolledCourses.length > 0 ? 'Your Learning Hub' : 'Welcome to Your Dashboard'}
+            </h3>
             <p className="text-xs text-slate-300 mt-1">
-              Track your progress here • Watch videos and access content in the <button onClick={() => onNavigate('video-learning')} className="text-blue-400 hover:text-blue-300 underline">Learning Portal</button>
+              {enrolledCourses.length > 0 
+                ? 'Access your courses, track progress, and continue learning' 
+                : 'Browse courses, enroll, and start your cybersecurity journey'
+              }
             </p>
           </div>
         </div>
@@ -396,89 +414,232 @@ export default function StudentDashboard({ onNavigate }) {
     </div>
   );
 
-  const renderCourses = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">My Courses</h2>
-        <button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
-          Browse Courses
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {enrolledCourses.length === 0 ? (
-          <div className="col-span-full text-center py-12">
-            <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
-            <p className="text-slate-400 text-lg">No courses enrolled yet</p>
-            <button 
-              onClick={() => onNavigate('video-learning')}
-              className="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+  // Integrated Learning Section with LMS
+  const renderMyLearning = () => {
+    // If viewing a specific course, show the course player
+    if (selectedCourse) {
+      const course = enrolledCourses.find(c => c.id === selectedCourse) || allCourses.find(c => c.id === selectedCourse);
+      const isEnrolled = enrolledCourses.some(c => c.id === selectedCourse);
+      
+      if (!isEnrolled) {
+        return (
+          <div className="space-y-6">
+            <button
+              onClick={() => setSelectedCourse(null)}
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
             >
-              Browse Available Courses in Learning Portal
+              <ArrowLeft className="w-5 h-5" />
+              Back to My Learning
+            </button>
+            
+            <div className="bg-slate-800 rounded-lg p-8 text-center">
+              <Lock className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+              <h2 className="text-2xl font-bold text-white mb-2">Course Not Accessible</h2>
+              <p className="text-slate-400 mb-6">You need to enroll in this course to access the content.</p>
+              <button
+                onClick={() => onNavigate('enroll')}
+                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                Enroll in Course
+              </button>
+            </div>
+          </div>
+        );
+      }
+      
+      return (
+        <div className="space-y-6">
+          <button
+            onClick={() => setSelectedCourse(null)}
+            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to My Learning
+          </button>
+          
+          <VideoCourse 
+            course={course} 
+            onCourseComplete={(course) => {
+              // Handle course completion
+              console.log('Course completed:', course);
+              setSelectedCourse(null);
+            }}
+          />
+        </div>
+      );
+    }
+
+    // Main learning dashboard
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white">My Learning</h2>
+          <button 
+            onClick={() => setActiveTab('browse')}
+            className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+          >
+            Browse More Courses
+          </button>
+        </div>
+
+        {enrolledCourses.length === 0 ? (
+          <div className="text-center py-12">
+            <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">Start Your Learning Journey</h3>
+            <p className="text-slate-400 text-lg mb-6">No enrolled courses yet. Browse our catalog to get started!</p>
+            <button 
+              onClick={() => setActiveTab('browse')}
+              className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+            >
+              Browse Available Courses
             </button>
           </div>
         ) : (
-          enrolledCourses.map((course) => (
-            <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-lg font-semibold text-white">{course.title}</h3>
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  course.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
-                  course.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                  'bg-red-500/20 text-red-400'
-                }`}>
-                  {course.difficulty || 'Intermediate'}
-                </span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {enrolledCourses.map((course) => (
+              <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700 hover:border-slate-600 transition-colors">
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-white">{course.title}</h3>
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    course.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
+                    course.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-red-500/20 text-red-400'
+                  }`}>
+                    {course.difficulty || 'Intermediate'}
+                  </span>
+                </div>
+                
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-slate-400">Progress</span>
+                    <span className="text-white font-medium">{course.progress || 0}%</span>
+                  </div>
+                  
+                  <div className="w-full bg-slate-700 rounded-full h-2">
+                    <div 
+                      className="bg-sky-500 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${course.progress || 0}%` }}
+                    ></div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-sm text-slate-400">
+                    <span>{course.completedLessons || 0}/{course.totalLessons || 0} lessons</span>
+                    <span>{course.duration || 'Self-paced'}</span>
+                  </div>
+                  
+                  <div className="pt-2 border-t border-slate-700">
+                    <p className="text-sm text-slate-400 mb-2">Next: {course.nextLesson || 'Start Course'}</p>
+                    <button 
+                      onClick={() => setSelectedCourse(course.id)}
+                      className="w-full flex items-center justify-center space-x-2 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+                    >
+                      <Play className="w-4 h-4" />
+                      <span>Continue Learning</span>
+                    </button>
+                  </div>
+                </div>
               </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-slate-400">Progress</span>
-                  <span className="text-white font-medium">{course.progress || 0}%</span>
-                </div>
-                
-                <div className="w-full bg-slate-700 rounded-full h-2">
-                  <div 
-                    className="bg-sky-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${course.progress || 0}%` }}
-                  ></div>
-                </div>
-                
-                <div className="flex items-center justify-between text-sm text-slate-400">
-                  <span>{course.completedLessons || 0}/{course.totalLessons || 0} lessons</span>
-                  <span>{course.duration || 'Self-paced'}</span>
-                </div>
-                
-                <div className="pt-2 border-t border-slate-700">
-                  <p className="text-sm text-slate-400 mb-2">Next: {course.nextLesson || 'Start Course'}</p>
-                  <button 
-                    onClick={() => onNavigate(`video-learning?course=${course.id}`)}
-                    className="w-full flex items-center justify-center space-x-2 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
-                  >
-                    <Play className="w-4 h-4" />
-                    <span>Continue Learning</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-        
-        {/* Browse More Courses Section - only show if student has enrolled courses */}
-        {enrolledCourses.length > 0 && (
-          <div className="col-span-full mt-6 p-6 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
-            <Video className="w-12 h-12 text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-semibold text-white mb-2">Explore More Courses</h3>
-            <p className="text-slate-400 mb-4">Access our full course catalog and video library</p>
-            <button 
-              onClick={() => onNavigate('video-learning')}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-flex items-center space-x-2"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>Open Learning Portal</span>
-            </button>
+            ))}
           </div>
         )}
+      </div>
+    );
+  };
+
+  // Browse Courses Section
+  const renderBrowseCourses = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-white">Browse Courses</h2>
+        {cart.length > 0 && (
+          <button 
+            onClick={() => onNavigate('enroll')}
+            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            Cart ({cart.length})
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {allCourses.map((course) => {
+          const isEnrolled = enrolledCourses.some(enrolled => enrolled.id === course.id);
+          const inCart = cart.includes(course.id);
+          
+          return (
+            <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-slate-600 transition-colors">
+              <div className="relative">
+                {course.thumbnail ? (
+                  <img 
+                    src={course.thumbnail} 
+                    alt={course.title}
+                    className="w-full h-40 object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-40 bg-slate-700 flex items-center justify-center">
+                    <Video className="w-12 h-12 text-slate-500" />
+                  </div>
+                )}
+                {isEnrolled && (
+                  <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                    Enrolled
+                  </div>
+                )}
+              </div>
+              
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
+                <p className="text-slate-400 text-sm mb-4 line-clamp-2">{course.description}</p>
+                
+                <div className="flex items-center justify-between text-sm text-slate-400 mb-4">
+                  <span>{course.duration}</span>
+                  <span className={`px-2 py-1 rounded-full text-xs ${
+                    course.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
+                    course.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                    'bg-red-500/20 text-red-400'
+                  }`}>
+                    {course.difficulty || 'Intermediate'}
+                  </span>
+                </div>
+                
+                {isEnrolled ? (
+                  <button 
+                    onClick={() => setSelectedCourse(course.id)}
+                    className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+                  >
+                    Access Course
+                  </button>
+                ) : (
+                  <div className="space-y-2">
+                    <button 
+                      onClick={() => setSelectedCourse(course.id)}
+                      className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm"
+                    >
+                      Preview Course
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (inCart) {
+                          setCart(cart.filter(id => id !== course.id));
+                        } else {
+                          setCart([...cart, course.id]);
+                        }
+                      }}
+                      className={`w-full py-2 rounded-lg transition-colors ${
+                        inCart 
+                          ? 'bg-orange-600 hover:bg-orange-700 text-white' 
+                          : 'bg-blue-600 hover:bg-blue-700 text-white'
+                      }`}
+                    >
+                      {inCart ? 'Remove from Cart' : 'Add to Cart'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -683,7 +844,8 @@ export default function StudentDashboard({ onNavigate }) {
 
       {/* Tab Content */}
       {activeTab === 'overview' && renderOverview()}
-      {activeTab === 'courses' && renderCourses()}
+      {activeTab === 'courses' && renderMyLearning()}
+      {activeTab === 'browse' && renderBrowseCourses()}
       {activeTab === 'certificates' && renderCertificates()}
       {activeTab === 'progress' && renderProgress()}
       {activeTab === 'settings' && renderSettings()}
