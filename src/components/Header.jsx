@@ -150,10 +150,10 @@ export default function Header({ onNavigate, currentPage }) {
         >
             <nav className="mx-auto px-6 py-4" style={{maxWidth: '1200px'}}>
                 {/* Desktop Navigation - Clean & Professional */}
-                <div className="flex items-center justify-between w-full relative"
-                     style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                <div className="flex items-center w-full"
+                     style={{display: 'flex', alignItems: 'center'}}>
                     {/* Left - Logo & Company Name */}
-                    <div className="flex items-center space-x-3 flex-shrink-0">
+                    <div className="flex items-center space-x-3 flex-shrink-0 mr-8">
                         <button 
                             onClick={() => onNavigate('home')} 
                             className="flex items-center space-x-3 group"
@@ -166,7 +166,7 @@ export default function Header({ onNavigate, currentPage }) {
                                 />
                             </div>
                             <div>
-                                <span className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
+                                <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
                                     Agnidhra Technologies
                                 </span>
                             </div>
@@ -174,8 +174,8 @@ export default function Header({ onNavigate, currentPage }) {
                     </div>
 
                     {/* Center - Main Navigation */}
-                    <nav className="absolute left-1/2 transform -translate-x-1/2">
-                        <div className="flex items-center space-x-6 lg:space-x-8">
+                    <nav className="flex-1 flex justify-center">
+                        <div className="flex items-center space-x-4 lg:space-x-6">
                             <MegaMenuPrograms 
                                 onNavigate={onNavigate} 
                                 scrollToSection={scrollToSection}
@@ -210,7 +210,7 @@ export default function Header({ onNavigate, currentPage }) {
                     </nav>
 
                     {/* Right - Actions: Enroll Now and Login/Username Dropdown */}
-                    <div className="flex items-center space-x-4 flex-shrink-0">
+                    <div className="flex items-center space-x-4 flex-shrink-0 ml-8">
                         <button
                             onClick={() => onNavigate('enroll')}
                             className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
