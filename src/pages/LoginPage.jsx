@@ -24,7 +24,19 @@ export default function LoginPage({ onNavigate, onLogin }) {
           setShowTwoFactor(true);
         } else {
           onLogin?.(result.user);
-          onNavigate('dashboard');
+          // Check for return URL
+          const returnUrl = localStorage.getItem('returnUrl');
+          if (returnUrl) {
+            localStorage.removeItem('returnUrl');
+            // Navigate using the path directly
+            if (returnUrl === '/video-learning') {
+              onNavigate('video-learning');
+            } else {
+              onNavigate('dashboard');
+            }
+          } else {
+            onNavigate('dashboard');
+          }
         }
       } else {
         setError(result.error || 'Google login failed');
@@ -38,7 +50,19 @@ export default function LoginPage({ onNavigate, onLogin }) {
 
   const handleTwoFactorSuccess = () => {
     onLogin?.(user);
-    onNavigate('dashboard');
+    // Check for return URL
+    const returnUrl = localStorage.getItem('returnUrl');
+    if (returnUrl) {
+      localStorage.removeItem('returnUrl');
+      // Navigate using the path directly
+      if (returnUrl === '/video-learning') {
+        onNavigate('video-learning');
+      } else {
+        onNavigate('dashboard');
+      }
+    } else {
+      onNavigate('dashboard');
+    }
   };
 
   const handleTwoFactorCancel = () => {

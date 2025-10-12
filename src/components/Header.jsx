@@ -29,7 +29,17 @@ export default function Header({ onNavigate, currentPage }) {
     const mobileNavItems = [
         { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
         { name: "About Us", action: () => scrollToSection('about') },
-        { name: "Learning Portal", action: () => onNavigate('video-learning') },
+        { 
+            name: "Learning Portal", 
+            action: () => {
+                if (user && (user.role === 'student' || user.role === 'admin')) {
+                    onNavigate('video-learning');
+                } else {
+                    localStorage.setItem('returnUrl', '/video-learning');
+                    onNavigate('login');
+                }
+            }
+        },
         { name: "Contact Us", action: () => onNavigate('contact') },
         { name: "Login", action: () => onNavigate('login') }
     ];
@@ -195,7 +205,15 @@ export default function Header({ onNavigate, currentPage }) {
                                 About Us
                             </button>
                             <button
-                                onClick={() => onNavigate('video-learning')}
+                                onClick={() => {
+                                    if (user && (user.role === 'student' || user.role === 'admin')) {
+                                        onNavigate('video-learning');
+                                    } else {
+                                        // Store return URL and redirect to login
+                                        localStorage.setItem('returnUrl', '/video-learning');
+                                        onNavigate('login');
+                                    }
+                                }}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
                             >
                                 Learning Portal
