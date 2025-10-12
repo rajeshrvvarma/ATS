@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
 import VideoCourse from '@/components/VideoCourse.jsx';
+import SecureContentViewer from '@/components/SecureContentViewer.jsx';
 import { loadCourses } from '@/services/courseService.js';
 import { 
   BookOpen, 
@@ -26,7 +27,8 @@ import {
   Book,
   ShoppingCart,
   ArrowLeft,
-  Lock
+  Lock,
+  Eye
 } from 'lucide-react';
 import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import app from '@/config/firebase';
@@ -46,6 +48,10 @@ export default function StudentDashboard({ onNavigate }) {
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [allCourses, setAllCourses] = useState([]);
   const [cart, setCart] = useState([]);
+  
+  // Content viewer states
+  const [viewingContent, setViewingContent] = useState(null); // { course, lesson }
+  const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
   
   // Real data states
   const [studentStats, setStudentStats] = useState({
@@ -217,6 +223,51 @@ export default function StudentDashboard({ onNavigate }) {
     }
   };
 
+  // Content viewer handlers
+  const handleOpenLesson = (course, lesson, lessonIndex = 0) => {
+    setViewingContent({ course, lesson });
+    setCurrentLessonIndex(lessonIndex);
+  };
+
+  const handleLessonComplete = (lessonId) => {
+    // Mark lesson as completed in user progress
+    console.log('Lesson completed:', lessonId);
+    // In real app, this would update the database
+  };
+
+  const handleNextLesson = () => {
+    if (!viewingContent) return;
+    
+    const nextIndex = currentLessonIndex + 1;
+    if (nextIndex < viewingContent.course.lessons.length) {
+      const nextLesson = viewingContent.course.lessons[nextIndex];
+      setViewingContent({ 
+        course: viewingContent.course, 
+        lesson: nextLesson 
+      });
+      setCurrentLessonIndex(nextIndex);
+    }
+  };
+
+  const handlePreviousLesson = () => {
+    if (!viewingContent) return;
+    
+    const prevIndex = currentLessonIndex - 1;
+    if (prevIndex >= 0) {
+      const prevLesson = viewingContent.course.lessons[prevIndex];
+      setViewingContent({ 
+        course: viewingContent.course, 
+        lesson: prevLesson 
+      });
+      setCurrentLessonIndex(prevIndex);
+    }
+  };
+
+  const handleCloseViewer = () => {
+    setViewingContent(null);
+    setCurrentLessonIndex(0);
+  };
+
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     { id: 'courses', label: 'My Learning', icon: Play },
@@ -247,7 +298,7 @@ export default function StudentDashboard({ onNavigate }) {
       </div>
       
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <div className="flex items-center justify-between">
             <div>
@@ -255,6 +306,18 @@ export default function StudentDashboard({ onNavigate }) {
               <p className="text-2xl font-bold text-white">{studentStats.coursesEnrolled}</p>
             </div>
             <BookOpen className="w-8 h-8 text-blue-400" />
+          </div>
+        </div>
+
+        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Available Courses</p>
+              <p className="text-2xl font-bold text-white">
+                {allCourses.filter(course => course.status === 'published').length}
+              </p>
+            </div>
+            <Video className="w-8 h-8 text-sky-400" />
           </div>
         </div>
         
@@ -530,7 +593,7 @@ export default function StudentDashboard({ onNavigate }) {
                   <div className="pt-2 border-t border-slate-700">
                     <p className="text-sm text-slate-400 mb-2">Next: {course.nextLesson || 'Start Course'}</p>
                     <button 
-                      onClick={() => setSelectedCourse(course.id)}
+                      onClick={() => handleOpenLesson(course.id, 0)}
                       className="w-full flex items-center justify-center space-x-2 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
                     >
                       <Play className="w-4 h-4" />
@@ -547,102 +610,238 @@ export default function StudentDashboard({ onNavigate }) {
   };
 
   // Browse Courses Section
-  const renderBrowseCourses = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">Browse Courses</h2>
-        {cart.length > 0 && (
-          <button 
-            onClick={() => onNavigate('enroll')}
-            className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            Cart ({cart.length})
-          </button>
+  const renderBrowseCourses = () => {
+    // Filter courses: only show published and coming-soon courses
+    const availableCourses = allCourses.filter(course => 
+      course.status === 'published' || course.status === 'coming-soon'
+    );
+
+    const publishedCourses = availableCourses.filter(course => course.status === 'published');
+    const comingSoonCourses = availableCourses.filter(course => course.status === 'coming-soon');
+
+    return (
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white">Browse Courses</h2>
+          {cart.length > 0 && (
+            <button 
+              onClick={() => onNavigate('enroll')}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              Cart ({cart.length})
+            </button>
+          )}
+        </div>
+
+        {/* Published Courses */}
+        {publishedCourses.length > 0 && (
+          <div>
+            <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <BookOpen className="w-5 h-5 text-green-400" />
+              Available Courses ({publishedCourses.length})
+            </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {publishedCourses.map((course) => {
+                const isEnrolled = enrolledCourses.some(enrolled => enrolled.id === course.id);
+                const inCart = cart.includes(course.id);
+                
+                return (
+                  <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-slate-600 transition-colors">
+                    <div className="relative">
+                      {course.thumbnail ? (
+                        <img 
+                          src={course.thumbnail} 
+                          alt={course.title}
+                          className="w-full h-40 object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-40 bg-slate-700 flex items-center justify-center">
+                          <Video className="w-12 h-12 text-slate-500" />
+                        </div>
+                      )}
+                      {isEnrolled && (
+                        <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                          Enrolled
+                        </div>
+                      )}
+                      <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                        Available
+                      </div>
+                    </div>
+                    
+                    <div className="p-6">
+                      <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
+                      <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                        {course.shortDescription || course.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          {course.duration || 'Self-paced'}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="w-3 h-3" />
+                          {course.lessons?.length || 0} lessons
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between text-sm text-slate-400 mb-4">
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          course.level === 'beginner' ? 'bg-green-500/20 text-green-400' :
+                          course.level === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                          course.level === 'advanced' ? 'bg-red-500/20 text-red-400' :
+                          'bg-blue-500/20 text-blue-400'
+                        }`}>
+                          {course.level || 'All Levels'}
+                        </span>
+                        <span className="font-semibold text-sky-400">
+                          {course.price > 0 ? `₹${course.price}` : 'Free'}
+                        </span>
+                      </div>
+                      
+                      {isEnrolled ? (
+                        <button 
+                          onClick={() => setSelectedCourse(course.id)}
+                          className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                        >
+                          <Play className="w-4 h-4" />
+                          Continue Learning
+                        </button>
+                      ) : (
+                        <div className="space-y-2">
+                          <button 
+                            onClick={() => setSelectedCourse(course.id)}
+                            className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Preview Course
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if (inCart) {
+                                setCart(cart.filter(id => id !== course.id));
+                              } else {
+                                setCart([...cart, course.id]);
+                              }
+                            }}
+                            className={`w-full py-2 rounded-lg transition-colors flex items-center justify-center gap-2 ${
+                              inCart 
+                                ? 'bg-orange-600 hover:bg-orange-700 text-white' 
+                                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            }`}
+                          >
+                            <ShoppingCart className="w-4 h-4" />
+                            {inCart ? 'Remove from Cart' : 'Add to Cart'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Coming Soon Courses */}
+        {comingSoonCourses.length > 0 && (
+          <div>
+            <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-blue-400" />
+              Coming Soon ({comingSoonCourses.length})
+            </h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {comingSoonCourses.map((course) => (
+                <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 opacity-75">
+                  <div className="relative">
+                    {course.thumbnail ? (
+                      <img 
+                        src={course.thumbnail} 
+                        alt={course.title}
+                        className="w-full h-40 object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-40 bg-slate-700 flex items-center justify-center">
+                        <Video className="w-12 h-12 text-slate-500" />
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                      <div className="text-center">
+                        <Lock className="w-8 h-8 text-white mx-auto mb-2" />
+                        <span className="text-white font-semibold">Coming Soon</span>
+                      </div>
+                    </div>
+                    <div className="absolute top-2 left-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                      Coming Soon
+                    </div>
+                  </div>
+                  
+                  <div className="p-6">
+                    <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                      {course.shortDescription || course.description}
+                    </p>
+                    
+                    <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
+                      <span className="flex items-center gap-1">
+                        <Clock className="w-3 h-3" />
+                        {course.duration || 'To be announced'}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" />
+                        {course.lessons?.length || 0} lessons planned
+                      </span>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm text-slate-400 mb-4">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        course.level === 'beginner' ? 'bg-green-500/20 text-green-400' :
+                        course.level === 'intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                        course.level === 'advanced' ? 'bg-red-500/20 text-red-400' :
+                        'bg-blue-500/20 text-blue-400'
+                      }`}>
+                        {course.level || 'All Levels'}
+                      </span>
+                      <span className="font-semibold text-slate-400">
+                        {course.price > 0 ? `₹${course.price}` : 'Free'}
+                      </span>
+                    </div>
+                    
+                    <button 
+                      disabled
+                      className="w-full py-2 bg-slate-700 text-slate-400 rounded-lg cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      <Calendar className="w-4 h-4" />
+                      Notify When Available
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {availableCourses.length === 0 && (
+          <div className="text-center py-12">
+            <BookOpen className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">No Courses Available</h3>
+            <p className="text-slate-400 mb-6">
+              New courses are being created by our instructors. Check back soon!
+            </p>
+            <button
+              onClick={() => setActiveTab('overview')}
+              className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
         )}
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {allCourses.map((course) => {
-          const isEnrolled = enrolledCourses.some(enrolled => enrolled.id === course.id);
-          const inCart = cart.includes(course.id);
-          
-          return (
-            <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-slate-600 transition-colors">
-              <div className="relative">
-                {course.thumbnail ? (
-                  <img 
-                    src={course.thumbnail} 
-                    alt={course.title}
-                    className="w-full h-40 object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-40 bg-slate-700 flex items-center justify-center">
-                    <Video className="w-12 h-12 text-slate-500" />
-                  </div>
-                )}
-                {isEnrolled && (
-                  <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
-                    Enrolled
-                  </div>
-                )}
-              </div>
-              
-              <div className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
-                <p className="text-slate-400 text-sm mb-4 line-clamp-2">{course.description}</p>
-                
-                <div className="flex items-center justify-between text-sm text-slate-400 mb-4">
-                  <span>{course.duration}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    course.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
-                    course.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-red-500/20 text-red-400'
-                  }`}>
-                    {course.difficulty || 'Intermediate'}
-                  </span>
-                </div>
-                
-                {isEnrolled ? (
-                  <button 
-                    onClick={() => setSelectedCourse(course.id)}
-                    className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
-                  >
-                    Access Course
-                  </button>
-                ) : (
-                  <div className="space-y-2">
-                    <button 
-                      onClick={() => setSelectedCourse(course.id)}
-                      className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm"
-                    >
-                      Preview Course
-                    </button>
-                    <button 
-                      onClick={() => {
-                        if (inCart) {
-                          setCart(cart.filter(id => id !== course.id));
-                        } else {
-                          setCart([...cart, course.id]);
-                        }
-                      }}
-                      className={`w-full py-2 rounded-lg transition-colors ${
-                        inCart 
-                          ? 'bg-orange-600 hover:bg-orange-700 text-white' 
-                          : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
-                    >
-                      {inCart ? 'Remove from Cart' : 'Add to Cart'}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderCertificates = () => (
     <div className="space-y-6">
@@ -685,6 +884,150 @@ export default function StudentDashboard({ onNavigate }) {
           ))
         )}
       </div>
+
+      {/* Quick Browse - Featured Courses */}
+      {allCourses.filter(course => course.status === 'published').length > 0 && (
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl font-semibold text-white">Featured Courses</h3>
+            <button
+              onClick={() => setActiveTab('browse')}
+              className="text-sky-400 hover:text-sky-300 text-sm flex items-center gap-1"
+            >
+              Browse All
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {allCourses
+              .filter(course => course.status === 'published')
+              .slice(0, 3)
+              .map((course) => {
+                const isEnrolled = enrolledCourses.some(enrolled => enrolled.id === course.id);
+                const inCart = cart.includes(course.id);
+                
+                return (
+                  <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-slate-600 transition-colors">
+                    <div className="relative">
+                      {course.thumbnail ? (
+                        <img 
+                          src={course.thumbnail} 
+                          alt={course.title}
+                          className="w-full h-32 object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-32 bg-slate-700 flex items-center justify-center">
+                          <Video className="w-8 h-8 text-slate-500" />
+                        </div>
+                      )}
+                      {isEnrolled && (
+                        <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                          Enrolled
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="p-4">
+                      <h4 className="font-semibold text-white mb-1">{course.title}</h4>
+                      <p className="text-slate-400 text-sm mb-3 line-clamp-2">
+                        {course.shortDescription || course.description}
+                      </p>
+                      
+                      <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="w-3 h-3" />
+                          {course.lessons?.length || 0} lessons
+                        </span>
+                        <span className="font-semibold text-sky-400">
+                          {course.price > 0 ? `₹${course.price}` : 'Free'}
+                        </span>
+                      </div>
+                      
+                      {isEnrolled ? (
+                        <button 
+                          onClick={() => setSelectedCourse(course.id)}
+                          className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded text-sm transition-colors"
+                        >
+                          Continue Learning
+                        </button>
+                      ) : (
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => setSelectedCourse(course.id)}
+                            className="flex-1 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded text-sm transition-colors"
+                          >
+                            Preview
+                          </button>
+                          <button 
+                            onClick={() => {
+                              if (inCart) {
+                                setCart(cart.filter(id => id !== course.id));
+                              } else {
+                                setCart([...cart, course.id]);
+                              }
+                            }}
+                            className={`flex-1 py-2 rounded text-sm transition-colors ${
+                              inCart 
+                                ? 'bg-orange-600 hover:bg-orange-700 text-white' 
+                                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                            }`}
+                          >
+                            {inCart ? 'Remove' : 'Add to Cart'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      )}
+
+      {/* Coming Soon Preview */}
+      {allCourses.filter(course => course.status === 'coming-soon').length > 0 && (
+        <div className="mt-8">
+          <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
+            <div className="flex items-center gap-3 mb-4">
+              <Calendar className="w-6 h-6 text-blue-400" />
+              <div>
+                <h3 className="text-lg font-semibold text-white">Coming Soon</h3>
+                <p className="text-slate-400 text-sm">New courses in development</p>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {allCourses
+                .filter(course => course.status === 'coming-soon')
+                .slice(0, 2)
+                .map((course) => (
+                  <div key={course.id} className="flex items-center gap-3 bg-slate-700 rounded-lg p-3">
+                    <div className="w-12 h-12 bg-slate-600 rounded-lg flex items-center justify-center">
+                      <Lock className="w-5 h-5 text-slate-400" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-medium text-white text-sm">{course.title}</h4>
+                      <p className="text-slate-400 text-xs">
+                        {course.lessons?.length || 0} lessons planned
+                      </p>
+                    </div>
+                    <span className="text-blue-400 text-xs font-medium">Soon</span>
+                  </div>
+                ))}
+            </div>
+            
+            {allCourses.filter(course => course.status === 'coming-soon').length > 2 && (
+              <button
+                onClick={() => setActiveTab('browse')}
+                className="w-full mt-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg text-sm transition-colors"
+              >
+                View All Coming Soon Courses
+              </button>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -880,6 +1223,19 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Secure Content Viewer */}
+      {viewingContent && (
+        <SecureContentViewer
+          course={viewingContent.course}
+          lesson={viewingContent.lesson}
+          lessonIndex={currentLessonIndex}
+          onClose={handleCloseViewer}
+          onNext={handleNextLesson}
+          onPrevious={handlePreviousLesson}
+          user={user}
+        />
       )}
     </DashboardLayout>
   );
