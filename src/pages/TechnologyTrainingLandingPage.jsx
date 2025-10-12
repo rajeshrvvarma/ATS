@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers } from 'lucide-react';
+import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
@@ -10,6 +10,7 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 const TechnologyTrainingLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
   const coursePricingData = useCoursePricing();
   const coursePricing = coursePricingData?.pricing || {};
   const pricingLoading = coursePricingData?.loading || false;
@@ -69,6 +70,7 @@ const TechnologyTrainingLandingPage = () => {
       price: '₹30,000', // Fallback price
       originalPrice: '₹45,000', // Fallback original price
       description: 'Master full-stack development with MongoDB, Express.js, React, and Node.js.',
+      detailedDescription: 'Become a professional MERN Stack developer with comprehensive training in modern web development. Learn to build scalable, full-stack applications using the most in-demand technologies in the industry.',
       features: [
         'React.js Frontend Development',
         'Node.js Backend Development',
@@ -77,6 +79,26 @@ const TechnologyTrainingLandingPage = () => {
         'Authentication & Security',
         'Deployment & DevOps Basics'
       ],
+      curriculum: [
+        {
+          module: 'Frontend Development',
+          topics: ['React Fundamentals', 'State Management (Redux)', 'Component Architecture', 'Hooks & Context API', 'UI Libraries (Material-UI, Tailwind)']
+        },
+        {
+          module: 'Backend Development', 
+          topics: ['Node.js & Express.js', 'API Design & Development', 'Middleware & Authentication', 'File Handling & Uploads', 'Error Handling']
+        },
+        {
+          module: 'Database Design',
+          topics: ['MongoDB Fundamentals', 'Schema Design', 'Aggregation Pipeline', 'Indexing & Performance', 'Database Security']
+        },
+        {
+          module: 'Full Stack Integration',
+          topics: ['Frontend-Backend Communication', 'Real-time Features (Socket.io)', 'Testing & Debugging', 'Deployment (AWS, Heroku)', 'Performance Optimization']
+        }
+      ],
+      prerequisites: ['Basic HTML, CSS, JavaScript knowledge', 'Understanding of programming concepts'],
+      careerOutcomes: ['Full Stack Developer', 'React Developer', 'Node.js Developer', 'JavaScript Engineer'],
       enrolled: 45,
       maxSeats: 60,
       highlights: ['Industry Projects Portfolio', 'Live Coding Sessions', 'Job Placement Support'],
@@ -216,7 +238,40 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 56,
       maxSeats: 70,
       highlights: ['Kaggle Competition Projects', 'Industry Datasets', 'ML Certification'],
-      color: 'green'
+      color: 'green',
+      curriculum: [
+        {
+          title: 'Python Fundamentals for Data Science',
+          topics: ['Python Basics', 'Data Structures', 'NumPy Arrays', 'Pandas DataFrames']
+        },
+        {
+          title: 'Data Analysis & Visualization',
+          topics: ['Data Cleaning', 'Exploratory Data Analysis', 'Matplotlib & Seaborn', 'Statistical Analysis']
+        },
+        {
+          title: 'Machine Learning',
+          topics: ['Supervised Learning', 'Unsupervised Learning', 'Model Evaluation', 'Feature Engineering']
+        },
+        {
+          title: 'Advanced ML & Deep Learning',
+          topics: ['Neural Networks', 'TensorFlow & Keras', 'Computer Vision', 'Natural Language Processing']
+        },
+        {
+          title: 'Real-world Projects',
+          topics: ['Kaggle Competitions', 'Industry Case Studies', 'Model Deployment', 'MLOps Basics']
+        }
+      ],
+      prerequisites: [
+        'Basic programming knowledge (any language)',
+        'High school level mathematics',
+        'Interest in data and problem-solving'
+      ],
+      careerOutcomes: [
+        'Data Scientist positions',
+        'Machine Learning Engineer roles',
+        'Business Analyst opportunities',
+        'Research and Analytics positions'
+      ]
     },
     {
       id: 8,
@@ -330,7 +385,40 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 31,
       maxSeats: 40,
       highlights: ['Cross-platform Focus', 'App Store Publishing', 'Industry Projects'],
-      color: 'blue'
+      color: 'blue',
+      curriculum: [
+        {
+          title: 'React Native Fundamentals',
+          topics: ['Setup & Environment', 'Components & Styling', 'Navigation Basics', 'State Management']
+        },
+        {
+          title: 'Advanced UI Development',
+          topics: ['Custom Components', 'Animations', 'Platform-specific Code', 'Responsive Design']
+        },
+        {
+          title: 'Native Integration',
+          topics: ['Native Modules', 'Camera & Gallery', 'Geolocation', 'Device APIs']
+        },
+        {
+          title: 'Data & Backend',
+          topics: ['API Integration', 'AsyncStorage', 'SQLite Database', 'Offline Support']
+        },
+        {
+          title: 'App Distribution',
+          topics: ['App Store Guidelines', 'Google Play Store', 'Code Signing', 'CI/CD Pipelines']
+        }
+      ],
+      prerequisites: [
+        'Strong JavaScript and React knowledge',
+        'Understanding of mobile app concepts',
+        'Basic knowledge of mobile development lifecycle'
+      ],
+      careerOutcomes: [
+        'React Native Developer',
+        'Cross-platform Mobile Developer',
+        'Mobile App Consultant',
+        'Hybrid App Specialist'
+      ]
     },
     {
       id: 13,
@@ -363,6 +451,10 @@ const TechnologyTrainingLandingPage = () => {
   const handleEnrollment = (courseTitle) => {
     const courseType = titleToIdMap[courseTitle];
     setEnrollmentModal({ isOpen: true, courseType, courseName: courseTitle });
+  };
+
+  const handleCourseDetails = (course) => {
+    setCourseDetailsModal({ isOpen: true, course });
   };
 
   const getColorClasses = (color) => {
@@ -555,16 +647,28 @@ const TechnologyTrainingLandingPage = () => {
                   </div>
                 </div>
 
-                {/* Action Button */}
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleEnrollment(program.title)}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  Enroll Now
-                  <ArrowRight size={16} />
-                </motion.button>
+                {/* Action Buttons */}
+                <div className="space-y-3">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleCourseDetails(program)}
+                    className="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <Info size={16} />
+                    Course Details
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleEnrollment(program.title)}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    Enroll Now
+                    <ArrowRight size={16} />
+                  </motion.button>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -609,6 +713,140 @@ const TechnologyTrainingLandingPage = () => {
       </AnimatedBackground>
 
       {/* Modals */}
+      {/* Course Details Modal */}
+      {courseDetailsModal.isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between mb-6 border-b border-slate-200 pb-4">
+              <div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                  {courseDetailsModal.course?.title}
+                </h3>
+                <p className="text-slate-600">
+                  {courseDetailsModal.course?.description}
+                </p>
+              </div>
+              <button
+                onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left Column - Course Details */}
+              <div className="space-y-6">
+                {/* Course Highlights */}
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <BookOpen size={18} className="text-blue-600" />
+                    Course Highlights
+                  </h4>
+                  <ul className="space-y-2">
+                    {courseDetailsModal.course?.highlights?.map((highlight, index) => (
+                      <li key={index} className="flex items-start gap-2 text-slate-700">
+                        <ArrowRight size={14} className="text-blue-600 mt-1 flex-shrink-0" />
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Prerequisites */}
+                {courseDetailsModal.course?.prerequisites && (
+                  <div>
+                    <h4 className="font-semibold text-slate-800 mb-3">Prerequisites</h4>
+                    <ul className="space-y-2">
+                      {courseDetailsModal.course.prerequisites.map((prereq, index) => (
+                        <li key={index} className="flex items-start gap-2 text-slate-700">
+                          <ArrowRight size={14} className="text-orange-600 mt-1 flex-shrink-0" />
+                          {prereq}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Career Outcomes */}
+                {courseDetailsModal.course?.careerOutcomes && (
+                  <div>
+                    <h4 className="font-semibold text-slate-800 mb-3">Career Outcomes</h4>
+                    <ul className="space-y-2">
+                      {courseDetailsModal.course.careerOutcomes.map((outcome, index) => (
+                        <li key={index} className="flex items-start gap-2 text-slate-700">
+                          <ArrowRight size={14} className="text-green-600 mt-1 flex-shrink-0" />
+                          {outcome}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column - Curriculum */}
+              <div>
+                <h4 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <Play size={18} className="text-blue-600" />
+                  Curriculum
+                </h4>
+                <div className="space-y-3">
+                  {courseDetailsModal.course?.curriculum?.map((module, index) => (
+                    <div key={index} className="border border-slate-200 rounded-lg p-4">
+                      <h5 className="font-medium text-slate-800 mb-2">
+                        Module {index + 1}: {module.title}
+                      </h5>
+                      <ul className="space-y-1">
+                        {module.topics.map((topic, topicIndex) => (
+                          <li key={topicIndex} className="text-sm text-slate-600 flex items-start gap-2">
+                            <ArrowRight size={12} className="text-slate-400 mt-1 flex-shrink-0" />
+                            {topic}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center">
+              <div className="text-center sm:text-left">
+                <div className="text-2xl font-bold text-blue-600">
+                  ₹{formatPrice(courseDetailsModal.course?.price)}
+                </div>
+                <div className="text-sm text-slate-600">Duration: {courseDetailsModal.course?.duration}</div>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setCourseDetailsModal({ isOpen: false, course: null });
+                  handleEnrollment(courseDetailsModal.course?.title);
+                }}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300"
+              >
+                Enroll Now
+              </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+      
       <EnhancedEnrollmentModal 
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
