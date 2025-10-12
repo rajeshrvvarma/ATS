@@ -9,6 +9,8 @@ import AdminUPIReferences from "@/components/admin/AdminUPIReferences.jsx";
 import PricingCalculator from "@/components/PricingCalculator.jsx";
 import InstructorContentManagement from "@/components/InstructorContentManagement.jsx";
 import AdminDeletionRequests from "@/components/admin/AdminDeletionRequests.jsx";
+import AdminIndexAlerts from "@/components/admin/AdminIndexAlerts.jsx";
+import IndexAlertBanner from "@/components/IndexAlertBanner.jsx";
 
 const db = getFirestore(app);
 const statusColors = {
@@ -269,9 +271,9 @@ function AdminDashboard({ onNavigate }) {
   const tabs = [
     { key: "overview", label: "Overview" },
     { key: "user", label: "User Management" },
-    { key: "course", label: "Course Management" },
     { key: "content-management", label: "Content Management" },
-    { key: "approval-requests", label: "Deletion Requests" },
+  { key: "approval-requests", label: "Deletion Requests" },
+  { key: "index-alerts", label: "Index Alerts" },
     { key: "pricing", label: "Course Pricing" },
     { key: "cloud-pricing", label: "Cloud Cost Calculator" },
     { key: "upi", label: "UPI References" },
@@ -282,6 +284,7 @@ function AdminDashboard({ onNavigate }) {
   return (
     <DashboardLayout user={user} onNavigate={onNavigate}>
       <div className="p-6">
+        <IndexAlertBanner mode="admin" onOpenAdminAlerts={() => setTab('index-alerts')} />
         <div className="flex gap-6 border-b border-slate-700 mb-6">
           {tabs.map(t => (
             <button
@@ -734,96 +737,18 @@ function AdminDashboard({ onNavigate }) {
           </>
         )}
 
-        {tab === "course" && (
-          <>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">Course Management</h2>
-              <button className="flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg" onClick={() => setShowAddCourse(true)}>
-                <Plus className="w-4 h-4" /> Add Course
-              </button>
-            </div>
-            <input
-              className="border rounded px-3 py-2 mb-4 w-full max-w-md"
-              placeholder="Search courses..."
-              value={courseSearch}
-              onChange={e => setCourseSearch(e.target.value)}
-            />
-            {courseLoading ? (
-              <div>Loading courses...</div>
-            ) : courseError ? (
-              <div className="text-red-600">{courseError}</div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="min-w-full bg-gray-800 rounded-lg">
-                  <thead>
-                    <tr className="text-left text-gray-400">
-                      <th className="px-4 py-2">TITLE</th>
-                      <th className="px-4 py-2">INSTRUCTOR</th>
-                      <th className="px-4 py-2">STATUS</th>
-                      <th className="px-4 py-2">ENROLLED</th>
-                      <th className="px-4 py-2">ACTIONS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {courses.filter(c => c.title?.toLowerCase().includes(courseSearch.toLowerCase())).length === 0 ? (
-                      <tr><td colSpan={5} className="text-center py-4 text-gray-400">No courses found.</td></tr>
-                    ) : (
-                      courses.filter(c => c.title?.toLowerCase().includes(courseSearch.toLowerCase())).map(course => (
-                        <tr key={course.id} className="border-b border-gray-700 hover:bg-gray-700/30">
-                          <td className="px-4 py-2">{course.title}</td>
-                          <td className="px-4 py-2">{course.instructor || '-'}</td>
-                          <td className="px-4 py-2">
-                            <span className={`px-2 py-1 rounded text-xs font-semibold ${course.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{course.status}</span>
-                          </td>
-                          <td className="px-4 py-2">{course.enrolled || 0}</td>
-                          <td className="px-4 py-2 flex gap-2">
-                            <button title="Edit" className="hover:text-yellow-400"><Edit size={18} /></button>
-                            <button title="Delete" className="hover:text-red-400" onClick={async () => {
-                              if (window.confirm('Delete this course?')) {
-                                await deleteDoc(doc(db, 'courses', course.id));
-                                setCourseRefresh(r => !r);
-                              }
-                            }}><Trash size={18} /></button>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            {/* Add Course Modal */}
-            {showAddCourse && (
-              <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-                <div className="bg-slate-900 p-8 rounded-lg w-full max-w-md">
-                  <h3 className="text-xl font-bold mb-4">Add New Course</h3>
-                  <input className="border rounded px-3 py-2 mb-2 w-full" placeholder="Title" value={newCourse.title} onChange={e => setNewCourse(c => ({ ...c, title: e.target.value }))} />
-                  <input className="border rounded px-3 py-2 mb-2 w-full" placeholder="Instructor" value={newCourse.instructor} onChange={e => setNewCourse(c => ({ ...c, instructor: e.target.value }))} />
-                  <select className="border rounded px-3 py-2 mb-4 w-full" value={newCourse.status} onChange={e => setNewCourse(c => ({ ...c, status: e.target.value }))}>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                  </select>
-                  <div className="flex gap-2 justify-end">
-                    <button className="px-4 py-2 bg-slate-700 text-white rounded" onClick={() => setShowAddCourse(false)}>Cancel</button>
-                    <button className="px-4 py-2 bg-sky-600 text-white rounded" onClick={async () => {
-                      if (!newCourse.title) return alert('Title required');
-                      await addDoc(collection(db, 'courses'), { ...newCourse, enrolled: 0 });
-                      setShowAddCourse(false);
-                      setNewCourse({ title: "", instructor: "", status: "active" });
-                      setCourseRefresh(r => !r);
-                    }}>Add</button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </>
-        )}
 
         {tab === "pricing" && <AdminCoursePricing />}
 
         {tab === "content-management" && <InstructorContentManagement />}
 
         {tab === "approval-requests" && <AdminDeletionRequests />}
+
+        {tab === "index-alerts" && (
+          <div className="bg-slate-800 rounded-lg p-6">
+            <AdminIndexAlerts />
+          </div>
+        )}
 
         {tab === "cloud-pricing" && <PricingCalculator />}
 

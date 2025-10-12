@@ -23,6 +23,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
 import { generateGeminiResponse } from '@/api/gemini.js';
+import { getDocsWithIndexFallback } from './firestoreIndexGuard.js';
 
 // Study group status types
 export const GROUP_STATUS = {
@@ -148,46 +149,39 @@ export const getStudyGroups = async (options = {}) => {
       sortOrder = 'desc'
     } = options;
 
-    let groupsRef = collection(db, 'studyGroups');
-    let q = query(groupsRef);
+  let groupsRef = collection(db, 'studyGroups');
+  let base = query(groupsRef);
 
     // Apply filters
-    if (category) {
-      q = query(q, where('category', '==', category));
-    }
-    if (type) {
-      q = query(q, where('type', '==', type));
-    }
-    if (status) {
-      q = query(q, where('status', '==', status));
-    }
+    if (category) base = query(base, where('category', '==', category));
+    if (type) base = query(base, where('type', '==', type));
+    if (status) base = query(base, where('status', '==', status));
     if (isRecruitingOnly) {
-      q = query(q, where('status', 'in', [GROUP_STATUS.RECRUITING, GROUP_STATUS.ACTIVE]));
-      q = query(q, where('isPublic', '==', true));
+      base = query(base, where('status', 'in', [GROUP_STATUS.RECRUITING, GROUP_STATUS.ACTIVE]));
+      base = query(base, where('isPublic', '==', true));
     }
 
-    // Apply sorting and limit
-    q = query(q, orderBy(sortBy, sortOrder), limit(limitCount));
+    const primary = () => getDocs(query(base, orderBy(sortBy, sortOrder), limit(limitCount)));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy, sortDir: sortOrder, alertSource: 'studyGroups.getStudyGroups', alertPath: 'studyGroups' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
 
-    const snapshot = await getDocs(q);
-    const groups = [];
-    
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      groups.push({
-        id: doc.id,
-        ...data,
-        createdAt: data.createdAt?.toDate(),
-        updatedAt: data.updatedAt?.toDate(),
-        lastMeetingAt: data.lastMeetingAt?.toDate(),
-        nextMeetingAt: data.nextMeetingAt?.toDate(),
-        members: data.members?.map(member => ({
-          ...member,
-          joinedAt: member.joinedAt?.toDate()
-        })) || []
-      });
-    });
+    const groups = rows.map((data) => ({
+      id: data.id,
+      ...data,
+      createdAt: data.createdAt?.toDate?.() || data.createdAt,
+      updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+      lastMeetingAt: data.lastMeetingAt?.toDate?.() || data.lastMeetingAt,
+      nextMeetingAt: data.nextMeetingAt?.toDate?.() || data.nextMeetingAt,
+      members: (data.members || []).map(member => ({
+        ...member,
+        joinedAt: member.joinedAt?.toDate?.() || member.joinedAt
+      }))
+    }));
 
+    if (indexRequired) console.warn('Index required for getStudyGroups; using fallback sorting.');
     return { success: true, data: groups };
   } catch (error) {
     console.error('Error fetching study groups:', error);
@@ -395,27 +389,26 @@ export const getGroupMeetings = async (groupId, options = {}) => {
     const { upcoming = false, limit: limitCount = 10 } = options;
 
     const meetingsRef = collection(db, 'studyGroupMeetings');
-    let q = query(meetingsRef, where('groupId', '==', groupId));
+    let base = query(meetingsRef, where('groupId', '==', groupId));
 
     if (upcoming) {
       const now = new Date();
-      q = query(q, where('scheduledDate', '>=', now));
+      base = query(base, where('scheduledDate', '>=', now));
     }
 
-    q = query(q, orderBy('scheduledDate', 'desc'), limit(limitCount));
-
-    const snapshot = await getDocs(q);
-    const meetings = [];
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      meetings.push({
-        id: doc.id,
-        ...data,
-        scheduledDate: data.scheduledDate?.toDate(),
-        createdAt: data.createdAt?.toDate()
-      });
-    });
+    const primary = () => getDocs(query(base, orderBy('scheduledDate', 'desc'), limit(limitCount)));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'scheduledDate', sortDir: 'desc', alertSource: 'studyGroups.getGroupMeetings', alertPath: 'studyGroupMeetings' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+    const meetings = rows.map((data) => ({
+      id: data.id,
+      ...data,
+      scheduledDate: data.scheduledDate?.toDate?.() || data.scheduledDate,
+      createdAt: data.createdAt?.toDate?.() || data.createdAt
+    }));
+    if (indexRequired) console.warn('Index required for getGroupMeetings; using fallback sorting.');
 
     return { success: true, data: meetings };
   } catch (error) {

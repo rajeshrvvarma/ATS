@@ -35,7 +35,7 @@ import {
   HardDrive,
   CloudUpload,
   File,
-  Progress,
+  Loader2,
   Shield,
   UserCheck
 } from 'lucide-react';

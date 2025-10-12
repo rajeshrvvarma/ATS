@@ -393,7 +393,7 @@ class NotificationService {
         notificationsRef,
         where('userId', '==', userId)
       ));
-      const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc' });
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc', alertSource: 'notifications.getUserNotifications', alertPath: 'notifications' });
       const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
         ? docs.map(doc => ({ id: doc.id, ...doc.data() }))
         : docs;
@@ -463,7 +463,7 @@ class NotificationService {
         notificationsRef,
         where('userId', '==', userId)
       ));
-      const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc' });
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc', alertSource: 'notifications.getNotificationStats', alertPath: 'notifications' });
       const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
         ? docs.map(doc => ({ id: doc.id, ...doc.data() }))
         : docs;

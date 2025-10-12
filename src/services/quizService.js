@@ -19,6 +19,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
 
+import { getDocsWithIndexFallback } from './firestoreIndexGuard.js';
 // Quiz categories for different cybersecurity domains
 export const QUIZ_CATEGORIES = {
   DEFENSIVE_SECURITY: 'defensive-security',
@@ -285,29 +286,23 @@ export const getUserQuizProgress = async (userId, quizId = null) => {
 export const getQuizLeaderboard = async (quizId, limitCount = 10) => {
   try {
     const attemptsRef = collection(db, 'quizAttempts');
-    const q = query(
-      attemptsRef,
-      where('quizId', '==', quizId),
-      where('passed', '==', true),
-      orderBy('percentage', 'desc'),
-      orderBy('timeSpent', 'asc'),
-      limit(limitCount)
-    );
-    
-    const querySnapshot = await getDocs(q);
-    
-    const leaderboard = [];
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      leaderboard.push({
-        id: doc.id,
-        userEmail: data.userEmail,
-        percentage: data.percentage,
-        timeSpent: data.timeSpent,
-        completedAt: data.completedAt
-      });
-    });
-    
+    const base = query(attemptsRef, where('quizId', '==', quizId), where('passed', '==', true));
+    const primary = () => getDocs(query(base, orderBy('percentage', 'desc'), orderBy('timeSpent', 'asc'), limit(limitCount)));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'percentage', sortDir: 'desc', alertSource: 'quiz.getQuizLeaderboard', alertPath: 'quizAttempts' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+
+    const leaderboard = rows.map((data) => ({
+      id: data.id,
+      userEmail: data.userEmail,
+      percentage: data.percentage,
+      timeSpent: data.timeSpent,
+      completedAt: data.completedAt
+    }));
+    if (indexRequired) console.warn('Index required for getQuizLeaderboard; using fallback sorting.');
+
     return { success: true, data: leaderboard };
   } catch (error) {
     console.error('Error fetching quiz leaderboard:', error);

@@ -15,6 +15,7 @@ import {
   increment
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
+import { getDocsWithIndexFallback } from './firestoreIndexGuard.js';
 import { analyzeWithGemini } from '../api/gemini';
 
 /**
@@ -66,39 +67,35 @@ export const createWikiArticle = async (articleData, userId) => {
 // Get all wiki articles with filtering and sorting
 export const getWikiArticles = async (filters = {}) => {
   try {
-    let q = collection(db, 'wikiArticles');
+    let base = collection(db, 'wikiArticles');
     
     // Apply filters
     if (filters.category) {
-      q = query(q, where('categories', 'array-contains', filters.category));
+      base = query(base, where('categories', 'array-contains', filters.category));
     }
     
     if (filters.tags && filters.tags.length > 0) {
-      q = query(q, where('tags', 'array-contains-any', filters.tags));
+      base = query(base, where('tags', 'array-contains-any', filters.tags));
     }
     
     if (filters.status) {
-      q = query(q, where('status', '==', filters.status));
+      base = query(base, where('status', '==', filters.status));
     }
     
     if (filters.authorId) {
-      q = query(q, where('authorId', '==', filters.authorId));
+      base = query(base, where('authorId', '==', filters.authorId));
     }
     
     // Apply sorting
-    if (filters.sortBy === 'views') {
-      q = query(q, orderBy('views', 'desc'));
-    } else if (filters.sortBy === 'likes') {
-      q = query(q, orderBy('likes', 'desc'));
-    } else {
-      q = query(q, orderBy('updatedAt', 'desc'));
-    }
-
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const sortField = filters.sortBy === 'views' ? 'views' : filters.sortBy === 'likes' ? 'likes' : 'updatedAt';
+    const primary = () => getDocs(query(base, orderBy(sortField, 'desc')));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: sortField, sortDir: 'desc', alertSource: 'wiki.getWikiArticles', alertPath: 'wikiArticles' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+    if (indexRequired) console.warn('Index required for getWikiArticles; using fallback sorting.');
+    return rows;
   } catch (error) {
     console.error('Error getting wiki articles:', error);
     throw error;
@@ -208,17 +205,15 @@ export const deleteWikiArticle = async (articleId, userId) => {
 // Get article revision history
 export const getArticleRevisions = async (articleId) => {
   try {
-    const q = query(
-      collection(db, 'wikiRevisions'),
-      where('articleId', '==', articleId),
-      orderBy('timestamp', 'desc')
-    );
-    
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const base = query(collection(db, 'wikiRevisions'), where('articleId', '==', articleId));
+    const primary = () => getDocs(query(base, orderBy('timestamp', 'desc')));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'timestamp', sortDir: 'desc', alertSource: 'wiki.getArticleRevisions', alertPath: 'wikiRevisions' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+    if (indexRequired) console.warn('Index required for getArticleRevisions; using fallback sorting.');
+    return rows;
   } catch (error) {
     console.error('Error getting article revisions:', error);
     throw error;

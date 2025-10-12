@@ -20,6 +20,7 @@ import {
   increment
 } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
+import { getDocsWithIndexFallback } from './firestoreIndexGuard.js';
 
 // Forum categories for different discussion topics
 export const FORUM_CATEGORIES = {
@@ -96,32 +97,27 @@ export const getForumThreads = async (options = {}) => {
       sortOrder = 'desc'
     } = options;
 
-    let threadsRef = collection(db, 'forumThreads');
-    let q = query(threadsRef);
+  let threadsRef = collection(db, 'forumThreads');
+  let base = query(threadsRef);
 
     // Apply filters
-    if (category) {
-      q = query(q, where('category', '==', category));
-    }
-    if (type) {
-      q = query(q, where('type', '==', type));
-    }
+    if (category) base = query(base, where('category', '==', category));
+    if (type) base = query(base, where('type', '==', type));
 
-    // Apply sorting and limit
-    q = query(q, orderBy(sortBy, sortOrder), limit(limitCount));
-
-    const snapshot = await getDocs(q);
-    const threads = [];
-    
-    snapshot.forEach((doc) => {
-      threads.push({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate(),
-        updatedAt: doc.data().updatedAt?.toDate(),
-        lastReplyAt: doc.data().lastReplyAt?.toDate()
-      });
-    });
+    const primary = () => getDocs(query(base, orderBy(sortBy, sortOrder), limit(limitCount)));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy, sortDir: sortOrder, alertSource: 'forum.getForumThreads', alertPath: 'forumThreads' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+    const threads = rows.map((data) => ({
+      id: data.id,
+      ...data,
+      createdAt: data.createdAt?.toDate?.() || data.createdAt,
+      updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+      lastReplyAt: data.lastReplyAt?.toDate?.() || data.lastReplyAt
+    }));
+    if (indexRequired) console.warn('Index required for getForumThreads; using fallback sorting.');
 
     return { success: true, data: threads };
   } catch (error) {
@@ -287,20 +283,19 @@ export const searchForum = async (searchTerm, options = {}) => {
     } = options;
 
     // Note: This is a simple search. For production, consider using Algolia or similar
-    let threadsRef = collection(db, 'forumThreads');
-    let q = query(threadsRef);
+  let threadsRef = collection(db, 'forumThreads');
+  let base = query(threadsRef);
 
-    if (category) {
-      q = query(q, where('category', '==', category));
-    }
+    if (category) base = query(base, where('category', '==', category));
 
-    q = query(q, orderBy('updatedAt', 'desc'), limit(limitCount));
-
-    const snapshot = await getDocs(q);
+    const primary = () => getDocs(query(base, orderBy('updatedAt', 'desc'), limit(limitCount)));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'updatedAt', sortDir: 'desc', alertSource: 'forum.searchForum', alertPath: 'forumThreads' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
     const results = [];
-    
-    snapshot.forEach((doc) => {
-      const data = doc.data();
+    rows.forEach((data) => {
       const searchLower = searchTerm.toLowerCase();
       
       // Simple text matching
@@ -310,14 +305,15 @@ export const searchForum = async (searchTerm, options = {}) => {
         data.tags?.some(tag => tag.toLowerCase().includes(searchLower))
       ) {
         results.push({
-          id: doc.id,
+          id: data.id,
           ...data,
-          createdAt: data.createdAt?.toDate(),
-          updatedAt: data.updatedAt?.toDate(),
-          lastReplyAt: data.lastReplyAt?.toDate()
+          createdAt: data.createdAt?.toDate?.() || data.createdAt,
+          updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+          lastReplyAt: data.lastReplyAt?.toDate?.() || data.lastReplyAt
         });
       }
     });
+    if (indexRequired) console.warn('Index required for searchForum; using fallback sorting.');
 
     return { success: true, data: results };
   } catch (error) {
@@ -454,26 +450,21 @@ export const getTrendingTopics = async (limitCount = 5) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const threadsRef = collection(db, 'forumThreads');
-    const q = query(
-      threadsRef,
-      where('lastReplyAt', '>=', sevenDaysAgo),
-      orderBy('lastReplyAt', 'desc'),
-      orderBy('replyCount', 'desc'),
-      limit(limitCount)
-    );
-
-    const snapshot = await getDocs(q);
-    const trending = [];
-    
-    snapshot.forEach((doc) => {
-      trending.push({
-        id: doc.id,
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate(),
-        updatedAt: doc.data().updatedAt?.toDate(),
-        lastReplyAt: doc.data().lastReplyAt?.toDate()
-      });
-    });
+    const base = query(threadsRef, where('lastReplyAt', '>=', sevenDaysAgo));
+    const primary = () => getDocs(query(base, orderBy('lastReplyAt', 'desc'), orderBy('replyCount', 'desc'), limit(limitCount)));
+    const fallback = () => getDocs(base);
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'lastReplyAt', sortDir: 'desc', alertSource: 'forum.getTrendingTopics', alertPath: 'forumThreads' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+    const trending = rows.map((data) => ({
+      id: data.id,
+      ...data,
+      createdAt: data.createdAt?.toDate?.() || data.createdAt,
+      updatedAt: data.updatedAt?.toDate?.() || data.updatedAt,
+      lastReplyAt: data.lastReplyAt?.toDate?.() || data.lastReplyAt
+    }));
+    if (indexRequired) console.warn('Index required for getTrendingTopics; using fallback sorting.');
 
     return { success: true, data: trending };
   } catch (error) {

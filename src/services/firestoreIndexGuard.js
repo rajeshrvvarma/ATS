@@ -6,8 +6,10 @@
 //     { sortBy: 'createdAt', sortDir: 'desc' }
 //   );
 
+import { recordIndexAlert } from './indexAlertService.js';
+
 export const getDocsWithIndexFallback = async (primaryFn, fallbackFn, options = {}) => {
-  const { sortBy, sortDir = 'desc', mapFn } = options;
+  const { sortBy, sortDir = 'desc', mapFn, alertSource = '', alertPath = '' } = options;
 
   try {
     const snap = await primaryFn();
@@ -41,10 +43,15 @@ export const getDocsWithIndexFallback = async (primaryFn, fallbackFn, options = 
     // Allow mapper to shape results if provided
     const mapped = mapFn ? rows.map(mapFn) : rows;
 
-    return {
+    const result = {
       docs: mapped,
       indexRequired: true,
       indexLink
     };
+    // Record an index alert for admin visibility
+    try {
+      recordIndexAlert({ source: alertSource || 'firestore-query', indexLink, path: alertPath, details: { sortBy, sortDir } });
+    } catch (_) {}
+    return result;
   }
 };

@@ -23,7 +23,7 @@ export async function getAllUPIReferences() {
   try {
     const primary = () => getDocs(query(collection(db, COLLECTION), orderBy('createdAt', 'desc')));
     const fallback = () => getDocs(query(collection(db, COLLECTION)));
-    const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc' });
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc', alertSource: 'upi.getAllUPIReferences', alertPath: 'upi_references' });
     // docs could be QueryDocumentSnapshots (primary) or mapped plain objects (fallback)
     const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
       ? docs.map(d => ({ id: d.id, ...d.data() }))

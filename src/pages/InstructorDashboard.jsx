@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { getFirestore, collection, query, where, getDocs, orderBy, limit, addDoc, serverTimestamp, updateDoc, doc } from 'firebase/firestore';
 import app from '@/config/firebase';
+import IndexAlertBanner from '@/components/IndexAlertBanner.jsx';
 
 const db = getFirestore(app);
 
@@ -750,6 +751,7 @@ export default function InstructorDashboard({ onNavigate }) {
 
   return (
     <DashboardLayout title="Instructor Dashboard" user={user} onNavigate={onNavigate}>
+      <IndexAlertBanner mode="instructor" />
       {/* Composite index required banner (non-blocking) */}
       {indexIssue && (
         <div className="mb-4 rounded border border-yellow-300 bg-yellow-50 text-yellow-800 p-3">

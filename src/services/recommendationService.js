@@ -8,13 +8,20 @@ import {
   doc, 
   getDoc, 
   getDocs, 
+  setDoc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
   query, 
   where, 
   orderBy, 
-  limit 
+  limit,
+  serverTimestamp,
+  increment 
 } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
 import { courses, getCourseById } from '@/data/courses.js';
+import { getDocsWithIndexFallback } from './firestoreIndexGuard.js';
 
 // Recommendation algorithms
 export const RECOMMENDATION_TYPES = {
@@ -43,26 +50,22 @@ const CATEGORY_RELATIONSHIPS = {
   'specialized': { nextCategories: ['expert'], difficulty: 4 }
 };
 
+// Weighting for different recommendation algorithms
+const algorithmWeights = {
+  skillBased: 1.0,
+  performanceBased: 1.0,
+  difficultyProgression: 0.9,
+  categoryAffinity: 0.8,
+  peerCollaborative: 0.7,
+  aiPersonalized: 1.1
+};
+
 /**
  * Get comprehensive course recommendations for a user
  */
 export const getCourseRecommendations = async (userId, options = {}) => {
   try {
-    const {
-      maxRecommendations = 6,
-      includeCompleted = false,
-      focusArea = null,
-      algorithmWeights = {
-        skillBased: 0.25,
-        performanceBased: 0.20,
-        difficultyProgression: 0.20,
-        categoryAffinity: 0.15,
-        peerCollaborative: 0.10,
-        aiPersonalized: 0.10
-      }
-    } = options;
-
-    // Get user data
+    const { focusArea = null, includeCompleted = false, maxRecommendations = 5 } = options;
     const [userProgress, userQuizData, userProfile] = await Promise.all([
       getUserCourseProgress(userId),
       getUserQuizPerformance(userId),
@@ -453,15 +456,14 @@ const getUserCourseProgress = async (userId) => {
 const getUserQuizPerformance = async (userId) => {
   try {
     const attemptsRef = collection(db, 'quizAttempts');
-    const q = query(attemptsRef, where('userId', '==', userId), orderBy('completedAt', 'desc'));
-    const snapshot = await getDocs(q);
-    
-    const attempts = [];
-    snapshot.forEach(doc => {
-      attempts.push({ id: doc.id, ...doc.data() });
-    });
-    
-    return attempts;
+    const primary = () => getDocs(query(attemptsRef, where('userId', '==', userId), orderBy('completedAt', 'desc')));
+    const fallback = () => getDocs(query(attemptsRef, where('userId', '==', userId)));
+  const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'completedAt', sortDir: 'desc', alertSource: 'recommendations.getUserQuizPerformance', alertPath: 'quizAttempts' });
+    const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+      ? docs.map(d => ({ id: d.id, ...d.data() }))
+      : docs;
+    if (indexRequired) console.warn('Index required for getUserQuizPerformance; using fallback.');
+    return rows;
   } catch (error) {
     console.error('Error fetching quiz performance:', error);
     return [];
