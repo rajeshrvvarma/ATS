@@ -141,21 +141,21 @@ const PricingCalculator = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
+    <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-lg p-6">
       <div className="flex items-center gap-3 mb-6">
-        <Calculator className="h-6 w-6 text-blue-600" />
-        <h2 className="text-2xl font-bold text-gray-800">Cloud Storage Pricing Calculator</h2>
+        <Calculator className="h-6 w-6 text-sky-400" />
+        <h2 className="text-2xl font-bold text-white">Cloud Storage Pricing Calculator</h2>
       </div>
 
       {/* Preset Scenarios */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-gray-700 mb-3">Quick Scenarios</h3>
+        <h3 className="text-lg font-semibold text-white mb-3">Quick Scenarios</h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           {presetScenarios.map((scenario, index) => (
             <button
               key={index}
               onClick={() => applyPreset(scenario)}
-              className="bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+              className="bg-slate-700 hover:bg-slate-600 text-slate-200 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
             >
               {scenario.name}
             </button>
@@ -166,13 +166,13 @@ const PricingCalculator = () => {
       {/* Input Controls */}
       <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-300 mb-2">
             Cloud Provider
           </label>
           <select
             value={cloudProvider}
             onChange={(e) => setCloudProvider(e.target.value)}
-            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full px-4 py-3 text-base bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
           >
             <option value="google">Google Cloud</option>
             <option value="aws">Amazon AWS</option>
@@ -181,7 +181,7 @@ const PricingCalculator = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-300 mb-2">
             Content Size (GB)
           </label>
           <input
@@ -194,14 +194,14 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter GB"
-            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
+            className="w-full px-4 py-3 text-base bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder-slate-400"
             min="1"
             max="2000"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-300 mb-2">
             Number of Students
           </label>
           <input
@@ -214,14 +214,14 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter student count"
-            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
+            className="w-full px-4 py-3 text-base bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder-slate-400"
             min="1"
             max="10000"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-300 mb-2">
             Duration (Months)
           </label>
           <input
@@ -234,14 +234,14 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter months"
-            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
+            className="w-full px-4 py-3 text-base bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder-slate-400"
             min="1"
             max="24"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-slate-300 mb-2">
             Content Access (%)
           </label>
           <input
@@ -254,11 +254,11 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter percentage"
-            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
+            className="w-full px-4 py-3 text-base bg-slate-700 text-white border border-slate-600 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent placeholder-slate-400"
             min="10"
             max="100"
           />
-          <p className="text-xs text-gray-500 mt-1">% of content each student accesses</p>
+          <p className="text-xs text-slate-400 mt-1">% of content each student accesses</p>
         </div>
       </div>
 
@@ -270,105 +270,105 @@ const PricingCalculator = () => {
           className="space-y-6"
         >
           {/* Provider Info */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-slate-700/40 rounded-lg p-4 border border-slate-600">
             <div className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full bg-${pricingRates[cloudProvider].color}-500`}></div>
-              <span className="font-medium text-gray-800">
+              <div className={`w-3 h-3 rounded-full bg-${pricingRates[cloudProvider].color}-400`}></div>
+              <span className="font-medium text-white">
                 Pricing for: {pricingRates[cloudProvider].name}
               </span>
             </div>
           </div>
 
           {/* Total Cost Summary */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
+          <div className="bg-gradient-to-r from-slate-700/40 to-slate-700/20 border border-slate-600 rounded-xl p-6">
             <div className="grid md:grid-cols-3 gap-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600">
+                <div className="text-3xl font-bold text-sky-400">
                   {formatCurrency(costs.total.inr)}
                 </div>
-                <div className="text-sm text-gray-600">Total Cost ({months} months)</div>
-                <div className="text-xs text-gray-500">{formatCurrency(costs.total.usd, 'USD')}</div>
+                <div className="text-sm text-slate-300">Total Cost ({months} months)</div>
+                <div className="text-xs text-slate-400">{formatCurrency(costs.total.usd, 'USD')}</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-2xl font-bold text-emerald-400">
                   {formatCurrency(costs.perStudent.inr)}
                 </div>
-                <div className="text-sm text-gray-600">Per Student Cost</div>
+                <div className="text-sm text-slate-300">Per Student Cost</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">
+                <div className="text-2xl font-bold text-purple-400">
                   {formatCurrency(costs.total.inr / months)}
                 </div>
-                <div className="text-sm text-gray-600">Monthly Cost</div>
+                <div className="text-sm text-slate-300">Monthly Cost</div>
               </div>
             </div>
           </div>
 
           {/* Detailed Breakdown */}
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-green-50 rounded-lg p-4">
+            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <HardDrive className="h-5 w-5 text-green-600" />
-                <h3 className="font-semibold text-green-800">Storage</h3>
+                <HardDrive className="h-5 w-5 text-emerald-400" />
+                <h3 className="font-semibold text-emerald-200">Storage</h3>
               </div>
-              <div className="text-xl font-bold text-green-700">
+              <div className="text-xl font-bold text-emerald-300">
                 {formatCurrency(costs.storage.inr)}
               </div>
-              <div className="text-sm text-green-600">
+              <div className="text-sm text-emerald-300">
                 {contentGB} GB × {months} months
               </div>
             </div>
 
-            <div className="bg-orange-50 rounded-lg p-4">
+            <div className="bg-orange-500/10 border border-orange-500/30 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="h-5 w-5 text-orange-600" />
-                <h3 className="font-semibold text-orange-800">Data Transfer</h3>
+                <TrendingUp className="h-5 w-5 text-orange-400" />
+                <h3 className="font-semibold text-orange-200">Data Transfer</h3>
               </div>
-              <div className="text-xl font-bold text-orange-700">
+              <div className="text-xl font-bold text-orange-300">
                 {formatCurrency(costs.dataTransfer.inr)}
               </div>
-              <div className="text-sm text-orange-600">
+              <div className="text-sm text-orange-300">
                 {Math.round(costs.dataTransfer.totalGB)} GB total
               </div>
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-4">
+            <div className="bg-sky-500/10 border border-sky-500/30 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Users className="h-5 w-5 text-blue-600" />
-                <h3 className="font-semibold text-blue-800">Requests</h3>
+                <Users className="h-5 w-5 text-sky-400" />
+                <h3 className="font-semibold text-sky-200">Requests</h3>
               </div>
-              <div className="text-xl font-bold text-blue-700">
+              <div className="text-xl font-bold text-sky-300">
                 {formatCurrency(costs.requests.inr)}
               </div>
-              <div className="text-sm text-blue-600">
+              <div className="text-sm text-sky-300">
                 {Math.round(costs.requests.count / 1000)}K requests
               </div>
             </div>
           </div>
 
           {/* Scenario Comparison Table */}
-          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-            <div className="bg-gray-50 px-4 py-3 border-b">
-              <h3 className="font-semibold text-gray-800">Cost Comparison Matrix (3 months)</h3>
-              <p className="text-sm text-gray-600">Compare costs across different content sizes and student numbers</p>
+          <div className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden">
+            <div className="bg-slate-900/60 px-4 py-3 border-b border-slate-700">
+              <h3 className="font-semibold text-white">Cost Comparison Matrix (3 months)</h3>
+              <p className="text-sm text-slate-300">Compare costs across different content sizes and student numbers</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50">
-                    <th className="px-3 py-2 text-left font-medium text-gray-700">Content Size</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-700">25 Students</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-700">50 Students</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-700">100 Students</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-700">250 Students</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-700">500 Students</th>
-                    <th className="px-3 py-2 text-center font-medium text-gray-700">1000 Students</th>
+                  <tr className="bg-slate-900/40">
+                    <th className="px-3 py-2 text-left font-medium text-slate-300">Content Size</th>
+                    <th className="px-3 py-2 text-center font-medium text-slate-300">25 Students</th>
+                    <th className="px-3 py-2 text-center font-medium text-slate-300">50 Students</th>
+                    <th className="px-3 py-2 text-center font-medium text-slate-300">100 Students</th>
+                    <th className="px-3 py-2 text-center font-medium text-slate-300">250 Students</th>
+                    <th className="px-3 py-2 text-center font-medium text-slate-300">500 Students</th>
+                    <th className="px-3 py-2 text-center font-medium text-slate-300">1000 Students</th>
                   </tr>
                 </thead>
                 <tbody>
                   {scenarioMatrix.map((row, rowIndex) => (
-                    <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                      <td className="px-3 py-2 font-medium text-gray-900">{row.content} GB</td>
+                    <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-slate-800' : 'bg-slate-900/30'}>
+                      <td className="px-3 py-2 font-medium text-white">{row.content} GB</td>
                       {row.students.map((studentCount, colIndex) => {
                         const cost = calculateScenarioCost(row.content, studentCount);
                         const isCurrentSelection = row.content === contentGB && studentCount === students;
@@ -377,8 +377,8 @@ const PricingCalculator = () => {
                             key={colIndex} 
                             className={`px-3 py-2 text-center cursor-pointer transition-colors ${
                               isCurrentSelection 
-                                ? 'bg-blue-100 text-blue-800 font-bold' 
-                                : 'text-gray-700 hover:bg-blue-50'
+                                ? 'bg-sky-900/40 text-sky-300 font-bold border border-sky-700' 
+                                : 'text-slate-300 hover:bg-slate-700/40'
                             }`}
                             onClick={() => {
                               setContentGB(row.content);
@@ -394,8 +394,8 @@ const PricingCalculator = () => {
                 </tbody>
               </table>
             </div>
-            <div className="bg-gray-50 px-4 py-2 text-xs text-gray-600">
-              💡 Click any cell to select that configuration. Current selection is highlighted in blue.
+            <div className="bg-slate-900/60 px-4 py-2 text-xs text-slate-300 border-t border-slate-700">
+              💡 Click any cell to select that configuration. Current selection is highlighted.
             </div>
           </div>
 

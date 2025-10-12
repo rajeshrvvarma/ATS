@@ -459,19 +459,19 @@ const InstructorContentManagement = forwardRef((props, ref) => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
+    <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-lg p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <BookOpen className="h-6 w-6 text-blue-600" />
+          <BookOpen className="h-6 w-6 text-sky-400" />
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">Content Management</h2>
-            <p className="text-gray-600">Create and manage your courses and lessons</p>
+            <h2 className="text-2xl font-bold text-white">Content Management</h2>
+            <p className="text-slate-300">Create and manage your courses and lessons</p>
           </div>
         </div>
         <button
           onClick={() => openCourseModal()}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+          className="bg-sky-600 text-white px-4 py-2 rounded-lg hover:bg-sky-700 transition-colors flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
           New Course
@@ -482,13 +482,13 @@ const InstructorContentManagement = forwardRef((props, ref) => {
   <div className="relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex-1 min-w-0">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
             <input
               type="text"
               placeholder="Search courses..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:ring-2 focus:ring-sky-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -497,7 +497,7 @@ const InstructorContentManagement = forwardRef((props, ref) => {
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto min-w-[160px]"
+            className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-transparent w-full sm:w-auto min-w-[160px]"
           >
             <option value="all">All Status</option>
             <option value="published">Published</option>
@@ -644,7 +644,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+  <div className="bg-slate-700/40 border border-slate-600 rounded-lg p-4 hover:shadow-md transition-shadow">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4 flex-1">
             <img
@@ -754,7 +754,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+  className="bg-slate-700/40 border border-slate-600 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
     >
       <div className="relative">
         <img
@@ -903,7 +903,7 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl shadow-xl ring-1 ring-black/5 w-full max-w-4xl max-h-[90vh] overflow-hidden"
+  className="bg-slate-800 border border-slate-700 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
       >
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
           <div className="flex items-center justify-between">
@@ -1228,7 +1228,7 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl shadow-xl ring-1 ring-black/5 w-full max-w-4xl max-h-[90vh] overflow-hidden"
+  className="bg-slate-800 border border-slate-700 rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
       >
         <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white">
           <div className="flex items-center justify-between">

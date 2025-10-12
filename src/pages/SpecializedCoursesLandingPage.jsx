@@ -954,15 +954,15 @@ const SpecializedCoursesLandingPage = () => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            className="bg-slate-800 border border-slate-700 rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
           >
             {/* Modal Header */}
-            <div className="flex items-start justify-between mb-6 border-b border-slate-200 pb-4">
+            <div className="flex items-start justify-between mb-6 border-b border-slate-700 pb-4">
               <div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                <h3 className="text-2xl font-bold text-white mb-2">
                   {courseDetailsModal.course?.title}
                 </h3>
-                <p className="text-slate-600">
+                <p className="text-slate-300">
                   {courseDetailsModal.course?.description}
                 </p>
               </div>
@@ -979,7 +979,7 @@ const SpecializedCoursesLandingPage = () => {
               <div className="space-y-6">
                 {/* Course Highlights */}
                 <div>
-                  <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                  <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
                     <BookOpen size={18} className="text-blue-600" />
                     Course Highlights
                   </h4>
@@ -996,7 +996,7 @@ const SpecializedCoursesLandingPage = () => {
                 {/* Prerequisites */}
                 {courseDetailsModal.course?.prerequisites && (
                   <div>
-                    <h4 className="font-semibold text-slate-800 mb-3">Prerequisites</h4>
+                    <h4 className="font-semibold text-white mb-3">Prerequisites</h4>
                     <ul className="space-y-2">
                       {courseDetailsModal.course.prerequisites.map((prereq, index) => (
                         <li key={index} className="flex items-start gap-2 text-slate-700">
@@ -1011,7 +1011,7 @@ const SpecializedCoursesLandingPage = () => {
                 {/* Career Outcomes */}
                 {courseDetailsModal.course?.careerOutcomes && (
                   <div>
-                    <h4 className="font-semibold text-slate-800 mb-3">Career Outcomes</h4>
+                    <h4 className="font-semibold text-white mb-3">Career Outcomes</h4>
                     <ul className="space-y-2">
                       {courseDetailsModal.course.careerOutcomes.map((outcome, index) => (
                         <li key={index} className="flex items-start gap-2 text-slate-700">
@@ -1026,19 +1026,19 @@ const SpecializedCoursesLandingPage = () => {
 
               {/* Right Column - Curriculum */}
               <div>
-                <h4 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                <h4 className="font-semibold text-white mb-4 flex items-center gap-2">
                   <Play size={18} className="text-blue-600" />
                   Curriculum
                 </h4>
                 <div className="space-y-3">
                   {courseDetailsModal.course?.curriculum?.map((module, index) => (
                     <div key={index} className="border border-slate-200 rounded-lg p-4">
-                      <h5 className="font-medium text-slate-800 mb-2">
+                      <h5 className="font-medium text-white mb-2">
                         Module {index + 1}: {module.title}
                       </h5>
                       <ul className="space-y-1">
                         {module.topics.map((topic, topicIndex) => (
-                          <li key={topicIndex} className="text-sm text-slate-600 flex items-start gap-2">
+                          <li key={topicIndex} className="text-sm text-slate-300 flex items-start gap-2">
                             <ArrowRight size={12} className="text-slate-400 mt-1 flex-shrink-0" />
                             {topic}
                           </li>
@@ -1051,15 +1051,15 @@ const SpecializedCoursesLandingPage = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center">
+            <div className="mt-8 pt-6 border-t border-slate-700 flex flex-col sm:flex-row gap-4 justify-between items-center">
               <div className="text-center sm:text-left">
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="text-2xl font-bold text-sky-400">
                   {(() => {
                     const dynamicPricing = getPricing(courseDetailsModal.course?.title);
                     return dynamicPricing ? dynamicPricing.finalPrice : courseDetailsModal.course?.price;
                   })()}
                 </div>
-                <div className="text-sm text-slate-600">Duration: {courseDetailsModal.course?.duration}</div>
+                <div className="text-sm text-slate-300">Duration: {courseDetailsModal.course?.duration}</div>
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}
