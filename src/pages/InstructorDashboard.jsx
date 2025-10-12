@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
+import InstructorContentManagement from '@/components/InstructorContentManagement.jsx';
 import { 
   BookOpen, 
   Users, 
@@ -18,6 +19,7 @@ import {
   MessageSquare,
   FileText,
   Video,
+  Folder,
   PlayCircle,
   Download,
   Upload,
@@ -201,6 +203,7 @@ export default function InstructorDashboard({ onNavigate }) {
   const tabs = [
     { id: 'overview', label: 'Overview', icon: BarChart3 },
     { id: 'courses', label: 'My Courses', icon: BookOpen },
+    { id: 'content', label: 'Content Management', icon: Folder },
     { id: 'students', label: 'Students', icon: Users },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
     { id: 'earnings', label: 'Earnings', icon: Award },
@@ -748,6 +751,7 @@ export default function InstructorDashboard({ onNavigate }) {
       {/* Tab Content */}
       {activeTab === 'overview' && renderOverview()}
       {activeTab === 'courses' && renderCourses()}
+      {activeTab === 'content' && <InstructorContentManagement />}
       {activeTab === 'students' && renderStudents()}
       {activeTab === 'analytics' && renderAnalytics()}
       {activeTab === 'earnings' && renderEarnings()}

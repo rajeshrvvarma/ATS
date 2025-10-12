@@ -92,4 +92,68 @@ export function importCourses(json) {
   saveCourses(parsed);
 }
 
+// Admin approval system for course deletions
+const DELETION_REQUESTS_KEY = 'course_deletion_requests_v1';
+
+export function requestCourseDeletion(courseId, instructorId, instructorName, courseName) {
+  const requests = getDeletionRequests();
+  const newRequest = {
+    id: `del_req_${Date.now()}`,
+    courseId,
+    instructorId,
+    instructorName,
+    courseName,
+    requestedAt: new Date().toISOString(),
+    status: 'pending', // pending, approved, rejected
+    reason: ''
+  };
+  
+  // Check if request already exists
+  const existingRequest = requests.find(req => 
+    req.courseId === courseId && req.status === 'pending'
+  );
+  
+  if (existingRequest) {
+    throw new Error('A deletion request for this course is already pending');
+  }
+  
+  requests.push(newRequest);
+  localStorage.setItem(DELETION_REQUESTS_KEY, JSON.stringify(requests));
+  return newRequest;
+}
+
+export function getDeletionRequests() {
+  const stored = localStorage.getItem(DELETION_REQUESTS_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+export function approveDeletionRequest(requestId) {
+  const requests = getDeletionRequests();
+  const request = requests.find(req => req.id === requestId);
+  if (!request) throw new Error('Request not found');
+  
+  // Delete the course
+  deleteCourse(request.courseId);
+  
+  // Update request status
+  request.status = 'approved';
+  request.approvedAt = new Date().toISOString();
+  localStorage.setItem(DELETION_REQUESTS_KEY, JSON.stringify(requests));
+  
+  return request;
+}
+
+export function rejectDeletionRequest(requestId, reason = '') {
+  const requests = getDeletionRequests();
+  const request = requests.find(req => req.id === requestId);
+  if (!request) throw new Error('Request not found');
+  
+  request.status = 'rejected';
+  request.rejectedAt = new Date().toISOString();
+  request.rejectionReason = reason;
+  localStorage.setItem(DELETION_REQUESTS_KEY, JSON.stringify(requests));
+  
+  return request;
+}
+
 

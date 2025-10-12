@@ -8,6 +8,7 @@ import AdminCoursePricing from "@/components/admin/AdminCoursePricing.jsx";
 import AdminUPIReferences from "@/components/admin/AdminUPIReferences.jsx";
 import PricingCalculator from "@/components/PricingCalculator.jsx";
 import InstructorContentManagement from "@/components/InstructorContentManagement.jsx";
+import AdminDeletionRequests from "@/components/admin/AdminDeletionRequests.jsx";
 
 const db = getFirestore(app);
 const statusColors = {
@@ -270,6 +271,7 @@ function AdminDashboard({ onNavigate }) {
     { key: "user", label: "User Management" },
     { key: "course", label: "Course Management" },
     { key: "content-management", label: "Content Management" },
+    { key: "approval-requests", label: "Deletion Requests" },
     { key: "pricing", label: "Course Pricing" },
     { key: "cloud-pricing", label: "Cloud Cost Calculator" },
     { key: "upi", label: "UPI References" },
@@ -820,6 +822,8 @@ function AdminDashboard({ onNavigate }) {
         {tab === "pricing" && <AdminCoursePricing />}
 
         {tab === "content-management" && <InstructorContentManagement />}
+
+        {tab === "approval-requests" && <AdminDeletionRequests />}
 
         {tab === "cloud-pricing" && <PricingCalculator />}
 

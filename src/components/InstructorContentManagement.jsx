@@ -35,9 +35,11 @@ import {
   HardDrive,
   CloudUpload,
   File,
-  Progress
+  Progress,
+  Shield,
+  UserCheck
 } from 'lucide-react';
-import { loadCourses, addCourse, updateCourse, deleteCourse, addLesson, updateLesson, deleteLesson } from '@/services/courseService.js';
+import { loadCourses, addCourse, updateCourse, deleteCourse, addLesson, updateLesson, deleteLesson, requestCourseDeletion } from '@/services/courseService.js';
 import { 
   uploadCourseVideo, 
   uploadCourseDocument, 
@@ -45,8 +47,18 @@ import {
   getFileTypeIcon,
   cloudConfig 
 } from '@/services/googleCloudStorage.js';
+import { useAuth } from '@/context/AuthContext.jsx';
+import { 
+  canEditCourse, 
+  canDeleteCourse, 
+  canRequestCourseDeletion, 
+  isAdmin, 
+  isInstructor,
+  hasPermission 
+} from '@/services/authService.js';
 
 const InstructorContentManagement = () => {
+  const { user } = useAuth();
   // Core state
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -102,10 +114,24 @@ const InstructorContentManagement = () => {
   }, []);
 
   const loadCoursesData = async () => {
+    if (!user) return;
+    
     try {
       setLoading(true);
       const coursesData = loadCourses();
-      setCourses(coursesData);
+      
+      // Filter courses based on user role
+      let filteredCourses = coursesData;
+      
+      if (isInstructor()) {
+        // Instructors can only see their own courses
+        filteredCourses = coursesData.filter(course => 
+          course.instructorId === user.uid || course.createdBy === user.uid
+        );
+      }
+      // Admin can see all courses (no filtering needed)
+      
+      setCourses(filteredCourses);
     } catch (error) {
       console.error('Error loading courses:', error);
     } finally {
@@ -135,6 +161,8 @@ const InstructorContentManagement = () => {
 
   // Course CRUD operations
   const handleCreateCourse = async () => {
+    if (!user) return;
+    
     try {
       const newCourse = {
         ...courseForm,
@@ -142,7 +170,10 @@ const InstructorContentManagement = () => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         lessons: [],
-        enrolledStudents: 0
+        enrolledStudents: 0,
+        instructorId: user.uid, // Add instructor ownership
+        createdBy: user.uid,
+        instructorName: user.displayName || user.email
       };
       
       addCourse(newCourse);
@@ -155,6 +186,11 @@ const InstructorContentManagement = () => {
   };
 
   const handleUpdateCourse = async () => {
+    if (!editingCourse || !canEditCourse(editingCourse.id, editingCourse.instructorId)) {
+      alert('You do not have permission to edit this course.');
+      return;
+    }
+    
     try {
       const updatedCourse = {
         ...courseForm,
@@ -171,13 +207,51 @@ const InstructorContentManagement = () => {
     }
   };
 
-  const handleDeleteCourse = async (courseId) => {
-    if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
-      try {
-        deleteCourse(courseId);
-        await loadCoursesData();
-      } catch (error) {
-        console.error('Error deleting course:', error);
+  const handleDeleteCourse = async (courseId, courseOwnerId) => {
+    // Check permissions for deletion
+    if (canDeleteCourse(courseId, courseOwnerId)) {
+      // Admin can delete directly
+      if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
+        try {
+          deleteCourse(courseId);
+          await loadCoursesData();
+        } catch (error) {
+          console.error('Error deleting course:', error);
+        }
+      }
+    } else if (canRequestCourseDeletion(courseId, courseOwnerId)) {
+      // Instructor can request deletion
+      if (window.confirm('This will send a deletion request to the admin for approval. Do you want to proceed?')) {
+        try {
+          await requestCourseDeletionHelper(courseId);
+        } catch (error) {
+          console.error('Error requesting course deletion:', error);
+        }
+      }
+    } else {
+      alert('You do not have permission to delete this course.');
+    }
+  };
+
+  // Helper function to request course deletion
+  const requestCourseDeletionHelper = async (courseId) => {
+    const course = courses.find(c => c.id === courseId);
+    if (!course) return;
+    
+    try {
+      await requestCourseDeletion(
+        courseId, 
+        user.uid, 
+        user.displayName || user.email,
+        course.title
+      );
+      alert('Deletion request sent to admin for approval.');
+    } catch (error) {
+      if (error.message.includes('already pending')) {
+        alert('A deletion request for this course is already pending admin approval.');
+      } else {
+        console.error('Error requesting course deletion:', error);
+        alert('Error sending deletion request. Please try again.');
       }
     }
   };
@@ -500,7 +574,7 @@ const InstructorContentManagement = () => {
               course={course}
               viewMode={viewMode}
               onEdit={() => openCourseModal(course)}
-              onDelete={() => handleDeleteCourse(course.id)}
+              onDelete={() => handleDeleteCourse(course.id, course.instructorId)}
               onDuplicate={() => handleDuplicateCourse(course)}
               onManageLessons={() => openLessonModal(course)}
             />
@@ -553,6 +627,13 @@ const InstructorContentManagement = () => {
 // Course Card Component
 const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageLessons }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const { user } = useAuth();
+  
+  // Check permissions for this specific course
+  const canEdit = canEditCourse(course.id, course.instructorId);
+  const canDelete = canDeleteCourse(course.id, course.instructorId);
+  const canRequestDelete = canRequestCourseDeletion(course.id, course.instructorId);
+  const showDeleteOption = canDelete || canRequestDelete;
 
   if (viewMode === 'list') {
     return (
@@ -594,13 +675,29 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
             >
               <BookOpen className="h-4 w-4" />
             </button>
-            <button
-              onClick={onEdit}
-              className="text-gray-600 hover:text-gray-700 p-2 rounded"
-              title="Edit Course"
-            >
-              <Edit className="h-4 w-4" />
-            </button>
+            {canEdit && (
+              <button
+                onClick={onEdit}
+                className="text-gray-600 hover:text-gray-700 p-2 rounded"
+                title="Edit Course"
+              >
+                <Edit className="h-4 w-4" />
+              </button>
+            )}
+            {/* Show course owner indicator for instructors */}
+            {isInstructor() && course.instructorId === user?.uid && (
+              <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded text-xs text-blue-600">
+                <UserCheck className="h-3 w-3" />
+                <span>Your Course</span>
+              </div>
+            )}
+            {/* Admin can see course owner */}
+            {isAdmin() && course.instructorName && (
+              <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded text-xs text-gray-600">
+                <UserCheck className="h-3 w-3" />
+                <span>{course.instructorName}</span>
+              </div>
+            )}
             <div className="relative">
               <button
                 onClick={() => setShowDropdown(!showDropdown)}
@@ -609,7 +706,7 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
                 <MoreVertical className="h-4 w-4" />
               </button>
               {showDropdown && (
-                <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                <div className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-10">
                   <button
                     onClick={onDuplicate}
                     className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
@@ -617,13 +714,24 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
                     <Copy className="h-3 w-3" />
                     Duplicate
                   </button>
-                  <button
-                    onClick={onDelete}
-                    className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
-                  >
-                    <Trash2 className="h-3 w-3" />
-                    Delete
-                  </button>
+                  {showDeleteOption && (
+                    <button
+                      onClick={onDelete}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-red-50 flex items-center gap-2 ${
+                        canDelete ? 'text-red-600' : 'text-orange-600'
+                      }`}
+                      title={canDelete ? 'Delete course' : 'Request deletion (requires admin approval)'}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                      {canDelete ? 'Delete' : 'Request Delete'}
+                    </button>
+                  )}
+                  {!canEdit && !showDeleteOption && (
+                    <div className="px-3 py-2 text-xs text-gray-400 flex items-center gap-2">
+                      <Shield className="h-3 w-3" />
+                      Read Only
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -671,54 +779,83 @@ const CourseCard = ({ course, viewMode, onEdit, onDelete, onDuplicate, onManageL
           </span>
         </div>
         
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <button
-              onClick={onManageLessons}
-              className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded text-sm hover:bg-blue-100 transition-colors flex items-center gap-1"
-            >
-              <BookOpen className="h-3 w-3" />
-              Lessons
-            </button>
-            <button
-              onClick={onEdit}
-              className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
-              title="Edit"
-            >
-              <Edit className="h-3 w-3" />
-            </button>
-          </div>
-          
-          <div className="relative">
-            <button
-              onClick={() => setShowDropdown(!showDropdown)}
-              className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
-            >
-              <MoreVertical className="h-3 w-3" />
-            </button>
-            {showDropdown && (
-              <div className="absolute right-0 mt-1 w-32 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1">
+              <button
+                onClick={onManageLessons}
+                className="bg-blue-50 text-blue-600 px-3 py-1.5 rounded text-sm hover:bg-blue-100 transition-colors flex items-center gap-1"
+              >
+                <BookOpen className="h-3 w-3" />
+                Lessons
+              </button>
+              {canEdit && (
                 <button
-                  onClick={onDuplicate}
-                  className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                  onClick={onEdit}
+                  className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
+                  title="Edit"
                 >
-                  <Copy className="h-3 w-3" />
-                  Duplicate
+                  <Edit className="h-3 w-3" />
                 </button>
+              )}
+            </div>
+            
+            {/* Course ownership indicator */}
+            <div className="flex items-center gap-2">
+              {isInstructor() && course.instructorId === user?.uid && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 rounded text-xs text-blue-600">
+                  <UserCheck className="h-3 w-3" />
+                  <span>Your Course</span>
+                </div>
+              )}
+              {isAdmin() && course.instructorName && (
+                <div className="flex items-center gap-1 px-2 py-1 bg-gray-50 rounded text-xs text-gray-600">
+                  <UserCheck className="h-3 w-3" />
+                  <span>{course.instructorName}</span>
+                </div>
+              )}
+              
+              <div className="relative">
                 <button
-                  onClick={onDelete}
-                  className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
+                  onClick={() => setShowDropdown(!showDropdown)}
+                  className="text-gray-600 hover:text-gray-700 p-1.5 rounded"
                 >
-                  <Trash2 className="h-3 w-3" />
-                  Delete
+                  <MoreVertical className="h-3 w-3" />
                 </button>
+                {showDropdown && (
+                  <div className="absolute right-0 mt-1 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-10">
+                    <button
+                      onClick={onDuplicate}
+                      className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    >
+                      <Copy className="h-3 w-3" />
+                      Duplicate
+                    </button>
+                    {showDeleteOption && (
+                      <button
+                        onClick={onDelete}
+                        className={`w-full text-left px-3 py-2 text-sm hover:bg-red-50 flex items-center gap-2 ${
+                          canDelete ? 'text-red-600' : 'text-orange-600'
+                        }`}
+                        title={canDelete ? 'Delete course' : 'Request deletion (requires admin approval)'}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                        {canDelete ? 'Delete' : 'Request Delete'}
+                      </button>
+                    )}
+                    {!canEdit && !showDeleteOption && (
+                      <div className="px-3 py-2 text-xs text-gray-400 flex items-center gap-2">
+                        <Shield className="h-3 w-3" />
+                        Read Only
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </div>
-    </motion.div>
-  );
+      </motion.div>
+    );
 };
 
 // Course Modal Component

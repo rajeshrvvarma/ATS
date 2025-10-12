@@ -6,7 +6,8 @@
 // Enhanced user roles and permissions
 const ROLES = {
   STUDENT: 'student',
-  ADMIN: 'admin', // Unified role for admin/instructor/owner
+  INSTRUCTOR: 'instructor', // Separate instructor role with limited course management
+  ADMIN: 'admin', // Full admin permissions
   OWNER: 'admin' // Alias for owner (same permissions as admin)
 };
 
@@ -21,13 +22,31 @@ const PERMISSIONS = {
     'track_progress',
     'view_certificates'
   ],
+  [ROLES.INSTRUCTOR]: [
+    // Instructor permissions - can manage their own courses
+    'view_courses',
+    'create_courses',
+    'edit_own_courses', // Can only edit their own courses
+    'manage_own_lessons', // Can manage lessons for their own courses
+    'view_own_students', // Can view students enrolled in their courses
+    'view_instructor_analytics', // Can view analytics for their courses
+    'upload_course_content', // Can upload videos/documents
+    'manage_own_course_settings', // Can manage settings for their own courses
+    'request_course_deletion', // Can request deletion (requires admin approval)
+    'view_instructor_dashboard',
+    'grade_own_assignments', // Can grade assignments for their courses
+    'manage_own_enrollments', // Can manage enrollments for their courses
+    'export_own_data', // Can export data for their courses
+    'update_profile'
+  ],
   [ROLES.ADMIN]: [
-    // Admin has all permissions (instructor + owner + admin)
+    // Admin has all permissions (instructor + admin specific)
     'manage_users',
     'manage_courses', 
     'create_courses',
     'edit_courses',
-    'delete_courses',
+    'delete_courses', // Can delete any course
+    'edit_any_course', // Can edit any course
     'view_students',
     'manage_students',
     'view_analytics',
@@ -39,7 +58,11 @@ const PERMISSIONS = {
     'view_admin_dashboard',
     'export_data',
     'import_data',
-    'manage_settings'
+    'manage_settings',
+    'approve_course_deletions', // Can approve instructor deletion requests
+    'manage_instructor_permissions', // Can manage instructor permissions
+    'view_all_courses', // Can view all courses regardless of owner
+    'override_course_ownership' // Can override course ownership restrictions
   ]
 };
 
@@ -215,6 +238,56 @@ export const isInstructor = () => {
  */
 export const isStudent = () => {
   return hasRole(ROLES.STUDENT);
+};
+
+/**
+ * Check if user can edit a specific course
+ */
+export const canEditCourse = (courseId, courseOwnerId) => {
+  const user = getCurrentUser();
+  if (!user) return false;
+  
+  // Admin can edit any course
+  if (hasPermission('edit_courses')) return true;
+  
+  // Instructor can edit their own courses
+  if (hasPermission('edit_own_courses') && user.uid === courseOwnerId) return true;
+  
+  return false;
+};
+
+/**
+ * Check if user can delete a specific course
+ */
+export const canDeleteCourse = (courseId, courseOwnerId) => {
+  const user = getCurrentUser();
+  if (!user) return false;
+  
+  // Only admin can directly delete courses
+  return hasPermission('delete_courses');
+};
+
+/**
+ * Check if user can request course deletion
+ */
+export const canRequestCourseDeletion = (courseId, courseOwnerId) => {
+  const user = getCurrentUser();
+  if (!user) return false;
+  
+  // Admin can delete directly
+  if (hasPermission('delete_courses')) return true;
+  
+  // Instructor can request deletion for their own courses
+  if (hasPermission('request_course_deletion') && user.uid === courseOwnerId) return true;
+  
+  return false;
+};
+
+/**
+ * Check if user can view course management interface
+ */
+export const canAccessCourseManagement = () => {
+  return hasPermission('create_courses') || hasPermission('manage_courses');
 };
 
 /**
