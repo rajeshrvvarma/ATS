@@ -993,6 +993,15 @@ const TechnologyTrainingLandingPage = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  // Create and trigger download of curriculum guide
+                  const link = document.createElement('a');
+                  link.href = '/technology-training-curriculum.pdf';
+                  link.download = 'Technology-Training-Curriculum-Guide.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
                 className="border border-slate-600 hover:border-green-500 px-8 py-4 rounded-lg font-semibold transition-colors"
               >
                 Download Curriculum

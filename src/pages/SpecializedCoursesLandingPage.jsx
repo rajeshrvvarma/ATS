@@ -894,24 +894,48 @@ const SpecializedCoursesLandingPage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Call to Action */}
       <section className="py-16 bg-gradient-to-r from-purple-900 to-blue-900">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Specialize?</h2>
-          <p className="text-xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Choose your specialization and become a domain expert. Start your journey to advanced cybersecurity expertise.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => setSelectedCategory('all')}
-              className="bg-white text-purple-900 font-bold py-3 px-8 rounded-lg hover:bg-gray-100 transition-all duration-300"
-            >
-              Explore All Courses
-            </button>
-            <button className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg hover:bg-white hover:text-purple-900 transition-all duration-300">
-              Download Course Catalog
-            </button>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Start Your Cybersecurity Specialization Today</h2>
+            <p className="text-slate-300 text-lg mb-8">
+              Join hundreds of professionals who have advanced their careers with our specialized cybersecurity training programs
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsAdvisorOpen(true)}
+                className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
+              >
+                Get Career Guidance
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  // Create and trigger download of course catalog
+                  const link = document.createElement('a');
+                  link.href = '/specialized-courses-catalog.pdf';
+                  link.download = 'Specialized-Cybersecurity-Courses-Catalog.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="border border-slate-600 hover:border-green-500 px-8 py-4 rounded-lg font-semibold transition-colors"
+              >
+                Download Course Catalog
+              </motion.button>
+            </div>
+          </motion.div>
         </div>
       </section>
       </AnimatedBackground>
