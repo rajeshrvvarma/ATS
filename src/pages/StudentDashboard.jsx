@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
+import { useAccessControl } from '@/context/AccessControlContext.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
 import VideoCourse from '@/components/VideoCourse.jsx';
 import SecureContentViewer from '@/components/SecureContentViewer.jsx';
+import EnhancedEnrollmentButton from '@/components/EnhancedEnrollmentButton.jsx';
 import { loadCourses } from '@/services/courseService.js';
 import { 
   BookOpen, 
@@ -40,6 +42,15 @@ const db = getFirestore(app);
  */
 export default function StudentDashboard({ onNavigate }) {
   const { user } = useAuth();
+  const { 
+    enrollments, 
+    activeEnrollments, 
+    checkCourseAccess,
+    getCourseProgress,
+    getCompletedLessons,
+    refreshEnrollments
+  } = useAccessControl();
+
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -545,7 +556,7 @@ export default function StudentDashboard({ onNavigate }) {
           </button>
         </div>
 
-        {enrolledCourses.length === 0 ? (
+        {activeEnrollments.length === 0 ? (
           <div className="text-center py-12">
             <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-white mb-2">Start Your Learning Journey</h3>
@@ -559,34 +570,42 @@ export default function StudentDashboard({ onNavigate }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {enrolledCourses.map((course) => (
-              <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700 hover:border-slate-600 transition-colors">
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">{course.title}</h3>
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    course.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
-                    course.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
-                    'bg-red-500/20 text-red-400'
-                  }`}>
-                    {course.difficulty || 'Intermediate'}
-                  </span>
-                </div>
-                
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-slate-400">Progress</span>
-                    <span className="text-white font-medium">{course.progress || 0}%</span>
+            {activeEnrollments.map((enrollment) => {
+              const course = allCourses.find(c => c.id === enrollment.courseId);
+              if (!course) return null;
+
+              const progress = enrollment.enrollment.progress || 0;
+              const completedLessons = enrollment.enrollment.completedLessons?.length || 0;
+              const totalLessons = course.lessons?.length || 0;
+
+              return (
+                <div key={course.id} className="bg-slate-800 rounded-lg p-6 border border-slate-700 hover:border-slate-600 transition-colors">
+                  <div className="flex items-start justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-white">{course.title}</h3>
+                    <span className={`px-2 py-1 text-xs rounded-full ${
+                      course.difficulty === 'Beginner' ? 'bg-green-500/20 text-green-400' :
+                      course.difficulty === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-red-500/20 text-red-400'
+                    }`}>
+                      {course.difficulty || 'Intermediate'}
+                    </span>
                   </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-slate-400">Progress</span>
+                      <span className="text-white font-medium">{Math.round(progress)}%</span>
+                    </div>
                   
                   <div className="w-full bg-slate-700 rounded-full h-2">
                     <div 
                       className="bg-sky-500 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${course.progress || 0}%` }}
+                      style={{ width: `${Math.round(progress)}%` }}
                     ></div>
                   </div>
                   
                   <div className="flex items-center justify-between text-sm text-slate-400">
-                    <span>{course.completedLessons || 0}/{course.totalLessons || 0} lessons</span>
+                    <span>{completedLessons}/{totalLessons} lessons</span>
                     <span>{course.duration || 'Self-paced'}</span>
                   </div>
                   
@@ -602,7 +621,8 @@ export default function StudentDashboard({ onNavigate }) {
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -643,7 +663,7 @@ export default function StudentDashboard({ onNavigate }) {
             </h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
               {publishedCourses.map((course) => {
-                const isEnrolled = enrolledCourses.some(enrolled => enrolled.id === course.id);
+                const isEnrolled = activeEnrollments.some(enrollment => enrollment.courseId === course.id);
                 const inCart = cart.includes(course.id);
                 
                 return (
@@ -718,23 +738,15 @@ export default function StudentDashboard({ onNavigate }) {
                             <Eye className="w-4 h-4" />
                             Preview Course
                           </button>
-                          <button 
-                            onClick={() => {
-                              if (inCart) {
-                                setCart(cart.filter(id => id !== course.id));
-                              } else {
-                                setCart([...cart, course.id]);
-                              }
+                          <EnhancedEnrollmentButton
+                            course={course}
+                            user={user}
+                            onEnrollmentSuccess={async (courseId) => {
+                              await refreshEnrollments();
+                              setCart(cart.filter(id => id !== courseId));
                             }}
-                            className={`w-full py-2 rounded-lg transition-colors flex items-center justify-center gap-2 ${
-                              inCart 
-                                ? 'bg-orange-600 hover:bg-orange-700 text-white' 
-                                : 'bg-blue-600 hover:bg-blue-700 text-white'
-                            }`}
-                          >
-                            <ShoppingCart className="w-4 h-4" />
-                            {inCart ? 'Remove from Cart' : 'Add to Cart'}
-                          </button>
+                            className="w-full text-sm"
+                          />
                         </div>
                       )}
                     </div>
@@ -904,7 +916,7 @@ export default function StudentDashboard({ onNavigate }) {
               .filter(course => course.status === 'published')
               .slice(0, 3)
               .map((course) => {
-                const isEnrolled = enrolledCourses.some(enrolled => enrolled.id === course.id);
+                const isEnrolled = activeEnrollments.some(enrollment => enrollment.courseId === course.id);
                 const inCart = cart.includes(course.id);
                 
                 return (

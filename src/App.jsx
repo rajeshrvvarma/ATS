@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-
 import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider, useAuth } from '@/context/AuthContext.jsx';
 import { CourseAccessProvider } from '@/context/SafeCourseAccessContext.jsx';
+import { AccessControlProvider } from '@/context/AccessControlContext.jsx';
 import { ToastProvider } from '@/context/ToastContext.jsx';
 import ToastContainer from '@/components/ToastContainer.jsx';
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
@@ -134,6 +135,7 @@ export default function App() {
 
     return (
         <AuthProvider>
+        <AccessControlProvider>
         <CourseAccessProvider>
         <ThemeProvider>
         <SettingsProvider>
@@ -201,6 +203,7 @@ export default function App() {
         </SettingsProvider>
         </ThemeProvider>
         </CourseAccessProvider>
+        </AccessControlProvider>
         </AuthProvider>
     );
 }

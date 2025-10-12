@@ -27,7 +27,7 @@ import {
   AlertCircle,
   Shield
 } from 'lucide-react';
-import { getSecureContentUrl, checkContentAccess } from '@/services/googleCloudStorage.js';
+import { useAccessControl } from '@/context/AccessControlContext.jsx';
 
 /**
  * SecureContentViewer - Protected content viewer for enrolled students
@@ -36,13 +36,21 @@ import { getSecureContentUrl, checkContentAccess } from '@/services/googleCloudS
 const SecureContentViewer = ({ 
   course, 
   currentLesson, 
-  user, 
-  onLessonComplete, 
+  lessonIndex = 0,
   onClose,
-  onNextLesson,
-  onPreviousLesson,
-  enrollmentStatus = null
+  onNext,
+  onPrevious,
+  user
 }) => {
+  // Access control
+  const { 
+    checkCourseAccess, 
+    getContentUrl, 
+    updateProgress,
+    getCourseProgress,
+    isLessonCompleted
+  } = useAccessControl();
+
   // Player states
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -114,11 +122,12 @@ const SecureContentViewer = ({
     setError(null);
 
     try {
-      // Check if user has access to this course/lesson
-      const accessGranted = await checkContentAccess(user.uid, course.id);
+      // Check if user has access to this course
+      const accessResult = await checkCourseAccess(course.id);
       
-      if (!accessGranted && !currentLesson.isPreview) {
+      if (!accessResult.hasAccess && !currentLesson.isPreview) {
         setHasAccess(false);
+        setError(accessResult.reason || 'You need to enroll in this course to access this content');
         setAccessChecking(false);
         return;
       }
@@ -127,17 +136,15 @@ const SecureContentViewer = ({
 
       // Get secure content URL
       if (currentLesson.content) {
-        const secureUrl = await getSecureContentUrl(
-          currentLesson.content, 
-          user.uid, 
-          course.id
-        );
+        const secureUrl = await getContentUrl(course.id, currentLesson.content);
         
         if (secureUrl) {
           setSecureContentUrl(secureUrl);
         } else if (currentLesson.isPreview) {
           // For preview lessons, use direct URL
           setSecureContentUrl(currentLesson.content);
+        } else {
+          setError('Unable to load content. Please try again.');
         }
       }
     } catch (error) {
@@ -149,31 +156,53 @@ const SecureContentViewer = ({
     }
   };
 
-  const saveProgress = () => {
-    if (!videoRef.current) return;
+  const saveProgress = async () => {
+    if (!videoRef.current || !hasAccess) return;
 
-    const progress = {
-      courseId: course.id,
-      lessonId: currentLesson.id,
-      watchTime: watchTime,
-      currentTime: videoRef.current.currentTime,
-      duration: videoRef.current.duration,
-      completed: videoRef.current.currentTime / videoRef.current.duration > 0.8,
-      lastAccessed: new Date().toISOString()
-    };
+    const progressPercentage = (videoRef.current.currentTime / videoRef.current.duration) * 100;
+    const isCompleted = progressPercentage > 80; // Consider 80% as completed
 
-    // Save to localStorage for now (in real app, save to database)
-    const userProgress = JSON.parse(localStorage.getItem(`progress_${user.uid}`) || '{}');
-    if (!userProgress[course.id]) {
-      userProgress[course.id] = {};
+    try {
+      await updateProgress(
+        course.id,
+        currentLesson.id,
+        progressPercentage,
+        isCompleted
+      );
+
+      // Also save to localStorage for immediate UI updates
+      const progress = {
+        courseId: course.id,
+        lessonId: currentLesson.id,
+        watchTime: watchTime,
+        currentTime: videoRef.current.currentTime,
+        duration: videoRef.current.duration,
+        progressPercentage,
+        completed: isCompleted,
+        lastAccessed: new Date().toISOString()
+      };
+
+      const userProgress = JSON.parse(localStorage.getItem(`progress_${user.uid}`) || '{}');
+      if (!userProgress[course.id]) {
+        userProgress[course.id] = {};
+      }
+      userProgress[course.id][currentLesson.id] = progress;
+      localStorage.setItem(`progress_${user.uid}`, JSON.stringify(userProgress));
+
+    } catch (error) {
+      console.error('Failed to save progress:', error);
     }
-    userProgress[course.id][currentLesson.id] = progress;
-    localStorage.setItem(`progress_${user.uid}`, JSON.stringify(userProgress));
+  };
 
-    // Mark lesson as complete if watch time > 80%
-    if (progress.completed && onLessonComplete) {
-      onLessonComplete(currentLesson.id);
-    }
+  // Video player event handlers
+  const handlePlay = () => {
+    setIsPlaying(true);
+    videoRef.current?.play();
+  };
+
+  const handlePause = () => {
+    setIsPlaying(false);
+    videoRef.current?.pause();
   };
 
   const handlePlayPause = () => {
