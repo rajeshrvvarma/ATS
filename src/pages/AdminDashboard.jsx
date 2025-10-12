@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext.jsx";
 import app from "@/config/firebase";
 import AdminCoursePricing from "@/components/admin/AdminCoursePricing.jsx";
 import AdminUPIReferences from "@/components/admin/AdminUPIReferences.jsx";
+import PricingCalculator from "@/components/PricingCalculator.jsx";
 
 const db = getFirestore(app);
 const statusColors = {
@@ -268,6 +269,7 @@ function AdminDashboard({ onNavigate }) {
     { key: "user", label: "User Management" },
     { key: "course", label: "Course Management" },
     { key: "pricing", label: "Course Pricing" },
+    { key: "cloud-pricing", label: "Cloud Cost Calculator" },
     { key: "upi", label: "UPI References" },
     { key: "analytics", label: "Analytics" },
     { key: "system", label: "System" },
@@ -814,6 +816,8 @@ function AdminDashboard({ onNavigate }) {
         )}
 
         {tab === "pricing" && <AdminCoursePricing />}
+
+        {tab === "cloud-pricing" && <PricingCalculator />}
 
         {tab === "upi" && <AdminUPIReferences />}
 
