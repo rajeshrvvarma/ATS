@@ -73,7 +73,7 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
     <div className="min-h-screen bg-slate-900">
       {/* Welcome Banner with unified animated background */}
       <section className="relative border-b border-slate-800">
-        <AnimatedBackground variant="default" uniformCount={40} minHeight={160} className="">
+        <AnimatedBackground variant="programs" intensity="high" speedMultiplier={1.25} enableSquares enablePlus uniformCount={null} minHeight={180} className="">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             <h2 className="text-2xl font-bold text-white mb-2">
               {user ? `Welcome ${user.displayName || user.email || 'User'},` : 'Welcome,'}
@@ -91,7 +91,7 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
 
       {/* Main Content with unified animated background */}
       <div className="relative">
-        <AnimatedBackground variant="default" uniformCount={30} minHeight={0} className="">
+        <AnimatedBackground variant="default" intensity="high" speedMultiplier={1.2} enableSquares enablePlus uniformCount={null} minHeight={0} className="">
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
             {children}
           </main>
