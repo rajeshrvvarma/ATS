@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus,
@@ -473,8 +474,8 @@ const InstructorContentManagement = () => {
       </div>
 
       {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
-        <div className="flex-1">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="flex-1 min-w-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <input
@@ -487,11 +488,11 @@ const InstructorContentManagement = () => {
           </div>
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3 md:gap-4 w-full sm:w-auto min-w-0">
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto min-w-[160px]"
           >
             <option value="all">All Status</option>
             <option value="published">Published</option>
@@ -502,14 +503,14 @@ const InstructorContentManagement = () => {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full sm:w-auto min-w-[160px]"
           >
             <option value="recent">Most Recent</option>
             <option value="title">Title A-Z</option>
             <option value="students">Most Students</option>
           </select>
           
-          <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+          <div className="flex border border-gray-300 rounded-lg overflow-hidden shrink-0">
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 ${viewMode === 'grid' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'}`}
@@ -886,18 +887,18 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
     }));
   };
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-[1000] p-4 overscroll-contain"
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        className="bg-white rounded-xl shadow-xl ring-1 ring-black/5 w-full max-w-4xl max-h-[90vh] overflow-hidden"
       >
         <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 text-white">
           <div className="flex items-center justify-between">
@@ -1193,7 +1194,8 @@ const CourseModal = ({ isOpen, onClose, courseForm, setCourseForm, onSave, isEdi
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 
@@ -1210,18 +1212,18 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
     { value: 'assignment', label: 'Assignment', icon: Edit }
   ];
 
-  return (
+  return createPortal(
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center z-[1000] p-4 overscroll-contain"
     >
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden"
+        className="bg-white rounded-xl shadow-xl ring-1 ring-black/5 w-full max-w-4xl max-h-[90vh] overflow-hidden"
       >
         <div className="bg-gradient-to-r from-green-600 to-green-700 p-6 text-white">
           <div className="flex items-center justify-between">
@@ -1496,7 +1498,8 @@ const LessonModal = ({ isOpen, onClose, course, lessonForm, setLessonForm, onSav
           </div>
         </div>
       </motion.div>
-    </motion.div>
+    </motion.div>,
+    document.body
   );
 };
 
