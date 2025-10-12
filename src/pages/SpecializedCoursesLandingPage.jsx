@@ -127,7 +127,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 18,
       maxSeats: 40,
       highlights: ['AZ-500 Exam Preparation', 'Live Azure Labs', 'Microsoft Partnership'],
-      color: 'blue'
+      color: 'blue',
+      curriculum: [
+        {
+          title: 'Azure Security Fundamentals',
+          topics: ['Azure Security Center', 'Security Policies', 'Compliance Dashboard', 'Security Recommendations']
+        },
+        {
+          title: 'Identity & Access Management',
+          topics: ['Azure Active Directory', 'Conditional Access', 'Privileged Identity Management', 'Multi-Factor Authentication']
+        },
+        {
+          title: 'Data & Application Security',
+          topics: ['Key Vault Management', 'Database Security', 'Application Security', 'Encryption Services']
+        },
+        {
+          title: 'Security Operations',
+          topics: ['Azure Sentinel', 'Security Incident Response', 'Threat Detection', 'Security Monitoring']
+        }
+      ],
+      prerequisites: [
+        'Basic Azure knowledge',
+        'Understanding of security concepts',
+        'Networking fundamentals'
+      ],
+      careerOutcomes: [
+        'Azure Security Engineer',
+        'Cloud Security Specialist',
+        'Azure Solutions Architect',
+        'Security Consultant'
+      ]
     },
     {
       id: 3,
@@ -148,7 +177,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 12,
       maxSeats: 25,
       highlights: ['Multi-Cloud Certification Track', 'Advanced Labs', 'Industry Mentorship'],
-      color: 'purple'
+      color: 'purple',
+      curriculum: [
+        {
+          title: 'Multi-Cloud Strategy',
+          topics: ['Cloud Architecture Patterns', 'Vendor Comparison', 'Hybrid Cloud Design', 'Cost Optimization']
+        },
+        {
+          title: 'Security Architecture',
+          topics: ['Cross-Cloud Identity', 'Unified Security Policies', 'Compliance Management', 'Risk Assessment']
+        },
+        {
+          title: 'Container Security',
+          topics: ['Kubernetes Security', 'Container Scanning', 'Runtime Protection', 'DevSecOps Integration']
+        },
+        {
+          title: 'Automation & Governance',
+          topics: ['Security Automation', 'Policy as Code', 'Continuous Compliance', 'Monitoring Solutions']
+        }
+      ],
+      prerequisites: [
+        'AWS and Azure experience',
+        'Security architecture knowledge',
+        'Container technologies familiarity'
+      ],
+      careerOutcomes: [
+        'Multi-Cloud Security Architect',
+        'Cloud Security Consultant',
+        'Enterprise Security Engineer',
+        'DevSecOps Lead'
+      ]
     },
 
     // Digital Forensics
@@ -225,7 +283,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 8,
       maxSeats: 20,
       highlights: ['Malware Analysis Lab', 'Custom Analysis Tools', 'Threat Intelligence'],
-      color: 'red'
+      color: 'red',
+      curriculum: [
+        {
+          title: 'Advanced Static Analysis',
+          topics: ['PE Structure Analysis', 'Disassembly Techniques', 'Code Obfuscation', 'Packer Analysis']
+        },
+        {
+          title: 'Dynamic Analysis',
+          topics: ['Behavioral Analysis', 'API Monitoring', 'Network Analysis', 'Sandbox Evasion']
+        },
+        {
+          title: 'Memory Forensics',
+          topics: ['Memory Dumps Analysis', 'Process Investigation', 'Rootkit Detection', 'Volatile Artifacts']
+        },
+        {
+          title: 'Threat Intelligence',
+          topics: ['Attribution Techniques', 'IOC Generation', 'Threat Hunting', 'YARA Rules']
+        }
+      ],
+      prerequisites: [
+        'Basic malware analysis knowledge',
+        'Assembly language familiarity',
+        'Windows internals understanding'
+      ],
+      careerOutcomes: [
+        'Senior Malware Analyst',
+        'Threat Intelligence Analyst',
+        'Incident Response Specialist',
+        'Security Researcher'
+      ]
     },
 
     // Malware Analysis
@@ -298,7 +385,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 9,
       maxSeats: 15,
       highlights: ['Advanced RE Tools', 'Custom Exploit Development', 'Elite Mentorship'],
-      color: 'purple'
+      color: 'purple',
+      curriculum: [
+        {
+          title: 'Assembly & Architecture',
+          topics: ['x86/x64 Assembly', 'CPU Architecture', 'Instruction Sets', 'Memory Management']
+        },
+        {
+          title: 'Advanced Debugging',
+          topics: ['WinDbg Mastery', 'IDA Pro Advanced', 'Ghidra Analysis', 'Custom Scripts']
+        },
+        {
+          title: 'Anti-Analysis Techniques',
+          topics: ['Packing/Unpacking', 'Anti-Debug Tricks', 'VM Detection', 'Code Obfuscation']
+        },
+        {
+          title: 'Exploit Development',
+          topics: ['Buffer Overflows', 'ROP Chains', 'Exploit Mitigations', 'Custom Tool Creation']
+        }
+      ],
+      prerequisites: [
+        'Strong programming background',
+        'Assembly language knowledge',
+        'Malware analysis experience'
+      ],
+      careerOutcomes: [
+        'Senior Reverse Engineer',
+        'Exploit Developer',
+        'Security Researcher',
+        'Advanced Threat Analyst'
+      ]
     },
 
     // Compliance & GRC
@@ -371,7 +487,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 21,
       maxSeats: 40,
       highlights: ['GRC Certification Track', 'Industry Best Practices', 'Tool Training'],
-      color: 'green'
+      color: 'green',
+      curriculum: [
+        {
+          title: 'GRC Foundations',
+          topics: ['Governance Frameworks', 'Risk Management Principles', 'Compliance Overview', 'GRC Integration']
+        },
+        {
+          title: 'Risk Assessment',
+          topics: ['Risk Identification', 'Risk Analysis Methods', 'Risk Treatment', 'Risk Monitoring']
+        },
+        {
+          title: 'Compliance Management',
+          topics: ['Regulatory Requirements', 'Compliance Programs', 'Audit Management', 'Reporting Systems']
+        },
+        {
+          title: 'GRC Tools & Automation',
+          topics: ['GRC Platform Implementation', 'Automated Controls', 'Dashboard Development', 'Continuous Monitoring']
+        }
+      ],
+      prerequisites: [
+        'Basic understanding of business processes',
+        'Risk management awareness',
+        'Regulatory knowledge helpful'
+      ],
+      careerOutcomes: [
+        'GRC Analyst',
+        'Risk Management Specialist',
+        'Compliance Officer',
+        'Governance Consultant'
+      ]
     },
 
     // Incident Response
@@ -394,7 +539,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 19,
       maxSeats: 35,
       highlights: ['Real Incident Simulations', 'Industry Playbooks', 'Crisis Management'],
-      color: 'red'
+      color: 'red',
+      curriculum: [
+        {
+          title: 'Incident Response Framework',
+          topics: ['NIST IR Framework', 'Preparation Phase', 'Detection & Analysis', 'Containment Strategy']
+        },
+        {
+          title: 'Investigation Techniques',
+          topics: ['Digital Forensics', 'Evidence Collection', 'Timeline Analysis', 'Attribution Methods']
+        },
+        {
+          title: 'Response & Recovery',
+          topics: ['Containment Procedures', 'Eradication Methods', 'Recovery Planning', 'Business Continuity']
+        },
+        {
+          title: 'Communication & Learning',
+          topics: ['Crisis Communication', 'Stakeholder Management', 'Post-Incident Review', 'Process Improvement']
+        }
+      ],
+      prerequisites: [
+        'Basic security knowledge',
+        'Understanding of network concepts',
+        'Familiarity with security tools'
+      ],
+      careerOutcomes: [
+        'Incident Response Analyst',
+        'Security Operations Specialist',
+        'Digital Forensics Investigator',
+        'Crisis Management Coordinator'
+      ]
     },
     {
       id: 11,
@@ -415,7 +589,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 11,
       maxSeats: 25,
       highlights: ['Advanced Analytics Tools', 'Threat Intelligence Feeds', 'Custom Hunting Tools'],
-      color: 'purple'
+      color: 'purple',
+      curriculum: [
+        {
+          title: 'Threat Hunting Foundations',
+          topics: ['Hunting Methodologies', 'Hypothesis Development', 'Data Sources', 'Hunting Maturity Model']
+        },
+        {
+          title: 'Advanced Analytics',
+          topics: ['Statistical Analysis', 'Machine Learning for Security', 'Anomaly Detection', 'Behavioral Analytics']
+        },
+        {
+          title: 'Threat Intelligence',
+          topics: ['CTI Integration', 'IOC Development', 'TTP Analysis', 'Attribution Techniques']
+        },
+        {
+          title: 'Automation & Tools',
+          topics: ['SIEM Query Development', 'Custom Detection Rules', 'Hunting Automation', 'Tool Integration']
+        }
+      ],
+      prerequisites: [
+        'Strong security operations background',
+        'SIEM experience',
+        'Understanding of attack techniques'
+      ],
+      careerOutcomes: [
+        'Senior Threat Hunter',
+        'Threat Intelligence Analyst',
+        'Security Architect',
+        'Advanced SOC Analyst'
+      ]
     }
   ];
 

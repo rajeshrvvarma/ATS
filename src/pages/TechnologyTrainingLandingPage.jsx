@@ -124,7 +124,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 38,
       maxSeats: 50,
       highlights: ['Real-world Projects', 'Industry Mentorship', 'Certification Included'],
-      color: 'green'
+      color: 'green',
+      curriculum: [
+        {
+          title: 'Python Fundamentals',
+          topics: ['Python Syntax & Data Types', 'Control Structures', 'Functions & Modules', 'Object-Oriented Programming']
+        },
+        {
+          title: 'Web Development with Django',
+          topics: ['Django Framework', 'Models & Views', 'Templates & Forms', 'User Authentication']
+        },
+        {
+          title: 'Database & APIs',
+          topics: ['PostgreSQL Integration', 'REST API Development', 'GraphQL Implementation', 'Database Optimization']
+        },
+        {
+          title: 'Advanced Topics',
+          topics: ['Flask Microservices', 'Testing & Debugging', 'Docker Containerization', 'Cloud Deployment']
+        }
+      ],
+      prerequisites: [
+        'Basic programming knowledge',
+        'Understanding of web technologies',
+        'Familiarity with databases helpful'
+      ],
+      careerOutcomes: [
+        'Python Full Stack Developer',
+        'Django Developer',
+        'Backend Engineer',
+        'Web Application Developer'
+      ]
     },
     {
       id: 3,
@@ -146,7 +175,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 52,
       maxSeats: 70,
       highlights: ['Enterprise Focus', 'Spring Certification Prep', 'Corporate Training Style'],
-      color: 'orange'
+      color: 'orange',
+      curriculum: [
+        {
+          title: 'Core Java Mastery',
+          topics: ['Java Fundamentals', 'OOP Concepts', 'Exception Handling', 'Collections Framework']
+        },
+        {
+          title: 'Spring Boot Development',
+          topics: ['Spring Boot Framework', 'Dependency Injection', 'Spring MVC', 'Spring Security']
+        },
+        {
+          title: 'Database & ORM',
+          topics: ['Hibernate ORM', 'JPA Implementation', 'Database Design', 'Transaction Management']
+        },
+        {
+          title: 'Frontend Integration',
+          topics: ['Angular/React Integration', 'RESTful Services', 'Microservices Architecture', 'Enterprise Deployment']
+        }
+      ],
+      prerequisites: [
+        'Basic programming concepts',
+        'Understanding of object-oriented programming',
+        'Familiarity with databases'
+      ],
+      careerOutcomes: [
+        'Java Full Stack Developer',
+        'Spring Boot Developer',
+        'Enterprise Java Developer',
+        'Backend Engineer'
+      ]
     },
 
     // Cloud & DevOps
@@ -170,7 +228,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 34,
       maxSeats: 45,
       highlights: ['AWS Certification Prep', 'Hands-on Labs', 'Industry Projects'],
-      color: 'yellow'
+      color: 'yellow',
+      curriculum: [
+        {
+          title: 'AWS Foundation',
+          topics: ['AWS Console & CLI', 'EC2 & Storage Services', 'VPC & Networking', 'IAM & Security']
+        },
+        {
+          title: 'Architecture Design',
+          topics: ['Well-Architected Framework', 'High Availability', 'Scalability Patterns', 'Cost Optimization']
+        },
+        {
+          title: 'Advanced Services',
+          topics: ['Container Services (ECS/EKS)', 'Serverless (Lambda)', 'Database Services', 'Monitoring & Logging']
+        },
+        {
+          title: 'Infrastructure as Code',
+          topics: ['CloudFormation', 'Terraform', 'CI/CD Pipelines', 'DevOps Best Practices']
+        }
+      ],
+      prerequisites: [
+        'Basic cloud computing knowledge',
+        'Linux/Windows system administration',
+        'Networking fundamentals'
+      ],
+      careerOutcomes: [
+        'AWS Solutions Architect',
+        'Cloud Engineer',
+        'DevOps Engineer',
+        'Cloud Consultant'
+      ]
     },
     {
       id: 5,
@@ -192,7 +279,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 41,
       maxSeats: 55,
       highlights: ['Industry-standard Tools', 'Real Pipeline Projects', 'DevOps Certification'],
-      color: 'purple'
+      color: 'purple',
+      curriculum: [
+        {
+          title: 'DevOps Fundamentals',
+          topics: ['DevOps Culture & Practices', 'Git Advanced Workflows', 'Linux System Administration', 'Shell Scripting']
+        },
+        {
+          title: 'CI/CD Pipelines',
+          topics: ['Jenkins Setup & Configuration', 'Pipeline as Code', 'Automated Testing', 'Deployment Strategies']
+        },
+        {
+          title: 'Containerization',
+          topics: ['Docker Fundamentals', 'Kubernetes Orchestration', 'Container Security', 'Microservices Deployment']
+        },
+        {
+          title: 'Infrastructure & Monitoring',
+          topics: ['Infrastructure as Code', 'Terraform/Ansible', 'Monitoring & Logging', 'Cloud Platform Integration']
+        }
+      ],
+      prerequisites: [
+        'Basic Linux knowledge',
+        'Understanding of software development',
+        'Networking fundamentals'
+      ],
+      careerOutcomes: [
+        'DevOps Engineer',
+        'Site Reliability Engineer',
+        'Cloud Infrastructure Engineer',
+        'Automation Specialist'
+      ]
     },
     {
       id: 6,
@@ -214,7 +330,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 28,
       maxSeats: 40,
       highlights: ['Microsoft Partnership', 'AZ-900/104 Certification Prep', 'Enterprise Focus'],
-      color: 'blue'
+      color: 'blue',
+      curriculum: [
+        {
+          title: 'Azure Fundamentals',
+          topics: ['Azure Portal & CLI', 'Virtual Machines', 'Storage Solutions', 'Virtual Networks']
+        },
+        {
+          title: 'Identity & Security',
+          topics: ['Azure Active Directory', 'Role-based Access Control', 'Azure Security Center', 'Key Vault']
+        },
+        {
+          title: 'Application Services',
+          topics: ['App Services', 'Azure Functions', 'Logic Apps', 'API Management']
+        },
+        {
+          title: 'DevOps & Integration',
+          topics: ['Azure DevOps', 'Power Platform', 'Hybrid Solutions', 'Migration Strategies']
+        }
+      ],
+      prerequisites: [
+        'Basic cloud computing concepts',
+        'Windows/Linux administration',
+        'Networking fundamentals'
+      ],
+      careerOutcomes: [
+        'Azure Solutions Architect',
+        'Azure Developer',
+        'Cloud Administrator',
+        'Microsoft Cloud Specialist'
+      ]
     },
 
     // AI & Data Science
@@ -293,7 +438,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 23,
       maxSeats: 35,
       highlights: ['AI Research Projects', 'Industry Mentorship', 'Advanced Certification'],
-      color: 'purple'
+      color: 'purple',
+      curriculum: [
+        {
+          title: 'Advanced Machine Learning',
+          topics: ['Ensemble Methods', 'Feature Engineering', 'Model Optimization', 'Advanced Algorithms']
+        },
+        {
+          title: 'Deep Learning',
+          topics: ['Neural Networks', 'CNNs & RNNs', 'Transfer Learning', 'Generative Models']
+        },
+        {
+          title: 'Computer Vision & NLP',
+          topics: ['OpenCV Applications', 'Image Processing', 'Natural Language Processing', 'Text Analytics']
+        },
+        {
+          title: 'MLOps & Deployment',
+          topics: ['Model Deployment', 'MLOps Pipeline', 'AI Ethics', 'Production Scaling']
+        }
+      ],
+      prerequisites: [
+        'Strong Python programming skills',
+        'Mathematics and statistics background',
+        'Basic machine learning knowledge'
+      ],
+      careerOutcomes: [
+        'AI/ML Engineer',
+        'Research Scientist',
+        'Computer Vision Engineer',
+        'NLP Specialist'
+      ]
     },
     {
       id: 9,
@@ -315,7 +489,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 47,
       maxSeats: 60,
       highlights: ['Business-focused Projects', 'Industry Datasets', 'BI Certification'],
-      color: 'blue'
+      color: 'blue',
+      curriculum: [
+        {
+          title: 'SQL & Database Fundamentals',
+          topics: ['Advanced SQL Queries', 'Database Design', 'Data Modeling', 'ETL Processes']
+        },
+        {
+          title: 'Business Intelligence Tools',
+          topics: ['Power BI Development', 'Tableau Visualizations', 'Dashboard Design', 'Report Automation']
+        },
+        {
+          title: 'Data Analysis & Strategy',
+          topics: ['Excel Advanced Functions', 'Statistical Analysis', 'Business Metrics', 'KPI Development']
+        },
+        {
+          title: 'Data Warehousing',
+          topics: ['Data Warehouse Concepts', 'OLAP Systems', 'Data Integration', 'Performance Optimization']
+        }
+      ],
+      prerequisites: [
+        'Basic database knowledge',
+        'Excel proficiency',
+        'Business analytics interest'
+      ],
+      careerOutcomes: [
+        'Business Intelligence Analyst',
+        'Data Analyst',
+        'Reporting Specialist',
+        'Business Data Consultant'
+      ]
     },
 
     // Software Testing
@@ -339,7 +542,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 39,
       maxSeats: 50,
       highlights: ['Automation Framework Development', 'Industry Tools', 'ISTQB Certification Prep'],
-      color: 'orange'
+      color: 'orange',
+      curriculum: [
+        {
+          title: 'Testing Fundamentals',
+          topics: ['Testing Principles', 'Test Design Techniques', 'Test Planning', 'Defect Management']
+        },
+        {
+          title: 'Selenium Automation',
+          topics: ['WebDriver Basics', 'Page Object Model', 'TestNG Framework', 'Data-Driven Testing']
+        },
+        {
+          title: 'API & Performance Testing',
+          topics: ['REST API Testing', 'REST Assured', 'JMeter Performance Testing', 'Load Testing']
+        },
+        {
+          title: 'Advanced Automation',
+          topics: ['Mobile Testing', 'Cross-browser Testing', 'CI/CD Integration', 'Framework Development']
+        }
+      ],
+      prerequisites: [
+        'Basic programming knowledge',
+        'Understanding of web applications',
+        'Software testing basics'
+      ],
+      careerOutcomes: [
+        'Automation Test Engineer',
+        'QA Automation Lead',
+        'Test Framework Developer',
+        'SDET (Software Developer in Test)'
+      ]
     },
     {
       id: 11,
@@ -361,7 +593,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 61,
       maxSeats: 80,
       highlights: ['Entry-level Friendly', 'Real Project Experience', 'Job Placement Assistance'],
-      color: 'green'
+      color: 'green',
+      curriculum: [
+        {
+          title: 'Testing Fundamentals',
+          topics: ['SDLC & STLC', 'Testing Types', 'Test Planning', 'Test Strategy']
+        },
+        {
+          title: 'Test Design & Execution',
+          topics: ['Test Case Design', 'Boundary Value Analysis', 'Equivalence Partitioning', 'Test Execution']
+        },
+        {
+          title: 'Defect Management',
+          topics: ['Bug Life Cycle', 'Defect Reporting', 'Severity & Priority', 'Tracking Tools']
+        },
+        {
+          title: 'Specialized Testing',
+          topics: ['Database Testing', 'Web Testing', 'Mobile Testing', 'Agile Testing']
+        }
+      ],
+      prerequisites: [
+        'Basic computer knowledge',
+        'Understanding of software applications',
+        'Attention to detail'
+      ],
+      careerOutcomes: [
+        'Manual Test Engineer',
+        'QA Analyst',
+        'Software Tester',
+        'Quality Assurance Specialist'
+      ]
     },
 
     // Mobile Development
@@ -440,7 +701,36 @@ const TechnologyTrainingLandingPage = () => {
       enrolled: 26,
       maxSeats: 35,
       highlights: ['Google Certification Path', 'Beautiful UI Focus', 'Firebase Integration'],
-      color: 'purple'
+      color: 'purple',
+      curriculum: [
+        {
+          title: 'Dart & Flutter Basics',
+          topics: ['Dart Programming', 'Flutter Framework', 'Widgets & Layouts', 'Navigation']
+        },
+        {
+          title: 'State Management',
+          topics: ['StatefulWidget', 'Provider Pattern', 'Bloc Architecture', 'Redux Pattern']
+        },
+        {
+          title: 'Backend Integration',
+          topics: ['Firebase Services', 'REST API Integration', 'Database Operations', 'Authentication']
+        },
+        {
+          title: 'Advanced Features',
+          topics: ['Custom Widgets', 'Animations', 'Performance Optimization', 'App Publishing']
+        }
+      ],
+      prerequisites: [
+        'Basic programming knowledge',
+        'Understanding of mobile app concepts',
+        'Object-oriented programming familiarity'
+      ],
+      careerOutcomes: [
+        'Flutter Developer',
+        'Mobile App Developer',
+        'Cross-platform Developer',
+        'Freelance App Developer'
+      ]
     }
   ];
 
@@ -827,7 +1117,10 @@ const TechnologyTrainingLandingPage = () => {
             <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center">
               <div className="text-center sm:text-left">
                 <div className="text-2xl font-bold text-blue-600">
-                  ₹{formatPrice(courseDetailsModal.course?.price)}
+                  {(() => {
+                    const dynamicPricing = getPricing(courseDetailsModal.course?.title);
+                    return dynamicPricing ? dynamicPricing.finalPrice : courseDetailsModal.course?.price;
+                  })()}
                 </div>
                 <div className="text-sm text-slate-600">Duration: {courseDetailsModal.course?.duration}</div>
               </div>
