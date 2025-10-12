@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calculator, TrendingUp, Storage, Users, DollarSign, Info } from 'lucide-react';
+import { Calculator, TrendingUp, HardDrive, Users, DollarSign, Info } from 'lucide-react';
 
 const PricingCalculator = () => {
   const [contentGB, setContentGB] = useState(50);
@@ -234,7 +234,7 @@ const PricingCalculator = () => {
           <div className="grid md:grid-cols-3 gap-4">
             <div className="bg-green-50 rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <Storage className="h-5 w-5 text-green-600" />
+                <HardDrive className="h-5 w-5 text-green-600" />
                 <h3 className="font-semibold text-green-800">Storage</h3>
               </div>
               <div className="text-xl font-bold text-green-700">
