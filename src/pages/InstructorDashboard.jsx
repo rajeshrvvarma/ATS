@@ -62,6 +62,8 @@ export default function InstructorDashboard({ onNavigate }) {
     thisYear: 0,
     pending: 0,
   });
+  // Holds info if a Firestore composite index is required for a query
+  const [indexIssue, setIndexIssue] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -111,16 +113,41 @@ export default function InstructorDashboard({ onNavigate }) {
       }
       setStudents(allStudents);
 
-      // Load recent activity
-      const activityQuery = query(
-        collection(db, 'instructorActivity'),
-        where('instructorId', '==', user.uid),
-        orderBy('timestamp', 'desc'),
-        limit(10)
-      );
-      const activitySnapshot = await getDocs(activityQuery);
-      const activities = activitySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setRecentActivity(activities);
+      // Load recent activity (guard missing composite index)
+      try {
+        const activityQuery = query(
+          collection(db, 'instructorActivity'),
+          where('instructorId', '==', user.uid),
+          orderBy('timestamp', 'desc'),
+          limit(10)
+        );
+        const activitySnapshot = await getDocs(activityQuery);
+        const activities = activitySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setRecentActivity(activities);
+        // Clear any previous index issue
+        setIndexIssue(null);
+      } catch (idxErr) {
+        // If Firestore requires a composite index, show banner and fallback
+        const message = (idxErr && idxErr.message) || '';
+        const linkMatch = message.match(/https?:\/\/[^\s)]+/);
+        const link = linkMatch ? linkMatch[0] : '';
+        if (message.toLowerCase().includes('requires an index') || (idxErr && idxErr.code === 'failed-precondition')) {
+          setIndexIssue({
+            desc: 'A Firestore composite index is required to sort instructor activity by timestamp.',
+            link
+          });
+          // Fallback: fetch without orderBy to avoid index requirement
+          const fallbackQuery = query(
+            collection(db, 'instructorActivity'),
+            where('instructorId', '==', user.uid)
+          );
+          const fbSnap = await getDocs(fallbackQuery);
+          const fbActivities = fbSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })).slice(0, 10);
+          setRecentActivity(fbActivities);
+        } else {
+          throw idxErr;
+        }
+      }
 
       // Calculate stats
       const totalStudents = allStudents.length;
@@ -723,6 +750,21 @@ export default function InstructorDashboard({ onNavigate }) {
 
   return (
     <DashboardLayout title="Instructor Dashboard" user={user} onNavigate={onNavigate}>
+      {/* Composite index required banner (non-blocking) */}
+      {indexIssue && (
+        <div className="mb-4 rounded border border-yellow-300 bg-yellow-50 text-yellow-800 p-3">
+          <div className="font-semibold">Firestore index required</div>
+          <div className="text-sm">
+            {indexIssue.desc}{' '}
+            {indexIssue.link ? (
+              <a className="underline font-medium" href={indexIssue.link} target="_blank" rel="noreferrer">
+                Create index
+              </a>
+            ) : null}
+            . The page is using a safe fallback for now.
+          </div>
+        </div>
+      )}
       {/* Tab Navigation */}
       <div className="mb-6">
         <div className="border-b border-slate-700">

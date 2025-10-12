@@ -440,22 +440,6 @@ const InstructorContentManagement = () => {
     setShowLessonModal(true);
   };
 
-  // Status badge component
-  const StatusBadge = ({ status }) => {
-    const statusConfig = {
-      published: { color: 'bg-green-100 text-green-800', label: 'Published' },
-      draft: { color: 'bg-gray-100 text-gray-800', label: 'Draft' },
-      'coming-soon': { color: 'bg-blue-100 text-blue-800', label: 'Coming Soon' }
-    };
-    
-    const config = statusConfig[status] || statusConfig.draft;
-    
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
-        {config.label}
-      </span>
-    );
-  };
 
   if (loading) {
     return (
@@ -621,6 +605,23 @@ const InstructorContentManagement = () => {
         )}
       </AnimatePresence>
     </div>
+  );
+};
+
+// Status badge component
+const StatusBadge = ({ status }) => {
+  const statusConfig = {
+    published: { color: 'bg-green-100 text-green-800', label: 'Published' },
+    draft: { color: 'bg-gray-100 text-gray-800', label: 'Draft' },
+    'coming-soon': { color: 'bg-blue-100 text-blue-800', label: 'Coming Soon' }
+  };
+  
+  const config = statusConfig[status] || statusConfig.draft;
+  
+  return (
+    <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
+      {config.label}
+    </span>
   );
 };
 

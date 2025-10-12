@@ -272,6 +272,56 @@ export const getStudentCourses = async (studentEmail) => {
     
   } catch (error) {
     console.error('Error getting student courses:', error);
+    // If Firestore requires a composite index for where + orderBy, fall back without orderBy
+    const message = (error && error.message) || '';
+    const linkMatch = message.match(/https?:\/\/[^\s)]+/);
+    const indexLink = linkMatch ? linkMatch[0] : '';
+    const isIndexIssue = message.toLowerCase().includes('requires an index') || (error && error.code === 'failed-precondition');
+
+    if (isIndexIssue) {
+      try {
+        // Fallback: query without orderBy and sort in-memory
+        const fbQuery = query(
+          collection(db, 'enrollments'),
+          where('studentDetails.email', '==', studentEmail)
+        );
+        const fbSnap = await getDocs(fbQuery);
+        const raw = fbSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        // Sort by createdAt (desc) if available
+        const sorted = raw.sort((a, b) => {
+          const ad = a.createdAt?.toDate ? a.createdAt.toDate().getTime() : 0;
+          const bd = b.createdAt?.toDate ? b.createdAt.toDate().getTime() : 0;
+          return bd - ad;
+        });
+        const courses = sorted.map(d => ({
+          ...d,
+          enrolledAt: d.createdAt?.toDate?.(),
+          startDate: d.enrollment?.startDate?.toDate?.(),
+          endDate: d.enrollment?.endDate?.toDate?.(),
+          lastAccessed: d.course?.lastAccessed?.toDate?.()
+        }));
+
+        console.warn('Firestore index required for getStudentCourses; using fallback without orderBy.', { indexLink });
+
+        return {
+          success: true,
+          courses,
+          totalCourses: courses.length,
+          indexRequired: true,
+          indexLink
+        };
+      } catch (fbErr) {
+        console.error('Fallback query failed for getStudentCourses:', fbErr);
+        return {
+          success: false,
+          error: fbErr.message || message,
+          courses: [],
+          indexRequired: true,
+          indexLink
+        };
+      }
+    }
+
     return {
       success: false,
       error: error.message,

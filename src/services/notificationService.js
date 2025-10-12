@@ -78,6 +78,7 @@ class NotificationService {
 
       // Set up message listener for foreground messages
       this.setupForegroundMessageListener();
+    import { getDocsWithIndexFallback } from '@/services/firestoreIndexGuard.js';
 
       console.log('🔔 Notification Service initialized successfully');
     } catch (error) {
@@ -381,26 +382,28 @@ class NotificationService {
   async getUserNotifications(userId, limit = 20) {
     try {
       const notificationsRef = collection(db, 'notifications');
-      const q = query(
+      // Use index guard with fallback
+      const primary = () => getDocs(query(
         notificationsRef,
         where('userId', '==', userId),
         orderBy('createdAt', 'desc'),
         limit(limit)
-      );
-
-      const snapshot = await getDocs(q);
-      const notifications = [];
-
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        notifications.push({
-          id: doc.id,
-          ...data,
-          createdAt: data.createdAt?.toDate(),
-          expiresAt: data.expiresAt?.toDate()
-        });
-      });
-
+      ));
+      const fallback = () => getDocs(query(
+        notificationsRef,
+        where('userId', '==', userId)
+      ));
+      const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc' });
+      const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+        ? docs.map(doc => ({ id: doc.id, ...doc.data() }))
+        : docs;
+      const notifications = rows.map(data => ({
+        id: data.id,
+        ...data,
+        createdAt: data.createdAt?.toDate?.() || data.createdAt,
+        expiresAt: data.expiresAt?.toDate?.() || data.expiresAt
+      }));
+      if (indexRequired) console.warn('Index required for getUserNotifications; using fallback sorting.');
       return { success: true, data: notifications };
     } catch (error) {
       console.error('Error fetching notifications:', error);
@@ -450,28 +453,32 @@ class NotificationService {
   async getNotificationStats(userId) {
     try {
       const notificationsRef = collection(db, 'notifications');
-      const userNotificationsQuery = query(
+      const primary = () => getDocs(query(
         notificationsRef,
         where('userId', '==', userId),
         orderBy('createdAt', 'desc'),
         limit(100)
-      );
-
-      const snapshot = await getDocs(userNotificationsQuery);
+      ));
+      const fallback = () => getDocs(query(
+        notificationsRef,
+        where('userId', '==', userId)
+      ));
+      const { docs, indexRequired } = await getDocsWithIndexFallback(primary, fallback, { sortBy: 'createdAt', sortDir: 'desc' });
+      const rows = Array.isArray(docs) && docs.length && typeof docs[0].data === 'function'
+        ? docs.map(doc => ({ id: doc.id, ...doc.data() }))
+        : docs;
       let total = 0;
       let unread = 0;
       let clicked = 0;
       const typeStats = {};
 
-      snapshot.forEach(doc => {
-        const data = doc.data();
+      rows.forEach(data => {
         total++;
-        
         if (!data.read) unread++;
         if (data.clicked) clicked++;
-        
         typeStats[data.type] = (typeStats[data.type] || 0) + 1;
       });
+      if (indexRequired) console.warn('Index required for getNotificationStats; using fallback sorting.');
 
       return {
         success: true,
