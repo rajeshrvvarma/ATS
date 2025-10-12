@@ -66,7 +66,7 @@ export default function LearningManagementSystemPage({ onNavigate }) {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-6">
-            <h1 className="text-4xl font-bold text-white">Our Learning Management System</h1>
+            <h1 className="text-4xl font-bold text-white">Learning Portal - Video Library</h1>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowTranscriptManager(true)}
@@ -84,9 +84,11 @@ export default function LearningManagementSystemPage({ onNavigate }) {
               </button>
             </div>
           </div>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Master cybersecurity through our comprehensive video-based training programs. 
-            Learn at your own pace with expert-led content and hands-on labs.
+          <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
+            Access our complete video library and course resources. Watch lessons, download materials, and learn at your own pace.
+          </p>
+          <p className="text-sm text-slate-400 max-w-2xl mx-auto">
+            💡 Track your progress and manage enrollments in your <button onClick={() => onNavigate('dashboard')} className="text-blue-400 hover:text-blue-300 underline">Student Dashboard</button>
           </p>
         </div>
 

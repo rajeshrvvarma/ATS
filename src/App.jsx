@@ -123,8 +123,15 @@ export default function App() {
     const currentPage = pathToPage[location.pathname] || 'home';
 
     const go = (pageKey) => {
-        const path = pageToPath[pageKey] || '/';
-        navigate(path);
+        // Handle navigation with query parameters (e.g., "video-learning?course=xyz")
+        if (pageKey.includes('?')) {
+            const [key, queryString] = pageKey.split('?');
+            const path = pageToPath[key] || '/';
+            navigate(`${path}?${queryString}`);
+        } else {
+            const path = pageToPath[pageKey] || '/';
+            navigate(path);
+        }
     };
 
     return (

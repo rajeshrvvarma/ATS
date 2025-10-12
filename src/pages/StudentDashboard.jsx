@@ -215,6 +215,19 @@ export default function StudentDashboard({ onNavigate }) {
 
   const renderOverview = () => (
     <div className="space-y-6">
+      {/* Info Banner */}
+      <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg p-4">
+        <div className="flex items-start space-x-3">
+          <Video className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+          <div>
+            <h3 className="text-sm font-semibold text-white">Dashboard & Learning Portal</h3>
+            <p className="text-xs text-slate-300 mt-1">
+              Track your progress here • Watch videos and access content in the <button onClick={() => onNavigate('video-learning')} className="text-blue-400 hover:text-blue-300 underline">Learning Portal</button>
+            </p>
+          </div>
+        </div>
+      </div>
+      
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
@@ -397,8 +410,11 @@ export default function StudentDashboard({ onNavigate }) {
           <div className="col-span-full text-center py-12">
             <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
             <p className="text-slate-400 text-lg">No courses enrolled yet</p>
-            <button className="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
-              Browse Available Courses
+            <button 
+              onClick={() => onNavigate('video-learning')}
+              className="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+            >
+              Browse Available Courses in Learning Portal
             </button>
           </div>
         ) : (
@@ -435,7 +451,10 @@ export default function StudentDashboard({ onNavigate }) {
                 
                 <div className="pt-2 border-t border-slate-700">
                   <p className="text-sm text-slate-400 mb-2">Next: {course.nextLesson || 'Start Course'}</p>
-                  <button className="w-full flex items-center justify-center space-x-2 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
+                  <button 
+                    onClick={() => onNavigate(`video-learning?course=${course.id}`)}
+                    className="w-full flex items-center justify-center space-x-2 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+                  >
                     <Play className="w-4 h-4" />
                     <span>Continue Learning</span>
                   </button>
@@ -443,6 +462,22 @@ export default function StudentDashboard({ onNavigate }) {
               </div>
             </div>
           ))
+        )}
+        
+        {/* Browse More Courses Section - only show if student has enrolled courses */}
+        {enrolledCourses.length > 0 && (
+          <div className="col-span-full mt-6 p-6 bg-slate-800/50 border border-slate-700 rounded-lg text-center">
+            <Video className="w-12 h-12 text-blue-400 mx-auto mb-3" />
+            <h3 className="text-lg font-semibold text-white mb-2">Explore More Courses</h3>
+            <p className="text-slate-400 mb-4">Access our full course catalog and video library</p>
+            <button 
+              onClick={() => onNavigate('video-learning')}
+              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors inline-flex items-center space-x-2"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>Open Learning Portal</span>
+            </button>
+          </div>
         )}
       </div>
     </div>
