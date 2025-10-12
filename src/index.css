@@ -7,6 +7,27 @@ body {
   font-family: 'Inter', sans-serif;
 }
 
+/* Global subtle float animation for decor */
+@keyframes decor-float {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-6px) translateX(3px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+.decor-float {
+  animation-name: decor-float;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* Content on dark backgrounds: enforce readable defaults */
+.content-dark {
+  @apply bg-white text-slate-800 rounded-xl shadow-lg;
+}
+.content-dark h1, .content-dark h2, .content-dark h3, .content-dark h4 {
+  @apply text-slate-900;
+}
+.content-dark .muted { @apply text-slate-600; }
+
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center font-semibold rounded-lg transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed;

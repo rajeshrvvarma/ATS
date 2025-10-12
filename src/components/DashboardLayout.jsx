@@ -2,6 +2,7 @@ import React from 'react';
 import { Shield, GraduationCap, User } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext.jsx';
 import UserMenu from '@/components/UserMenu.jsx';
+import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 
 /**
  * DashboardLayout - Shared layout for all dashboard types
@@ -70,20 +71,22 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
 
   return (
     <div className="min-h-screen bg-slate-900">
-      {/* Welcome Banner */}
-      <section className="bg-slate-900 border-b border-slate-800 py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-2xl font-bold text-white mb-2">
-            {user ? `Welcome ${user.displayName || user.email || 'User'},` : 'Welcome,'}
-            <span className="ml-2 font-normal text-sky-400">{roleLabel}</span>
-          </h2>
-          <p className="text-slate-300 text-lg">
-            {user?.role === 'student' && 'Continue your next lesson or assignment to keep progressing!'}
-            {user?.role === 'instructor' && 'Continue creating a course or lesson to help your students learn!'}
-            {user?.role === 'admin' && 'Monitor analytics, manage users, and keep the platform running smoothly!'}
-            {!user?.role && 'Explore your dashboard and get started!'}
-          </p>
-        </div>
+      {/* Welcome Banner with unified animated background */}
+      <section className="relative border-b border-slate-800">
+        <AnimatedBackground variant="default" uniformCount={40} minHeight={160} className="">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <h2 className="text-2xl font-bold text-white mb-2">
+              {user ? `Welcome ${user.displayName || user.email || 'User'},` : 'Welcome,'}
+              <span className="ml-2 font-normal text-sky-400">{roleLabel}</span>
+            </h2>
+            <p className="text-slate-200 text-lg">
+              {user?.role === 'student' && 'Continue your next lesson or assignment to keep progressing!'}
+              {user?.role === 'instructor' && 'Continue creating a course or lesson to help your students learn!'}
+              {user?.role === 'admin' && 'Monitor analytics, manage users, and keep the platform running smoothly!'}
+              {!user?.role && 'Explore your dashboard and get started!'}
+            </p>
+          </div>
+        </AnimatedBackground>
       </section>
 
       {/* Main Content */}

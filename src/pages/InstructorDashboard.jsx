@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '@/context/AuthContext.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
 import InstructorContentManagement from '@/components/InstructorContentManagement.jsx';
@@ -40,6 +40,7 @@ const db = getFirestore(app);
 export default function InstructorDashboard({ onNavigate }) {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
+  const contentRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [adminNotes, setAdminNotes] = useState([]);
   const [showNotesPopup, setShowNotesPopup] = useState(false);
@@ -350,7 +351,10 @@ export default function InstructorDashboard({ onNavigate }) {
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
           <div className="grid grid-cols-2 gap-3">
-            <button className="flex items-center justify-center space-x-2 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
+            <button
+              onClick={() => { setActiveTab('content'); setTimeout(() => contentRef.current?.openCreateCourse?.(), 0); }}
+              className="flex items-center justify-center space-x-2 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+            >
               <Plus className="w-4 h-4" />
               <span className="text-sm">New Course</span>
             </button>
@@ -398,7 +402,10 @@ export default function InstructorDashboard({ onNavigate }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-white">My Courses</h2>
-        <button className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center space-x-2">
+        <button
+          onClick={() => { setActiveTab('content'); setTimeout(() => contentRef.current?.openCreateCourse?.(), 0); }}
+          className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center space-x-2"
+        >
           <Plus className="w-4 h-4" />
           <span>Create New Course</span>
         </button>
@@ -409,7 +416,10 @@ export default function InstructorDashboard({ onNavigate }) {
           <div className="col-span-full text-center py-12">
             <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
             <p className="text-slate-400 text-lg">No courses created yet</p>
-            <button className="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors">
+            <button
+              onClick={() => { setActiveTab('content'); setTimeout(() => contentRef.current?.openCreateCourse?.(), 0); }}
+              className="mt-4 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
+            >
               Create Your First Course
             </button>
           </div>
@@ -795,7 +805,7 @@ export default function InstructorDashboard({ onNavigate }) {
       {/* Tab Content */}
       {activeTab === 'overview' && renderOverview()}
       {activeTab === 'courses' && renderCourses()}
-      {activeTab === 'content' && <InstructorContentManagement />}
+  {activeTab === 'content' && <InstructorContentManagement ref={contentRef} />}
       {activeTab === 'students' && renderStudents()}
       {activeTab === 'analytics' && renderAnalytics()}
       {activeTab === 'earnings' && renderEarnings()}

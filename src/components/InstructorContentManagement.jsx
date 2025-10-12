@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -58,7 +58,7 @@ import {
   hasPermission 
 } from '@/services/authService.js';
 
-const InstructorContentManagement = () => {
+const InstructorContentManagement = forwardRef((props, ref) => {
   const { user } = useAuth();
   // Core state
   const [courses, setCourses] = useState([]);
@@ -441,6 +441,11 @@ const InstructorContentManagement = () => {
     setShowLessonModal(true);
   };
 
+  // Expose imperative API for parent components (e.g., dashboard quick actions)
+  useImperativeHandle(ref, () => ({
+    openCreateCourse: () => openCourseModal(),
+  }));
+
 
   if (loading) {
     return (
@@ -473,8 +478,8 @@ const InstructorContentManagement = () => {
         </button>
       </div>
 
-      {/* Filters and Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+  {/* Filters and Search */}
+  <div className="relative z-20 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex-1 min-w-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -607,7 +612,7 @@ const InstructorContentManagement = () => {
       </AnimatePresence>
     </div>
   );
-};
+});
 
 // Status badge component
 const StatusBadge = ({ status }) => {

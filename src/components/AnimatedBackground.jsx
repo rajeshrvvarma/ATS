@@ -1,9 +1,19 @@
 
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 // Enhanced Animated Background Component for Landing Pages
-const AnimatedBackground = ({ variant = 'default', children, className = '' }) => {
+const AnimatedBackground = ({
+    variant = 'default',
+    children,
+    className = '',
+    uniformCount = null, // number: enforce same particle count everywhere
+    enableParticles = true,
+    enableShapes = true,
+    enableLines = true,
+    speedMultiplier = 1,
+    minHeight = 400
+}) => {
 
     // Adaptive particle count based on device
     // Use higher particle counts and higher opacity for all variants
@@ -57,12 +67,12 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
 
     // Fallback: If variant is not found, use 'default' style
     const currentVariant = Object.prototype.hasOwnProperty.call(variants, variant) ? variants[variant] : variants.default;
-    // Use static, higher particle count for all variants
-    const particleCount = currentVariant.particles.count;
+    // If uniformCount provided, use it for consistency across pages
+    const particleCount = typeof uniformCount === 'number' ? uniformCount : currentVariant.particles.count;
     // Old animation: random movement, more visible
-    const particles = Array.from({ length: particleCount }).map((_, i) => (
+    const particles = enableParticles ? Array.from({ length: particleCount }).map((_, i) => (
         <motion.div
-            key={i}
+            key={`p-${i}`}
             className={`absolute w-2 h-2 ${currentVariant.particles.color} rounded-full`}
             initial={{
                 x: Math.random() * 1200,
@@ -75,18 +85,18 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
                 opacity: [null, 0.85 + Math.random() * 0.15]
             }}
             transition={{
-                duration: 8 + Math.random() * 6,
+                duration: (8 + Math.random() * 6) / speedMultiplier,
                 repeat: Infinity,
                 repeatType: 'reverse',
                 delay: Math.random() * 4
             }}
         />
-    ));
+    )) : null;
 
     // Geometric shapes (blurred, random movement, more visible)
-    const shapes = Array.from({ length: Math.ceil(particleCount / 4) }).map((_, i) => (
+    const shapes = enableShapes ? Array.from({ length: Math.ceil(particleCount / 4) }).map((_, i) => (
         <motion.div
-            key={i}
+            key={`s-${i}`}
             className={`absolute w-24 h-24 ${currentVariant.particles.color} rounded-full blur-xl`}
             style={{ opacity: 0.18 + Math.random() * 0.12, zIndex: 1 }}
             initial={{
@@ -99,18 +109,18 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
                 rotate: [null, Math.random() * 360]
             }}
             transition={{
-                duration: 18 + Math.random() * 8,
+                duration: (18 + Math.random() * 8) / speedMultiplier,
                 repeat: Infinity,
                 repeatType: 'reverse',
                 delay: Math.random() * 6
             }}
         />
-    ));
+    )) : null;
 
     // Network lines (static, for tech look)
-    const lines = Array.from({ length: 3 }).map((_, i) => (
+    const lines = enableLines ? Array.from({ length: 3 }).map((_, i) => (
         <motion.div
-            key={i}
+            key={`l-${i}`}
             className={`absolute h-px ${currentVariant.particles.color}`}
             style={{
                 width: '300px',
@@ -122,17 +132,17 @@ const AnimatedBackground = ({ variant = 'default', children, className = '' }) =
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 0.3 }}
             transition={{
-                duration: 3,
+                duration: 3 / speedMultiplier,
                 delay: i * 1,
                 repeat: Infinity,
                 repeatType: 'reverse',
                 repeatDelay: 2
             }}
         />
-    ));
+    )) : null;
 
     return (
-        <div className={`relative overflow-hidden ${className}`} style={{ minHeight: 400 }}>
+        <div className={`relative overflow-hidden ${className}`} style={{ minHeight }}>
             {/* Animated Background */}
             <div className="absolute inset-0 pointer-events-none select-none">
                 <div className={`absolute inset-0 ${currentVariant.gradient}`}></div>
