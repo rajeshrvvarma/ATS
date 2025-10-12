@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye } from 'lucide-react';
+import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
@@ -10,6 +10,7 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 const SpecializedCoursesLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
   const coursePricingData = useCoursePricing();
   const coursePricing = coursePricingData?.pricing || {};
   const pricingLoading = coursePricingData?.loading || false;
@@ -76,7 +77,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 23,
       maxSeats: 50,
       highlights: ['AWS Certified Security Preparation', 'Real AWS Environment Labs', 'Industry Projects'],
-      color: 'blue'
+      color: 'blue',
+      curriculum: [
+        {
+          title: 'AWS Security Fundamentals',
+          topics: ['AWS Shared Responsibility Model', 'IAM Policies & Roles', 'Security Groups & NACLs', 'AWS CloudTrail & CloudWatch']
+        },
+        {
+          title: 'Data Protection in AWS',
+          topics: ['KMS Key Management', 'S3 Bucket Security', 'RDS Encryption', 'Secrets Manager']
+        },
+        {
+          title: 'Network Security',
+          topics: ['VPC Security', 'AWS WAF', 'Shield & DDoS Protection', 'Private Link & VPN']
+        },
+        {
+          title: 'Compliance & Monitoring',
+          topics: ['AWS Config Rules', 'Security Hub', 'GuardDuty', 'Macie for Data Discovery']
+        }
+      ],
+      prerequisites: [
+        'Basic AWS cloud knowledge',
+        'Understanding of network security concepts',
+        'Familiarity with Linux/Windows administration'
+      ],
+      careerOutcomes: [
+        'AWS Security Specialist roles',
+        'Cloud Security Engineer positions',
+        'AWS Solutions Architect - Security',
+        'Cloud Compliance Analyst'
+      ]
     },
     {
       id: 2,
@@ -141,7 +171,40 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 15,
       maxSeats: 30,
       highlights: ['Industry-Standard Tools', 'Real Case Studies', 'Legal Framework Training'],
-      color: 'green'
+      color: 'green',
+      curriculum: [
+        {
+          title: 'Forensics Fundamentals',
+          topics: ['Digital Evidence Lifecycle', 'Chain of Custody', 'Forensic Acquisition', 'Write Blockers & Imaging']
+        },
+        {
+          title: 'File System Analysis',
+          topics: ['NTFS/FAT32/EXT Forensics', 'Deleted File Recovery', 'Timeline Analysis', 'Registry Forensics']
+        },
+        {
+          title: 'Network & Memory Forensics',
+          topics: ['Network Traffic Analysis', 'Memory Dumps', 'Volatile Data Collection', 'Live Response']
+        },
+        {
+          title: 'Mobile & Cloud Forensics',
+          topics: ['iOS/Android Forensics', 'Cloud Evidence Collection', 'Social Media Investigations', 'Cryptocurrency Tracing']
+        },
+        {
+          title: 'Legal & Reporting',
+          topics: ['Court Testimony', 'Expert Witness Preparation', 'Forensic Reporting', 'Ethics in Forensics']
+        }
+      ],
+      prerequisites: [
+        'Basic computer systems knowledge',
+        'Understanding of operating systems',
+        'Legal awareness and attention to detail'
+      ],
+      careerOutcomes: [
+        'Digital Forensics Investigator',
+        'Incident Response Analyst',
+        'Computer Crime Investigator',
+        'eDiscovery Specialist'
+      ]
     },
     {
       id: 5,
@@ -185,7 +248,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 32,
       maxSeats: 60,
       highlights: ['Hands-on Malware Samples', 'Safe Analysis Environment', 'Industry Tools'],
-      color: 'red'
+      color: 'red',
+      curriculum: [
+        {
+          title: 'Malware Fundamentals',
+          topics: ['Malware Classification', 'Attack Vectors', 'Malware Families', 'Safe Lab Setup']
+        },
+        {
+          title: 'Static Analysis',
+          topics: ['PE File Analysis', 'Strings & Import Analysis', 'Entropy Analysis', 'Signature Detection']
+        },
+        {
+          title: 'Dynamic Analysis',
+          topics: ['Sandbox Analysis', 'Behavioral Monitoring', 'Network Traffic Analysis', 'Registry/File Changes']
+        },
+        {
+          title: 'Advanced Techniques',
+          topics: ['Packed Malware', 'Anti-Analysis Evasion', 'Code Injection', 'Persistence Mechanisms']
+        }
+      ],
+      prerequisites: [
+        'Basic programming knowledge',
+        'Understanding of Windows/Linux systems',
+        'Network fundamentals'
+      ],
+      careerOutcomes: [
+        'Malware Analyst',
+        'Threat Intelligence Analyst',
+        'Security Researcher',
+        'Incident Response Specialist'
+      ]
     },
     {
       id: 7,
@@ -229,7 +321,36 @@ const SpecializedCoursesLandingPage = () => {
       enrolled: 28,
       maxSeats: 50,
       highlights: ['ISO Certification Preparation', 'Real Implementation Projects', 'Audit Experience'],
-      color: 'blue'
+      color: 'blue',
+      curriculum: [
+        {
+          title: 'ISO 27001 Foundation',
+          topics: ['ISMS Fundamentals', 'ISO 27001:2013 Structure', 'Information Security Principles', 'Risk Management Framework']
+        },
+        {
+          title: 'Implementation Planning',
+          topics: ['Gap Analysis', 'Project Planning', 'Resource Allocation', 'Timeline Development']
+        },
+        {
+          title: 'ISMS Documentation',
+          topics: ['Policies & Procedures', 'Risk Assessment Methodology', 'Statement of Applicability', 'Control Implementation']
+        },
+        {
+          title: 'Audit & Certification',
+          topics: ['Internal Audit Process', 'Management Review', 'Certification Audit Preparation', 'Continuous Improvement']
+        }
+      ],
+      prerequisites: [
+        'Basic information security knowledge',
+        'Understanding of risk management',
+        'Project management experience preferred'
+      ],
+      careerOutcomes: [
+        'ISO 27001 Lead Implementer',
+        'Information Security Manager',
+        'GRC Consultant',
+        'Compliance Auditor'
+      ]
     },
     {
       id: 9,
@@ -305,6 +426,10 @@ const SpecializedCoursesLandingPage = () => {
   const handleEnrollment = (course) => {
     const courseType = titleToIdMap[course.title];
     setEnrollmentModal({ isOpen: true, courseType, courseName: course.title });
+  };
+
+  const handleCourseDetails = (course) => {
+    setCourseDetailsModal({ isOpen: true, course });
   };
 
   return (
@@ -494,13 +619,26 @@ const SpecializedCoursesLandingPage = () => {
                       </div>
                     </div>
                     
-                    <button
-                      onClick={() => handleEnrollment(course)}
-                      className={`w-full bg-gradient-to-r from-${course.color}-600 to-${course.color}-700 hover:from-${course.color}-700 hover:to-${course.color}-800 text-white font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center`}
-                    >
-                      Enroll Now
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </button>
+                    {/* Action Buttons */}
+                    <div className="space-y-3">
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleCourseDetails(course)}
+                        className="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <Info size={16} />
+                        Course Details
+                      </motion.button>
+                      
+                      <button
+                        onClick={() => handleEnrollment(course)}
+                        className={`w-full bg-gradient-to-r from-${course.color}-600 to-${course.color}-700 hover:from-${course.color}-700 hover:to-${course.color}-800 text-white font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center`}
+                      >
+                        Enroll Now
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </button>
+                    </div>
                   </div>
                 </motion.div>
               );
@@ -574,6 +712,143 @@ const SpecializedCoursesLandingPage = () => {
         </div>
       </section>
       </AnimatedBackground>
+
+      {/* Course Details Modal */}
+      {courseDetailsModal.isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-2xl p-6 max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+          >
+            {/* Modal Header */}
+            <div className="flex items-start justify-between mb-6 border-b border-slate-200 pb-4">
+              <div>
+                <h3 className="text-2xl font-bold text-slate-800 mb-2">
+                  {courseDetailsModal.course?.title}
+                </h3>
+                <p className="text-slate-600">
+                  {courseDetailsModal.course?.description}
+                </p>
+              </div>
+              <button
+                onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Left Column - Course Details */}
+              <div className="space-y-6">
+                {/* Course Highlights */}
+                <div>
+                  <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <BookOpen size={18} className="text-blue-600" />
+                    Course Highlights
+                  </h4>
+                  <ul className="space-y-2">
+                    {courseDetailsModal.course?.highlights?.map((highlight, index) => (
+                      <li key={index} className="flex items-start gap-2 text-slate-700">
+                        <ArrowRight size={14} className="text-blue-600 mt-1 flex-shrink-0" />
+                        {highlight}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Prerequisites */}
+                {courseDetailsModal.course?.prerequisites && (
+                  <div>
+                    <h4 className="font-semibold text-slate-800 mb-3">Prerequisites</h4>
+                    <ul className="space-y-2">
+                      {courseDetailsModal.course.prerequisites.map((prereq, index) => (
+                        <li key={index} className="flex items-start gap-2 text-slate-700">
+                          <ArrowRight size={14} className="text-orange-600 mt-1 flex-shrink-0" />
+                          {prereq}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Career Outcomes */}
+                {courseDetailsModal.course?.careerOutcomes && (
+                  <div>
+                    <h4 className="font-semibold text-slate-800 mb-3">Career Outcomes</h4>
+                    <ul className="space-y-2">
+                      {courseDetailsModal.course.careerOutcomes.map((outcome, index) => (
+                        <li key={index} className="flex items-start gap-2 text-slate-700">
+                          <ArrowRight size={14} className="text-green-600 mt-1 flex-shrink-0" />
+                          {outcome}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column - Curriculum */}
+              <div>
+                <h4 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                  <Play size={18} className="text-blue-600" />
+                  Curriculum
+                </h4>
+                <div className="space-y-3">
+                  {courseDetailsModal.course?.curriculum?.map((module, index) => (
+                    <div key={index} className="border border-slate-200 rounded-lg p-4">
+                      <h5 className="font-medium text-slate-800 mb-2">
+                        Module {index + 1}: {module.title}
+                      </h5>
+                      <ul className="space-y-1">
+                        {module.topics.map((topic, topicIndex) => (
+                          <li key={topicIndex} className="text-sm text-slate-600 flex items-start gap-2">
+                            <ArrowRight size={12} className="text-slate-400 mt-1 flex-shrink-0" />
+                            {topic}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-4 justify-between items-center">
+              <div className="text-center sm:text-left">
+                <div className="text-2xl font-bold text-blue-600">
+                  {(() => {
+                    const dynamicPricing = getPricing(courseDetailsModal.course?.title);
+                    return dynamicPricing ? dynamicPricing.finalPrice : courseDetailsModal.course?.price;
+                  })()}
+                </div>
+                <div className="text-sm text-slate-600">Duration: {courseDetailsModal.course?.duration}</div>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setCourseDetailsModal({ isOpen: false, course: null });
+                  handleEnrollment(courseDetailsModal.course);
+                }}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300"
+              >
+                Enroll Now
+              </motion.button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* Enrollment Modal */}
       <EnhancedEnrollmentModal
