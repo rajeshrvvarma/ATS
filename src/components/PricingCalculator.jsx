@@ -154,7 +154,7 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter GB"
-            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
             min="1"
             max="2000"
           />
@@ -174,7 +174,7 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter student count"
-            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
             min="1"
             max="10000"
           />
@@ -194,7 +194,7 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter months"
-            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
             min="1"
             max="24"
           />
@@ -214,7 +214,7 @@ const PricingCalculator = () => {
               }
             }}
             placeholder="Enter percentage"
-            className="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white placeholder-gray-400"
             min="10"
             max="100"
           />
