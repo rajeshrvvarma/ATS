@@ -25,6 +25,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../config/firebase.js';
 import { generateGeminiResponse } from '../api/gemini.js';
+import { getDocsWithIndexFallback } from '../services/firestoreIndexGuard.js';
 
 // VAPID Key for FCM (you'll need to generate this in Firebase Console)
 const VAPID_KEY = import.meta.env.VITE_FIREBASE_VAPID_KEY || 'your-vapid-key-here';
@@ -78,7 +79,6 @@ class NotificationService {
 
       // Set up message listener for foreground messages
       this.setupForegroundMessageListener();
-    import { getDocsWithIndexFallback } from '@/services/firestoreIndexGuard.js';
 
       console.log('🔔 Notification Service initialized successfully');
     } catch (error) {
