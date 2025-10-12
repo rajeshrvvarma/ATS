@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ArrowLeft, Trophy, Award, Download, Play, FileText, Brain } from 'lucide-react';
+import { ArrowLeft, Trophy, Award, Download, Play, FileText, Brain, Lock, UserPlus } from 'lucide-react';
 import VideoCourse from '@/components/VideoCourse';
 import TranscriptManager from '@/components/TranscriptManager';
 import AIContentDashboard from '@/components/ai/AIContentDashboard';
 import { loadCourses } from '@/services/courseService.js';
 import { useToast } from '@/context/ToastContext.jsx';
+import { useAuth } from '@/context/AuthContext.jsx';
 
 /**
  * LearningManagementSystemPage - Main page for comprehensive learning management
  * Displays available courses, manages course enrollment, and provides LMS functionality
  */
 export default function LearningManagementSystemPage({ onNavigate }) {
+  const { user } = useAuth();
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [completedCourses, setCompletedCourses] = useState(new Set());
   const [list, setList] = useState(loadCourses());
@@ -50,10 +52,53 @@ export default function LearningManagementSystemPage({ onNavigate }) {
             Back to Courses
           </button>
           
-          <VideoCourse 
-            course={course} 
-            onCourseComplete={handleCourseComplete}
-          />
+          {user ? (
+            <VideoCourse 
+              course={course} 
+              onCourseComplete={handleCourseComplete}
+            />
+          ) : (
+            <div className="bg-slate-800 rounded-lg p-8 text-center">
+              <div className="mb-6">
+                <Lock className="w-16 h-16 text-slate-400 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-white mb-2">{course?.title}</h2>
+                <p className="text-slate-400 mb-4">{course?.description}</p>
+                <div className="text-sm text-slate-500 mb-6">
+                  Duration: {course?.duration} | Level: {course?.level || 'Intermediate'}
+                </div>
+              </div>
+              
+              <div className="bg-slate-900 rounded-lg p-6 mb-6">
+                <h3 className="text-lg font-semibold text-white mb-3">Course Preview</h3>
+                <p className="text-slate-400 mb-4">
+                  This course includes comprehensive video lessons, hands-on labs, and downloadable resources.
+                  Sign in to access the full content.
+                </p>
+                <div className="text-left text-sm text-slate-500">
+                  <p>✅ Expert-led video tutorials</p>
+                  <p>✅ Practical exercises and labs</p>
+                  <p>✅ Downloadable resources</p>
+                  <p>✅ Progress tracking</p>
+                  <p>✅ Certificate upon completion</p>
+                </div>
+              </div>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="w-full py-3 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
+                >
+                  Sign In to Start Learning
+                </button>
+                <button
+                  onClick={() => onNavigate('enroll')}
+                  className="w-full py-3 px-6 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors"
+                >
+                  Enroll Now
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -67,30 +112,83 @@ export default function LearningManagementSystemPage({ onNavigate }) {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-4 mb-6">
             <h1 className="text-4xl font-bold text-white">Learning Portal - Video Library</h1>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowTranscriptManager(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
-              >
-                <FileText className="w-4 h-4" />
-                Manage Transcripts
-              </button>
-              <button
-                onClick={() => setShowAIDashboard(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
-              >
-                <Brain className="w-4 h-4" />
-                AI Content Dashboard
-              </button>
+            {user && user.role === 'admin' && (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setShowTranscriptManager(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                >
+                  <FileText className="w-4 h-4" />
+                  Manage Transcripts
+                </button>
+                <button
+                  onClick={() => setShowAIDashboard(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm"
+                >
+                  <Brain className="w-4 h-4" />
+                  AI Content Dashboard
+                </button>
+              </div>
+            )}
+          </div>
+          {user ? (
+            <>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
+                Access your enrolled courses and our complete video library. Watch lessons, download materials, and learn at your own pace.
+              </p>
+              <p className="text-sm text-slate-400 max-w-2xl mx-auto">
+                💡 Track your progress and manage enrollments in your <button onClick={() => onNavigate('dashboard')} className="text-blue-400 hover:text-blue-300 underline">Student Dashboard</button>
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
+                Explore our comprehensive cybersecurity course catalog. See course previews and what you'll learn.
+              </p>
+              <div className="flex items-center justify-center gap-4 text-sm text-slate-400 max-w-2xl mx-auto">
+                <div className="flex items-center gap-2">
+                  <Lock className="w-4 h-4" />
+                  <span>Full access requires enrollment</span>
+                </div>
+                <button 
+                  onClick={() => onNavigate('login')}
+                  className="flex items-center gap-2 text-blue-400 hover:text-blue-300"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  <span>Sign in to access</span>
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Preview Mode Banner for Non-Authenticated Users */}
+        {!user && (
+          <div className="max-w-4xl mx-auto mb-8">
+            <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg p-6">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-white mb-2">🔍 Preview Mode</h3>
+                <p className="text-slate-300 mb-4">
+                  You're viewing course previews. Sign in or enroll to access full video content, labs, and resources.
+                </p>
+                <div className="flex items-center justify-center gap-4">
+                  <button
+                    onClick={() => onNavigate('login')}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => onNavigate('enroll')}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Enroll Now
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-4">
-            Access our complete video library and course resources. Watch lessons, download materials, and learn at your own pace.
-          </p>
-          <p className="text-sm text-slate-400 max-w-2xl mx-auto">
-            💡 Track your progress and manage enrollments in your <button onClick={() => onNavigate('dashboard')} className="text-blue-400 hover:text-blue-300 underline">Student Dashboard</button>
-          </p>
-        </div>
+        )}
 
         {/* Course Grid */}
         <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
@@ -145,18 +243,37 @@ export default function LearningManagementSystemPage({ onNavigate }) {
                   </div>
 
                   {/* Action Button */}
-                  <button
-                    onClick={() => setSelectedCourse(course.id)}
-                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
-                      isCompleted
-                        ? 'bg-green-600 text-white hover:bg-green-700'
-                        : isEnrolled
-                          ? 'bg-slate-700 text-white hover:bg-slate-600'
-                          : 'bg-sky-600 text-white hover:bg-sky-700'
-                    }`}
-                  >
-                    {isCompleted ? 'Review Course' : isEnrolled ? 'Continue Learning' : 'Start Learning'}
-                  </button>
+                  {user ? (
+                    <button
+                      onClick={() => setSelectedCourse(course.id)}
+                      className={`w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
+                        isCompleted
+                          ? 'bg-green-600 text-white hover:bg-green-700'
+                          : isEnrolled
+                            ? 'bg-slate-700 text-white hover:bg-slate-600'
+                            : 'bg-sky-600 text-white hover:bg-sky-700'
+                      }`}
+                    >
+                      {isCompleted ? 'Review Course' : isEnrolled ? 'Continue Learning' : 'Start Learning'}
+                    </button>
+                  ) : (
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => setSelectedCourse(course.id)}
+                        className="w-full py-3 px-6 rounded-lg font-semibold transition-all duration-300 bg-slate-700 text-white hover:bg-slate-600 flex items-center justify-center gap-2"
+                      >
+                        <Play className="w-4 h-4" />
+                        Preview Course
+                      </button>
+                      <button
+                        onClick={() => onNavigate('login')}
+                        className="w-full py-2 px-6 rounded-lg font-semibold transition-all duration-300 bg-blue-600 text-white hover:bg-blue-700 flex items-center justify-center gap-2 text-sm"
+                      >
+                        <Lock className="w-3 h-3" />
+                        Sign in for Full Access
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             );
