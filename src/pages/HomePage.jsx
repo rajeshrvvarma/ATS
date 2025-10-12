@@ -9,66 +9,88 @@ import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
-// Hero Section using shared AnimatedBackground
+// Hero Section updated to match backup's first section below header
 const HeroSection = ({ onNavigate }) => {
+    const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+
     return (
-        <AnimatedBackground variant="programs" intensity="high" speedMultiplier={1.25} enableSquares enablePlus className="py-20">
-            <section className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center max-w-4xl mx-auto"
-                >
-                    <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
-                        Launch your cybersecurity and tech career
-                    </h1>
-                    <p className="text-lg md:text-xl text-slate-300 mb-10">
-                        Hands-on programs, expert mentors, and job-focused training from foundation to elite levels.
-                    </p>
+        <>
+            <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+            <AnimatedBackground variant="default" className="min-h-screen flex items-center justify-center">
+                <section id="home" className="container mx-auto px-6 text-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                            Master{' '}
+                            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-red-500 bg-clip-text text-transparent">
+                                Cybersecurity
+                            </span>
+                            <br />
+                            <span className="text-3xl md:text-5xl text-slate-300">Launch Your Career</span>
+                        </h1>
 
-                    {/* Key Stats */}
-                    <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-10 text-center">
-                        <div className="flex items-center gap-2 bg-slate-800/50 px-5 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                            <Users className="w-5 h-5 text-blue-400" />
-                            <span className="text-white font-semibold">1000+ Students</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-slate-800/50 px-5 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                            <TrendingUp className="w-5 h-5 text-emerald-400" />
-                            <span className="text-white font-semibold">85% Placement</span>
-                        </div>
-                        <div className="flex items-center gap-2 bg-slate-800/50 px-5 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                            <Star className="w-5 h-5 text-yellow-400" />
-                            <span className="text-white font-semibold">4.8/5 Rating</span>
-                        </div>
-                    </div>
+                        <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+                            From <strong className="text-blue-400">Beginner Bootcamps</strong> to <strong className="text-red-400">Elite Programs</strong> -
+                            Choose your cybersecurity path and join thousands of successful graduates.
+                        </p>
 
-                    {/* CTAs */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })}
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-2"
+                        <div className="flex flex-wrap justify-center gap-8 mb-12 text-center">
+                            <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                                <Users className="w-5 h-5 text-blue-400" />
+                                <span className="text-white font-semibold">1000+ Students Enrolled</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                                <TrendingUp className="w-5 h-5 text-green-400" />
+                                <span className="text-white font-semibold">85% Job Placement</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                                <Star className="w-5 h-5 text-yellow-400" />
+                                <span className="text-white font-semibold">4.8/5 Student Rating</span>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })}
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-2"
+                            >
+                                <BookOpen className="w-5 h-5" />
+                                Explore All Programs
+                                <ArrowRight className="w-5 h-5" />
+                            </motion.button>
+
+                            <motion.button
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                onClick={() => setIsAdvisorOpen(true)}
+                                className="bg-slate-700/80 text-white font-semibold px-8 py-4 rounded-lg border border-slate-600 hover:bg-slate-600 transition-all duration-300 flex items-center gap-2"
+                            >
+                                <Sparkles className="w-5 h-5" />
+                                Get AI Career Guidance
+                            </motion.button>
+                        </div>
+
+                        <motion.div
+                            animate={{ y: [0, 10, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="mt-16"
                         >
-                            <BookOpen className="w-5 h-5" />
-                            Explore Programs
-                            <ArrowRight className="w-5 h-5" />
-                        </motion.button>
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => onNavigate('enroll')}
-                            className="bg-slate-700/80 text-white font-semibold px-8 py-4 rounded-lg border border-slate-600 hover:bg-slate-600 transition-all duration-300 flex items-center gap-2"
-                        >
-                            <Sparkles className="w-5 h-5" />
-                            Talk to an Advisor
-                        </motion.button>
-                    </div>
-                </motion.div>
-            </section>
-        </AnimatedBackground>
+                            <div className="flex flex-col items-center text-slate-400">
+                                <span className="text-sm mb-2">Discover Programs</span>
+                                <div className="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center">
+                                    <div className="w-1 h-3 bg-slate-400 rounded-full mt-2"></div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                </section>
+            </AnimatedBackground>
+        </>
     );
 };
 
