@@ -7,33 +7,57 @@ const PricingCalculator = () => {
   const [students, setStudents] = useState(100);
   const [months, setMonths] = useState(3);
   const [contentAccessPercentage, setContentAccessPercentage] = useState(70);
+  const [cloudProvider, setCloudProvider] = useState('google');
   const [costs, setCosts] = useState({});
 
-  // Google Cloud Storage + CDN pricing (Global)
-  const STORAGE_RATE_PER_GB_MONTH = 0.020; // USD
-  const DATA_TRANSFER_RATE_PER_GB = 0.08; // USD
-  const REQUEST_RATE_PER_1000 = 0.0004; // USD
+  // Cloud provider pricing rates (USD)
+  const pricingRates = {
+    google: {
+      name: 'Google Cloud Storage',
+      storage: 0.020, // USD per GB per month
+      dataTransfer: 0.08, // USD per GB
+      requests: 0.0004, // USD per 1000 requests
+      color: 'blue'
+    },
+    aws: {
+      name: 'Amazon S3 + CloudFront',
+      storage: 0.023, // USD per GB per month (S3 Standard)
+      dataTransfer: 0.085, // USD per GB (CloudFront)
+      requests: 0.0005, // USD per 1000 requests
+      color: 'orange'
+    },
+    azure: {
+      name: 'Azure Blob Storage + CDN',
+      storage: 0.018, // USD per GB per month (Hot tier)
+      dataTransfer: 0.087, // USD per GB (Azure CDN)
+      requests: 0.00036, // USD per 1000 requests
+      color: 'cyan'
+    }
+  };
+
   const USD_TO_INR = 84; // Current exchange rate
 
   useEffect(() => {
     calculateCosts();
-  }, [contentGB, students, months, contentAccessPercentage]);
+  }, [contentGB, students, months, contentAccessPercentage, cloudProvider]);
 
   const calculateCosts = () => {
+    const rates = pricingRates[cloudProvider];
+    
     // Storage costs
     const totalStorageGBMonths = contentGB * months;
-    const storageCostUSD = totalStorageGBMonths * STORAGE_RATE_PER_GB_MONTH;
+    const storageCostUSD = totalStorageGBMonths * rates.storage;
     const storageCostINR = storageCostUSD * USD_TO_INR;
 
     // Data transfer costs
     const contentPerStudent = (contentGB * contentAccessPercentage) / 100;
     const totalDataTransferGB = students * contentPerStudent;
-    const dataTransferCostUSD = totalDataTransferGB * DATA_TRANSFER_RATE_PER_GB;
+    const dataTransferCostUSD = totalDataTransferGB * rates.dataTransfer;
     const dataTransferCostINR = dataTransferCostUSD * USD_TO_INR;
 
     // Request costs (assuming 100 requests per GB accessed)
     const totalRequests = totalDataTransferGB * 100;
-    const requestCostUSD = (totalRequests / 1000) * REQUEST_RATE_PER_1000;
+    const requestCostUSD = (totalRequests / 1000) * rates.requests;
     const requestCostINR = requestCostUSD * USD_TO_INR;
 
     // Total costs
@@ -103,9 +127,10 @@ const PricingCalculator = () => {
   ];
 
   const calculateScenarioCost = (contentGB, students, months = 3, accessPercent = 70) => {
-    const storageCost = contentGB * months * STORAGE_RATE_PER_GB_MONTH * USD_TO_INR;
-    const dataTransferCost = students * (contentGB * accessPercent / 100) * DATA_TRANSFER_RATE_PER_GB * USD_TO_INR;
-    const requestCost = students * (contentGB * accessPercent / 100) * 100 * (REQUEST_RATE_PER_1000 / 1000) * USD_TO_INR;
+    const rates = pricingRates[cloudProvider];
+    const storageCost = contentGB * months * rates.storage * USD_TO_INR;
+    const dataTransferCost = students * (contentGB * accessPercent / 100) * rates.dataTransfer * USD_TO_INR;
+    const requestCost = students * (contentGB * accessPercent / 100) * 100 * (rates.requests / 1000) * USD_TO_INR;
     return Math.round(storageCost + dataTransferCost + requestCost);
   };
 
@@ -139,7 +164,22 @@ const PricingCalculator = () => {
       </div>
 
       {/* Input Controls */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Cloud Provider
+          </label>
+          <select
+            value={cloudProvider}
+            onChange={(e) => setCloudProvider(e.target.value)}
+            className="w-full px-4 py-3 text-base text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+          >
+            <option value="google">Google Cloud</option>
+            <option value="aws">Amazon AWS</option>
+            <option value="azure">Microsoft Azure</option>
+          </select>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Content Size (GB)
@@ -229,6 +269,16 @@ const PricingCalculator = () => {
           animate={{ opacity: 1, y: 0 }}
           className="space-y-6"
         >
+          {/* Provider Info */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full bg-${pricingRates[cloudProvider].color}-500`}></div>
+              <span className="font-medium text-gray-800">
+                Pricing for: {pricingRates[cloudProvider].name}
+              </span>
+            </div>
+          </div>
+
           {/* Total Cost Summary */}
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6">
             <div className="grid md:grid-cols-3 gap-4">
@@ -346,6 +396,66 @@ const PricingCalculator = () => {
             </div>
             <div className="bg-gray-50 px-4 py-2 text-xs text-gray-600">
               💡 Click any cell to select that configuration. Current selection is highlighted in blue.
+            </div>
+          </div>
+
+          {/* Provider Comparison */}
+          <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+              <h3 className="font-semibold text-gray-800">Provider Comparison (Current Configuration)</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Provider</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Storage Rate</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Data Transfer Rate</th>
+                    <th className="px-4 py-3 text-right text-sm font-medium text-gray-700">Total Cost</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {Object.entries(pricingRates).map(([key, provider]) => {
+                    // Calculate cost for this provider
+                    const totalStorageGBMonths = contentGB * months;
+                    const contentPerStudent = (contentGB * contentAccessPercentage) / 100;
+                    const totalDataTransferGB = students * contentPerStudent;
+                    const totalRequests = totalDataTransferGB * 100;
+                    
+                    const storageCostUSD = totalStorageGBMonths * provider.storage;
+                    const dataTransferCostUSD = totalDataTransferGB * provider.dataTransfer;
+                    const requestCostUSD = (totalRequests / 1000) * provider.requests;
+                    const totalCostINR = (storageCostUSD + dataTransferCostUSD + requestCostUSD) * USD_TO_INR;
+                    
+                    return (
+                      <tr key={key} className={key === cloudProvider ? 'bg-blue-50' : ''}>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            <div className={`w-3 h-3 rounded-full bg-${provider.color}-500`}></div>
+                            <span className={`font-medium ${key === cloudProvider ? 'text-blue-800' : 'text-gray-800'}`}>
+                              {provider.name}
+                            </span>
+                            {key === cloudProvider && (
+                              <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Selected</span>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 text-right text-sm text-gray-600">
+                          ${provider.storage}/GB/month
+                        </td>
+                        <td className="px-4 py-3 text-right text-sm text-gray-600">
+                          ${provider.dataTransfer}/GB
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <span className={`font-semibold ${key === cloudProvider ? 'text-blue-800' : 'text-gray-800'}`}>
+                            ₹{Math.round(totalCostINR).toLocaleString('en-IN')}
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
 
