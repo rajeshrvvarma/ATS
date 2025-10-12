@@ -89,10 +89,14 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
         </AnimatedBackground>
       </section>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {children}
-      </main>
+      {/* Main Content with unified animated background */}
+      <div className="relative">
+        <AnimatedBackground variant="default" uniformCount={30} minHeight={0} className="">
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {children}
+          </main>
+        </AnimatedBackground>
+      </div>
     </div>
   );
 }
