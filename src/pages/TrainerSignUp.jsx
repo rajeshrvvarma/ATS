@@ -18,7 +18,7 @@ export default function TrainerSignUp({ onNavigate }) {
         className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden"
       >
         {/* Left: Content */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-400 via-blue-200 to-green-200 animate-gradient-x">
+  <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-600 animate-gradient-x">
           <h2 className="text-4xl font-bold text-blue-800 mb-4 drop-shadow">Become a Trainer at Agnidhra Technologies</h2>
           <p className="text-lg text-slate-700 mb-6">
             Join our mission to empower learners with cutting-edge skills in cybersecurity, technology, and more. As a trainer, you'll:
@@ -42,19 +42,19 @@ export default function TrainerSignUp({ onNavigate }) {
           <form className="space-y-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-              <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Enter your full name" required />
+              <input type="text" className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-emerald-600" placeholder="Enter your full name" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-              <input type="email" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="Enter your email" required />
+              <input type="email" className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-emerald-600" placeholder="Enter your email" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Expertise / Subject</label>
-              <input type="text" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="e.g. Cybersecurity, Data Science" required />
+              <input type="text" className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-emerald-600" placeholder="e.g. Cybersecurity, Data Science" required />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">LinkedIn Profile (optional)</label>
-              <input type="url" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500" placeholder="https://linkedin.com/in/yourprofile" />
+              <input type="url" className="w-full px-4 py-2 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:border-emerald-600" placeholder="https://linkedin.com/in/yourprofile" />
             </div>
             <div className="pt-2">
               <button

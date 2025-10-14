@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { Shield, AlertCircle } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
 import { loginWithGoogle } from '@/services/firebaseAuthService';
@@ -76,7 +77,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
         className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden"
       >
         {/* Left: Content */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-400 via-blue-200 to-green-200 animate-gradient-x">
+  <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-600 animate-gradient-x">
           <div className="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center mb-6">
             <Shield className="w-8 h-8 text-white" />
           </div>
@@ -120,7 +121,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
           </div>
         </div>
         {/* Right: Login Form */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-white border-l border-slate-100">
+  <div className="flex-1 p-8 flex flex-col justify-center bg-white border-l border-slate-100">
           <div className="max-w-sm mx-auto w-full">
             <h3 className="text-2xl font-bold text-blue-700 mb-2 text-center">Sign In</h3>
             <p className="text-slate-600 text-center mb-6">Access your learning dashboard</p>
