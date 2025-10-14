@@ -1,10 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { modules } from '@/data/modules.js';
 
 const ModuleCatalog = () => {
   const [selectedModule, setSelectedModule] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('All');
+
+  // On mount, read query parameters for filter & category
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const filter = params.get('filter');
+      const category = params.get('category');
+      if (filter) setSearchTerm(filter);
+      if (category && category !== 'All') setSelectedCategory(category);
+    }
+  }, []);
 
   // Get unique categories
   const categories = ['All', ...new Set(modules.map(mod => mod.category))];
@@ -17,7 +28,7 @@ const ModuleCatalog = () => {
     return matchesSearch && matchesCategory;
   });
   return (
-    <div className="min-h-screen bg-slate-900 py-12">
+    <div className="min-h-screen bg-gradient-blue py-12">
       <div className="container mx-auto px-6">
         <h1 className="text-4xl font-bold text-white mb-8 text-center">Complete Technology Module Catalog ({modules.length} Modules)</h1>
         
