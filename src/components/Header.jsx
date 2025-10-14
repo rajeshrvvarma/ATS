@@ -194,27 +194,7 @@ export default function Header({ onNavigate, currentPage }) {
                             >
                                 Upcoming Batches
                             </button>
-                            <button
-                                onClick={() => scrollToSection('about')}
-                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
-                            >
-                                About Us
-                            </button>
-                            {/* Only show Learning Portal for enrolled students */}
-                            {user && user.enrolledCourses && user.enrolledCourses.length > 0 && (
-                                <button
-                                    onClick={() => onNavigate('dashboard')}
-                                    className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
-                                >
-                                    My Learning
-                                </button>
-                            )}
-                            <button
-                                onClick={() => onNavigate('contact')}
-                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
-                            >
-                                Contact Us
-                            </button>
+                            {/* About Us and Contact Us links removed */}
                         </div>
                     </nav>
 
@@ -229,12 +209,20 @@ export default function Header({ onNavigate, currentPage }) {
                                 onLogout={logout} 
                             />
                         ) : (
-                            <button
-                                onClick={() => onNavigate('login')}
-                                className="bg-slate-800 px-4 py-2 rounded-lg text-white font-semibold hover:bg-slate-700 transition-colors"
-                            >
-                                Login
-                            </button>
+                            <>
+                                <button
+                                    onClick={() => onNavigate('trainer-signup')}
+                                    className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg"
+                                >
+                                    Trainer Sign Up
+                                </button>
+                                <button
+                                    onClick={() => onNavigate('login')}
+                                    className="bg-slate-800 px-4 py-2 rounded-lg text-white font-semibold hover:bg-slate-700 transition-colors"
+                                >
+                                    Login
+                                </button>
+                            </>
                         )}
                     </div>
                 </div>
