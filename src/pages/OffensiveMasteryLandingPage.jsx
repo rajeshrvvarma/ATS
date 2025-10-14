@@ -6,8 +6,11 @@ import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
+import { modules } from '@/data/modules.js';
+import { useNavigate } from 'react-router-dom';
 
 const OffensiveMasteryLandingPage = () => {
+  const navigate = useNavigate();
   const [currentEnrolled, setCurrentEnrolled] = useState(4); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
@@ -17,6 +20,38 @@ const OffensiveMasteryLandingPage = () => {
   const coursePricingData = useCoursePricing();
   const coursePricing = coursePricingData?.pricing || {};
   const pricingLoading = coursePricingData?.loading || false;
+
+  // --- Hybrid Approach: Module mapping for 2-month offensive security course ---
+  // Course to modules mapping for Offensive Security Mastery (2-Month Program)
+  const courseModulesMapping = {
+    'Offensive Security Mastery': [
+      { id: 'mod_70', title: 'Ethical Hacking Foundation', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_71', title: 'Penetration Testing Methodology', price: 2499, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_72', title: 'Web Application Security', price: 2299, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_73', title: 'Wireless & Mobile Security', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_74', title: 'Network Security Fundamentals', price: 1299, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_79', title: 'Malware Analysis Fundamentals', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_80', title: 'Reverse Engineering', price: 2199, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_81', title: 'Advanced Threat Detection', price: 1899, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_89', title: 'Incident Response Planning', price: 1899, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_91', title: 'Threat Intelligence', price: 1799, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_92', title: 'Behavioral Analysis', price: 1699, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_26', title: 'Linux Administration', price: 1299, category: 'DevOps & Infrastructure' }
+    ]
+  };
+
+  // Helper function to get modules for the course
+  const getCourseModules = () => {
+    return courseModulesMapping['Offensive Security Mastery'] || [];
+  };
+
+  // Helper function to calculate total module price and adjusted course price
+  const getModulePricing = () => {
+    const courseModules = getCourseModules();
+    const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
+    const adjustedCoursePrice = Math.round(totalModulePrice * 0.65); // 35% discount for course bundle
+    return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
+  };
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -311,6 +346,70 @@ const OffensiveMasteryLandingPage = () => {
               <p className="text-gray-200">Direct guidance from senior pentesters and red team leaders.</p>
             </div>
           </div>
+        </div>
+      </AnimatedBackground>
+
+      {/* --- Hybrid Approach: Modular Integration --- */}
+      <AnimatedBackground variant="offensive" className="py-12">
+        <div className="container mx-auto px-6">
+          <div className="bg-red-900/80 border-l-4 border-red-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
+            <div>
+              <div className="text-lg font-bold text-red-200 mb-1">Enhanced Learning Experience!</div>
+              <div className="text-red-100 text-base">Our 2-month Offensive Security Mastery program now shows you exactly which modules are included. You can enroll in the complete program or customize by selecting individual modules.</div>
+            </div>
+            <div className="mt-4 md:mt-0 flex gap-3">
+              <button
+                className="bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-red-600 hover:to-orange-600 transition-all"
+                onClick={() => navigate('/module-catalog')}
+              >
+                Browse All Modules
+              </button>
+              <button
+                className="bg-gradient-to-r from-green-500 to-red-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-red-600 transition-all"
+                onClick={() => navigate('/course-builder')}
+              >
+                Build Custom Path
+              </button>
+            </div>
+          </div>
+          
+          {/* Course Modules */}
+          {(() => {
+            const courseModules = getCourseModules();
+            const modulePricing = getModulePricing();
+            
+            return (
+              <div className="bg-slate-900 rounded-xl p-6 border border-red-700">
+                <h3 className="text-2xl font-semibold text-red-300 mb-4 flex items-center gap-2">
+                  <span className="text-2xl">🧩</span> Included Modules ({courseModules.length})
+                </h3>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                  {courseModules.map((module, idx) => (
+                    <div key={idx} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-red-500 transition-all">
+                      <div className="font-bold text-white text-lg mb-1">{module.title}</div>
+                      <div className="text-slate-400 text-sm mb-1">{module.category}</div>
+                      <div className="text-green-400 font-bold">₹{module.price}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="bg-red-900/30 rounded-lg p-4 border border-red-600">
+                  <div className="flex justify-between items-center text-lg mb-2">
+                    <span className="text-gray-300">Individual Module Total:</span>
+                    <span className="text-gray-400 line-through">₹{modulePricing.totalModulePrice}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-xl mb-3">
+                    <span className="text-red-300 font-bold">2-Month Program Bundle:</span>
+                    <span className="text-green-400 font-bold">₹{modulePricing.adjustedCoursePrice}</span>
+                  </div>
+                  <div className="text-center">
+                    <span className="text-lg text-green-300 bg-green-900/30 px-4 py-2 rounded-full">
+                      Save ₹{modulePricing.totalModulePrice - modulePricing.adjustedCoursePrice} (35% off)
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </AnimatedBackground>
 

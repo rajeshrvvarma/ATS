@@ -34,6 +34,108 @@ const TechnologyTrainingLandingPage = () => {
     mod.category === 'Software Testing'
   );
 
+  // Course to modules mapping - showing which modules are included in each course
+  const courseModulesMapping = {
+    'MERN Stack Developer': [
+      { id: 'mod_1', title: 'JavaScript ES6+', price: 1499, category: 'Programming Foundation' },
+      { id: 'mod_7', title: 'React.js', price: 1999, category: 'Web Development Frontend' },
+      { id: 'mod_10', title: 'Node.js', price: 1799, category: 'Web Development Backend' },
+      { id: 'mod_13', title: 'MongoDB', price: 1599, category: 'Database Technologies' },
+      { id: 'mod_12', title: 'Express.js', price: 1299, category: 'Web Development Backend' }
+    ],
+    'Full Stack Python Developer': [
+      { id: 'mod_2', title: 'Python Programming', price: 1399, category: 'Programming Foundation' },
+      { id: 'mod_11', title: 'Django Framework', price: 1899, category: 'Web Development Backend' },
+      { id: 'mod_9', title: 'HTML5 & CSS3', price: 999, category: 'Web Development Frontend' },
+      { id: 'mod_14', title: 'PostgreSQL', price: 1499, category: 'Database Technologies' },
+      { id: 'mod_8', title: 'Bootstrap', price: 799, category: 'Web Development Frontend' }
+    ],
+    'Java Full Stack Developer': [
+      { id: 'mod_3', title: 'Java Programming', price: 1699, category: 'Programming Foundation' },
+      { id: 'mod_7', title: 'React.js', price: 1999, category: 'Web Development Frontend' },
+      { id: 'mod_15', title: 'Spring Boot', price: 2199, category: 'Web Development Backend' },
+      { id: 'mod_16', title: 'MySQL', price: 1399, category: 'Database Technologies' },
+      { id: 'mod_17', title: 'Hibernate', price: 1599, category: 'Database Technologies' }
+    ],
+    'AWS Cloud Architect': [
+      { id: 'mod_18', title: 'AWS Fundamentals', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_19', title: 'AWS Security Services', price: 1999, category: 'Cloud Platforms' },
+      { id: 'mod_23', title: 'Docker Fundamentals', price: 1399, category: 'DevOps & Infrastructure' },
+      { id: 'mod_24', title: 'Kubernetes', price: 1899, category: 'DevOps & Infrastructure' },
+      { id: 'mod_25', title: 'CI/CD Pipelines', price: 1599, category: 'DevOps & Infrastructure' }
+    ],
+    'DevOps Engineer Bootcamp': [
+      { id: 'mod_23', title: 'Docker Fundamentals', price: 1399, category: 'DevOps & Infrastructure' },
+      { id: 'mod_24', title: 'Kubernetes', price: 1899, category: 'DevOps & Infrastructure' },
+      { id: 'mod_25', title: 'CI/CD Pipelines', price: 1599, category: 'DevOps & Infrastructure' },
+      { id: 'mod_26', title: 'Linux Administration', price: 1299, category: 'DevOps & Infrastructure' },
+      { id: 'mod_27', title: 'Terraform', price: 1699, category: 'DevOps & Infrastructure' }
+    ],
+    'Azure Cloud Solutions': [
+      { id: 'mod_20', title: 'Microsoft Azure Fundamentals', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_21', title: 'Azure Security Center', price: 1999, category: 'Cloud Platforms' },
+      { id: 'mod_23', title: 'Docker Fundamentals', price: 1399, category: 'DevOps & Infrastructure' },
+      { id: 'mod_24', title: 'Kubernetes', price: 1899, category: 'DevOps & Infrastructure' }
+    ],
+    'Data Science with Python': [
+      { id: 'mod_2', title: 'Python Programming', price: 1399, category: 'Programming Foundation' },
+      { id: 'mod_28', title: 'Pandas & NumPy', price: 1599, category: 'Data Science & Analytics' },
+      { id: 'mod_29', title: 'Data Visualization', price: 1499, category: 'Data Science & Analytics' },
+      { id: 'mod_30', title: 'Machine Learning Basics', price: 1999, category: 'Data Science & Analytics' },
+      { id: 'mod_31', title: 'Statistical Analysis', price: 1699, category: 'Data Science & Analytics' }
+    ],
+    'AI & Machine Learning Engineer': [
+      { id: 'mod_2', title: 'Python Programming', price: 1399, category: 'Programming Foundation' },
+      { id: 'mod_32', title: 'TensorFlow', price: 2199, category: 'Artificial Intelligence' },
+      { id: 'mod_33', title: 'PyTorch', price: 2199, category: 'Artificial Intelligence' },
+      { id: 'mod_34', title: 'Deep Learning', price: 2499, category: 'Artificial Intelligence' },
+      { id: 'mod_35', title: 'Computer Vision', price: 2299, category: 'Artificial Intelligence' }
+    ],
+    'Business Intelligence Analyst': [
+      { id: 'mod_36', title: 'Power BI', price: 1699, category: 'Data Science & Analytics' },
+      { id: 'mod_37', title: 'Tableau', price: 1799, category: 'Data Science & Analytics' },
+      { id: 'mod_31', title: 'Statistical Analysis', price: 1699, category: 'Data Science & Analytics' },
+      { id: 'mod_38', title: 'SQL for Analytics', price: 1399, category: 'Database Technologies' }
+    ],
+    'Automation Testing Engineer': [
+      { id: 'mod_1', title: 'JavaScript ES6+', price: 1499, category: 'Programming Foundation' },
+      { id: 'mod_39', title: 'Selenium WebDriver', price: 1899, category: 'Software Testing' },
+      { id: 'mod_40', title: 'TestNG Framework', price: 1399, category: 'Software Testing' },
+      { id: 'mod_41', title: 'API Testing', price: 1599, category: 'Software Testing' }
+    ],
+    'Manual Testing Specialist': [
+      { id: 'mod_42', title: 'Software Testing Fundamentals', price: 1199, category: 'Software Testing' },
+      { id: 'mod_43', title: 'Test Case Design', price: 1399, category: 'Software Testing' },
+      { id: 'mod_44', title: 'Bug Tracking & Reporting', price: 1199, category: 'Software Testing' },
+      { id: 'mod_45', title: 'Agile Testing', price: 1299, category: 'Software Testing' }
+    ],
+    'React Native Developer': [
+      { id: 'mod_1', title: 'JavaScript ES6+', price: 1499, category: 'Programming Foundation' },
+      { id: 'mod_7', title: 'React.js', price: 1999, category: 'Web Development Frontend' },
+      { id: 'mod_46', title: 'React Native', price: 2199, category: 'Mobile Development' },
+      { id: 'mod_47', title: 'Mobile UI/UX', price: 1699, category: 'Mobile Development' }
+    ],
+    'Flutter App Developer': [
+      { id: 'mod_48', title: 'Dart Programming', price: 1399, category: 'Programming Foundation' },
+      { id: 'mod_49', title: 'Flutter Framework', price: 2199, category: 'Mobile Development' },
+      { id: 'mod_47', title: 'Mobile UI/UX', price: 1699, category: 'Mobile Development' },
+      { id: 'mod_50', title: 'Firebase Integration', price: 1599, category: 'Mobile Development' }
+    ]
+  };
+
+  // Helper function to get modules for a course
+  const getCourseModules = (courseTitle) => {
+    return courseModulesMapping[courseTitle] || [];
+  };
+
+  // Helper function to calculate total module price and adjusted course price
+  const getModulePricing = (courseTitle) => {
+    const courseModules = getCourseModules(courseTitle);
+    const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
+    const adjustedCoursePrice = Math.round(totalModulePrice * 0.70); // 30% discount for course bundle
+    return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
+  };
+
   // Mapping from course titles to centralized pricing IDs
   const titleToIdMap = {
     'MERN Stack Developer': 'mern-stack-developer',
@@ -854,8 +956,8 @@ const TechnologyTrainingLandingPage = () => {
         <div className="container mx-auto px-6">
           <div className="bg-blue-900/80 border-l-4 border-blue-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
             <div>
-              <div className="text-lg font-bold text-blue-200 mb-1">Now Modular!</div>
-              <div className="text-blue-100 text-base">Our technology training programs are now available as individual modules. Learn specific skills or build comprehensive expertise by combining modules.</div>
+              <div className="text-lg font-bold text-blue-200 mb-1">Enhanced Learning Experience!</div>
+              <div className="text-blue-100 text-base">Our predefined technology training programs now show you exactly which modules are included. You can enroll in complete programs or customize by selecting individual modules.</div>
             </div>
             <div className="mt-4 md:mt-0 flex gap-3">
               <button
@@ -869,32 +971,6 @@ const TechnologyTrainingLandingPage = () => {
                 onClick={() => navigate('/course-builder')}
               >
                 Build Custom Path
-              </button>
-            </div>
-          </div>
-          <div className="bg-slate-900 rounded-xl p-6 border border-blue-700">
-            <h3 className="text-2xl font-semibold text-blue-300 mb-4">Technology Modules Available</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {technologyModules.slice(0, 9).map(mod => (
-                <div key={mod.id} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-blue-500 transition-all">
-                  <div className="font-bold text-white text-lg mb-1">{mod.title}</div>
-                  <div className="text-slate-400 text-sm mb-1">{mod.category} • {mod.duration}</div>
-                  <div className="text-slate-300 text-sm mb-2">{mod.description.substring(0, 80)}...</div>
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {mod.learningPaths.slice(0, 2).map((path, i) => (
-                      <span key={i} className="bg-slate-700 text-blue-200 px-2 py-1 rounded-full text-xs">{path}</span>
-                    ))}
-                  </div>
-                  <div className="text-green-400 font-bold">₹{mod.price}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 text-center">
-              <button
-                className="text-blue-400 hover:text-blue-300 underline"
-                onClick={() => navigate('/module-catalog')}
-              >
-                View All {technologyModules.length} Technology Modules →
               </button>
             </div>
           </div>
@@ -990,6 +1066,44 @@ const TechnologyTrainingLandingPage = () => {
                     ))}
                   </div>
                 </div>
+
+                {/* Course Modules */}
+                {(() => {
+                  const courseModules = getCourseModules(program.title);
+                  const modulePricing = getModulePricing(program.title);
+                  
+                  if (courseModules.length > 0) {
+                    return (
+                      <div className="mb-4 bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                        <h4 className="font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                          <span className="text-sm">🧩</span> Included Modules ({courseModules.length})
+                        </h4>
+                        <div className="space-y-2 mb-3">
+                          {courseModules.map((module, idx) => (
+                            <div key={idx} className="flex justify-between items-center text-sm">
+                              <span className="text-gray-400">{module.title}</span>
+                              <span className="text-green-400 font-medium">₹{module.price}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="border-t border-slate-600 pt-2 flex justify-between items-center text-sm">
+                          <span className="text-gray-300">Individual Total:</span>
+                          <span className="text-gray-400 line-through">₹{modulePricing.totalModulePrice}</span>
+                        </div>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-blue-300 font-medium">Program Bundle:</span>
+                          <span className="text-green-400 font-bold">₹{modulePricing.adjustedCoursePrice}</span>
+                        </div>
+                        <div className="text-center mt-2">
+                          <span className="text-xs text-green-300 bg-green-900/30 px-2 py-1 rounded-full">
+                            Save ₹{modulePricing.totalModulePrice - modulePricing.adjustedCoursePrice} (30% off)
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
 
                 {/* Enrollment Progress */}
                 <div className="mb-4">
