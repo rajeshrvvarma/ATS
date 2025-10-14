@@ -33,17 +33,17 @@ export default defineConfig({
         },
         // PERFORMANCE FIX: Manual chunk splitting for better loading
         manualChunks: (id) => {
-          // Core React and React Router (split more granularly)
-          if (id.includes('react-router-dom')) {
-            return 'vendor-react-router';
+          // Group all React ecosystem packages into a single chunk
+          if (
+            id.includes('react') ||
+            id.includes('react-dom') ||
+            id.includes('react-router-dom') ||
+            id.includes('framer-motion') ||
+            id.includes('lucide-react') ||
+            id.includes('react-icons')
+          ) {
+            return 'vendor-react';
           }
-          if (id.includes('react-dom')) {
-            return 'vendor-react-dom';
-          }
-          if (id.includes('react') && !id.includes('react-')) {
-            return 'vendor-react-core';
-          }
-          
           // Firebase services (split into smaller chunks)
           if (id.includes('firebase/auth')) {
             return 'vendor-firebase-auth';
@@ -59,15 +59,7 @@ export default defineConfig({
           }
           
           // UI libraries (split by type)
-          if (id.includes('lucide-react')) {
-            return 'vendor-icons-lucide';
-          }
-          if (id.includes('react-icons')) {
-            return 'vendor-icons-react';
-          }
-          if (id.includes('framer-motion')) {
-            return 'vendor-animation';
-          }
+          // (Handled above in vendor-react)
           
           // Chart and visualization libraries (split further)
           if (id.includes('chart.js')) {
@@ -80,16 +72,7 @@ export default defineConfig({
             return 'vendor-pdf';
           }
           
-          // Split React ecosystem more granularly
-          if (id.includes('node_modules/react-router')) {
-            return 'vendor-react-router';
-          }
-          if (id.includes('node_modules/react-dom')) {
-            return 'vendor-react-dom';
-          }
-          if (id.includes('node_modules/react') && !id.includes('react-')) {
-            return 'vendor-react-core';
-          }
+          // Split React ecosystem more granularly (handled above)
           
           // AI services
           if (id.includes('@google/generative-ai') || id.includes('openai')) {
