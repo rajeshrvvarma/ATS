@@ -69,50 +69,63 @@ export default function LoginPage({ onNavigate, onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-100 flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-teal-900 flex items-center justify-center py-12 px-4 relative">
+      {/* Floating particles like homepage */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-2 h-2 bg-green-400 rounded-full top-10 left-10 animate-pulse"></div>
+        <div className="absolute w-1 h-1 bg-green-300 rounded-full top-32 left-32 animate-pulse delay-100"></div>
+        <div className="absolute w-3 h-3 bg-green-500 rounded-full top-64 right-20 animate-pulse delay-200"></div>
+        <div className="absolute w-1 h-1 bg-green-400 rounded-full bottom-32 left-20 animate-pulse delay-300"></div>
+        <div className="absolute w-2 h-2 bg-green-300 rounded-full bottom-10 right-40 animate-pulse delay-500"></div>
+      </div>
+      
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden"
+        className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden relative z-10"
       >
-        {/* Left: Content */}
-  <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-emerald-800 via-emerald-700 to-emerald-600 animate-gradient-x">
-          <div className="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center mb-6">
+        {/* Left: Content - Area 1: Dark green like homepage */}
+        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-slate-800 via-green-800 to-teal-800 relative">
+          {/* Small floating dots in the left section */}
+          <div className="absolute w-1 h-1 bg-green-400 rounded-full top-4 right-8 animate-pulse"></div>
+          <div className="absolute w-2 h-2 bg-green-300 rounded-full bottom-8 left-4 animate-pulse delay-200"></div>
+          
+          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-6">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-4xl font-bold text-blue-800 mb-4 drop-shadow">Welcome Back to Agnidhra Technologies</h2>
-          <p className="text-lg text-slate-700 mb-6">
+          <h2 className="text-4xl font-bold text-white mb-4 drop-shadow">Welcome Back to Agnidhra Technologies</h2>
+          <p className="text-lg text-green-100 mb-6">
             Continue your journey to become a cybersecurity expert. Access your personalized learning dashboard, track your progress, and unlock new courses in cybersecurity, technology, and more.
           </p>
           <div className="space-y-3 mb-6">
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+              <div className="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-slate-800">Industry-Ready Skills</h4>
-                <p className="text-slate-600 text-sm">Learn from real-world scenarios and industry best practices</p>
+                <h4 className="font-semibold text-white">Industry-Ready Skills</h4>
+                <p className="text-green-200 text-sm">Learn from real-world scenarios and industry best practices</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+              <div className="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-slate-800">Hands-On Learning</h4>
-                <p className="text-slate-600 text-sm">Practice with live labs, tools, and real security environments</p>
+                <h4 className="font-semibold text-white">Hands-On Learning</h4>
+                <p className="text-green-200 text-sm">Practice with live labs, tools, and real security environments</p>
               </div>
             </div>
             <div className="flex items-start space-x-3">
-              <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+              <div className="w-2 h-2 bg-green-400 rounded-full mt-2"></div>
               <div>
-                <h4 className="font-semibold text-slate-800">Career Growth</h4>
-                <p className="text-slate-600 text-sm">Join 1000+ students who've advanced their cybersecurity careers</p>
+                <h4 className="font-semibold text-white">Career Growth</h4>
+                <p className="text-green-200 text-sm">Join 1000+ students who've advanced their cybersecurity careers</p>
               </div>
             </div>
           </div>
-          <div className="bg-slate-100 border-l-4 border-blue-500 p-4 rounded">
-            <p className="text-slate-700 font-medium">"The only way to stay ahead in cybersecurity is to never stop learning."</p>
-            <p className="text-slate-500 text-sm mt-1">- Agnidhra Technologies</p>
+          <div className="bg-slate-700/50 border-l-4 border-green-400 p-4 rounded">
+            <p className="text-green-100 font-medium">"The only way to stay ahead in cybersecurity is to never stop learning."</p>
+            <p className="text-green-300 text-sm mt-1">- Agnidhra Technologies</p>
           </div>
-          <div className="mt-6 text-slate-600 text-sm">
+          <div className="mt-6 text-green-200 text-sm">
             <div className="flex items-center space-x-4 mb-2">
               <span className="font-semibold">🎯 1000+ Students Trained</span>
               <span className="font-semibold">🏆 Industry Experts</span>
@@ -120,14 +133,14 @@ export default function LoginPage({ onNavigate, onLogin }) {
             <p>Join the community that's shaping the future of cybersecurity</p>
           </div>
         </div>
-        {/* Right: Login Form */}
-  <div className="flex-1 p-8 flex flex-col justify-center bg-white border-l border-slate-100">
+        {/* Right: Login Form - Area 2 & 3: Light background with dark inputs like homepage */}
+        <div className="flex-1 p-8 flex flex-col justify-center bg-slate-50 border-l border-slate-200">
           <div className="max-w-sm mx-auto w-full">
-            <h3 className="text-2xl font-bold text-blue-700 mb-2 text-center">Sign In</h3>
+            <h3 className="text-2xl font-bold text-slate-800 mb-2 text-center">Sign In</h3>
             <p className="text-slate-600 text-center mb-6">Access your learning dashboard</p>
             {/* Error Message */}
             {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 mb-4">
+              <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-600 mb-4">
                 <AlertCircle className="w-5 h-5 flex-shrink-0" />
                 <span className="text-sm">{error}</span>
               </div>
@@ -136,12 +149,12 @@ export default function LoginPage({ onNavigate, onLogin }) {
               type="button"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-300 rounded-lg bg-white text-slate-800 font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg mb-4"
+              className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-300 rounded-lg bg-slate-700 text-white font-medium hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg mb-4"
             >
               <FcGoogle className="w-6 h-6" />
               {isLoading ? (
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Signing in with Google...
                 </div>
               ) : (
@@ -159,7 +172,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
             <div className="text-center mt-8">
               <button
                 onClick={() => onNavigate('home')}
-                className="text-sky-500 hover:text-sky-400 text-sm"
+                className="text-green-600 hover:text-green-500 text-sm"
               >
                 ← Back to Home
               </button>
