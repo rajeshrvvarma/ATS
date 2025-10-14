@@ -6,8 +6,11 @@ import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import { modules } from '@/data/modules.js';
+import { useNavigate } from 'react-router-dom';
 
 const TechnologyTrainingLandingPage = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
@@ -15,6 +18,21 @@ const TechnologyTrainingLandingPage = () => {
   const coursePricing = coursePricingData?.pricing || {};
   const pricingLoading = coursePricingData?.loading || false;
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+
+  // --- Hybrid Approach: Module mapping for technology training ---
+  // Filter modules relevant to technology training (programming, web dev, cloud, data science, etc.)
+  const technologyModules = modules.filter(mod => 
+    mod.category === 'Programming Foundation' || 
+    mod.category === 'Web Development Frontend' ||
+    mod.category === 'Web Development Backend' ||
+    mod.category === 'Database Technologies' ||
+    mod.category === 'Cloud Platforms' ||
+    mod.category === 'DevOps & Infrastructure' ||
+    mod.category === 'Mobile Development' ||
+    mod.category === 'Data Science & Analytics' ||
+    mod.category === 'Artificial Intelligence' ||
+    mod.category === 'Software Testing'
+  );
 
   // Mapping from course titles to centralized pricing IDs
   const titleToIdMap = {
@@ -831,6 +849,58 @@ const TechnologyTrainingLandingPage = () => {
         </div>
       </section>
 
+      {/* --- Hybrid Approach: Modular Integration --- */}
+      <section className="py-12 bg-slate-800">
+        <div className="container mx-auto px-6">
+          <div className="bg-blue-900/80 border-l-4 border-blue-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
+            <div>
+              <div className="text-lg font-bold text-blue-200 mb-1">Now Modular!</div>
+              <div className="text-blue-100 text-base">Our technology training programs are now available as individual modules. Learn specific skills or build comprehensive expertise by combining modules.</div>
+            </div>
+            <div className="mt-4 md:mt-0 flex gap-3">
+              <button
+                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-blue-600 hover:to-purple-600 transition-all"
+                onClick={() => navigate('/module-catalog')}
+              >
+                Browse All Modules
+              </button>
+              <button
+                className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-blue-600 transition-all"
+                onClick={() => navigate('/course-builder')}
+              >
+                Build Custom Path
+              </button>
+            </div>
+          </div>
+          <div className="bg-slate-900 rounded-xl p-6 border border-blue-700">
+            <h3 className="text-2xl font-semibold text-blue-300 mb-4">Technology Modules Available</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {technologyModules.slice(0, 9).map(mod => (
+                <div key={mod.id} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-blue-500 transition-all">
+                  <div className="font-bold text-white text-lg mb-1">{mod.title}</div>
+                  <div className="text-slate-400 text-sm mb-1">{mod.category} • {mod.duration}</div>
+                  <div className="text-slate-300 text-sm mb-2">{mod.description.substring(0, 80)}...</div>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {mod.learningPaths.slice(0, 2).map((path, i) => (
+                      <span key={i} className="bg-slate-700 text-blue-200 px-2 py-1 rounded-full text-xs">{path}</span>
+                    ))}
+                  </div>
+                  <div className="text-green-400 font-bold">₹{mod.price}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-center">
+              <button
+                className="text-blue-400 hover:text-blue-300 underline"
+                onClick={() => navigate('/module-catalog')}
+              >
+                View All {technologyModules.length} Technology Modules →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Programs Grid */}
       <section className="py-12">
         <div className="container mx-auto px-6">
@@ -947,6 +1017,18 @@ const TechnologyTrainingLandingPage = () => {
                   >
                     <Info size={16} />
                     Course Details
+                  </motion.button>
+                  
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => navigate('/course-builder')}
+                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  >
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs">🧩</span>
+                      Build Custom Path
+                    </div>
                   </motion.button>
                   
                   <motion.button

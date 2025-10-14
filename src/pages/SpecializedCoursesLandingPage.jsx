@@ -6,8 +6,11 @@ import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import { modules } from '@/data/modules.js';
+import { useNavigate } from 'react-router-dom';
 
 const SpecializedCoursesLandingPage = () => {
+  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
@@ -15,6 +18,23 @@ const SpecializedCoursesLandingPage = () => {
   const coursePricing = coursePricingData?.pricing || {};
   const pricingLoading = coursePricingData?.loading || false;
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+
+  // --- Hybrid Approach: Module mapping for specialized courses ---
+  // Filter modules relevant to specialized cybersecurity courses
+  const specializedModules = modules.filter(mod => 
+    mod.category === 'Cybersecurity Fundamentals' || 
+    mod.category === 'Cloud Platforms' ||
+    mod.category === 'Artificial Intelligence' ||
+    mod.category === 'Software Testing' ||
+    mod.category === 'Business Intelligence' ||
+    mod.category === 'Blockchain & Emerging Tech' ||
+    mod.category === 'IoT & Embedded Systems' ||
+    mod.category === 'Game Development' ||
+    mod.category === 'AR/VR Development' ||
+    mod.category === 'High-Performance Computing' ||
+    mod.category === 'System Design' ||
+    mod.category === 'Professional Skills'
+  );
 
   // Mapping from course titles to centralized pricing IDs
   const titleToIdMap = {
@@ -716,6 +736,58 @@ const SpecializedCoursesLandingPage = () => {
                 </motion.button>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* --- Hybrid Approach: Modular Integration --- */}
+      <section className="py-12 bg-slate-800">
+        <div className="container mx-auto px-6">
+          <div className="bg-purple-900/80 border-l-4 border-purple-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
+            <div>
+              <div className="text-lg font-bold text-purple-200 mb-1">Now Modular!</div>
+              <div className="text-purple-100 text-base">Our specialized courses are now available as individual modules. Build your own custom learning path or enroll in complete specializations.</div>
+            </div>
+            <div className="mt-4 md:mt-0 flex gap-3">
+              <button
+                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-purple-600 hover:to-blue-600 transition-all"
+                onClick={() => navigate('/module-catalog')}
+              >
+                Browse All Modules
+              </button>
+              <button
+                className="bg-gradient-to-r from-green-500 to-purple-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-purple-600 transition-all"
+                onClick={() => navigate('/course-builder')}
+              >
+                Build Custom Path
+              </button>
+            </div>
+          </div>
+          <div className="bg-slate-900 rounded-xl p-6 border border-purple-700">
+            <h3 className="text-2xl font-semibold text-purple-300 mb-4">Specialized Modules Available</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {specializedModules.slice(0, 6).map(mod => (
+                <div key={mod.id} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-purple-500 transition-all">
+                  <div className="font-bold text-white text-lg mb-1">{mod.title}</div>
+                  <div className="text-slate-400 text-sm mb-1">{mod.category} • {mod.duration}</div>
+                  <div className="text-slate-300 text-sm mb-2">{mod.description.substring(0, 80)}...</div>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {mod.learningPaths.slice(0, 2).map((path, i) => (
+                      <span key={i} className="bg-slate-700 text-purple-200 px-2 py-1 rounded-full text-xs">{path}</span>
+                    ))}
+                  </div>
+                  <div className="text-green-400 font-bold">₹{mod.price}</div>
+                </div>
+              ))}
+            </div>
+            <div className="mt-4 text-center">
+              <button
+                className="text-purple-400 hover:text-purple-300 underline"
+                onClick={() => navigate('/module-catalog')}
+              >
+                View All {specializedModules.length} Specialized Modules →
+              </button>
+            </div>
           </div>
         </div>
       </section>
