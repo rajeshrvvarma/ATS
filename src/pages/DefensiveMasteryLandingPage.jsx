@@ -49,7 +49,8 @@ const DefensiveMasteryLandingPage = () => {
   const getModulePricing = () => {
     const courseModules = getCourseModules();
     const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
-    const adjustedCoursePrice = Math.round(totalModulePrice * 0.68); // 32% discount for course bundle
+    // 2-month program should be significantly cheaper - 50% off individual module prices
+    const adjustedCoursePrice = Math.round(totalModulePrice * 0.50); 
     return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
   };
 
@@ -67,6 +68,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 1,
       title: 'Cybersecurity Fundamentals & Foundations',
+      modules: ['Network Security Fundamentals', 'Information Security Management'],
       sessions: [
         'Cybersecurity Landscape & Career Paths',
         'Network Security Fundamentals', 
@@ -80,6 +82,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 2,
       title: 'Threat Intelligence & Analysis',
+      modules: ['Threat Intelligence', 'Behavioral Analysis'],
       sessions: [
         'Threat Intelligence Fundamentals',
         'OSINT Techniques',
@@ -93,6 +96,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 3,
       title: 'Security Operations Center (SOC)',
+      modules: ['Advanced Threat Detection', 'Incident Response Planning'],
       sessions: [
         'SOC Operations & Procedures',
         'SIEM Implementation & Management',
@@ -106,6 +110,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 4,
       title: 'Vulnerability Management & Assessment',
+      modules: ['Risk Assessment', 'Forensic Investigation'],
       sessions: [
         'Vulnerability Assessment Methodologies',
         'Penetration Testing Fundamentals',
@@ -119,6 +124,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 5,
       title: 'Compliance & Governance',
+      modules: ['Compliance Frameworks', 'Information Security Management'],
       sessions: [
         'Security Frameworks (ISO 27001, NIST)',
         'Compliance Management',
@@ -132,6 +138,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 6,
       title: 'Advanced Security Technologies',
+      modules: ['AWS Fundamentals', 'AWS Security Services', 'Identity and Access Management'],
       sessions: [
         'Cloud Security Fundamentals',
         'Zero Trust Architecture',
@@ -145,6 +152,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 7,
       title: 'Digital Forensics & Investigation',
+      modules: ['Forensic Investigation', 'Advanced Threat Detection'],
       sessions: [
         'Digital Forensics Fundamentals',
         'Evidence Collection & Analysis',
@@ -158,6 +166,7 @@ const DefensiveMasteryLandingPage = () => {
     {
       week: 8,
       title: 'Career Development & Capstone',
+      modules: ['Professional Skills Integration'],
       sessions: [
         'Industry Networking & Personal Branding',
         'Advanced Interview Preparation',
@@ -355,70 +364,6 @@ const DefensiveMasteryLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* --- Hybrid Approach: Modular Integration --- */}
-      <AnimatedBackground variant="premium" className="py-12">
-        <div className="container mx-auto px-6">
-          <div className="bg-purple-900/80 border-l-4 border-purple-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
-            <div>
-              <div className="text-lg font-bold text-purple-200 mb-1">Enhanced Learning Experience!</div>
-              <div className="text-purple-100 text-base">Our 2-month Defensive Security Mastery program now shows you exactly which modules are included. You can enroll in the complete program or customize by selecting individual modules.</div>
-            </div>
-            <div className="mt-4 md:mt-0 flex gap-3">
-              <button
-                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-purple-600 hover:to-blue-600 transition-all"
-                onClick={() => navigate('/module-catalog')}
-              >
-                Browse All Modules
-              </button>
-              <button
-                className="bg-gradient-to-r from-green-500 to-purple-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-purple-600 transition-all"
-                onClick={() => navigate('/course-builder')}
-              >
-                Build Custom Path
-              </button>
-            </div>
-          </div>
-          
-          {/* Course Modules */}
-          {(() => {
-            const courseModules = getCourseModules();
-            const modulePricing = getModulePricing();
-            
-            return (
-              <div className="bg-slate-900 rounded-xl p-6 border border-purple-700">
-                <h3 className="text-2xl font-semibold text-purple-300 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🧩</span> Included Modules ({courseModules.length})
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                  {courseModules.map((module, idx) => (
-                    <div key={idx} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-purple-500 transition-all">
-                      <div className="font-bold text-white text-lg mb-1">{module.title}</div>
-                      <div className="text-slate-400 text-sm mb-1">{module.category}</div>
-                      <div className="text-green-400 font-bold">₹{module.price}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="bg-purple-900/30 rounded-lg p-4 border border-purple-600">
-                  <div className="flex justify-between items-center text-lg mb-2">
-                    <span className="text-gray-300">Individual Module Total:</span>
-                    <span className="text-gray-400 line-through">₹{modulePricing.totalModulePrice}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xl mb-3">
-                    <span className="text-purple-300 font-bold">2-Month Program Bundle:</span>
-                    <span className="text-green-400 font-bold">₹{modulePricing.adjustedCoursePrice}</span>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-lg text-green-300 bg-green-900/30 px-4 py-2 rounded-full">
-                      Save ₹{modulePricing.totalModulePrice - modulePricing.adjustedCoursePrice} (32% off)
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      </AnimatedBackground>
-
       {/* Detailed Curriculum */}
       <AnimatedBackground variant="premium" className="py-16">
         <div className="container mx-auto px-6">
@@ -444,6 +389,23 @@ const DefensiveMasteryLandingPage = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Modules Covered This Week */}
+                {week.modules && week.modules.length > 0 && (
+                  <div className="mb-4 bg-slate-800/50 rounded-lg p-4 border border-purple-600/30">
+                    <h4 className="font-semibold mb-2 text-purple-300 flex items-center gap-2">
+                      <span className="text-sm">🧩</span> Modules Covered:
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {week.modules.map((module, idx) => (
+                        <span key={idx} className="bg-purple-700/30 text-purple-200 px-3 py-1 rounded-full text-sm border border-purple-600/50">
+                          {module}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-semibold mb-3 text-purple-300">Sessions Covered:</h4>

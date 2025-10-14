@@ -49,7 +49,8 @@ const OffensiveMasteryLandingPage = () => {
   const getModulePricing = () => {
     const courseModules = getCourseModules();
     const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
-    const adjustedCoursePrice = Math.round(totalModulePrice * 0.65); // 35% discount for course bundle
+    // 2-month program should be significantly cheaper - 45% off individual module prices
+    const adjustedCoursePrice = Math.round(totalModulePrice * 0.45); 
     return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
   };
 
@@ -67,6 +68,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 1,
       title: 'Advanced Reconnaissance & Intelligence',
+      modules: ['Threat Intelligence', 'Behavioral Analysis'],
       sessions: [
         'Advanced OSINT & Social Engineering',
         'Network Reconnaissance Techniques',
@@ -80,6 +82,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 2,
       title: 'Web Application Security Mastery',
+      modules: ['Web Application Security', 'Penetration Testing Methodology'],
       sessions: [
         'Advanced Web Application Attacks',
         'API Security Testing',
@@ -93,6 +96,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 3,
       title: 'Network Penetration & Infrastructure',
+      modules: ['Network Security Fundamentals', 'Linux Administration'],
       sessions: [
         'Advanced Network Exploitation',
         'Active Directory Attacks',
@@ -106,6 +110,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 4,
       title: 'Mobile & Wireless Security',
+      modules: ['Wireless & Mobile Security', 'Ethical Hacking Foundation'],
       sessions: [
         'Mobile Application Security Testing',
         'Wireless Network Exploitation',
@@ -119,6 +124,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 5,
       title: 'Advanced Exploitation Techniques',
+      modules: ['Reverse Engineering', 'Malware Analysis Fundamentals'],
       sessions: [
         'Binary Exploitation & Buffer Overflows',
         'Return-Oriented Programming (ROP)',
@@ -132,6 +138,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 6,
       title: 'Cloud Security & Modern Infrastructure',
+      modules: ['AWS Fundamentals', 'AWS Security Services'],
       sessions: [
         'Cloud Platform Penetration Testing',
         'Container Security Assessment',
@@ -145,6 +152,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 7,
       title: 'Red Team Operations & Advanced Techniques',
+      modules: ['Advanced Threat Detection', 'Incident Response Planning'],
       sessions: [
         'Red Team Methodology & Planning',
         'Command & Control Infrastructure',
@@ -158,6 +166,7 @@ const OffensiveMasteryLandingPage = () => {
     {
       week: 8,
       title: 'Professional Development & Certification',
+      modules: ['Professional Skills Integration'],
       sessions: [
         'Advanced Report Writing & Communication',
         'Client Presentation & Remediation Planning',
@@ -349,70 +358,6 @@ const OffensiveMasteryLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* --- Hybrid Approach: Modular Integration --- */}
-      <AnimatedBackground variant="offensive" className="py-12">
-        <div className="container mx-auto px-6">
-          <div className="bg-red-900/80 border-l-4 border-red-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
-            <div>
-              <div className="text-lg font-bold text-red-200 mb-1">Enhanced Learning Experience!</div>
-              <div className="text-red-100 text-base">Our 2-month Offensive Security Mastery program now shows you exactly which modules are included. You can enroll in the complete program or customize by selecting individual modules.</div>
-            </div>
-            <div className="mt-4 md:mt-0 flex gap-3">
-              <button
-                className="bg-gradient-to-r from-red-500 to-orange-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-red-600 hover:to-orange-600 transition-all"
-                onClick={() => navigate('/module-catalog')}
-              >
-                Browse All Modules
-              </button>
-              <button
-                className="bg-gradient-to-r from-green-500 to-red-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-red-600 transition-all"
-                onClick={() => navigate('/course-builder')}
-              >
-                Build Custom Path
-              </button>
-            </div>
-          </div>
-          
-          {/* Course Modules */}
-          {(() => {
-            const courseModules = getCourseModules();
-            const modulePricing = getModulePricing();
-            
-            return (
-              <div className="bg-slate-900 rounded-xl p-6 border border-red-700">
-                <h3 className="text-2xl font-semibold text-red-300 mb-4 flex items-center gap-2">
-                  <span className="text-2xl">🧩</span> Included Modules ({courseModules.length})
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                  {courseModules.map((module, idx) => (
-                    <div key={idx} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-red-500 transition-all">
-                      <div className="font-bold text-white text-lg mb-1">{module.title}</div>
-                      <div className="text-slate-400 text-sm mb-1">{module.category}</div>
-                      <div className="text-green-400 font-bold">₹{module.price}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="bg-red-900/30 rounded-lg p-4 border border-red-600">
-                  <div className="flex justify-between items-center text-lg mb-2">
-                    <span className="text-gray-300">Individual Module Total:</span>
-                    <span className="text-gray-400 line-through">₹{modulePricing.totalModulePrice}</span>
-                  </div>
-                  <div className="flex justify-between items-center text-xl mb-3">
-                    <span className="text-red-300 font-bold">2-Month Program Bundle:</span>
-                    <span className="text-green-400 font-bold">₹{modulePricing.adjustedCoursePrice}</span>
-                  </div>
-                  <div className="text-center">
-                    <span className="text-lg text-green-300 bg-green-900/30 px-4 py-2 rounded-full">
-                      Save ₹{modulePricing.totalModulePrice - modulePricing.adjustedCoursePrice} (35% off)
-                    </span>
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
-      </AnimatedBackground>
-
       {/* Detailed Curriculum */}
       <AnimatedBackground variant="offensive" className="py-16">
         <div className="container mx-auto px-6">
@@ -438,6 +383,23 @@ const OffensiveMasteryLandingPage = () => {
                     </div>
                   </div>
                 </div>
+                
+                {/* Modules Covered This Week */}
+                {week.modules && week.modules.length > 0 && (
+                  <div className="mb-4 bg-slate-800/50 rounded-lg p-4 border border-red-600/30">
+                    <h4 className="font-semibold mb-2 text-red-300 flex items-center gap-2">
+                      <span className="text-sm">🧩</span> Modules Covered:
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {week.modules.map((module, idx) => (
+                        <span key={idx} className="bg-red-700/30 text-red-200 px-3 py-1 rounded-full text-sm border border-red-600/50">
+                          {module}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <h4 className="font-semibold mb-3 text-red-300">Advanced Sessions:</h4>
