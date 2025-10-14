@@ -106,7 +106,7 @@ export default function WhatsAppWidget() {
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
-              className="mb-4 bg-white rounded-2xl shadow-2xl p-4 w-80 max-w-[90vw]"
+              className="mb-4 content-card w-80 max-w-[90vw]"
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
@@ -186,7 +186,7 @@ export default function WhatsAppWidget() {
           </div>
           <button
             onClick={() => window.open(generateWhatsAppURL(messageTemplates.courseInquiry), '_blank')}
-            className="bg-white text-green-600 px-4 py-2 rounded-full text-sm font-medium flex items-center gap-2 hover:bg-green-50 transition-colors"
+            className="btn-secondary text-green-400 px-4 py-2 text-sm font-medium flex items-center gap-2"
           >
             <MessageCircle className="w-4 h-4" />
             Chat Now

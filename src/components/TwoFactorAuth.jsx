@@ -86,7 +86,7 @@ export default function TwoFactorAuth({ onVerify, onCancel }) {
           <div className="space-y-6">
             <div className="text-center">
               <h3 className="text-lg font-semibold text-white mb-4">Step 1: Scan QR Code</h3>
-              <div className="bg-white p-4 rounded-lg mb-4">
+              <div className="content-card mb-4">
                 <div className="w-48 h-48 bg-gray-200 rounded flex items-center justify-center mx-auto">
                   <span className="text-gray-500">QR Code Placeholder</span>
                 </div>

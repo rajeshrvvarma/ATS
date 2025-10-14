@@ -52,11 +52,11 @@ export default function PaymentFailedPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-slate-900 text-white min-h-screen">
+        <div className="bg-gradient-orange bg-fixed text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
-                    className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
+                    className="flex items-center text-orange-400 hover:text-orange-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home
@@ -71,8 +71,8 @@ export default function PaymentFailedPage({ onNavigate }) {
                             </div>
                         </div>
 
-                        <SectionTitle>Payment Failed</SectionTitle>
-                        <p className="text-xl text-slate-300 -mt-8 mb-8">
+                        <h1 className="text-4xl md:text-6xl font-bold text-gradient-orange text-center mb-4">Payment Failed</h1>
+                        <p className="text-xl text-orange-200 mb-8">
                             We couldn't process your payment. Don't worry, no amount has been charged.
                         </p>
                     </div>

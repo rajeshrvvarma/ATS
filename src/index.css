@@ -19,33 +19,83 @@ body {
   animation-timing-function: ease-in-out;
 }
 
-/* Content on dark backgrounds: enforce readable defaults */
+/* Gradient text utilities for multicolor headings */
+.text-gradient-blue {
+  @apply bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent;
+}
+.text-gradient-green {
+  @apply bg-gradient-to-r from-green-400 via-emerald-400 to-teal-600 bg-clip-text text-transparent;
+}
+.text-gradient-purple {
+  @apply bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-600 bg-clip-text text-transparent;
+}
+.text-gradient-orange {
+  @apply bg-gradient-to-r from-orange-400 via-red-400 to-pink-600 bg-clip-text text-transparent;
+}
+.text-gradient-pink {
+  @apply bg-gradient-to-r from-pink-400 via-rose-400 to-red-500 bg-clip-text text-transparent;
+}
+.text-gradient-violet {
+  @apply bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-500 bg-clip-text text-transparent;
+}
+.text-gradient-cyan {
+  @apply bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-500 bg-clip-text text-transparent;
+}
+
+/* Card and content styles with NO white backgrounds */
+.content-card {
+  @apply bg-gradient-to-br from-slate-800/90 via-slate-700/90 to-slate-800/90 backdrop-blur-sm rounded-xl shadow-xl border border-slate-600/50 p-6;
+}
+.content-card-alt {
+  @apply bg-gradient-to-br from-indigo-900/90 via-purple-900/90 to-indigo-900/90 backdrop-blur-sm rounded-xl shadow-xl border border-indigo-600/50 p-6;
+}
+.form-card {
+  @apply bg-gradient-to-br from-slate-800/95 via-slate-700/95 to-slate-800/95 backdrop-blur-md rounded-xl shadow-2xl border border-slate-600/50 p-8;
+}
+
+/* Form input styles - dark themed */
+.form-input {
+  @apply w-full bg-slate-700/80 border border-slate-600 text-white placeholder-slate-400 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+}
+.form-textarea {
+  @apply w-full bg-slate-700/80 border border-slate-600 text-white placeholder-slate-400 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none;
+}
+.form-select {
+  @apply w-full bg-slate-700/80 border border-slate-600 text-white rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all;
+}
+
+/* Dark content styles for consistent theming */
 .content-dark {
-  @apply bg-white text-slate-800 rounded-xl shadow-lg;
+  @apply bg-gradient-to-br from-slate-800/90 via-slate-700/90 to-slate-800/90 text-slate-200 rounded-xl shadow-lg p-6 border border-slate-600/50;
 }
 .content-dark h1, .content-dark h2, .content-dark h3, .content-dark h4 {
-  @apply text-slate-900;
+  @apply text-white;
 }
-.content-dark .muted { @apply text-slate-600; }
+.content-dark .muted { 
+  @apply text-slate-400; 
+}
 
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center font-semibold rounded-lg transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed;
   }
   .btn-primary {
-    @apply btn bg-blue-600 text-white hover:bg-blue-700;
+    @apply btn bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl;
   }
   .btn-secondary {
-    @apply btn bg-slate-700 text-white hover:bg-slate-600;
+    @apply btn bg-slate-700 text-white hover:bg-slate-600 shadow-lg hover:shadow-xl;
   }
   .btn-danger {
-    @apply btn bg-red-600 text-white hover:bg-red-700;
+    @apply btn bg-red-600 text-white hover:bg-red-700 shadow-lg hover:shadow-xl;
+  }
+  .btn-gradient {
+    @apply btn bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl;
   }
   .card {
-    @apply bg-slate-800 border border-slate-700 rounded-lg;
+    @apply content-card text-white;
   }
   .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-1;
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl;
   }
   .section {
     @apply py-20;
@@ -57,6 +107,13 @@ body {
     @apply text-3xl font-bold;
   }
   .p-lg {
-    @apply text-lg md:text-xl text-slate-300;
+    @apply text-lg md:text-xl text-slate-200;
+  }
+  /* Multicolor heading utilities */
+  .heading-gradient {
+    @apply text-gradient-blue font-bold text-4xl md:text-5xl;
+  }
+  .heading-gradient-lg {
+    @apply text-gradient-purple font-bold text-5xl md:text-7xl;
   }
 }

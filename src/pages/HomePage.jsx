@@ -34,11 +34,11 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                     >
                         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
                             Learn{' '}
-                            <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-red-500 bg-clip-text text-transparent">
+                            <span className="text-gradient-cyan">
                                 Any Skill
                             </span>
                             <br />
-                            <span className="text-3xl md:text-5xl text-slate-300">One Module at a Time</span>
+                            <span className="text-3xl md:text-5xl text-gradient-blue">One Module at a Time</span>
                         </h1>
 
                         <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed">
@@ -128,7 +128,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
     };
 
     return (
-        <AnimatedBackground variant="subtle" className="py-20">
+        <AnimatedBackground variant="programs" className="py-20">
             <section id="featured-modules" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -139,7 +139,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
                 >
                     <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                         Featured{' '}
-                        <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                        <span className="text-gradient-green">
                             Learning Modules
                         </span>
                     </h2>
@@ -174,7 +174,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
                                 placeholder={`Search ${selectedCategory === 'All' ? '' : selectedCategory + ' '}modules...`}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+                                className="form-input w-full"
                             />
                         </div>
                     </div>
@@ -194,7 +194,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 viewport={{ once: true }}
                                 whileHover={{ y: -5 }}
-                                className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:border-blue-500/50 transition-all duration-300 group"
+                                className="content-card hover:border-blue-500/50 transition-all duration-300 group"
                             >
                                 <div className="flex items-start gap-4 mb-4">
                                     <div className={`p-3 bg-${colorClass}-500/20 rounded-lg`}>
@@ -344,7 +344,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
     ];
 
     return (
-        <AnimatedBackground variant="subtle" className="py-20">
+        <AnimatedBackground variant="bootcamp" className="py-20">
             <section id="traditional-courses" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -355,7 +355,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
                 >
                     <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                         Traditional{' '}
-                        <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+                        <span className="text-gradient-purple">
                             Course Programs
                         </span>
                     </h2>
@@ -377,7 +377,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                                 viewport={{ once: true }}
                                 whileHover={{ y: -5 }}
-                                className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8 hover:border-blue-500/50 transition-all duration-300 group"
+                                className="content-card hover:border-blue-500/50 transition-all duration-300 group"
                             >
                                 <div className="flex items-start gap-4 mb-6">
                                     <div className={`p-4 bg-gradient-to-br ${course.gradient} rounded-lg`}>
@@ -454,7 +454,7 @@ const SuccessMetrics = () => (
             >
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                     Proven{' '}
-                    <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                    <span className="text-gradient-cyan">
                         Results
                     </span>
                 </h2>
@@ -476,7 +476,7 @@ const SuccessMetrics = () => (
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         viewport={{ once: true }}
-                        className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 text-center hover:border-blue-500/50 transition-all duration-300"
+                        className="content-card text-center hover:border-blue-500/50 transition-all duration-300"
                     >
                         <metric.icon className={`w-12 h-12 text-${metric.color}-400 mx-auto mb-4`} />
                         <h3 className="text-2xl font-bold text-white mb-2">{metric.label}</h3>
@@ -512,7 +512,7 @@ const SuccessMetrics = () => (
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.2 }}
                         viewport={{ once: true }}
-                        className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8 hover:border-blue-500/50 transition-all duration-300"
+                        className="content-card hover:border-blue-500/50 transition-all duration-300"
                     >
                         <feature.icon className={`w-12 h-12 text-${feature.color}-400 mb-4`} />
                         <h3 className="text-xl font-bold text-white mb-4">{feature.title}</h3>
@@ -672,8 +672,8 @@ const Contact = ({ onNavigate }) => {
                             </div>
                         </div>
                         
-                        <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-6">
-                            <h4 className="text-lg font-semibold text-white mb-4">Why Choose Our Training?</h4>
+                        <div className="content-card">
+                            <h4 className="text-lg font-semibold text-gradient-green mb-4">Why Choose Our Training?</h4>
                             <ul className="space-y-3 text-slate-300">
                                 <li className="flex items-center gap-3">
                                     <CheckCircle className="w-5 h-5 text-green-400" />
@@ -700,7 +700,7 @@ const Contact = ({ onNavigate }) => {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
-                        className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-8"
+                        className="form-card"
                     >
                         {submitted ? (
                             <div className="text-center">
@@ -718,7 +718,7 @@ const Contact = ({ onNavigate }) => {
                                         placeholder="Your Name"
                                         value={formData.name}
                                         onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                        className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+                                        className="form-input"
                                         required
                                     />
                                 </div>
@@ -728,7 +728,7 @@ const Contact = ({ onNavigate }) => {
                                         placeholder="Your Email"
                                         value={formData.email}
                                         onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                        className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+                                        className="form-input"
                                         required
                                     />
                                 </div>
@@ -738,14 +738,14 @@ const Contact = ({ onNavigate }) => {
                                         placeholder="Your Phone"
                                         value={formData.phone}
                                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                        className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+                                        className="form-input"
                                     />
                                 </div>
                                 <div>
                                     <select
                                         value={formData.interest}
                                         onChange={(e) => setFormData({...formData, interest: e.target.value})}
-                                        className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:border-blue-500 focus:outline-none"
+                                        className="form-select"
                                         required
                                     >
                                         <option value="">Select Your Interest</option>
@@ -763,13 +763,13 @@ const Contact = ({ onNavigate }) => {
                                         value={formData.message}
                                         onChange={(e) => setFormData({...formData, message: e.target.value})}
                                         rows={4}
-                                        className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+                                        className="form-textarea"
                                     ></textarea>
                                 </div>
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+                                    className="btn-gradient w-full py-3 px-6 font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
                                 >
                                     {isSubmitting ? 'Sending...' : 'Send Message'}
                                     <ArrowRight className="w-5 h-5" />

@@ -24,7 +24,7 @@ export default function TrainerSignUp({ onNavigate }) {
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden relative z-10"
+        className="max-w-5xl w-full content-card flex flex-col md:flex-row overflow-hidden relative z-10"
       >
         {/* Left: Content - Area 1: Dark green like homepage */}
         <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-slate-800 via-green-800 to-teal-800 relative">
@@ -72,7 +72,7 @@ export default function TrainerSignUp({ onNavigate }) {
               <button
                 type="button"
                 onClick={handleGoogleSignUp}
-                className="w-full flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 font-semibold shadow hover:bg-gray-50 transition-colors"
+                className="btn-gradient w-full gap-2 px-4 py-2"
               >
                 <FcGoogle className="w-6 h-6" />
                 Sign Up with Google

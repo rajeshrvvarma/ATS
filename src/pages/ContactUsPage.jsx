@@ -137,14 +137,14 @@ export default function ContactUsPage({ onNavigate }) {
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
-                    className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
+                    className="flex items-center text-green-400 hover:text-green-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home
                 </button>
 
-                <SectionTitle>Support & Help Center</SectionTitle>
-                <p className="text-center text-xl text-slate-300 -mt-8 mb-12">
+                <h1 className="text-4xl md:text-6xl font-bold text-gradient-green text-center mb-4">Support & Help Center</h1>
+                <p className="text-center text-xl text-green-200 mb-12">
                     Get support for payments, technical issues, and policy inquiries
                 </p>
 
@@ -154,7 +154,7 @@ export default function ContactUsPage({ onNavigate }) {
                         {contactMethods.map((method, index) => {
                             const IconComponent = method.icon;
                             return (
-                                <div key={index} className="bg-slate-800 p-8 rounded-lg border border-slate-700 text-center">
+                                <div key={index} className="content-card text-center">
                                     <div className="bg-sky-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                         <IconComponent size={32} className="text-white" />
                                     </div>
@@ -169,9 +169,9 @@ export default function ContactUsPage({ onNavigate }) {
 
                     {/* Contact Form */}
                     <div className="grid lg:grid-cols-2 gap-12">
-                        <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
-                            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-                                <Send size={24} className="mr-3 text-sky-400" />
+                        <div className="form-card">
+                            <h2 className="text-2xl font-bold text-gradient-green mb-6 flex items-center">
+                                <Send size={24} className="mr-3 text-green-400" />
                                 Send us a Message
                             </h2>
                             
@@ -195,7 +195,7 @@ export default function ContactUsPage({ onNavigate }) {
                                             required
                                             value={formData.name}
                                             onChange={handleInputChange}
-                                            className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500"
+                                            className="form-input"
                                         />
                                     </div>
                                     <div>

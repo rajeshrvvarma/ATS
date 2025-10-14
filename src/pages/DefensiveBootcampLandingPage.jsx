@@ -142,7 +142,7 @@ const DefensiveBootcampLandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gradient-purple">
                 7-Day Defensive Security Bootcamp
               </h1>
               <p className="text-2xl md:text-3xl text-gray-300 mb-8">

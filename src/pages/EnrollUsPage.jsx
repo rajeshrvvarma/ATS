@@ -215,7 +215,7 @@ export default function EnrollUsPage({ onNavigate }) {
     };
 
     return (
-        <div className="bg-slate-900 text-white min-h-screen">
+        <div className="bg-gradient-green bg-fixed text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 

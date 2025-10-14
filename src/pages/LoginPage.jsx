@@ -110,7 +110,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
         initial={{ opacity: 0, y: 40 }}
         animate={cssLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden relative z-10"
+        className="max-w-5xl w-full content-card flex flex-col md:flex-row overflow-hidden relative z-10"
       >
         {/* Left: Content - Area 1: Dark green like homepage */}
         <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-slate-800 via-green-800 to-teal-800 relative">
@@ -160,11 +160,11 @@ export default function LoginPage({ onNavigate, onLogin }) {
             <p>Join the community that's shaping the future of cybersecurity</p>
           </div>
         </div>
-        {/* Right: Login Form - Area 2 & 3: Light background with dark inputs like homepage */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-slate-50 border-l border-slate-200">
+        {/* Right: Login Form - Area 2 & 3: Dark background with form styling */}
+        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-slate-700/90 to-slate-800/90">
           <div className="max-w-sm mx-auto w-full">
-            <h3 className="text-2xl font-bold text-slate-800 mb-2 text-center">Sign In</h3>
-            <p className="text-slate-600 text-center mb-6">Access your learning dashboard</p>
+            <h3 className="text-2xl font-bold text-gradient-blue mb-2 text-center">Sign In</h3>
+            <p className="text-slate-300 text-center mb-6">Access your learning dashboard</p>
             {/* Error Message */}
             {error && (
               <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-600 mb-4">
@@ -176,7 +176,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
               type="button"
               onClick={handleGoogle}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-300 rounded-lg bg-slate-700 text-white font-medium hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg mb-4"
+              className="btn-gradient w-full gap-3 py-4 px-6 text-lg mb-4"
             >
               <FcGoogle className="w-6 h-6" />
               {isLoading ? (

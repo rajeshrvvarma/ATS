@@ -378,7 +378,7 @@ const OffensiveBootcampLandingPage = () => {
             Only {seatsLeft} seats left • Registration closes in {timeLeft.days} days
           </p>
           <button
-            className="bg-white text-red-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition-all duration-300"
+            className="btn-gradient font-bold py-3 px-8 text-lg"
             onClick={() => setIsEnrollmentModalOpen(true)}
           >
             Join Now - {pricing.price}

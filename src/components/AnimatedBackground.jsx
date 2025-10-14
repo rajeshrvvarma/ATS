@@ -24,64 +24,74 @@ const AnimatedBackground = ({
     // Use higher particle counts and higher opacity for all variants
     const variants = {
         default: {
-            gradient: 'bg-gradient-to-br from-slate-900 via-blue-950 to-purple-950',
-            overlay: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-red-900/20',
-            particles: { color: 'bg-blue-400', count: 40 }
+            gradient: 'bg-gradient-blue bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-cyan-900/20',
+            particles: { color: 'bg-cyan-400', count: 40 }
         },
         programs: {
-            gradient: 'bg-gradient-to-br from-slate-800 via-blue-900 to-purple-900',
-            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-800/20 via-transparent to-purple-800/20',
-            particles: { color: 'bg-blue-400', count: 42 }
+            gradient: 'bg-gradient-green bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-800/20 via-transparent to-emerald-800/20',
+            particles: { color: 'bg-emerald-400', count: 42 }
         },
         bootcamp: {
-            gradient: 'bg-gradient-to-br from-blue-900 via-purple-900 to-slate-900',
-            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-800/25 via-purple-800/10 to-transparent',
-            particles: { color: 'bg-blue-400', count: 44 }
+            gradient: 'bg-gradient-purple bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-800/25 via-indigo-800/10 to-transparent',
+            particles: { color: 'bg-purple-400', count: 44 }
         },
         premium: {
-            gradient: 'bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-950',
-            overlay: 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-purple-700/25 via-indigo-800/15 to-transparent',
-            particles: { color: 'bg-purple-400', count: 48 }
+            gradient: 'bg-gradient-violet bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-violet-700/25 via-purple-800/15 to-transparent',
+            particles: { color: 'bg-violet-400', count: 48 }
         },
         specialized: {
-            gradient: 'bg-gradient-to-br from-emerald-900 via-teal-900 to-blue-950',
-            overlay: 'bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-emerald-800/25 via-teal-800/15 to-transparent',
-            particles: { color: 'bg-emerald-400', count: 40 }
+            gradient: 'bg-gradient-cyan bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-cyan-800/25 via-teal-800/15 to-transparent',
+            particles: { color: 'bg-cyan-400', count: 40 }
         },
         offensive: {
-            gradient: 'bg-gradient-to-br from-red-900 via-orange-900 to-slate-900',
-            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-red-800/25 via-orange-800/15 to-transparent',
-            particles: { color: 'bg-red-400', count: 50 }
+            gradient: 'bg-gradient-orange bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-800/25 via-red-800/15 to-transparent',
+            particles: { color: 'bg-orange-400', count: 50 }
         },
         workshop: {
-            gradient: 'bg-gradient-to-br from-cyan-900 via-blue-900 to-indigo-950',
+            gradient: 'bg-gradient-cyan bg-fixed',
             overlay: 'bg-[radial-gradient(ellipse_at_top_center,_var(--tw-gradient-stops))] from-cyan-800/25 via-blue-800/15 to-transparent',
             particles: { color: 'bg-cyan-400', count: 36 }
         },
         testimonials: {
-            gradient: 'bg-gradient-to-br from-slate-800 via-purple-900 to-blue-900',
-            overlay: 'bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-800/20 via-transparent to-blue-800/20',
-            particles: { color: 'bg-purple-400', count: 38 }
+            gradient: 'bg-gradient-pink bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-pink-800/20 via-transparent to-rose-800/20',
+            particles: { color: 'bg-pink-400', count: 38 }
         },
         contact: {
-            gradient: 'bg-gradient-to-br from-slate-900 via-green-950 to-blue-950',
-            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-transparent to-blue-900/20',
+            gradient: 'bg-gradient-green bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-transparent to-emerald-900/20',
             particles: { color: 'bg-green-400', count: 40 }
         },
         success: {
-            gradient: 'bg-gradient-to-br from-slate-900 via-emerald-950 to-blue-950',
-            overlay: 'bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-emerald-900/25 via-transparent to-blue-900/20',
-            particles: { color: 'bg-emerald-400', count: 36 }
+            gradient: 'bg-gradient-violet bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-violet-900/25 via-transparent to-purple-900/20',
+            particles: { color: 'bg-violet-400', count: 36 }
         },
         footer: {
-            gradient: 'bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950',
-            overlay: 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-purple-900/20',
-            particles: { color: 'bg-indigo-400', count: 28 }
+            gradient: 'bg-gradient-dark bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-slate-900/20 via-transparent to-slate-900/20',
+            particles: { color: 'bg-slate-400', count: 28 }
         },
         error: {
-            gradient: 'bg-gradient-to-br from-red-900 via-pink-900 to-slate-950',
+            gradient: 'bg-gradient-orange bg-fixed',
             overlay: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-800/25 via-pink-800/15 to-transparent',
             particles: { color: 'bg-red-400', count: 32 }
+        },
+        subtle: {
+            gradient: 'bg-gradient-purple bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-800/15 via-transparent to-indigo-800/15',
+            particles: { color: 'bg-purple-400', count: 35 }
+        },
+        metrics: {
+            gradient: 'bg-gradient-cyan bg-fixed',
+            overlay: 'bg-[radial-gradient(ellipse_at_bottom_center,_var(--tw-gradient-stops))] from-cyan-800/20 via-transparent to-blue-800/20',
+            particles: { color: 'bg-cyan-400', count: 38 }
         }
     };
 

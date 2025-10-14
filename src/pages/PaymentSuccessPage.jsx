@@ -87,7 +87,7 @@ ${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paym
     }
 
     return (
-        <div className="bg-slate-900 text-white min-h-screen">
+        <div className="bg-gradient-green bg-fixed text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="flex justify-center mb-8">
@@ -96,7 +96,7 @@ ${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paym
                         </div>
                     </div>
 
-                    <SectionTitle>Payment Successful!</SectionTitle>
+                    <h1 className="text-4xl md:text-6xl font-bold text-gradient-green text-center mb-4">Payment Successful!</h1>
                     
                     <div className="bg-slate-800 rounded-lg p-8 border border-slate-700 mb-8">
                         <h3 className="text-2xl font-bold text-white mb-6">Enrollment Confirmed</h3>
@@ -148,7 +148,7 @@ ${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paym
                         <h4 className="text-xl font-bold mb-2">Need Help?</h4>
                         <p className="text-sky-100 mb-4">We're here to help you get started. Contact us if you have any questions.</p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href={`mailto:${siteConfig.supportEmail}`} className="bg-white text-sky-600 px-6 py-2 rounded-lg font-semibold hover:bg-sky-50 transition-colors">Email Support</a>
+                            <a href={`mailto:${siteConfig.supportEmail}`} className="btn-secondary px-6 py-2">Email Support</a>
                             <a href={`tel:${siteConfig.supportPhone}`} className="bg-sky-700 text-white px-6 py-2 rounded-lg font-semibold hover:bg-sky-800 transition-colors">Call Support</a>
                         </div>
                     </div>
