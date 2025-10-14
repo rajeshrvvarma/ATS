@@ -169,10 +169,14 @@ export default function Header({ onNavigate, currentPage }) {
                                     className="w-10 h-10 rounded-full group-hover:scale-110 transition-transform duration-200" 
                                 />
                             </div>
-                            <div>
+                            <div className="flex items-center space-x-4">
                                 <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
                                     Agnidhra Technologies
                                 </span>
+                                {/* Search bar beside Agnidhra Technologies */}
+                                <div className="hidden md:block ml-2">
+                                    <HeaderSearchDropdown onNavigate={onNavigate} />
+                                </div>
                             </div>
                         </button>
                     </div>
@@ -186,8 +190,7 @@ export default function Header({ onNavigate, currentPage }) {
                                 coursePricing={coursePricing}
                                 pricingLoading={pricingLoading}
                             />
-                            {/* Header Search Bar with Dropdown Popup */}
-                            <HeaderSearchDropdown onNavigate={onNavigate} />
+                            {/* Remove search bar from here, now beside Agnidhra Technologies */}
                             <button
                                 onClick={() => onNavigate('upcoming-batches')}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
@@ -218,7 +221,7 @@ export default function Header({ onNavigate, currentPage }) {
                                 </button>
                                 <button
                                     onClick={() => onNavigate('login')}
-                                    className="bg-slate-800 px-4 py-2 rounded-lg text-white font-semibold hover:bg-slate-700 transition-colors"
+                                    className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-200 shadow-lg"
                                 >
                                     Login
                                 </button>
