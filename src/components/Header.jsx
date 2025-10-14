@@ -660,11 +660,11 @@ function HeaderSearchDropdown({ onNavigate }) {
         { label: "Full Stack Development", icon: Laptop },
     ];
     const popularModules = [
-        { label: "Python Programming Foundation", onClick: () => onNavigate('moduleDetail', { moduleId: 'python-foundation' }) },
-        { label: "SOC Analyst Bootcamp", onClick: () => onNavigate('defensiveBootcampLanding') },
-        { label: "Elite Hacker Program", onClick: () => onNavigate('offensiveMastery') },
-        { label: "AWS Cloud Architect", onClick: () => onNavigate('technologyTraining') },
-        { label: "Data Science with Python", onClick: () => onNavigate('technologyTraining') },
+        { label: "Python Programming Foundation" },
+        { label: "SOC Analyst Bootcamp" },
+        { label: "Elite Hacker Program" },
+        { label: "AWS Cloud Architect" },
+        { label: "Data Science with Python" },
     ];
 
     // Close popup on outside click
@@ -718,11 +718,11 @@ function HeaderSearchDropdown({ onNavigate }) {
                     <div>
                         <div className="text-xs font-bold text-slate-400 mb-2">Most Popularly Searched Courses</div>
                         <div className="flex flex-col gap-1 mb-4">
-                            {popularModules.map((item, idx) => (
+                            {popularModules.map((item) => (
                                 <button
                                     key={item.label}
                                     className="text-left px-3 py-2 rounded-lg hover:bg-blue-800/40 text-slate-200 text-sm transition-colors"
-                                    onClick={() => { setOpen(false); item.onClick(); }}
+                                    onClick={() => { setOpen(false); onNavigate('moduleCatalog', { filter: item.label }); }}
                                 >
                                     {item.label}
                                 </button>
@@ -734,7 +734,7 @@ function HeaderSearchDropdown({ onNavigate }) {
                         <div className="text-xs text-slate-400 mb-1">Not sure what to search?</div>
                         <button
                             className="text-blue-400 hover:underline text-sm font-semibold"
-                            onClick={() => { setOpen(false); onNavigate('moduleCatalog', { filter: '' }); }}
+                            onClick={() => { setOpen(false); onNavigate('moduleCatalog'); }}
                         >
                             Browse our catalogue
                         </button>

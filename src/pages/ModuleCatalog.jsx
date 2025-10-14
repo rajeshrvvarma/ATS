@@ -1,21 +1,26 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { modules } from '@/data/modules.js';
 
 const ModuleCatalog = () => {
   const [selectedModule, setSelectedModule] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('All');
+  const location = useLocation();
 
   // On mount, read query parameters for filter & category
+  const syncFromParams = () => {
+    const params = new URLSearchParams(location.search);
+    const filter = params.get('filter');
+    const category = params.get('category');
+    if (filter !== null) setSearchTerm(filter); else setSearchTerm('');
+    if (category && category !== 'All') setSelectedCategory(category); else setSelectedCategory('All');
+  };
+
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const filter = params.get('filter');
-      const category = params.get('category');
-      if (filter) setSearchTerm(filter);
-      if (category && category !== 'All') setSelectedCategory(category);
-    }
-  }, []);
+    syncFromParams();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
 
   // Get unique categories
   const categories = ['All', ...new Set(modules.map(mod => mod.category))];
