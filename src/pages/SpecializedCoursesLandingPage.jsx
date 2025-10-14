@@ -36,6 +36,81 @@ const SpecializedCoursesLandingPage = () => {
     mod.category === 'Professional Skills'
   );
 
+  // Course to modules mapping - showing which modules are included in each course
+  const courseModulesMapping = {
+    'AWS Security Specialist': [
+      { id: 'mod_18', title: 'AWS Fundamentals', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_19', title: 'AWS Security Services', price: 1999, category: 'Cloud Platforms' },
+      { id: 'mod_74', title: 'Network Security Fundamentals', price: 1299, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Azure Security Engineer': [
+      { id: 'mod_20', title: 'Microsoft Azure Fundamentals', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_21', title: 'Azure Security Center', price: 1999, category: 'Cloud Platforms' },
+      { id: 'mod_75', title: 'Identity and Access Management', price: 1299, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Multi-Cloud Security Architect': [
+      { id: 'mod_18', title: 'AWS Fundamentals', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_20', title: 'Microsoft Azure Fundamentals', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_22', title: 'Google Cloud Platform', price: 1499, category: 'Cloud Platforms' },
+      { id: 'mod_98', title: 'System Design Fundamentals', price: 1799, category: 'System Design' },
+      { id: 'mod_74', title: 'Network Security Fundamentals', price: 1299, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Digital Forensics Investigator': [
+      { id: 'mod_76', title: 'Digital Forensics Basics', price: 1799, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_77', title: 'Computer Investigation Techniques', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_78', title: 'Mobile Device Forensics', price: 1699, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Advanced Malware Forensics': [
+      { id: 'mod_79', title: 'Malware Analysis Fundamentals', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_80', title: 'Reverse Engineering', price: 2199, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_81', title: 'Advanced Threat Detection', price: 1899, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Malware Analysis Fundamentals': [
+      { id: 'mod_79', title: 'Malware Analysis Fundamentals', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_82', title: 'Static Analysis Techniques', price: 1699, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_83', title: 'Dynamic Analysis Tools', price: 1699, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Advanced Reverse Engineering': [
+      { id: 'mod_80', title: 'Reverse Engineering', price: 2199, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_84', title: 'Assembly Language Analysis', price: 1899, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_85', title: 'Binary Analysis Tools', price: 1799, category: 'Cybersecurity Fundamentals' }
+    ],
+    'ISO 27001 Lead Implementer': [
+      { id: 'mod_86', title: 'Information Security Management', price: 1699, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_87', title: 'Compliance Frameworks', price: 1599, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_100', title: 'Project Management', price: 1399, category: 'Professional Skills' }
+    ],
+    'GRC Analyst Professional': [
+      { id: 'mod_86', title: 'Information Security Management', price: 1699, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_87', title: 'Compliance Frameworks', price: 1599, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_88', title: 'Risk Assessment', price: 1799, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_101', title: 'Business Communication', price: 1199, category: 'Professional Skills' }
+    ],
+    'Incident Response Specialist': [
+      { id: 'mod_89', title: 'Incident Response Planning', price: 1899, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_90', title: 'Forensic Investigation', price: 1999, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_81', title: 'Advanced Threat Detection', price: 1899, category: 'Cybersecurity Fundamentals' }
+    ],
+    'Advanced Threat Hunting': [
+      { id: 'mod_81', title: 'Advanced Threat Detection', price: 1899, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_91', title: 'Threat Intelligence', price: 1799, category: 'Cybersecurity Fundamentals' },
+      { id: 'mod_92', title: 'Behavioral Analysis', price: 1699, category: 'Cybersecurity Fundamentals' }
+    ]
+  };
+
+  // Helper function to get modules for a course
+  const getCourseModules = (courseTitle) => {
+    return courseModulesMapping[courseTitle] || [];
+  };
+
+  // Helper function to calculate total module price and adjusted course price
+  const getModulePricing = (courseTitle) => {
+    const courseModules = getCourseModules(courseTitle);
+    const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
+    const adjustedCoursePrice = Math.round(totalModulePrice * 0.75); // 25% discount for course bundle
+    return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
+  };
+
   // Mapping from course titles to centralized pricing IDs
   const titleToIdMap = {
     'AWS Security Specialist': 'aws-security-specialist',
@@ -745,8 +820,8 @@ const SpecializedCoursesLandingPage = () => {
         <div className="container mx-auto px-6">
           <div className="bg-purple-900/80 border-l-4 border-purple-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
             <div>
-              <div className="text-lg font-bold text-purple-200 mb-1">Now Modular!</div>
-              <div className="text-purple-100 text-base">Our specialized courses are now available as individual modules. Build your own custom learning path or enroll in complete specializations.</div>
+              <div className="text-lg font-bold text-purple-200 mb-1">Enhanced Learning Experience!</div>
+              <div className="text-purple-100 text-base">Our predefined specialized courses now show you exactly which modules are included. You can enroll in complete courses or customize by selecting individual modules.</div>
             </div>
             <div className="mt-4 md:mt-0 flex gap-3">
               <button
@@ -760,32 +835,6 @@ const SpecializedCoursesLandingPage = () => {
                 onClick={() => navigate('/course-builder')}
               >
                 Build Custom Path
-              </button>
-            </div>
-          </div>
-          <div className="bg-slate-900 rounded-xl p-6 border border-purple-700">
-            <h3 className="text-2xl font-semibold text-purple-300 mb-4">Specialized Modules Available</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {specializedModules.slice(0, 6).map(mod => (
-                <div key={mod.id} className="bg-slate-800 rounded-lg p-4 border border-slate-700 hover:border-purple-500 transition-all">
-                  <div className="font-bold text-white text-lg mb-1">{mod.title}</div>
-                  <div className="text-slate-400 text-sm mb-1">{mod.category} • {mod.duration}</div>
-                  <div className="text-slate-300 text-sm mb-2">{mod.description.substring(0, 80)}...</div>
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {mod.learningPaths.slice(0, 2).map((path, i) => (
-                      <span key={i} className="bg-slate-700 text-purple-200 px-2 py-1 rounded-full text-xs">{path}</span>
-                    ))}
-                  </div>
-                  <div className="text-green-400 font-bold">₹{mod.price}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 text-center">
-              <button
-                className="text-purple-400 hover:text-purple-300 underline"
-                onClick={() => navigate('/module-catalog')}
-              >
-                View All {specializedModules.length} Specialized Modules →
               </button>
             </div>
           </div>
@@ -854,6 +903,44 @@ const SpecializedCoursesLandingPage = () => {
                       ))}
                     </div>
                   </div>
+
+                  {/* Course Modules */}
+                  {(() => {
+                    const courseModules = getCourseModules(course.title);
+                    const modulePricing = getModulePricing(course.title);
+                    
+                    if (courseModules.length > 0) {
+                      return (
+                        <div className="mb-6 bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                          <h4 className="font-semibold text-gray-300 mb-3 flex items-center gap-2">
+                            <span className="text-sm">🧩</span> Included Modules ({courseModules.length})
+                          </h4>
+                          <div className="space-y-2 mb-3">
+                            {courseModules.map((module, idx) => (
+                              <div key={idx} className="flex justify-between items-center text-sm">
+                                <span className="text-gray-400">{module.title}</span>
+                                <span className="text-green-400 font-medium">₹{module.price}</span>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="border-t border-slate-600 pt-2 flex justify-between items-center text-sm">
+                            <span className="text-gray-300">Individual Total:</span>
+                            <span className="text-gray-400 line-through">₹{modulePricing.totalModulePrice}</span>
+                          </div>
+                          <div className="flex justify-between items-center text-sm">
+                            <span className="text-blue-300 font-medium">Course Bundle:</span>
+                            <span className="text-green-400 font-bold">₹{modulePricing.adjustedCoursePrice}</span>
+                          </div>
+                          <div className="text-center mt-2">
+                            <span className="text-xs text-green-300 bg-green-900/30 px-2 py-1 rounded-full">
+                              Save ₹{modulePricing.totalModulePrice - modulePricing.adjustedCoursePrice} (25% off)
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
 
                   {/* Enrollment Progress */}
                   <div className="mb-6">
