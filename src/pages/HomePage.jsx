@@ -10,29 +10,10 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 
 // Module-Focused Hero Section
-const HeroSection = ({ onNavigate }) => {
+const HeroSection = ({ onNavigate, modules, loading, error }) => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [modules, setModules] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        fetch('/modules.json')
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to load modules');
-                return res.json();
-            })
-            .then(data => {
-                setModules(data);
-                setLoading(false);
-            })
-            .catch(err => {
-                setError(err.message);
-                setLoading(false);
-            });
-    }, []);
 
     // Get unique categories from modules
     const categories = ['All', ...new Set(modules.map(module => module.category))];
@@ -176,18 +157,16 @@ const HeroSection = ({ onNavigate }) => {
 };
 
 // Featured Modules Showcase
-const FeaturedModulesSection = ({ onNavigate }) => {
+const FeaturedModulesSection = ({ onNavigate, modules }) => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
-    
     // Get categories and featured modules
     const categories = ['All', ...new Set(modules.map(module => module.category))];
-    
     // Get featured modules (first 12 or filtered modules)
     const featuredModules = modules
         .filter(module => {
-            const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                module.description.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                module.description.toLowerCase().includes(searchTerm.toLowerCase());
             const matchesCategory = selectedCategory === 'All' || module.category === selectedCategory;
             return matchesSearch && matchesCategory;
         })
@@ -920,9 +899,28 @@ const Contact = ({ onNavigate }) => {
 
 // Main HomePage Component
 const HomePage = ({ onNavigate }) => {
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
-    
-    React.useEffect(() => {
+
+    useEffect(() => {
+        fetch('/modules.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load modules');
+                return res.json();
+            })
+            .then(data => {
+                setModules(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, []);
+
+    useEffect(() => {
         // On mount, if a hash exists, attempt smooth scroll to that section
         const hash = window.location.hash?.replace('#', '');
         if (hash) {
@@ -934,8 +932,8 @@ const HomePage = ({ onNavigate }) => {
 
     return (
         <>
-            <HeroSection onNavigate={onNavigate} />
-            <FeaturedModulesSection onNavigate={onNavigate} />
+            <HeroSection onNavigate={onNavigate} modules={modules} loading={loading} error={error} />
+            <FeaturedModulesSection onNavigate={onNavigate} modules={modules} />
             <TraditionalCoursesSection onNavigate={onNavigate} />
             <SuccessMetrics />
             <Testimonials />
