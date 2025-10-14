@@ -186,18 +186,104 @@ export default function Header({ onNavigate, currentPage }) {
                                 coursePricing={coursePricing}
                                 pricingLoading={pricingLoading}
                             />
-                            <button
-                                onClick={() => onNavigate('moduleCatalog')}
-                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
-                            >
-                                All Modules Catalog
-                            </button>
+                            {/* Header Search Bar with Dropdown Popup */}
+                            <HeaderSearchDropdown onNavigate={onNavigate} />
                             <button
                                 onClick={() => onNavigate('upcoming-batches')}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
                             >
                                 Upcoming Batches
                             </button>
+// Header Search Dropdown Component
+function HeaderSearchDropdown({ onNavigate }) {
+    const [open, setOpen] = React.useState(false);
+    const [search, setSearch] = React.useState("");
+    const inputRef = React.useRef(null);
+
+    // Example data for specialisations and popular modules
+    const specialisations = [
+        { label: "AI & Machine Learning", icon: BrainCircuit },
+        { label: "Data Science", icon: Database },
+        { label: "Cybersecurity", icon: Shield },
+        { label: "Cloud & DevOps", icon: Cloud },
+        { label: "Full Stack Development", icon: Laptop },
+    ];
+    const popularModules = [
+        { label: "Python Programming Foundation", onClick: () => onNavigate('moduleDetail', { moduleId: 'python-foundation' }) },
+        { label: "SOC Analyst Bootcamp", onClick: () => onNavigate('defensiveBootcampLanding') },
+        { label: "Elite Hacker Program", onClick: () => onNavigate('offensiveMastery') },
+        { label: "AWS Cloud Architect", onClick: () => onNavigate('technologyTraining') },
+        { label: "Data Science with Python", onClick: () => onNavigate('technologyTraining') },
+    ];
+
+    // Close popup on outside click
+    React.useEffect(() => {
+        function handleClick(e) {
+            if (inputRef.current && !inputRef.current.contains(e.target)) setOpen(false);
+        }
+        if (open) document.addEventListener('mousedown', handleClick);
+        return () => document.removeEventListener('mousedown', handleClick);
+    }, [open]);
+
+    return (
+        <div className="relative" ref={inputRef} style={{ minWidth: 260 }}>
+            <input
+                type="text"
+                className="px-4 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white focus:outline-none focus:border-blue-500 w-64 shadow-sm"
+                placeholder="Search modules, skills..."
+                onFocus={() => setOpen(true)}
+                onClick={() => setOpen(true)}
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+            />
+            {open && (
+                <div className="absolute left-0 mt-2 w-[350px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-4 animate-fade-in">
+                    {/* Most Demand in Specialisation/Learning Path */}
+                    <div>
+                        <div className="text-xs font-bold text-slate-400 mb-2">Most Demand in Specialisation / Learning Path</div>
+                        <div className="flex flex-wrap gap-2 mb-4">
+                            {specialisations.map((item, idx) => (
+                                <button
+                                    key={item.label}
+                                    className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 hover:bg-blue-700 text-blue-300 text-xs font-medium border border-slate-700 transition-colors"
+                                    onClick={() => { setOpen(false); onNavigate('moduleCatalog', { filter: item.label }); }}
+                                >
+                                    <item.icon className="w-4 h-4" />
+                                    {item.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Most Popularly Searched Courses */}
+                    <div>
+                        <div className="text-xs font-bold text-slate-400 mb-2">Most Popularly Searched Courses</div>
+                        <div className="flex flex-col gap-1 mb-4">
+                            {popularModules.map((item, idx) => (
+                                <button
+                                    key={item.label}
+                                    className="text-left px-3 py-2 rounded-lg hover:bg-blue-800/40 text-slate-200 text-sm transition-colors"
+                                    onClick={() => { setOpen(false); item.onClick(); }}
+                                >
+                                    {item.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    {/* Browse Catalogue Link */}
+                    <div className="pt-2 border-t border-slate-700 mt-2">
+                        <div className="text-xs text-slate-400 mb-1">Not sure what to search?</div>
+                        <button
+                            className="text-blue-400 hover:underline text-sm font-semibold"
+                            onClick={() => { setOpen(false); onNavigate('moduleCatalog'); }}
+                        >
+                            Browse our catalogue
+                        </button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
                             <button
                                 onClick={() => scrollToSection('about')}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
