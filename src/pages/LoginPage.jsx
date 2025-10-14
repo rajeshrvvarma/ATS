@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Shield, AlertCircle } from 'lucide-react';
 import { FcGoogle } from 'react-icons/fc';
@@ -13,6 +13,26 @@ export default function LoginPage({ onNavigate, onLogin }) {
   const [error, setError] = useState('');
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [user, setUser] = useState(null);
+  const [cssLoaded, setCssLoaded] = useState(false);
+
+  // Wait for CSS to be fully loaded before showing animations
+  useEffect(() => {
+    const checkCSSLoaded = () => {
+      // Check if document is ready and stylesheets are loaded
+      if (document.readyState === 'complete') {
+        setCssLoaded(true);
+      } else {
+        // Wait for load event
+        const handleLoad = () => {
+          setTimeout(() => setCssLoaded(true), 50);
+        };
+        window.addEventListener('load', handleLoad);
+        return () => window.removeEventListener('load', handleLoad);
+      }
+    };
+
+    checkCSSLoaded();
+  }, []);
 
   const handleGoogle = async () => {
     try {
@@ -70,6 +90,13 @@ export default function LoginPage({ onNavigate, onLogin }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-green-900 to-teal-900 flex items-center justify-center py-12 px-4 relative">
+      {/* Show loading spinner while CSS loads */}
+      {!cssLoaded && (
+        <div className="absolute inset-0 flex items-center justify-center bg-slate-900 z-50">
+          <div className="w-8 h-8 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+      
       {/* Floating particles like homepage */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute w-2 h-2 bg-green-400 rounded-full top-10 left-10 animate-pulse"></div>
@@ -81,7 +108,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
       
       <motion.div
         initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={cssLoaded ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
         transition={{ duration: 0.7, ease: 'easeOut' }}
         className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden relative z-10"
       >
