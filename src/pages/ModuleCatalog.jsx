@@ -72,11 +72,8 @@ const modules = [
   // ... Add all other modules here with similar structure ...
 ];
 
-
-
-const [selectedModule, setSelectedModule] = React.useState(null);
-
 const ModuleCatalog = () => {
+  const [selectedModule, setSelectedModule] = React.useState(null);
   return (
     <div className="min-h-screen bg-slate-900 py-12">
       <div className="container mx-auto px-6">
