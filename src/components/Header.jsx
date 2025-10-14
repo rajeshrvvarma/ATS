@@ -169,12 +169,12 @@ export default function Header({ onNavigate, currentPage }) {
                                     className="w-10 h-10 rounded-full group-hover:scale-110 transition-transform duration-200" 
                                 />
                             </div>
-                            <div className="flex items-center space-x-4">
+                            <div className="flex items-center space-x-2 lg:space-x-4">
                                 <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
                                     Agnidhra Technologies
                                 </span>
-                                {/* Search bar beside Agnidhra Technologies */}
-                                <div className="hidden md:block ml-2">
+                                {/* Search bar beside Agnidhra Technologies - always show on desktop */}
+                                <div className="block ml-4">
                                     <HeaderSearchDropdown onNavigate={onNavigate} />
                                 </div>
                             </div>
@@ -665,18 +665,18 @@ function HeaderSearchDropdown({ onNavigate }) {
     }, [open]);
 
     return (
-        <div className="relative" ref={inputRef} style={{ minWidth: 260 }}>
+        <div className="relative" ref={inputRef} style={{ minWidth: 240 }}>
             <input
                 type="text"
-                className="px-4 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white focus:outline-none focus:border-blue-500 w-64 shadow-sm"
-                placeholder="Search modules, skills..."
+                className="px-4 py-2 rounded-lg border border-slate-400 bg-slate-700 text-white placeholder-slate-300 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 w-60 shadow-md transition-all duration-200"
+                placeholder="Search courses..."
                 onFocus={() => setOpen(true)}
                 onClick={() => setOpen(true)}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
             />
             {open && (
-                <div className="absolute left-0 mt-2 w-[350px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-4 animate-fade-in">
+                <div className="absolute left-0 mt-2 w-[320px] md:w-[350px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-4 animate-fade-in">
                     {/* Most Demand in Specialisation/Learning Path */}
                     <div>
                         <div className="text-xs font-bold text-slate-400 mb-2">Most Demand in Specialisation / Learning Path</div>
