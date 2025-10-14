@@ -7,24 +7,46 @@ import { sendContactForm } from '@/services/netlifyFormsService.js';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import modules from '@/modules.json';
+
 
 // Module-Focused Hero Section
 const HeroSection = ({ onNavigate }) => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [modules, setModules] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        fetch('/modules.json')
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load modules');
+                return res.json();
+            })
+            .then(data => {
+                setModules(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                setError(err.message);
+                setLoading(false);
+            });
+    }, []);
 
     // Get unique categories from modules
     const categories = ['All', ...new Set(modules.map(module => module.category))];
-    
+
     // Filter modules based on search and category
     const filteredModules = modules.filter(module => {
-        const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                            module.description.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            module.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'All' || module.category === selectedCategory;
         return matchesSearch && matchesCategory;
     });
+
+    if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
+    if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
 
     return (
         <>
