@@ -16,6 +16,12 @@ const ModuleCatalog = () => {
     const params = new URLSearchParams(location.search);
     const filter = params.get('filter');
     const category = params.get('category');
+    // If no query params, clear all filters
+    if (!filter && !category) {
+      setSearchTerm('');
+      setSelectedCategory('All');
+      return;
+    }
     if (filter !== null) setSearchTerm(filter); else setSearchTerm('');
     if (category && category !== 'All') setSelectedCategory(category); else setSelectedCategory('All');
   };
