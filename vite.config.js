@@ -10,6 +10,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  // Optimization for react-icons tree-shaking
+  optimizeDeps: {
+    include: ['react-icons/fc'],
+  },
   // This build configuration is the critical fix.
   // It ensures the build targets modern browsers that support import.meta.env.
   build: {
@@ -36,7 +40,7 @@ export default defineConfig({
             return 'vendor-firebase';
           }
           // UI libraries
-          if (id.includes('lucide-react')) {
+          if (id.includes('lucide-react') || id.includes('react-icons')) {
             return 'vendor-ui';
           }
           // AI services
