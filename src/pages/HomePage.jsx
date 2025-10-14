@@ -258,7 +258,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
                     </button>
                 </motion.div>
             </section>
-        </AnimatedBackground>
+    </div>
     );
 };
 
@@ -437,7 +437,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
                     })}
                 </div>
             </section>
-        </AnimatedBackground>
+    </div>
     );
 };
 
@@ -521,7 +521,7 @@ const SuccessMetrics = () => (
                 ))}
             </div>
         </section>
-    </AnimatedBackground>
+    </div>
 );
 
 // Testimonials Section
@@ -601,7 +601,7 @@ const Testimonials = () => {
                     </motion.div>
                 </div>
             </section>
-        </AnimatedBackground>
+    </div>
     );
 };
 
@@ -779,7 +779,7 @@ const Contact = ({ onNavigate }) => {
                     </motion.div>
                 </div>
             </section>
-        </AnimatedBackground>
+    </div>
     );
 };
 
