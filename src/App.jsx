@@ -1,3 +1,4 @@
+const CourseBuilder = React.lazy(() => import('@/pages/CourseBuilder.jsx'));
 import React, { Suspense, useMemo, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -88,6 +89,7 @@ export default function App() {
     admin: '/admin',
     login: '/login',
     moduleCatalog: '/module-catalog',
+    courseBuilder: '/course-builder',
     }), []);
 
     const pathToPage = useMemo(() => ({
@@ -120,6 +122,7 @@ export default function App() {
     '/admin': 'admin',
     '/login': 'login',
     '/module-catalog': 'moduleCatalog',
+    '/course-builder': 'courseBuilder',
     }), []);
 
     const currentPage = pathToPage[location.pathname] || 'home';
@@ -161,6 +164,7 @@ export default function App() {
                         <AnimatePresence mode="wait">
                         <motion.div key={location.pathname} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
                         <Routes>
+                            <Route path="/course-builder" element={<CourseBuilder />} />
                             <Route path="/" element={<HomePage onNavigate={go} />} />
                             <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
                             <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
