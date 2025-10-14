@@ -44,18 +44,15 @@ export default defineConfig({
           ) {
             return 'vendor-react';
           }
-          // Firebase services (split into smaller chunks)
-          if (id.includes('firebase/auth')) {
-            return 'vendor-firebase-auth';
-          }
-          if (id.includes('firebase/firestore')) {
-            return 'vendor-firebase-firestore';
-          }
-          if (id.includes('firebase/storage')) {
-            return 'vendor-firebase-storage';
-          }
-          if (id.includes('firebase')) {
-            return 'vendor-firebase-core';
+          // Group all Firebase modules into a single chunk
+          if (
+            id.includes('firebase') ||
+            id.includes('firebase/auth') ||
+            id.includes('firebase/firestore') ||
+            id.includes('firebase/storage') ||
+            id.includes('firebase-admin')
+          ) {
+            return 'vendor-firebase';
           }
           
           // UI libraries (split by type)
