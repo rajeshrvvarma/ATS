@@ -70,15 +70,20 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 
 
 // Combined Modules & Traditional Courses Section with Tabs
-const CoursesTabbedSection = ({ onNavigate, modules }) => {
-    const [activeTab, setActiveTab] = useState('modules');
+const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, searchFilter, setSearchFilter }) => {
     // --- Module Section Logic ---
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState(searchFilter || '');
+
+    // Update searchTerm if searchFilter changes (from header search)
+    React.useEffect(() => {
+        if (typeof searchFilter === 'string') setSearchTerm(searchFilter);
+    }, [searchFilter]);
     const categories = ['All', ...new Set(modules.map(module => module.category))];
     const handleTabClick = (category) => {
         setSelectedCategory(category);
         setSearchTerm('');
+        if (setSearchFilter) setSearchFilter('');
     };
     const featuredModules = modules
         .filter(module => {
@@ -202,7 +207,7 @@ const CoursesTabbedSection = ({ onNavigate, modules }) => {
     ];
 
     return (
-        <div className="py-20 bg-gradient-green bg-fixed">
+        <div className="py-20 bg-gradient-green bg-fixed" id="courses-tabbed-section">
             <section className="container mx-auto px-6">
                 {/* Tab Switcher */}
                 <div className="flex justify-center mb-10">
@@ -777,6 +782,23 @@ const HomePage = ({ onNavigate }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState('modules');
+    const [searchFilter, setSearchFilter] = useState('');
+    const tabbedSectionRef = React.useRef(null);
+
+    // Custom onNavigate handler
+    const handleNavigate = (route, params) => {
+        if (route === 'moduleCatalog') {
+            setActiveTab('modules');
+            setSearchFilter(params && params.filter ? params.filter : '');
+            setTimeout(() => {
+                const el = document.getElementById('courses-tabbed-section');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } else if (typeof onNavigate === 'function') {
+            onNavigate(route, params);
+        }
+    };
 
     useEffect(() => {
         const fetchModules = async () => {
@@ -808,11 +830,18 @@ const HomePage = ({ onNavigate }) => {
 
     return (
         <>
-            <HeroSection onNavigate={onNavigate} modules={modules} loading={loading} error={error} />
-            <CoursesTabbedSection onNavigate={onNavigate} modules={modules} />
+            <HeroSection onNavigate={handleNavigate} modules={modules} loading={loading} error={error} />
+            <CoursesTabbedSection
+                onNavigate={handleNavigate}
+                modules={modules}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                searchFilter={searchFilter}
+                setSearchFilter={setSearchFilter}
+            />
             <SuccessMetrics />
             <Testimonials />
-            <Contact onNavigate={onNavigate} />
+            <Contact onNavigate={handleNavigate} />
 
             <div className="fixed bottom-6 right-6 z-40">
                 <button
