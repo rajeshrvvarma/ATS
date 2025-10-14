@@ -69,13 +69,18 @@ export default function LoginPage({ onNavigate, onLogin }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-100 flex items-center justify-center py-12 px-4">
-      <div className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden"
+      >
         {/* Left: Content */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-100 to-green-50">
+        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-400 via-blue-200 to-green-200 animate-gradient-x">
           <div className="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center mb-6">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-4xl font-bold text-blue-700 mb-4">Welcome Back to Agnidhra Technologies</h2>
+          <h2 className="text-4xl font-bold text-blue-800 mb-4 drop-shadow">Welcome Back to Agnidhra Technologies</h2>
           <p className="text-lg text-slate-700 mb-6">
             Continue your journey to become a cybersecurity expert. Access your personalized learning dashboard, track your progress, and unlock new courses in cybersecurity, technology, and more.
           </p>
@@ -119,45 +124,45 @@ export default function LoginPage({ onNavigate, onLogin }) {
           <div className="max-w-sm mx-auto w-full">
             <h3 className="text-2xl font-bold text-blue-700 mb-2 text-center">Sign In</h3>
             <p className="text-slate-600 text-center mb-6">Access your learning dashboard</p>
-          {/* Error Message */}
-          {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 mb-4">
-              <AlertCircle className="w-5 h-5 flex-shrink-0" />
-              <span className="text-sm">{error}</span>
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={handleGoogle}
-            disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-300 rounded-lg bg-white text-slate-800 font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg mb-4"
-          >
-            <FcGoogle className="w-6 h-6" />
-            {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
-                Signing in with Google...
+            {/* Error Message */}
+            {error && (
+              <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 mb-4">
+                <AlertCircle className="w-5 h-5 flex-shrink-0" />
+                <span className="text-sm">{error}</span>
               </div>
-            ) : (
-              'Sign in with Google'
             )}
-          </button>
-          <div className="text-center">
-            <p className="text-sm text-slate-400">
-              Secure authentication powered by Google
-            </p>
-            <p className="text-xs text-slate-500 mt-2">
-              Your Google account will be used to access the learning platform
-            </p>
-          </div>
-          <div className="text-center mt-8">
             <button
-              onClick={() => onNavigate('home')}
-              className="text-sky-500 hover:text-sky-400 text-sm"
+              type="button"
+              onClick={handleGoogle}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-300 rounded-lg bg-white text-slate-800 font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg mb-4"
             >
-              ← Back to Home
+              <FcGoogle className="w-6 h-6" />
+              {isLoading ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-slate-800 border-t-transparent rounded-full animate-spin" />
+                  Signing in with Google...
+                </div>
+              ) : (
+                'Sign in with Google'
+              )}
             </button>
-          </div>
+            <div className="text-center">
+              <p className="text-sm text-slate-400">
+                Secure authentication powered by Google
+              </p>
+              <p className="text-xs text-slate-500 mt-2">
+                Your Google account will be used to access the learning platform
+              </p>
+            </div>
+            <div className="text-center mt-8">
+              <button
+                onClick={() => onNavigate('home')}
+                className="text-sky-500 hover:text-sky-400 text-sm"
+              >
+                ← Back to Home
+              </button>
+            </div>
           </div>
         </div>
         {/* Two-Factor Authentication Modal */}
@@ -167,7 +172,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
             onCancel={handleTwoFactorCancel}
           />
         )}
-      </div>
+      </motion.div>
     </div>
   );
 }

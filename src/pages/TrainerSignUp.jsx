@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
 
 export default function TrainerSignUp({ onNavigate }) {
@@ -10,10 +11,15 @@ export default function TrainerSignUp({ onNavigate }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-100 flex items-center justify-center py-12 px-4">
-      <div className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: 'easeOut' }}
+        className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden"
+      >
         {/* Left: Content */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-100 to-green-50">
-          <h2 className="text-4xl font-bold text-blue-700 mb-4">Become a Trainer at Agnidhra Technologies</h2>
+        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-400 via-blue-200 to-green-200 animate-gradient-x">
+          <h2 className="text-4xl font-bold text-blue-800 mb-4 drop-shadow">Become a Trainer at Agnidhra Technologies</h2>
           <p className="text-lg text-slate-700 mb-6">
             Join our mission to empower learners with cutting-edge skills in cybersecurity, technology, and more. As a trainer, you'll:
           </p>
@@ -31,7 +37,7 @@ export default function TrainerSignUp({ onNavigate }) {
           </div>
         </div>
         {/* Right: Form */}
-        <div className="flex-1 p-8 flex flex-col justify-center bg-white border-l border-slate-100">
+  <div className="flex-1 p-8 flex flex-col justify-center bg-white border-l border-slate-100">
           <h3 className="text-2xl font-bold text-blue-700 mb-6">Trainer Registration</h3>
           <form className="space-y-5">
             <div>
@@ -66,7 +72,7 @@ export default function TrainerSignUp({ onNavigate }) {
             <button className="text-blue-600 hover:underline" onClick={() => onNavigate && onNavigate('login')}>Login</button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
