@@ -151,19 +151,19 @@ export default function Footer({ onNavigate }) {
                         </h4>
                         <ul className="space-y-3">
                             <li>
-                                <a href="/programs/defensive-security" className="hover:text-blue-400 transition-colors duration-200 text-left">Defensive Security</a>
+                                <button onClick={() => onNavigate('defensiveMastery')} className="hover:text-blue-400 transition-colors duration-200 text-left">Defensive Security</button>
                             </li>
                             <li>
-                                <a href="/programs/offensive-security" className="hover:text-blue-400 transition-colors duration-200 text-left">Offensive Security</a>
+                                <button onClick={() => onNavigate('offensiveMastery')} className="hover:text-blue-400 transition-colors duration-200 text-left">Offensive Security</button>
                             </li>
                             <li>
-                                <a href="/programs/cloud-security" className="hover:text-blue-400 transition-colors duration-200 text-left">Cloud Security</a>
+                                <button onClick={() => onNavigate('specializedCourses')} className="hover:text-blue-400 transition-colors duration-200 text-left">Cloud Security</button>
                             </li>
                             <li>
-                                <a href="/workshop" className="hover:text-blue-400 transition-colors duration-200 text-left">Free Workshop</a>
+                                <button onClick={() => onNavigate('workshop')} className="hover:text-blue-400 transition-colors duration-200 text-left">Free Workshop</button>
                             </li>
                             <li>
-                                <a href="/learning-portal" className="hover:text-blue-400 transition-colors duration-200 text-left">Learning Portal</a>
+                                <button onClick={() => onNavigate('video-learning')} className="hover:text-blue-400 transition-colors duration-200 text-left">Learning Portal</button>
                             </li>
                         </ul>
                     </div>
@@ -176,19 +176,19 @@ export default function Footer({ onNavigate }) {
                         </h4>
                         <ul className="space-y-3">
                            <li>
-                               <a href="/terms" className="hover:text-blue-400 transition-colors duration-200 text-left">Terms & Conditions</a>
+                               <button onClick={() => onNavigate('terms')} className="hover:text-blue-400 transition-colors duration-200 text-left">Terms & Conditions</button>
                            </li>
                            <li>
-                               <a href="/privacy" className="hover:text-blue-400 transition-colors duration-200 text-left">Privacy Policy</a>
+                               <button onClick={() => onNavigate('privacy')} className="hover:text-blue-400 transition-colors duration-200 text-left">Privacy Policy</button>
                            </li>
                            <li>
-                               <a href="/refund-policy" className="hover:text-blue-400 transition-colors duration-200 text-left">Refund Policy</a>
+                               <button onClick={() => onNavigate('cancellationRefund')} className="hover:text-blue-400 transition-colors duration-200 text-left">Refund Policy</button>
                            </li>
                            <li>
-                               <a href="/contact" className="hover:text-blue-400 transition-colors duration-200 text-left">Contact Us</a>
+                               <button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors duration-200 text-left">Contact Us</button>
                            </li>
                            <li>
-                               <a href="/disclaimer" className="hover:text-blue-400 transition-colors duration-200 text-left">Disclaimer</a>
+                               <button onClick={() => onNavigate('disclaimer')} className="hover:text-blue-400 transition-colors duration-200 text-left">Disclaimer</button>
                            </li>
                         </ul>
                     </div>

@@ -309,7 +309,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
                     className="text-center"
                 >
                     <button
-                        onClick={() => onNavigate('modules')}
+                        onClick={() => onNavigate('moduleCatalog')}
                         className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 inline-flex items-center gap-2"
                     >
                         <Grid3X3 className="w-5 h-5" />
@@ -324,7 +324,6 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
 
 // Traditional Courses Section (Secondary to Modules)
 const TraditionalCoursesSection = ({ onNavigate }) => {
-    const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
     
     const traditionalCourses = [
         {
@@ -497,41 +496,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
                         );
                     })}
                 </div>
-
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                    viewport={{ once: true }}
-                    className="text-center"
-                >
-                    <div className="bg-slate-800/30 border border-slate-600/50 rounded-xl p-8 max-w-2xl mx-auto">
-                        <h3 className="text-2xl font-bold text-white mb-4">
-                            Not sure which path to choose?
-                        </h3>
-                        <p className="text-slate-300 mb-6">
-                            Our AI Career Advisor can help you choose between individual modules or structured courses based on your goals and experience.
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button
-                                onClick={() => document.getElementById('featured-modules')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-                            >
-                                <Grid3X3 className="w-5 h-5" />
-                                Browse Modules
-                            </button>
-                            <button
-                                onClick={() => setIsAdvisorOpen(true)}
-                                className="bg-slate-700 hover:bg-slate-600 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-                            >
-                                <Sparkles className="w-5 h-5" />
-                                Get AI Guidance
-                            </button>
-                        </div>
-                    </div>
-                </motion.div>
             </section>
-            <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
         </AnimatedBackground>
     );
 };
@@ -886,19 +851,28 @@ const HomePage = ({ onNavigate }) => {
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
 
     useEffect(() => {
-        fetch('/modules.json')
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to load modules');
-                return res.json();
-            })
-            .then(data => {
+        const fetchModules = async () => {
+            try {
+                console.log('Fetching modules from /modules.json...');
+                const response = await fetch('/modules.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch modules: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Successfully loaded modules:', data.length, 'items');
+                
                 setModules(data);
                 setLoading(false);
-            })
-            .catch(err => {
-                setError(err.message);
+            } catch (err) {
+                console.error('Error loading modules:', err);
+                setError(`Failed to load modules: ${err.message}`);
                 setLoading(false);
-            });
+            }
+        };
+        
+        fetchModules();
     }, []);
 
     useEffect(() => {
