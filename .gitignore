@@ -93,6 +93,7 @@ dist
 public
 !public/firebase-messaging-sw.js
 !public/manifest.json
+!public/modules.json
 
 # Storybook build outputs
 .out
