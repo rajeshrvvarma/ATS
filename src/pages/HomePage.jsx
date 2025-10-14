@@ -68,18 +68,18 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     );
 };
 
-// Featured Modules Showcase
-const FeaturedModulesSection = ({ onNavigate, modules }) => {
+
+// Combined Modules & Traditional Courses Section with Tabs
+const CoursesTabbedSection = ({ onNavigate, modules }) => {
+    const [activeTab, setActiveTab] = useState('modules');
+    // --- Module Section Logic ---
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
-    // Get categories for tabs
     const categories = ['All', ...new Set(modules.map(module => module.category))];
-    // Tab click handler
     const handleTabClick = (category) => {
         setSelectedCategory(category);
         setSearchTerm('');
     };
-    // Get featured modules (first 12 or filtered modules)
     const featuredModules = modules
         .filter(module => {
             const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -88,8 +88,6 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
             return matchesSearch && matchesCategory;
         })
         .slice(0, 12);
-
-    // Get category icon
     const getCategoryIcon = (category) => {
         const iconMap = {
             'Programming Foundation': Code,
@@ -107,8 +105,6 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
         };
         return iconMap[category] || BookOpen;
     };
-
-    // Get category color
     const getCategoryColor = (category) => {
         const colorMap = {
             'Programming Foundation': 'blue',
@@ -126,145 +122,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
         };
         return colorMap[category] || 'slate';
     };
-
-    return (
-        <div className="py-20 bg-gradient-green bg-fixed">
-            <section id="featured-modules" className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                        Featured{' '}
-                        <span className="text-gradient-green">
-                            Learning Modules
-                        </span>
-                    </h2>
-                    <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-                        Expertly crafted modules covering everything from programming fundamentals to advanced cybersecurity. 
-                        Start with any module that matches your interests and career goals.
-                    </p>
-
-                    {/* Tabs for categories */}
-                    <div className="flex flex-wrap justify-center gap-2 mb-8">
-                        {categories.map(category => (
-                            <button
-                                key={category}
-                                onClick={() => handleTabClick(category)}
-                                className={`px-5 py-2 rounded-full font-semibold border transition-colors duration-200 text-sm
-                                    ${selectedCategory === category
-                                        ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
-                                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-blue-700 hover:text-white'}
-                                `}
-                            >
-                                {category}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* Search bar */}
-                    <div className="max-w-xl mx-auto mb-8">
-                        <div className="relative">
-                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                            <input
-                                type="text"
-                                placeholder={`Search ${selectedCategory === 'All' ? '' : selectedCategory + ' '}modules...`}
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="form-input w-full"
-                            />
-                        </div>
-                    </div>
-                </motion.div>
-
-                {/* Modules Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-                    {featuredModules.map((module, index) => {
-                        const IconComponent = getCategoryIcon(module.category);
-                        const colorClass = getCategoryColor(module.category);
-                        
-                        return (
-                            <motion.div
-                                key={module.id}
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                whileHover={{ y: -5 }}
-                                className="content-card hover:border-blue-500/50 transition-all duration-300 group"
-                            >
-                                <div className="flex items-start gap-4 mb-4">
-                                    <div className={`p-3 bg-${colorClass}-500/20 rounded-lg`}>
-                                        <IconComponent className={`w-6 h-6 text-${colorClass}-400`} />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                                            {module.title}
-                                        </h3>
-                                        <div className="text-sm text-slate-400 mb-2">
-                                            {module.category}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <p className="text-slate-300 text-sm mb-4 line-clamp-3">
-                                    {module.description}
-                                </p>
-
-                                <div className="flex items-center justify-between mb-4">
-                                    <div className="flex items-center gap-2 text-sm text-slate-400">
-                                        <Clock className="w-4 h-4" />
-                                        {module.duration}
-                                    </div>
-                                    <div className="text-lg font-bold text-blue-400">
-                                        ₹{module.price}
-                                    </div>
-                                </div>
-
-                                <div className="flex gap-2">
-                                    <button 
-                                        onClick={() => onNavigate('moduleDetail', { moduleId: module.id })}
-                                        className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium"
-                                    >
-                                        Learn More
-                                    </button>
-                                    <button className="p-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
-                                        <BookmarkPlus className="w-4 h-4" />
-                                    </button>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-                </div>
-
-                {/* View All Modules Button */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.8, delay: 0.5 }}
-                    viewport={{ once: true }}
-                    className="text-center"
-                >
-                    <button
-                        onClick={() => onNavigate('moduleCatalog')}
-                        className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 inline-flex items-center gap-2"
-                    >
-                        <Grid3X3 className="w-5 h-5" />
-                        View All {modules.length} Modules
-                        <ArrowRight className="w-5 h-5" />
-                    </button>
-                </motion.div>
-            </section>
-    </div>
-    );
-};
-
-// Traditional Courses Section (Secondary to Modules)
-const TraditionalCoursesSection = ({ onNavigate }) => {
-    
+    // --- Traditional Courses Logic ---
     const traditionalCourses = [
         {
             id: 'specialized-courses',
@@ -344,100 +202,230 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
     ];
 
     return (
-        <div className="py-20 bg-gradient-purple bg-fixed">
-            <section id="traditional-courses" className="container mx-auto px-6">
-                <motion.div
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8 }}
-                    viewport={{ once: true }}
-                    className="text-center mb-16"
-                >
-                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                        Traditional{' '}
-                        <span className="text-gradient-purple">
-                            Course Programs
-                        </span>
-                    </h2>
-                    <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-                        Structured learning paths with mentorship, job guarantees, and comprehensive curriculum. 
-                        Perfect for those who prefer guided learning experiences.
-                    </p>
-                </motion.div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    {traditionalCourses.map((course, index) => {
-                        const IconComponent = course.icon;
-                        
-                        return (
-                            <motion.div
-                                key={course.id}
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                                viewport={{ once: true }}
-                                whileHover={{ y: -5 }}
-                                className="content-card hover:border-blue-500/50 transition-all duration-300 group"
-                            >
-                                <div className="flex items-start gap-4 mb-6">
-                                    <div className={`p-4 bg-gradient-to-br ${course.gradient} rounded-lg`}>
-                                        <IconComponent className="w-8 h-8 text-white" />
-                                    </div>
-                                    <div className="flex-1">
-                                        <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                                            {course.title}
-                                        </h3>
-                                        <div className="text-sm text-slate-400 mb-2">
-                                            {course.subtitle}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <p className="text-slate-300 mb-6 leading-relaxed">
-                                    {course.description}
-                                </p>
-
-                                <div className="flex items-center justify-between mb-6">
-                                    <div className="flex items-center gap-4 text-sm text-slate-400">
-                                        <div className="flex items-center gap-1">
-                                            <Clock className="w-4 h-4" />
-                                            {course.duration}
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Users className="w-4 h-4" />
-                                            {course.enrolled}
-                                        </div>
-                                    </div>
-                                    <div className="text-xl font-bold text-blue-400">
-                                        {course.price}
-                                    </div>
-                                </div>
-
-                                <div className="mb-6">
-                                    <div className="text-sm text-slate-400 mb-3">Key Features:</div>
-                                    <div className="grid grid-cols-2 gap-2">
-                                        {course.features.map((feature, idx) => (
-                                            <div key={idx} className="flex items-center gap-2 text-sm text-slate-300">
-                                                <CheckCircle className="w-4 h-4 text-green-400" />
-                                                {feature}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                <button
-                                    onClick={course.action}
-                                    className={`w-full bg-gradient-to-r ${course.gradient} text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2`}
-                                >
-                                    Learn More
-                                    <ArrowRight className="w-4 h-4" />
-                                </button>
-                            </motion.div>
-                        );
-                    })}
+        <div className="py-20 bg-gradient-green bg-fixed">
+            <section className="container mx-auto px-6">
+                {/* Tab Switcher */}
+                <div className="flex justify-center mb-10">
+                    <button
+                        className={`px-8 py-3 rounded-t-lg font-bold text-lg transition-all duration-200 border-b-4 ${activeTab === 'modules' ? 'bg-blue-600 text-white border-blue-400 shadow-lg' : 'bg-slate-800 text-slate-300 border-transparent hover:bg-blue-700 hover:text-white'}`}
+                        onClick={() => setActiveTab('modules')}
+                    >
+                        Module-Based Courses
+                    </button>
+                    <button
+                        className={`px-8 py-3 rounded-t-lg font-bold text-lg transition-all duration-200 border-b-4 ml-2 ${activeTab === 'traditional' ? 'bg-purple-600 text-white border-purple-400 shadow-lg' : 'bg-slate-800 text-slate-300 border-transparent hover:bg-purple-700 hover:text-white'}`}
+                        onClick={() => setActiveTab('traditional')}
+                    >
+                        Traditional Programs
+                    </button>
                 </div>
+
+                {/* Tab Content */}
+                {activeTab === 'modules' && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                            className="text-center mb-10"
+                        >
+                            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+                                Featured <span className="text-gradient-green">Learning Modules</span>
+                            </h2>
+                            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+                                Expertly crafted modules covering everything from programming fundamentals to advanced cybersecurity. Start with any module that matches your interests and career goals.
+                            </p>
+                            {/* Tabs for categories */}
+                            <div className="flex flex-wrap justify-center gap-2 mb-8">
+                                {categories.map(category => (
+                                    <button
+                                        key={category}
+                                        onClick={() => handleTabClick(category)}
+                                        className={`px-5 py-2 rounded-full font-semibold border transition-colors duration-200 text-sm
+                                            ${selectedCategory === category
+                                                ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                                                : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-blue-700 hover:text-white'}
+                                        `}
+                                    >
+                                        {category}
+                                    </button>
+                                ))}
+                            </div>
+                            {/* Search bar */}
+                            <div className="max-w-xl mx-auto mb-8">
+                                <div className="relative">
+                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                                    <input
+                                        type="text"
+                                        placeholder={`Search ${selectedCategory === 'All' ? '' : selectedCategory + ' '}modules...`}
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="form-input w-full"
+                                    />
+                                </div>
+                            </div>
+                        </motion.div>
+                        {/* Modules Grid */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+                            {featuredModules.map((module, index) => {
+                                const IconComponent = getCategoryIcon(module.category);
+                                const colorClass = getCategoryColor(module.category);
+                                return (
+                                    <motion.div
+                                        key={module.id}
+                                        initial={{ opacity: 0, y: 50 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                        viewport={{ once: true }}
+                                        whileHover={{ y: -5 }}
+                                        className="content-card hover:border-blue-500/50 transition-all duration-300 group"
+                                    >
+                                        <div className="flex items-start gap-4 mb-4">
+                                            <div className={`p-3 bg-${colorClass}-500/20 rounded-lg`}>
+                                                <IconComponent className={`w-6 h-6 text-${colorClass}-400`} />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                                                    {module.title}
+                                                </h3>
+                                                <div className="text-sm text-slate-400 mb-2">
+                                                    {module.category}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-slate-300 text-sm mb-4 line-clamp-3">
+                                            {module.description}
+                                        </p>
+                                        <div className="flex items-center justify-between mb-4">
+                                            <div className="flex items-center gap-2 text-sm text-slate-400">
+                                                <Clock className="w-4 h-4" />
+                                                {module.duration}
+                                            </div>
+                                            <div className="text-lg font-bold text-blue-400">
+                                                ₹{module.price}
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={() => onNavigate('moduleDetail', { moduleId: module.id })}
+                                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium"
+                                            >
+                                                Learn More
+                                            </button>
+                                            <button className="p-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+                                                <BookmarkPlus className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                        {/* View All Modules Button */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
+                            transition={{ duration: 0.8, delay: 0.5 }}
+                            viewport={{ once: true }}
+                            className="text-center"
+                        >
+                            <button
+                                onClick={() => onNavigate('moduleCatalog')}
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 inline-flex items-center gap-2"
+                            >
+                                <Grid3X3 className="w-5 h-5" />
+                                View All {modules.length} Modules
+                                <ArrowRight className="w-5 h-5" />
+                            </button>
+                        </motion.div>
+                    </>
+                )}
+                {activeTab === 'traditional' && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8 }}
+                            viewport={{ once: true }}
+                            className="text-center mb-10"
+                        >
+                            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+                                Traditional <span className="text-gradient-purple">Course Programs</span>
+                            </h2>
+                            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
+                                Structured learning paths with mentorship, job guarantees, and comprehensive curriculum. Perfect for those who prefer guided learning experiences.
+                            </p>
+                        </motion.div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                            {traditionalCourses.map((course, index) => {
+                                const IconComponent = course.icon;
+                                return (
+                                    <motion.div
+                                        key={course.id}
+                                        initial={{ opacity: 0, y: 50 }}
+                                        whileInView={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                        viewport={{ once: true }}
+                                        whileHover={{ y: -5 }}
+                                        className="content-card hover:border-blue-500/50 transition-all duration-300 group"
+                                    >
+                                        <div className="flex items-start gap-4 mb-6">
+                                            <div className={`p-4 bg-gradient-to-br ${course.gradient} rounded-lg`}>
+                                                <IconComponent className="w-8 h-8 text-white" />
+                                            </div>
+                                            <div className="flex-1">
+                                                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                                                    {course.title}
+                                                </h3>
+                                                <div className="text-sm text-slate-400 mb-2">
+                                                    {course.subtitle}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-slate-300 mb-6 leading-relaxed">
+                                            {course.description}
+                                        </p>
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className="flex items-center gap-4 text-sm text-slate-400">
+                                                <div className="flex items-center gap-1">
+                                                    <Clock className="w-4 h-4" />
+                                                    {course.duration}
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <Users className="w-4 h-4" />
+                                                    {course.enrolled}
+                                                </div>
+                                            </div>
+                                            <div className="text-xl font-bold text-blue-400">
+                                                {course.price}
+                                            </div>
+                                        </div>
+                                        <div className="mb-6">
+                                            <div className="text-sm text-slate-400 mb-3">Key Features:</div>
+                                            <div className="grid grid-cols-2 gap-2">
+                                                {course.features.map((feature, idx) => (
+                                                    <div key={idx} className="flex items-center gap-2 text-sm text-slate-300">
+                                                        <CheckCircle className="w-4 h-4 text-green-400" />
+                                                        {feature}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={course.action}
+                                            className={`w-full bg-gradient-to-r ${course.gradient} text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2`}
+                                        >
+                                            Learn More
+                                            <ArrowRight className="w-4 h-4" />
+                                        </button>
+                                    </motion.div>
+                                );
+                            })}
+                        </div>
+                    </>
+                )}
             </section>
-    </div>
+        </div>
     );
 };
 
@@ -793,25 +781,18 @@ const HomePage = ({ onNavigate }) => {
     useEffect(() => {
         const fetchModules = async () => {
             try {
-                console.log('Fetching modules from /modules.json...');
                 const response = await fetch('/modules.json');
-                
                 if (!response.ok) {
                     throw new Error(`Failed to fetch modules: ${response.status} ${response.statusText}`);
                 }
-                
                 const data = await response.json();
-                console.log('Successfully loaded modules:', data.length, 'items');
-                
                 setModules(data);
                 setLoading(false);
             } catch (err) {
-                console.error('Error loading modules:', err);
                 setError(`Failed to load modules: ${err.message}`);
                 setLoading(false);
             }
         };
-        
         fetchModules();
     }, []);
 
@@ -828,8 +809,7 @@ const HomePage = ({ onNavigate }) => {
     return (
         <>
             <HeroSection onNavigate={onNavigate} modules={modules} loading={loading} error={error} />
-            <FeaturedModulesSection onNavigate={onNavigate} modules={modules} />
-            <TraditionalCoursesSection onNavigate={onNavigate} />
+            <CoursesTabbedSection onNavigate={onNavigate} modules={modules} />
             <SuccessMetrics />
             <Testimonials />
             <Contact onNavigate={onNavigate} />
@@ -843,7 +823,6 @@ const HomePage = ({ onNavigate }) => {
                     <MessageCircle size={28} />
                 </button>
             </div>
-            
             <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
             <ScrollNavigation />
         </>
