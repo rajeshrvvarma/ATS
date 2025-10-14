@@ -73,16 +73,11 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, searchFilter, setSearchFilter }) => {
     // --- Module Section Logic ---
     const [selectedCategory, setSelectedCategory] = useState('All');
-    const [searchTerm, setSearchTerm] = useState(searchFilter || '');
-
-    // Update searchTerm if searchFilter changes (from header search)
-    React.useEffect(() => {
-        if (typeof searchFilter === 'string') setSearchTerm(searchFilter);
-    }, [searchFilter]);
+    // Make searchTerm fully controlled by searchFilter prop
+    const searchTerm = typeof searchFilter === 'string' ? searchFilter : '';
     const categories = ['All', ...new Set(modules.map(module => module.category))];
     const handleTabClick = (category) => {
         setSelectedCategory(category);
-        setSearchTerm('');
         if (setSearchFilter) setSearchFilter('');
     };
     const featuredModules = modules
@@ -265,7 +260,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                                         type="text"
                                         placeholder={`Search ${selectedCategory === 'All' ? '' : selectedCategory + ' '}modules...`}
                                         value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        onChange={(e) => setSearchFilter ? setSearchFilter(e.target.value) : undefined}
                                         className="form-input w-full"
                                     />
                                 </div>
@@ -791,10 +786,11 @@ const HomePage = ({ onNavigate }) => {
         if (route === 'moduleCatalog') {
             setActiveTab('modules');
             setSearchFilter(params && params.filter ? params.filter : '');
+            // Wait for state to update, then scroll
             setTimeout(() => {
                 const el = document.getElementById('courses-tabbed-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 200);
         } else if (typeof onNavigate === 'function') {
             onNavigate(route, params);
         }
