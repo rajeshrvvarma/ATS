@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { modules } from '@/data/modules.js';
+import { modules as staticModules } from '@/data/modules.js';
 
 const ModuleCatalog = () => {
   const [selectedModule, setSelectedModule] = React.useState(null);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState('All');
+  const [modules, setModules] = React.useState(staticModules || []);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState(null);
   const location = useLocation();
 
   // On mount, read query parameters for filter & category
@@ -22,6 +25,30 @@ const ModuleCatalog = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search]);
 
+  // Fetch dynamic modules.json (keep fallback if fails)
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const res = await fetch('/modules.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+        const data = await res.json();
+        if (!cancelled) {
+          setModules(Array.isArray(data) ? data : staticModules);
+        }
+      } catch (e) {
+        if (!cancelled) {
+          setModules(staticModules);
+          setError('Using fallback module data');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+    load();
+    return () => { cancelled = true; };
+  }, []);
+
   // Get unique categories
   const categories = ['All', ...new Set(modules.map(mod => mod.category))];
 
@@ -35,7 +62,9 @@ const ModuleCatalog = () => {
   return (
     <div className="min-h-screen bg-gradient-blue py-12">
       <div className="container mx-auto px-6">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Complete Technology Module Catalog ({modules.length} Modules)</h1>
+        <h1 className="text-4xl font-bold text-white mb-4 text-center">Complete Technology Module Catalog ({modules.length} Modules)</h1>
+        {error && (<div className="text-center text-amber-400 text-sm mb-4">{error}</div>)}
+        {loading && (<div className="text-center text-slate-300 py-8">Loading modules...</div>)}
         
         {/* Search and Filter Section */}
         <div className="mb-8 space-y-4">
@@ -68,8 +97,16 @@ const ModuleCatalog = () => {
           </div>
           
           {/* Results Count */}
-          <div className="text-center text-slate-400">
-            Showing {filteredModules.length} of {modules.length} modules
+          <div className="text-center text-slate-400 flex flex-col items-center gap-2">
+            <span>Showing {filteredModules.length} of {modules.length} modules</span>
+            {(searchTerm || selectedCategory !== 'All') && (
+              <button
+                onClick={() => { setSearchTerm(''); setSelectedCategory('All'); window.history.replaceState({}, '', '/module-catalog'); }}
+                className="text-xs text-blue-300 hover:text-blue-200 underline"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
         </div>
 
@@ -112,10 +149,19 @@ const ModuleCatalog = () => {
         </div>
 
         {/* No Results Message */}
-        {filteredModules.length === 0 && (
-          <div className="text-center text-slate-400 mt-12">
-            <p className="text-xl">No modules found matching your criteria.</p>
-            <p className="text-sm mt-2">Try adjusting your search or filter.</p>
+        {(!loading && filteredModules.length === 0) && (
+          <div className="text-center text-slate-300 mt-12 max-w-xl mx-auto bg-slate-800/60 p-6 rounded-xl border border-slate-700">
+            <p className="text-xl font-semibold mb-2">No modules matched your search.</p>
+            <p className="text-sm mb-4">Suggestions:</p>
+            <ul className="text-sm text-slate-400 list-disc list-inside space-y-1 text-left">
+              <li>Use broader keywords ("cloud" instead of "multi-cloud architecture security")</li>
+              <li>Remove the category filter</li>
+              <li>Check spelling</li>
+            </ul>
+            <button
+              onClick={() => { setSearchTerm(''); setSelectedCategory('All'); window.history.replaceState({}, '', '/module-catalog'); }}
+              className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+            >Show All Modules</button>
           </div>
         )}
 
