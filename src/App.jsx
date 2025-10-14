@@ -47,6 +47,7 @@ const LearningManagementSystemPage = React.lazy(() => import('@/pages/LearningMa
 const StudentDashboard = React.lazy(() => import('@/pages/StudentDashboard.jsx'));
 const AdminDashboard = React.lazy(() => import('@/pages/AdminDashboard.jsx'));
 const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
+const TrainerSignUp = React.lazy(() => import('@/pages/TrainerSignUp.jsx'));
 const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
 const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
 const UpcomingBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
@@ -88,6 +89,7 @@ export default function App() {
     dashboard: '/dashboard',
     admin: '/admin',
     login: '/login',
+    'trainer-signup': '/trainer-signup',
     moduleCatalog: '/module-catalog',
     courseBuilder: '/course-builder',
     }), []);
@@ -121,6 +123,7 @@ export default function App() {
     '/dashboard': 'dashboard',
     '/admin': 'admin',
     '/login': 'login',
+    '/trainer-signup': 'trainer-signup',
     '/module-catalog': 'moduleCatalog',
     '/course-builder': 'courseBuilder',
     }), []);
@@ -195,6 +198,7 @@ export default function App() {
                             <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
+                            <Route path="/trainer-signup" element={<TrainerSignUp onNavigate={go} />} />
                             <Route path="/module-catalog" element={<ModuleCatalog onNavigate={go} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
