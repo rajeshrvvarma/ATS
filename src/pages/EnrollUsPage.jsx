@@ -76,6 +76,7 @@ export default function EnrollUsPage({ onNavigate }) {
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [paymentMsg, setPaymentMsg] = useState('');
     const [lastOrderId, setLastOrderId] = useState('');
+    const [selectedBatch, setSelectedBatch] = useState(null);
 
 
     const handleInputChange = (e) => {
