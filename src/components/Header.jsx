@@ -6,7 +6,20 @@ import UserMenu from '@/components/UserMenu.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
+// Vibrant gradient backgrounds for header
+const headerGradients = [
+  'bg-gradient-blue',
+  'bg-gradient-green',
+  'bg-gradient-purple',
+  'bg-gradient-orange',
+  'bg-gradient-pink',
+  'bg-gradient-violet',
+  'bg-gradient-cyan',
+];
+
 export default function Header({ onNavigate, currentPage }) {
+  // Pick a gradient based on the current page for variety
+  const gradientClass = headerGradients[Math.abs(currentPage?.length || 0) % headerGradients.length];
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     
@@ -144,10 +157,9 @@ export default function Header({ onNavigate, currentPage }) {
 
     return (
         <header 
-            className="bg-slate-900 shadow-lg sticky top-0 w-full" 
+            className={`shadow-lg sticky top-0 w-full ${gradientClass} bg-fixed`} 
             style={{
                 zIndex: 50, 
-                backgroundColor: 'rgb(15 23 42)', 
                 display: 'block',
                 minHeight: '80px'
             }}

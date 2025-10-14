@@ -41,10 +41,10 @@ export default function Footer({ onNavigate }) {
     }, []);
 
     return (
-        <footer className="text-slate-400 py-16 relative overflow-hidden">
+        <footer className="text-slate-200 py-16 relative overflow-hidden bg-gradient-violet bg-fixed">
             {/* Enhanced Animated Background */}
             <div className="absolute inset-0">
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950"></div>
+                <div className="absolute inset-0 bg-gradient-violet opacity-80"></div>
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-purple-900/20"></div>
                 
                 {/* Floating particles */}
