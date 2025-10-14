@@ -778,7 +778,15 @@ const HomePage = ({ onNavigate }) => {
     const [error, setError] = useState(null);
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('modules');
-    const [searchFilter, setSearchFilter] = useState('');
+    // Read filter from URL query param on mount
+    const getInitialFilter = () => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('filter') || '';
+        }
+        return '';
+    };
+    const [searchFilter, setSearchFilter] = useState(getInitialFilter());
     const tabbedSectionRef = React.useRef(null);
 
     // Custom onNavigate handler
@@ -822,7 +830,11 @@ const HomePage = ({ onNavigate }) => {
                 document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         }
-    }, []);
+        // If filter query param changes (e.g., via navigation), update searchFilter
+        const params = new URLSearchParams(window.location.search);
+        const urlFilter = params.get('filter') || '';
+        setSearchFilter(urlFilter);
+    }, [window.location.search]);
 
     return (
         <>

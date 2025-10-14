@@ -130,9 +130,18 @@ export default function App() {
 
     const currentPage = pathToPage[location.pathname] || 'home';
 
-    const go = (pageKey) => {
+    // Enhanced go function to support filter param for moduleCatalog
+    const go = (pageKey, params = {}) => {
+        // If navigating to moduleCatalog with a filter, add ?filter=...
+        if (pageKey === 'moduleCatalog') {
+            const path = pageToPath[pageKey] || '/module-catalog';
+            const filter = params.filter || '';
+            const url = filter ? `${path}?filter=${encodeURIComponent(filter)}` : path;
+            navigate(url);
+            return;
+        }
         // Handle navigation with query parameters (e.g., "video-learning?course=xyz")
-        if (pageKey.includes('?')) {
+        if (typeof pageKey === 'string' && pageKey.includes('?')) {
             const [key, queryString] = pageKey.split('?');
             const path = pageToPath[key] || '/';
             navigate(`${path}?${queryString}`);
