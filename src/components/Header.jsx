@@ -224,12 +224,12 @@ export default function Header({ onNavigate, currentPage }) {
 
                     {/* Right - Actions: Enroll Now and Login/Username Dropdown */}
                     <div className="flex items-center space-x-4 flex-shrink-0 ml-8">
-                        <button
-                            onClick={() => onNavigate('enroll')}
+                        <a
+                            href="/enroll"
                             className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
                         >
                             Enroll Now
-                        </button>
+                        </a>
                         {user ? (
                             <UserMenu 
                                 user={user} 

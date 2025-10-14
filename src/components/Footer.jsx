@@ -151,44 +151,19 @@ export default function Footer({ onNavigate }) {
                         </h4>
                         <ul className="space-y-3">
                             <li>
-                                <button 
-                                    onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })} 
-                                    className="hover:text-blue-400 transition-colors duration-200 text-left"
-                                >
-                                    Defensive Security
-                                </button>
+                                <a href="/programs/defensive-security" className="hover:text-blue-400 transition-colors duration-200 text-left">Defensive Security</a>
                             </li>
                             <li>
-                                <button 
-                                    onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })} 
-                                    className="hover:text-blue-400 transition-colors duration-200 text-left"
-                                >
-                                    Offensive Security
-                                </button>
+                                <a href="/programs/offensive-security" className="hover:text-blue-400 transition-colors duration-200 text-left">Offensive Security</a>
                             </li>
                             <li>
-                                <button 
-                                    onClick={() => document.getElementById('programs')?.scrollIntoView({ behavior: 'smooth' })} 
-                                    className="hover:text-blue-400 transition-colors duration-200 text-left"
-                                >
-                                    Cloud Security
-                                </button>
+                                <a href="/programs/cloud-security" className="hover:text-blue-400 transition-colors duration-200 text-left">Cloud Security</a>
                             </li>
                             <li>
-                                <button 
-                                    onClick={() => onNavigate('workshop')} 
-                                    className="hover:text-blue-400 transition-colors duration-200 text-left"
-                                >
-                                    Free Workshop
-                                </button>
+                                <a href="/workshop" className="hover:text-blue-400 transition-colors duration-200 text-left">Free Workshop</a>
                             </li>
                             <li>
-                                <button 
-                                    onClick={() => onNavigate('video-learning')} 
-                                    className="hover:text-blue-400 transition-colors duration-200 text-left"
-                                >
-                                    Learning Portal
-                                </button>
+                                <a href="/learning-portal" className="hover:text-blue-400 transition-colors duration-200 text-left">Learning Portal</a>
                             </li>
                         </ul>
                     </div>
@@ -201,44 +176,19 @@ export default function Footer({ onNavigate }) {
                         </h4>
                         <ul className="space-y-3">
                            <li>
-                               <button 
-                                   onClick={() => onNavigate('terms')} 
-                                   className="hover:text-blue-400 transition-colors duration-200 text-left"
-                               >
-                                   Terms & Conditions
-                               </button>
+                               <a href="/terms" className="hover:text-blue-400 transition-colors duration-200 text-left">Terms & Conditions</a>
                            </li>
                            <li>
-                               <button 
-                                   onClick={() => onNavigate('privacy')} 
-                                   className="hover:text-blue-400 transition-colors duration-200 text-left"
-                               >
-                                   Privacy Policy
-                               </button>
+                               <a href="/privacy" className="hover:text-blue-400 transition-colors duration-200 text-left">Privacy Policy</a>
                            </li>
                            <li>
-                               <button 
-                                   onClick={() => onNavigate('cancellationRefund')} 
-                                   className="hover:text-blue-400 transition-colors duration-200 text-left"
-                               >
-                                   Refund Policy
-                               </button>
+                               <a href="/refund-policy" className="hover:text-blue-400 transition-colors duration-200 text-left">Refund Policy</a>
                            </li>
                            <li>
-                               <button 
-                                   onClick={() => onNavigate('contact')} 
-                                   className="hover:text-blue-400 transition-colors duration-200 text-left"
-                               >
-                                   Contact Us
-                               </button>
+                               <a href="/contact" className="hover:text-blue-400 transition-colors duration-200 text-left">Contact Us</a>
                            </li>
                            <li>
-                               <button 
-                                   onClick={() => onNavigate('disclaimer')} 
-                                   className="hover:text-blue-400 transition-colors duration-200 text-left"
-                               >
-                                   Disclaimer
-                               </button>
+                               <a href="/disclaimer" className="hover:text-blue-400 transition-colors duration-200 text-left">Disclaimer</a>
                            </li>
                         </ul>
                     </div>

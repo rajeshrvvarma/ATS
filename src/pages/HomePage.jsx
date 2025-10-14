@@ -116,15 +116,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                                 <ArrowRight className="w-5 h-5" />
                             </motion.button>
 
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setIsAdvisorOpen(true)}
-                                className="bg-slate-700/80 text-white font-semibold px-8 py-4 rounded-lg border border-slate-600 hover:bg-slate-600 transition-all duration-300 flex items-center gap-2"
-                            >
-                                <Sparkles className="w-5 h-5" />
-                                Get Learning Path Advice
-                            </motion.button>
+                            {/* Removed Get Learning Path Advice button as requested */}
 
                             <motion.button
                                 whileHover={{ scale: 1.05 }}
@@ -137,18 +129,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                             </motion.button>
                         </div>
 
-                        <motion.div
-                            animate={{ y: [0, 10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                            className="mt-8"
-                        >
-                            <div className="flex flex-col items-center text-slate-400">
-                                <span className="text-sm mb-2">Explore Modules</span>
-                                <div className="w-6 h-10 border-2 border-slate-400 rounded-full flex justify-center">
-                                    <div className="w-1 h-3 bg-slate-400 rounded-full mt-2"></div>
-                                </div>
-                            </div>
-                        </motion.div>
+                        {/* Removed 'Not sure which path to choose?' section as requested */}
                     </motion.div>
                 </section>
             </AnimatedBackground>
