@@ -141,8 +141,13 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 const FeaturedModulesSection = ({ onNavigate, modules }) => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [searchTerm, setSearchTerm] = useState('');
-    // Get categories and featured modules
+    // Get categories for tabs
     const categories = ['All', ...new Set(modules.map(module => module.category))];
+    // Tab click handler
+    const handleTabClick = (category) => {
+        setSelectedCategory(category);
+        setSearchTerm('');
+    };
     // Get featured modules (first 12 or filtered modules)
     const featuredModules = modules
         .filter(module => {
@@ -212,30 +217,34 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
                         Start with any module that matches your interests and career goals.
                     </p>
 
-                    {/* Search and Filter */}
-                    <div className="max-w-2xl mx-auto mb-12">
-                        <div className="flex flex-col md:flex-row gap-4">
-                            <div className="relative flex-1">
-                                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                <input
-                                    type="text"
-                                    placeholder="Search modules..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
-                                />
-                            </div>
-                            <select
-                                value={selectedCategory}
-                                onChange={(e) => setSelectedCategory(e.target.value)}
-                                className="px-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:border-blue-500 focus:outline-none"
+                    {/* Tabs for categories */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-8">
+                        {categories.map(category => (
+                            <button
+                                key={category}
+                                onClick={() => handleTabClick(category)}
+                                className={`px-5 py-2 rounded-full font-semibold border transition-colors duration-200 text-sm
+                                    ${selectedCategory === category
+                                        ? 'bg-blue-600 text-white border-blue-600 shadow-lg'
+                                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-blue-700 hover:text-white'}
+                                `}
                             >
-                                {categories.map(category => (
-                                    <option key={category} value={category} className="bg-slate-800">
-                                        {category}
-                                    </option>
-                                ))}
-                            </select>
+                                {category}
+                            </button>
+                        ))}
+                    </div>
+
+                    {/* Search bar */}
+                    <div className="max-w-xl mx-auto mb-8">
+                        <div className="relative">
+                            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+                            <input
+                                type="text"
+                                placeholder={`Search ${selectedCategory === 'All' ? '' : selectedCategory + ' '}modules...`}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-12 pr-4 py-3 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
+                            />
                         </div>
                     </div>
                 </motion.div>
