@@ -1,90 +1,69 @@
 import React from 'react';
-
-
-
-// --- Module Data Structure ---
-// For brevity, only a few modules are shown with details. In production, all 102+ modules would be included with full details.
-const modules = [
-  {
-    title: 'Python Programming',
-    category: 'Programming Foundation',
-    duration: '2 weeks',
-    price: 699,
-    description: 'Learn Python from scratch. Covers syntax, data types, control flow, functions, OOP, and basic libraries.',
-    curriculum: [
-      'Python syntax and variables',
-      'Data types and structures',
-      'Control flow (if, loops)',
-      'Functions and modules',
-      'Object-Oriented Programming',
-      'File I/O',
-      'Error handling',
-      'Popular libraries (requests, pandas, matplotlib)'
-    ],
-    learningPaths: [
-      'AWS Cloud Architect',
-      'DevOps Engineer',
-      'AI/ML Engineer',
-      'Data Scientist',
-      'Full Stack Developer (Modern)',
-      'DSA/Programming Interviews'
-    ]
-  },
-  {
-    title: 'AWS Fundamentals',
-    category: 'Cloud Platforms',
-    duration: '2 weeks',
-    price: 699,
-    description: 'Introduction to AWS core services, IAM, EC2, S3, and cloud concepts.',
-    curriculum: [
-      'AWS global infrastructure',
-      'IAM and security',
-      'EC2, S3, RDS basics',
-      'VPC and networking',
-      'Cloud best practices'
-    ],
-    learningPaths: [
-      'AWS Cloud Architect',
-      'Cloud Security Architect',
-      'DevOps Engineer'
-    ]
-  },
-  {
-    title: 'Data Structures & Algorithms',
-    category: 'Programming Foundation',
-    duration: '3 weeks',
-    price: 699,
-    description: 'Core DSA concepts for interviews and problem solving.',
-    curriculum: [
-      'Arrays, Linked Lists',
-      'Stacks, Queues',
-      'Trees, Graphs',
-      'Sorting and Searching',
-      'Recursion',
-      'Algorithmic complexity'
-    ],
-    learningPaths: [
-      'DSA/Programming Interviews',
-      'Full Stack Developer (Modern)',
-      'AI/ML Engineer'
-    ]
-  },
-  // ... Add all other modules here with similar structure ...
-];
+import { modules } from '@/data/modules.js';
 
 const ModuleCatalog = () => {
   const [selectedModule, setSelectedModule] = React.useState(null);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  const [selectedCategory, setSelectedCategory] = React.useState('All');
+
+  // Get unique categories
+  const categories = ['All', ...new Set(modules.map(mod => mod.category))];
+
+  // Filter modules based on search and category
+  const filteredModules = modules.filter(mod => {
+    const matchesSearch = mod.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         mod.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || mod.category === selectedCategory;
+    return matchesSearch && matchesCategory;
+  });
   return (
     <div className="min-h-screen bg-slate-900 py-12">
       <div className="container mx-auto px-6">
-        <h1 className="text-4xl font-bold text-white mb-8 text-center">Complete Technology Module Catalog (102+)</h1>
+        <h1 className="text-4xl font-bold text-white mb-8 text-center">Complete Technology Module Catalog ({modules.length} Modules)</h1>
+        
+        {/* Search and Filter Section */}
+        <div className="mb-8 space-y-4">
+          {/* Search Bar */}
+          <div className="max-w-md mx-auto">
+            <input
+              type="text"
+              placeholder="Search modules..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          
+          {/* Category Filter */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {categories.map(category => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  selectedCategory === category
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                }`}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+          
+          {/* Results Count */}
+          <div className="text-center text-slate-400">
+            Showing {filteredModules.length} of {modules.length} modules
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {modules.map((mod, idx) => (
-            <div key={mod.title + idx} className="bg-slate-800 rounded-xl p-6 shadow-lg border-2 border-slate-700 flex flex-col justify-between">
+          {filteredModules.map((mod, idx) => (
+            <div key={mod.id || mod.title + idx} className="bg-slate-800 rounded-xl p-6 shadow-lg border-2 border-slate-700 flex flex-col justify-between">
               <div>
                 <h2 className="text-2xl font-semibold text-sky-400 mb-2">{mod.title}</h2>
                 <div className="text-xs text-slate-400 mb-2">{mod.category} • {mod.duration}</div>
-                <p className="text-slate-300 mb-3 min-h-[48px]">{mod.description}</p>
+                <p className="text-slate-300 mb-3 min-h-[48px]">{mod.description.substring(0, 120)}...</p>
                 <div className="mb-2">
                   <span className="font-bold text-green-400 text-lg">₹{mod.price}</span>
                 </div>
@@ -104,14 +83,25 @@ const ModuleCatalog = () => {
               <div className="mt-4">
                 <div className="text-xs text-slate-400 font-semibold mb-1">Learning Paths:</div>
                 <ul className="flex flex-wrap gap-2">
-                  {mod.learningPaths && mod.learningPaths.map((path, i) => (
+                  {mod.learningPaths && mod.learningPaths.slice(0, 3).map((path, i) => (
                     <li key={path + i} className="bg-slate-700 text-sky-200 px-2 py-1 rounded-full text-xs">{path}</li>
                   ))}
+                  {mod.learningPaths && mod.learningPaths.length > 3 && (
+                    <li className="text-xs text-slate-400">+{mod.learningPaths.length - 3} more</li>
+                  )}
                 </ul>
               </div>
             </div>
           ))}
         </div>
+
+        {/* No Results Message */}
+        {filteredModules.length === 0 && (
+          <div className="text-center text-slate-400 mt-12">
+            <p className="text-xl">No modules found matching your criteria.</p>
+            <p className="text-sm mt-2">Try adjusting your search or filter.</p>
+          </div>
+        )}
 
         {/* Modal for module details */}
         {selectedModule && (
