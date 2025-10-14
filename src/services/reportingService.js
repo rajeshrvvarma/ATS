@@ -4,8 +4,6 @@
  */
 
 import { saveAs } from 'file-saver';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 class ReportingService {
   /**
@@ -51,6 +49,12 @@ class ReportingService {
    */
   static async exportToPDF(reportData, reportType = 'comprehensive') {
     try {
+      // Dynamic import for PDF libraries to reduce initial bundle size
+      const [{ default: jsPDF }, autoTableModule] = await Promise.all([
+        import('jspdf'),
+        import('jspdf-autotable')
+      ]);
+      
       const doc = new jsPDF();
       const pageWidth = doc.internal.pageSize.width;
       const pageHeight = doc.internal.pageSize.height;

@@ -18,6 +18,8 @@ export default defineConfig({
   // It ensures the build targets modern browsers that support import.meta.env.
   build: {
     target: 'esnext',
+    // Set chunk size warning limit to 300kb instead of default 500kb
+    chunkSizeWarningLimit: 300,
     rollupOptions: {
       // Ensure these files are copied as-is to the output directory
       external: [],
@@ -31,30 +33,125 @@ export default defineConfig({
         },
         // PERFORMANCE FIX: Manual chunk splitting for better loading
         manualChunks: (id) => {
-          // Core React and React Router
-          if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-            return 'vendor-react';
+          // Core React and React Router (split more granularly)
+          if (id.includes('react-router-dom')) {
+            return 'vendor-react-router';
           }
-          // Firebase services (largest dependency)
+          if (id.includes('react-dom')) {
+            return 'vendor-react-dom';
+          }
+          if (id.includes('react') && !id.includes('react-')) {
+            return 'vendor-react-core';
+          }
+          
+          // Firebase services (split into smaller chunks)
+          if (id.includes('firebase/auth')) {
+            return 'vendor-firebase-auth';
+          }
+          if (id.includes('firebase/firestore')) {
+            return 'vendor-firebase-firestore';
+          }
+          if (id.includes('firebase/storage')) {
+            return 'vendor-firebase-storage';
+          }
           if (id.includes('firebase')) {
-            return 'vendor-firebase';
+            return 'vendor-firebase-core';
           }
-          // UI libraries
-          if (id.includes('lucide-react') || id.includes('react-icons')) {
-            return 'vendor-ui';
+          
+          // UI libraries (split by type)
+          if (id.includes('lucide-react')) {
+            return 'vendor-icons-lucide';
           }
+          if (id.includes('react-icons')) {
+            return 'vendor-icons-react';
+          }
+          if (id.includes('framer-motion')) {
+            return 'vendor-animation';
+          }
+          
+          // Chart and visualization libraries (split further)
+          if (id.includes('chart.js')) {
+            return 'vendor-chartjs';
+          }
+          if (id.includes('html2canvas')) {
+            return 'vendor-canvas';
+          }
+          if (id.includes('jspdf')) {
+            return 'vendor-pdf';
+          }
+          
+          // Split React ecosystem more granularly
+          if (id.includes('node_modules/react-router')) {
+            return 'vendor-react-router';
+          }
+          if (id.includes('node_modules/react-dom')) {
+            return 'vendor-react-dom';
+          }
+          if (id.includes('node_modules/react') && !id.includes('react-')) {
+            return 'vendor-react-core';
+          }
+          
           // AI services
           if (id.includes('@google/generative-ai') || id.includes('openai')) {
             return 'vendor-ai';
           }
-          // Dashboard components
+          
+          // Dashboard components (split into smaller chunks)
+          if (id.includes('AdminDashboard') || id.includes('admin')) {
+            return 'dashboard-admin';
+          }
+          if (id.includes('StudentDashboard') || id.includes('student')) {
+            return 'dashboard-student';
+          }
+          if (id.includes('InstructorDashboard') || id.includes('instructor')) {
+            return 'dashboard-instructor';
+          }
           if (id.includes('Dashboard') || id.includes('analytics') || id.includes('gamification')) {
-            return 'dashboard';
+            return 'dashboard-common';
           }
-          // Learning components
-          if (id.includes('VideoLearning') || id.includes('VideoLesson') || id.includes('quiz')) {
-            return 'learning';
+          
+          // Learning components (split by feature)
+          if (id.includes('VideoLearning') || id.includes('VideoLesson')) {
+            return 'learning-video';
           }
+          if (id.includes('quiz') || id.includes('Quiz')) {
+            return 'learning-quiz';
+          }
+          if (id.includes('learning') || id.includes('Learning')) {
+            return 'learning-core';
+          }
+          
+          // Landing pages (split by category)
+          if (id.includes('BootcampLanding') || id.includes('MasteryLanding')) {
+            return 'pages-courses';
+          }
+          if (id.includes('HomePage') || id.includes('Contact') || id.includes('About')) {
+            return 'pages-marketing';
+          }
+          
+          // Services (split by functionality)
+          if (id.includes('reportingService') || id.includes('analyticsService')) {
+            return 'services-analytics';
+          }
+          if (id.includes('notificationService') || id.includes('emailService')) {
+            return 'services-communication';
+          }
+          if (id.includes('paymentService') || id.includes('phonepe')) {
+            return 'services-payment';
+          }
+          
+          // Node modules that are frequently updated
+          if (id.includes('node_modules')) {
+            // Split large node_modules into separate chunks
+            if (id.includes('node_modules/@firebase')) {
+              return 'vendor-firebase-sdk';
+            }
+            if (id.includes('node_modules/react-')) {
+              return 'vendor-react-ecosystem';
+            }
+            return 'vendor-others';
+          }
+          
           // Default chunk for everything else
           return undefined;
         }

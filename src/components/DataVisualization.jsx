@@ -4,10 +4,6 @@
  */
 
 import React, { useEffect, useRef } from 'react';
-import { Chart as ChartJS, registerables } from 'chart.js';
-
-// Register Chart.js components
-ChartJS.register(...registerables);
 
 // Chart wrapper component with common styling
 const ChartWrapper = ({ title, subtitle, children, className = "" }) => (
@@ -22,7 +18,7 @@ const ChartWrapper = ({ title, subtitle, children, className = "" }) => (
   </div>
 );
 
-// Line Chart Component
+// Line Chart Component with dynamic Chart.js loading
 export const LineChart = ({ 
   data, 
   title, 
@@ -39,43 +35,48 @@ export const LineChart = ({
   useEffect(() => {
     if (!chartRef.current || !data) return;
 
-    // Destroy existing chart
-    if (chartInstanceRef.current) {
-      chartInstanceRef.current.destroy();
-    }
+    // Dynamic import Chart.js to reduce initial bundle size
+    const loadChart = async () => {
+      const { Chart: ChartJS, registerables } = await import('chart.js');
+      ChartJS.register(...registerables);
 
-    const ctx = chartRef.current.getContext('2d');
-    
-    // Create gradient if requested
-    let backgroundColor = color + '20';
-    let borderColor = color;
-    
-    if (gradient) {
-      const gradientFill = ctx.createLinearGradient(0, 0, 0, height);
-      gradientFill.addColorStop(0, color + '40');
-      gradientFill.addColorStop(1, color + '00');
-      backgroundColor = gradientFill;
-    }
+      // Destroy existing chart
+      if (chartInstanceRef.current) {
+        chartInstanceRef.current.destroy();
+      }
 
-    chartInstanceRef.current = new ChartJS(ctx, {
-      type: 'line',
-      data: {
-        labels: data.labels || [],
-        datasets: [{
-          label: yAxisLabel || 'Value',
-          data: data.values || [],
-          borderColor: borderColor,
-          backgroundColor: backgroundColor,
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: borderColor,
-          pointBorderColor: '#ffffff',
-          pointBorderWidth: 2,
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
-      },
+      const ctx = chartRef.current.getContext('2d');
+      
+      // Create gradient if requested
+      let backgroundColor = color + '20';
+      let borderColor = color;
+      
+      if (gradient) {
+        const gradientFill = ctx.createLinearGradient(0, 0, 0, height);
+        gradientFill.addColorStop(0, color + '40');
+        gradientFill.addColorStop(1, color + '00');
+        backgroundColor = gradientFill;
+      }
+
+      chartInstanceRef.current = new ChartJS(ctx, {
+        type: 'line',
+        data: {
+          labels: data.labels || [],
+          datasets: [{
+            label: yAxisLabel || 'Value',
+            data: data.values || [],
+            borderColor: borderColor,
+            backgroundColor: backgroundColor,
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+            pointBackgroundColor: borderColor,
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }]
+        },
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -135,6 +136,9 @@ export const LineChart = ({
         }
       }
     });
+    };
+
+    loadChart();
 
     return () => {
       if (chartInstanceRef.current) {

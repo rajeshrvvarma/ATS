@@ -13,7 +13,7 @@ export default function TrainerSignUp({ onNavigate }) {
       <div className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
         {/* Left: Content */}
         <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-100 to-green-50">
-          <h2 className="text-4xl font-bold text-blue-700 mb-4">Become a Trainer at Agnidhra</h2>
+          <h2 className="text-4xl font-bold text-blue-700 mb-4">Become a Trainer at Agnidhra Technologies</h2>
           <p className="text-lg text-slate-700 mb-6">
             Join our mission to empower learners with cutting-edge skills in cybersecurity, technology, and more. As a trainer, you'll:
           </p>
@@ -24,7 +24,7 @@ export default function TrainerSignUp({ onNavigate }) {
             <li>Earn competitive compensation and recognition</li>
           </ul>
           <div className="text-slate-600 text-sm mt-4">
-            <span className="font-semibold">Why Agnidhra?</span> <br />
+            <span className="font-semibold">Why Agnidhra Technologies?</span> <br />
             - 1000+ students trained <br />
             - Industry-driven curriculum <br />
             - Flexible teaching opportunities
