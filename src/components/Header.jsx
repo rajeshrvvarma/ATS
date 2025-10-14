@@ -28,6 +28,7 @@ export default function Header({ onNavigate, currentPage }) {
     // Mobile navigation items - dynamic based on user status
     const mobileNavItems = [
         { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
+        { name: "All Modules Catalog", action: () => onNavigate('moduleCatalog') },
         { name: "About Us", action: () => scrollToSection('about') },
         ...(user && user.enrolledCourses && user.enrolledCourses.length > 0 
             ? [{ name: "My Learning", action: () => onNavigate('dashboard') }] 
@@ -185,6 +186,12 @@ export default function Header({ onNavigate, currentPage }) {
                                 coursePricing={coursePricing}
                                 pricingLoading={pricingLoading}
                             />
+                            <button
+                                onClick={() => onNavigate('moduleCatalog')}
+                                className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                            >
+                                All Modules Catalog
+                            </button>
                             <button
                                 onClick={() => onNavigate('upcoming-batches')}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"

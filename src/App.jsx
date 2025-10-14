@@ -31,6 +31,7 @@ const OffensiveMasteryLandingPage = React.lazy(() => import('@/pages/OffensiveMa
 const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/SpecializedCoursesLandingPage.jsx'));
 const TechnologyTrainingLandingPage = React.lazy(() => import('@/pages/TechnologyTrainingLandingPage.jsx'));
 const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrainingLandingPage.jsx'));
+const ModuleCatalog = React.lazy(() => import('@/pages/ModuleCatalog.jsx'));
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
 const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
@@ -82,10 +83,11 @@ export default function App() {
         privacy: '/privacy',
         contact: '/contact',
         enroll: '/enroll',
-        profile: '/profile',
-        dashboard: '/dashboard',
-        admin: '/admin',
-        login: '/login',
+    profile: '/profile',
+    dashboard: '/dashboard',
+    admin: '/admin',
+    login: '/login',
+    moduleCatalog: '/module-catalog',
     }), []);
 
     const pathToPage = useMemo(() => ({
@@ -117,6 +119,7 @@ export default function App() {
     '/dashboard': 'dashboard',
     '/admin': 'admin',
     '/login': 'login',
+    '/module-catalog': 'moduleCatalog',
     }), []);
 
     const currentPage = pathToPage[location.pathname] || 'home';
@@ -188,6 +191,7 @@ export default function App() {
                             <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
+                            <Route path="/module-catalog" element={<ModuleCatalog onNavigate={go} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                         </motion.div>
