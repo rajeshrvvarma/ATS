@@ -18,14 +18,6 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     // Get unique categories from modules
     const categories = ['All', ...new Set(modules.map(module => module.category))];
 
-    // Filter modules based on search and category
-    const filteredModules = modules.filter(module => {
-        const matchesSearch = module.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            module.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'All' || module.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
-
     if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
     if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
 
@@ -69,67 +61,6 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                                 <span className="text-white font-semibold">Self-Paced Learning</span>
                             </div>
                         </div>
-
-                        {/* Module Search Interface */}
-                        <div className="max-w-4xl mx-auto mb-8">
-                            <div className="flex flex-col md:flex-row gap-4 mb-6">
-                                <div className="relative flex-1">
-                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search modules... (e.g., Python, Cybersecurity, Cloud)"
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-4 bg-slate-800/50 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:border-blue-500 focus:outline-none"
-                                    />
-                                </div>
-                                <select
-                                    value={selectedCategory}
-                                    onChange={(e) => setSelectedCategory(e.target.value)}
-                                    className="px-6 py-4 bg-slate-800/50 border border-slate-600 rounded-lg text-white focus:border-blue-500 focus:outline-none"
-                                >
-                                    {categories.map(category => (
-                                        <option key={category} value={category} className="bg-slate-800">
-                                            {category}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="text-slate-300 mb-4">
-                                {searchTerm || selectedCategory !== 'All' ? 
-                                    `${filteredModules.length} modules found` : 
-                                    `Browse all ${modules.length} modules`
-                                }
-                            </div>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => document.getElementById('featured-modules')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold px-8 py-4 rounded-lg shadow-xl hover:shadow-2xl transition-all duration-300 flex items-center gap-2"
-                            >
-                                <Grid3X3 className="w-5 h-5" />
-                                Browse All Modules
-                                <ArrowRight className="w-5 h-5" />
-                            </motion.button>
-
-                            {/* Removed Get Learning Path Advice button as requested */}
-
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => document.getElementById('traditional-courses')?.scrollIntoView({ behavior: 'smooth' })}
-                                className="bg-slate-700/80 text-white font-semibold px-8 py-4 rounded-lg border border-slate-600 hover:bg-slate-600 transition-all duration-300 flex items-center gap-2"
-                            >
-                                <BookOpen className="w-5 h-5" />
-                                Traditional Courses
-                            </motion.button>
-                        </div>
-
-                        {/* Removed 'Not sure which path to choose?' section as requested */}
                     </motion.div>
                 </section>
             </AnimatedBackground>
