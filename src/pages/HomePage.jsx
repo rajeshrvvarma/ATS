@@ -252,19 +252,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                                     </button>
                                 ))}
                             </div>
-                            {/* Search bar */}
-                            <div className="max-w-xl mx-auto mb-8">
-                                <div className="relative">
-                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                                    <input
-                                        type="text"
-                                        placeholder={`Search ${selectedCategory === 'All' ? '' : selectedCategory + ' '}modules...`}
-                                        value={searchTerm}
-                                        onChange={(e) => setSearchFilter ? setSearchFilter(e.target.value) : undefined}
-                                        className="form-input w-full"
-                                    />
-                                </div>
-                            </div>
+
                         </motion.div>
                         {/* Modules Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">

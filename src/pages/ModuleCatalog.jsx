@@ -4,7 +4,7 @@ import { modules as staticModules } from '@/data/modules.js';
 
 const ModuleCatalog = () => {
   const [selectedModule, setSelectedModule] = React.useState(null);
-  const [searchTerm, setSearchTerm] = React.useState('');
+  // Removed searchTerm state
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   const [modules, setModules] = React.useState(staticModules || []);
   const [loading, setLoading] = React.useState(true);
@@ -18,11 +18,10 @@ const ModuleCatalog = () => {
     const category = params.get('category');
     // If no query params, clear all filters
     if (!filter && !category) {
-      setSearchTerm('');
       setSelectedCategory('All');
       return;
     }
-    if (filter !== null) setSearchTerm(filter); else setSearchTerm('');
+    // Ignore filter param
     if (category && category !== 'All') setSelectedCategory(category); else setSelectedCategory('All');
   };
 
@@ -60,10 +59,8 @@ const ModuleCatalog = () => {
 
   // Filter modules based on search and category
   const filteredModules = modules.filter(mod => {
-    const matchesSearch = mod.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         mod.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || mod.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    return matchesCategory;
   });
   return (
     <div className="min-h-screen bg-gradient-blue py-12">
@@ -72,20 +69,8 @@ const ModuleCatalog = () => {
         {error && (<div className="text-center text-amber-400 text-sm mb-4">{error}</div>)}
         {loading && (<div className="text-center text-slate-300 py-8">Loading modules...</div>)}
         
-        {/* Search and Filter Section */}
+        {/* Category Filter Only Section */}
         <div className="mb-8 space-y-4">
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto">
-            <input
-              type="text"
-              placeholder="Search modules..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-blue-500"
-            />
-          </div>
-          
-          {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-2">
             {categories.map(category => (
               <button
@@ -101,13 +86,11 @@ const ModuleCatalog = () => {
               </button>
             ))}
           </div>
-          
-          {/* Results Count */}
           <div className="text-center text-slate-400 flex flex-col items-center gap-2">
             <span>Showing {filteredModules.length} of {modules.length} modules</span>
-            {(searchTerm || selectedCategory !== 'All') && (
+            {(selectedCategory !== 'All') && (
               <button
-                onClick={() => { setSearchTerm(''); setSelectedCategory('All'); window.history.replaceState({}, '', '/module-catalog'); }}
+                onClick={() => { setSelectedCategory('All'); window.history.replaceState({}, '', '/module-catalog'); }}
                 className="text-xs text-blue-300 hover:text-blue-200 underline"
               >
                 Clear filters
@@ -157,15 +140,9 @@ const ModuleCatalog = () => {
         {/* No Results Message */}
         {(!loading && filteredModules.length === 0) && (
           <div className="text-center text-slate-300 mt-12 max-w-xl mx-auto bg-slate-800/60 p-6 rounded-xl border border-slate-700">
-            <p className="text-xl font-semibold mb-2">No modules matched your search.</p>
-            <p className="text-sm mb-4">Suggestions:</p>
-            <ul className="text-sm text-slate-400 list-disc list-inside space-y-1 text-left">
-              <li>Use broader keywords ("cloud" instead of "multi-cloud architecture security")</li>
-              <li>Remove the category filter</li>
-              <li>Check spelling</li>
-            </ul>
+            <p className="text-xl font-semibold mb-2">No modules matched your filter.</p>
             <button
-              onClick={() => { setSearchTerm(''); setSelectedCategory('All'); window.history.replaceState({}, '', '/module-catalog'); }}
+              onClick={() => { setSelectedCategory('All'); window.history.replaceState({}, '', '/module-catalog'); }}
               className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
             >Show All Modules</button>
           </div>

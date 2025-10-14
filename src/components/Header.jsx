@@ -187,7 +187,6 @@ export default function Header({ onNavigate, currentPage }) {
                                 </span>
                                 {/* Search bar beside Agnidhra Technologies - always show on desktop */}
                                 <div className="block ml-4">
-                                    <HeaderSearchDropdown onNavigate={onNavigate} />
                                 </div>
                             </div>
                         </button>
@@ -645,103 +644,4 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
     );
 };
 
-// Header Search Dropdown Component (move outside Header)
-function HeaderSearchDropdown({ onNavigate }) {
-    const [open, setOpen] = React.useState(false);
-    const [search, setSearch] = React.useState("");
-    const inputRef = React.useRef(null);
-
-    // Example data for specialisations and popular modules
-    const specialisations = [
-        { label: "AI & Machine Learning", icon: BrainCircuit },
-        { label: "Data Science", icon: Database },
-        { label: "Cybersecurity", icon: Shield },
-        { label: "Cloud & DevOps", icon: Cloud },
-        { label: "Full Stack Development", icon: Laptop },
-    ];
-    const popularModules = [
-        { label: "Python Programming Foundation" },
-        { label: "SOC Analyst Bootcamp" },
-        { label: "Elite Hacker Program" },
-        { label: "AWS Cloud Architect" },
-        { label: "Data Science with Python" },
-    ];
-
-    // Close popup on outside click
-    React.useEffect(() => {
-        function handleClick(e) {
-            if (inputRef.current && !inputRef.current.contains(e.target)) setOpen(false);
-        }
-        if (open) document.addEventListener('mousedown', handleClick);
-        return () => document.removeEventListener('mousedown', handleClick);
-    }, [open]);
-
-    // Handle Enter key for search
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && search.trim()) {
-            setOpen(false);
-            onNavigate('moduleCatalog', { filter: search.trim() });
-        }
-    };
-
-    return (
-        <div className="relative" ref={inputRef} style={{ minWidth: 240 }}>
-            <input
-                type="text"
-                className="px-4 py-2 rounded-lg border border-slate-400 bg-slate-700 text-white placeholder-slate-300 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 w-60 shadow-md transition-all duration-200"
-                placeholder="Search courses..."
-                onFocus={() => setOpen(true)}
-                onClick={() => setOpen(true)}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                onKeyDown={handleKeyDown}
-            />
-            {open && (
-                <div className="absolute left-0 mt-2 w-[320px] md:w-[350px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-4 animate-fade-in">
-                    {/* Most Demand in Specialisation/Learning Path */}
-                    <div>
-                        <div className="text-xs font-bold text-slate-400 mb-2">Most Demand in Specialisation / Learning Path</div>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                            {specialisations.map((item, idx) => (
-                                <button
-                                    key={item.label}
-                                    className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 hover:bg-blue-700 text-blue-300 text-xs font-medium border border-slate-700 transition-colors"
-                                    onClick={() => { setOpen(false); onNavigate('moduleCatalog', { category: item.label }); }}
-                                >
-                                    <item.icon className="w-4 h-4" />
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    {/* Most Popularly Searched Courses */}
-                    <div>
-                        <div className="text-xs font-bold text-slate-400 mb-2">Most Popularly Searched Courses</div>
-                        <div className="flex flex-col gap-1 mb-4">
-                            {popularModules.map((item) => (
-                                <button
-                                    key={item.label}
-                                    className="text-left px-3 py-2 rounded-lg hover:bg-blue-800/40 text-slate-200 text-sm transition-colors"
-                                    onClick={() => { setOpen(false); onNavigate('moduleCatalog', { filter: item.label }); }}
-                                >
-                                    {item.label}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    {/* Browse Catalogue Link */}
-                    <div className="pt-2 border-t border-slate-700 mt-2">
-                        <div className="text-xs text-slate-400 mb-1">Not sure what to search?</div>
-                        <button
-                            className="text-blue-400 hover:underline text-sm font-semibold"
-                            onClick={() => { setOpen(false); onNavigate('moduleCatalog'); }}
-                        >
-                            Browse our catalogue
-                        </button>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-}
 
