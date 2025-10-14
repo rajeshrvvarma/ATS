@@ -43,8 +43,8 @@ export default function Header({ onNavigate, currentPage }) {
         foundation: {
             title: '🎯 Foundation Programs (₹99)',
             courses: [
-                { name: 'Cybersecurity Fundamentals', action: () => onNavigate('enroll') },
-                { name: 'Technology Overview', action: () => onNavigate('enroll') }
+                { name: 'Cybersecurity Fundamentals', action: () => onNavigate('cybersecurityFundamentals') },
+                { name: 'Technology Overview', action: () => onNavigate('technologyOverview') }
             ]
         },
         bootcamp: {
@@ -72,10 +72,10 @@ export default function Header({ onNavigate, currentPage }) {
         technology: {
             title: '💻 Technology Training',
             courses: [
-                { name: 'Full Stack Development', action: () => onNavigate('enroll') },
-                { name: 'Cloud & DevOps', action: () => onNavigate('enroll') },
-                { name: 'AI & Data Science', action: () => onNavigate('enroll') },
-                { name: 'Software Testing', action: () => onNavigate('enroll') }
+                { name: 'Full Stack Development', action: () => onNavigate('fullStackDevelopment') },
+                { name: 'Cloud & DevOps', action: () => onNavigate('cloudDevOps') },
+                { name: 'AI & Data Science', action: () => onNavigate('aiDataScience') },
+                { name: 'Software Testing', action: () => onNavigate('softwareTesting') }
             ]
         },
         college: {
@@ -224,12 +224,7 @@ export default function Header({ onNavigate, currentPage }) {
 
                     {/* Right - Actions: Enroll Now and Login/Username Dropdown */}
                     <div className="flex items-center space-x-4 flex-shrink-0 ml-8">
-                        <button
-                            onClick={() => onNavigate('enroll')}
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
-                        >
-                            Enroll Now
-                        </button>
+                        {/* Enroll Now button removed as enrollment is now per-course */}
                         {user ? (
                             <UserMenu 
                                 user={user} 
@@ -339,12 +334,7 @@ export default function Header({ onNavigate, currentPage }) {
                         
                         {/* CTA Button */}
                         <li className="pt-2 border-t border-slate-700">
-                            <button 
-                                onClick={() => { setIsOpen(false); onNavigate('enroll'); }} 
-                                className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                            >
-                                🚀 Enroll Now
-                            </button>
+                            {/* Enroll Now button removed from mobile menu */}
                         </li>
                     </ul>
                 </div>
@@ -378,7 +368,7 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
                     duration: '2 Days',
                     price: '₹99',
                     description: 'Introduction to cybersecurity landscape and career paths',
-                    action: () => onNavigate('enroll'),
+                    action: () => onNavigate('cybersecurityFundamentals'),
                     popular: true
                 },
                 {
@@ -386,7 +376,7 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
                     duration: '2 Days',
                     price: '₹99',
                     description: 'Explore AI, Cloud Computing, and DevSecOps fundamentals',
-                    action: () => onNavigate('enroll')
+                    action: () => onNavigate('technologyOverview')
                 }
             ]
         },
