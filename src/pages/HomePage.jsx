@@ -24,7 +24,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <AnimatedBackground variant="default" className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center bg-gradient-blue bg-fixed">
                 <section id="home" className="container mx-auto px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -63,7 +63,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                         </div>
                     </motion.div>
                 </section>
-            </AnimatedBackground>
+            </div>
         </>
     );
 };
@@ -128,7 +128,7 @@ const FeaturedModulesSection = ({ onNavigate, modules }) => {
     };
 
     return (
-        <AnimatedBackground variant="programs" className="py-20">
+        <div className="py-20 bg-gradient-green bg-fixed">
             <section id="featured-modules" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -344,7 +344,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
     ];
 
     return (
-        <AnimatedBackground variant="bootcamp" className="py-20">
+        <div className="py-20 bg-gradient-purple bg-fixed">
             <section id="traditional-courses" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -443,7 +443,7 @@ const TraditionalCoursesSection = ({ onNavigate }) => {
 
 // Success Metrics & Why Choose Us Section
 const SuccessMetrics = () => (
-    <AnimatedBackground variant="metrics" className="py-20">
+    <div className="py-20 bg-gradient-cyan bg-fixed">
         <section id="success-metrics" className="container mx-auto px-6">
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
@@ -562,7 +562,7 @@ const Testimonials = () => {
     }, [items.length]);
 
     return (
-        <AnimatedBackground variant="testimonials" className="py-20">
+        <div className="py-20 bg-gradient-blue bg-fixed">
             <section id="testimonials" className="container mx-auto px-6">
                 <SectionTitle>What Our Students Say</SectionTitle>
                 <div className="text-center mb-12">
@@ -633,7 +633,7 @@ const Contact = ({ onNavigate }) => {
     };
 
     return (
-        <AnimatedBackground variant="contact" className="py-20">
+        <div className="py-20 bg-gradient-purple bg-fixed">
             <section id="contact" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
