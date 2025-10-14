@@ -734,7 +734,7 @@ function HeaderSearchDropdown({ onNavigate }) {
                         <div className="text-xs text-slate-400 mb-1">Not sure what to search?</div>
                         <button
                             className="text-blue-400 hover:underline text-sm font-semibold"
-                            onClick={() => { setOpen(false); onNavigate('moduleCatalog'); }}
+                            onClick={() => { setOpen(false); onNavigate('moduleCatalog', { filter: '' }); }}
                         >
                             Browse our catalogue
                         </button>
