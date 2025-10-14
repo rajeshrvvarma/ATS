@@ -641,6 +641,7 @@ export async function getCoursePricing(courseId) {
     }
   } catch (error) {
     console.error('Failed to fetch course pricing:', error);
+    // Return default pricing as fallback for permission errors
     return defaultPricing[courseId] || null;
   }
 }
