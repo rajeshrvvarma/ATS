@@ -67,35 +67,43 @@ export default function LoginPage({ onNavigate, onLogin }) {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        {/* Header */}
-        <div className="text-center">
-          <div className="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center mx-auto mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-100 flex items-center justify-center py-12 px-4">
+      <div className="max-w-5xl w-full bg-white rounded-xl shadow-lg flex flex-col md:flex-row overflow-hidden">
+        {/* Left: Content */}
+        <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-blue-100 to-green-50">
+          <div className="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center mb-6">
             <Shield className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-3xl font-bold text-white">Welcome to Agnidhra Technologies</h2>
-          <p className="mt-2 text-slate-400">
-            Sign in with your Google account to access the learning platform
+          <h2 className="text-4xl font-bold text-blue-700 mb-4">Welcome Back to Agnidhra</h2>
+          <p className="text-lg text-slate-700 mb-6">
+            Sign in to access your personalized learning dashboard, track your progress, and unlock new courses in cybersecurity, technology, and more.
           </p>
+          <ul className="list-disc pl-6 text-slate-700 space-y-2 mb-6">
+            <li>Secure Google-based authentication</li>
+            <li>Access exclusive course content</li>
+            <li>Track your learning journey</li>
+            <li>Join a vibrant tech community</li>
+          </ul>
+          <div className="text-slate-600 text-sm mt-4">
+            <span className="font-semibold">Trusted by 1000+ learners</span> <br />
+            Industry-driven curriculum & flexible learning
+          </div>
         </div>
-
-        {/* Login Form */}
-        <div className="mt-8 space-y-6">
+        {/* Right: Login Form */}
+        <div className="flex-1 p-8 flex flex-col justify-center bg-white border-l border-slate-100">
+          <h3 className="text-2xl font-bold text-blue-700 mb-6">Sign In</h3>
           {/* Error Message */}
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400">
+            <div className="flex items-center gap-2 p-3 bg-red-500/20 border border-red-500/50 rounded-lg text-red-400 mb-4">
               <AlertCircle className="w-5 h-5 flex-shrink-0" />
               <span className="text-sm">{error}</span>
             </div>
           )}
-
-          {/* Google Login Button */}
-          <button 
-            type="button" 
-            onClick={handleGoogle} 
-            disabled={isLoading} 
-            className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-600 rounded-lg bg-white text-slate-800 font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg"
+          <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-3 py-4 px-6 border border-slate-300 rounded-lg bg-white text-slate-800 font-medium hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-lg mb-4"
           >
             <svg className="w-6 h-6" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
@@ -112,8 +120,6 @@ export default function LoginPage({ onNavigate, onLogin }) {
               'Sign in with Google'
             )}
           </button>
-
-          {/* Information Text */}
           <div className="text-center">
             <p className="text-sm text-slate-400">
               Secure authentication powered by Google
@@ -122,26 +128,23 @@ export default function LoginPage({ onNavigate, onLogin }) {
               Your Google account will be used to access the learning platform
             </p>
           </div>
+          <div className="text-center mt-8">
+            <button
+              onClick={() => onNavigate('home')}
+              className="text-sky-500 hover:text-sky-400 text-sm"
+            >
+              ← Back to Home
+            </button>
+          </div>
         </div>
-
-        {/* Back to Home */}
-        <div className="text-center">
-          <button
-            onClick={() => onNavigate('home')}
-            className="text-sky-400 hover:text-sky-300 text-sm"
-          >
-            ← Back to Home
-          </button>
-        </div>
+        {/* Two-Factor Authentication Modal */}
+        {showTwoFactor && (
+          <TwoFactorAuth
+            onVerify={handleTwoFactorSuccess}
+            onCancel={handleTwoFactorCancel}
+          />
+        )}
       </div>
-
-      {/* Two-Factor Authentication Modal */}
-      {showTwoFactor && (
-        <TwoFactorAuth
-          onVerify={handleTwoFactorSuccess}
-          onCancel={handleTwoFactorCancel}
-        />
-      )}
     </div>
   );
 }
