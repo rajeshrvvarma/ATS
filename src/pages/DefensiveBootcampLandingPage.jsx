@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { modules } from '@/data/modules.js';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
@@ -8,6 +10,19 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const DefensiveBootcampLandingPage = () => {
+  const navigate = useNavigate();
+  // --- Hybrid Approach: Modules for this course ---
+  // Define the module IDs that make up this bootcamp (update as needed)
+  const bootcampModuleIds = [
+    'python-programming',
+    'networking-fundamentals',
+    'incident-response',
+    'vulnerability-management',
+    'soc-operations',
+    'compliance-risk',
+    'career-launch',
+  ];
+  const bootcampModules = modules.filter(m => bootcampModuleIds.includes(m.id));
   const [currentEnrolled, setCurrentEnrolled] = useState(23); // Dynamic counter
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 8, minutes: 42 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
@@ -272,7 +287,39 @@ const DefensiveBootcampLandingPage = () => {
         </div>
       </AnimatedBackground>
 
-      {/* Curriculum */}
+      {/* --- Hybrid Approach: Modules Included Banner --- */}
+      <div className="container mx-auto px-6 mb-8">
+        <div className="bg-blue-900/80 border-l-4 border-blue-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
+          <div>
+            <div className="text-lg font-bold text-blue-200 mb-1">Now Modular!</div>
+            <div className="text-blue-100 text-base">This bootcamp is made up of the following modules. You can enroll in the full course or customize your own learning path.</div>
+          </div>
+          <button
+            className="mt-4 md:mt-0 bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-blue-600 transition-all"
+            onClick={() => navigate(`/course-builder?modules=${bootcampModuleIds.join(',')}`)}
+          >
+            Customize this Course
+          </button>
+        </div>
+        <div className="bg-slate-800 rounded-xl p-6 border border-blue-700 mb-8">
+          <h3 className="text-2xl font-semibold text-blue-300 mb-4">Modules Included in This Bootcamp</h3>
+          <div className="grid md:grid-cols-2 gap-6">
+            {bootcampModules.map(mod => (
+              <div key={mod.id} className="bg-slate-900 rounded-lg p-4 border border-slate-700 mb-2">
+                <div className="font-bold text-white text-lg mb-1">{mod.title}</div>
+                <div className="text-slate-400 text-sm mb-1">{mod.category} • {mod.duration}</div>
+                <div className="text-slate-300 text-sm mb-2">{mod.description}</div>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {mod.learningPaths.map((path, i) => (
+                    <span key={i} className="bg-slate-700 text-sky-200 px-2 py-1 rounded-full text-xs">{path}</span>
+                  ))}
+                </div>
+                <div className="text-green-400 font-bold">₹{mod.price}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
       <AnimatedBackground variant="bootcamp" className="py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">7-Day Intensive Curriculum</h2>
