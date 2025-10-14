@@ -676,6 +676,14 @@ function HeaderSearchDropdown({ onNavigate }) {
         return () => document.removeEventListener('mousedown', handleClick);
     }, [open]);
 
+    // Handle Enter key for search
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && search.trim()) {
+            setOpen(false);
+            onNavigate('moduleCatalog', { filter: search.trim() });
+        }
+    };
+
     return (
         <div className="relative" ref={inputRef} style={{ minWidth: 240 }}>
             <input
@@ -686,6 +694,7 @@ function HeaderSearchDropdown({ onNavigate }) {
                 onClick={() => setOpen(true)}
                 value={search}
                 onChange={e => setSearch(e.target.value)}
+                onKeyDown={handleKeyDown}
             />
             {open && (
                 <div className="absolute left-0 mt-2 w-[320px] md:w-[350px] bg-slate-900 border border-slate-700 rounded-xl shadow-2xl z-50 p-4 animate-fade-in">
