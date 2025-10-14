@@ -706,7 +706,7 @@ function HeaderSearchDropdown({ onNavigate }) {
                                 <button
                                     key={item.label}
                                     className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 hover:bg-blue-700 text-blue-300 text-xs font-medium border border-slate-700 transition-colors"
-                                    onClick={() => { setOpen(false); onNavigate('moduleCatalog', { filter: item.label }); }}
+                                    onClick={() => { setOpen(false); onNavigate('moduleCatalog', { category: item.label }); }}
                                 >
                                     <item.icon className="w-4 h-4" />
                                     {item.label}
