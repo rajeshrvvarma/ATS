@@ -5,54 +5,12 @@ import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
-import { modules } from '@/data/modules.js';
-import { useNavigate } from 'react-router-dom';
 
 const OffensiveMasteryLandingPage = () => {
-  const navigate = useNavigate();
   const [currentEnrolled, setCurrentEnrolled] = useState(4); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
-
-  // Centralized pricing for offensive-mastery
-  const coursePricingData = useCoursePricing();
-  const coursePricing = coursePricingData?.pricing || {};
-  const pricingLoading = coursePricingData?.loading || false;
-
-  // --- Hybrid Approach: Module mapping for 2-month offensive security course ---
-  // Course to modules mapping for Offensive Security Mastery (2-Month Program)
-  const courseModulesMapping = {
-    'Offensive Security Mastery': [
-      { id: 'mod_70', title: 'Ethical Hacking Foundation', price: 1999, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_71', title: 'Penetration Testing Methodology', price: 2499, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_72', title: 'Web Application Security', price: 2299, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_73', title: 'Wireless & Mobile Security', price: 1999, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_74', title: 'Network Security Fundamentals', price: 1299, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_79', title: 'Malware Analysis Fundamentals', price: 1999, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_80', title: 'Reverse Engineering', price: 2199, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_81', title: 'Advanced Threat Detection', price: 1899, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_89', title: 'Incident Response Planning', price: 1899, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_91', title: 'Threat Intelligence', price: 1799, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_92', title: 'Behavioral Analysis', price: 1699, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_26', title: 'Linux Administration', price: 1299, category: 'DevOps & Infrastructure' }
-    ]
-  };
-
-  // Helper function to get modules for the course
-  const getCourseModules = () => {
-    return courseModulesMapping['Offensive Security Mastery'] || [];
-  };
-
-  // Helper function to calculate total module price and adjusted course price
-  const getModulePricing = () => {
-    const courseModules = getCourseModules();
-    const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
-    // 2-month program should be significantly cheaper - 45% off individual module prices
-    const adjustedCoursePrice = Math.round(totalModulePrice * 0.45); 
-    return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
-  };
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -267,9 +225,9 @@ const OffensiveMasteryLandingPage = () => {
             >
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                  <div className="text-6xl font-bold text-red-300 mb-2">{pricingLoading ? '₹—' : formatPrice(coursePricing?.['offensive-mastery']?.finalPrice)}</div>
-                  <div className="text-lg text-gray-300 mb-1 line-through">{pricingLoading ? '' : formatPrice(coursePricing?.['offensive-mastery']?.originalPrice)}</div>
-                  <div className="text-orange-400 font-semibold">{pricingLoading ? '' : `Save ${formatPrice((coursePricing?.['offensive-mastery']?.originalPrice || 0) - (coursePricing?.['offensive-mastery']?.finalPrice || 0))} with full payment`}</div>
+                  <div className="text-6xl font-bold text-red-300 mb-2">₹7,999</div>
+                  <div className="text-lg text-gray-300 mb-1 line-through">₹12,999</div>
+                  <div className="text-orange-400 font-semibold">Save ₹5,000 with full payment</div>
                 </div>
                 
                 <div>
@@ -527,7 +485,7 @@ const OffensiveMasteryLandingPage = () => {
             className="bg-white text-red-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition-all duration-300"
             onClick={() => setIsEnrollmentModalOpen(true)}
           >
-            Reserve Elite Seat - {pricingLoading ? '₹—' : formatPrice(coursePricing?.['offensive-mastery']?.finalPrice)}
+            Reserve Elite Seat - ₹7,999
           </button>
         </div>
       </AnimatedBackground>
@@ -537,8 +495,7 @@ const OffensiveMasteryLandingPage = () => {
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
         courseType="offensive-mastery"
-        courseName="2-Month Offensive Security Mastery"
-        coursePrice={pricingLoading ? undefined : (coursePricing?.['offensive-mastery']?.finalPrice)}
+        courseName="Offensive Security Mastery"
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />

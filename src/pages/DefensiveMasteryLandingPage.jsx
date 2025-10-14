@@ -5,54 +5,12 @@ import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
-import { modules } from '@/data/modules.js';
-import { useNavigate } from 'react-router-dom';
 
 const DefensiveMasteryLandingPage = () => {
-  const navigate = useNavigate();
   const [currentEnrolled, setCurrentEnrolled] = useState(7); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
-
-  // Load centralized pricing for defensive-mastery
-  const coursePricingData = useCoursePricing();
-  const coursePricing = coursePricingData?.pricing || {};
-  const pricingLoading = coursePricingData?.loading || false;
-
-  // --- Hybrid Approach: Module mapping for 2-month defensive security course ---
-  // Course to modules mapping for Defensive Security Mastery (2-Month Program)
-  const courseModulesMapping = {
-    'Defensive Security Mastery': [
-      { id: 'mod_74', title: 'Network Security Fundamentals', price: 1299, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_75', title: 'Identity and Access Management', price: 1299, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_86', title: 'Information Security Management', price: 1699, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_87', title: 'Compliance Frameworks', price: 1599, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_88', title: 'Risk Assessment', price: 1799, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_89', title: 'Incident Response Planning', price: 1899, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_90', title: 'Forensic Investigation', price: 1999, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_91', title: 'Threat Intelligence', price: 1799, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_81', title: 'Advanced Threat Detection', price: 1899, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_92', title: 'Behavioral Analysis', price: 1699, category: 'Cybersecurity Fundamentals' },
-      { id: 'mod_18', title: 'AWS Fundamentals', price: 1499, category: 'Cloud Platforms' },
-      { id: 'mod_19', title: 'AWS Security Services', price: 1999, category: 'Cloud Platforms' }
-    ]
-  };
-
-  // Helper function to get modules for the course
-  const getCourseModules = () => {
-    return courseModulesMapping['Defensive Security Mastery'] || [];
-  };
-
-  // Helper function to calculate total module price and adjusted course price
-  const getModulePricing = () => {
-    const courseModules = getCourseModules();
-    const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
-    // 2-month program should be significantly cheaper - 50% off individual module prices
-    const adjustedCoursePrice = Math.round(totalModulePrice * 0.50); 
-    return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
-  };
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -198,43 +156,35 @@ const DefensiveMasteryLandingPage = () => {
     'Salary negotiation coaching'
   ];
 
-  const paymentPlans = (() => {
-    // Get centralized pricing or use fallbacks
-    const coursePrice = !pricingLoading && coursePricing?.['defensive-mastery'] ? coursePricing['defensive-mastery'] : null;
-    const finalPrice = coursePrice ? coursePrice.finalPrice : 5999;
-    const originalPrice = coursePrice ? coursePrice.originalPrice : 8999;
-    const savings = originalPrice - finalPrice;
-    
-    return [
-      {
-        id: 'full',
-        name: 'Full Payment',
-        price: formatPrice(finalPrice),
-        originalPrice: formatPrice(originalPrice),
-        savings: `Save ${formatPrice(savings)}`,
-        benefits: ['Best Value', 'Lifetime Access', 'All Bonuses Included'],
-        popular: true
-      },
-      {
-        id: 'installment',
-        name: 'Two Installments', 
-        price: `${formatPrice(Math.ceil(finalPrice * 0.55))} + ${formatPrice(Math.ceil(finalPrice * 0.5))}`,
-        originalPrice: formatPrice(originalPrice - 1000),
-        savings: `Save ${formatPrice(savings - 1300)}`,
-        benefits: ['Flexible Payment', 'Start Now, Pay Later', 'No Interest'],
-        popular: false
-      },
-      {
-        id: 'monthly',
-        name: 'Monthly Payment',
-        price: `${formatPrice(Math.ceil(finalPrice * 0.55))}/month x 2`,
-        originalPrice: formatPrice(originalPrice - 1000),
-        savings: `Save ${formatPrice(savings - 1600)}`, 
-        benefits: ['Cash Flow Friendly', 'Easy on Budget', 'No Hidden Fees'],
-        popular: false
-      }
-    ];
-  })();
+  const paymentPlans = [
+    {
+      id: 'full',
+      name: 'Full Payment',
+      price: '₹5,999',
+      originalPrice: '₹8,999',
+      savings: 'Save ₹3,000',
+      benefits: ['Best Value', 'Lifetime Access', 'All Bonuses Included'],
+      popular: true
+    },
+    {
+      id: 'installment',
+      name: 'Two Installments', 
+      price: '₹3,299 + ₹3,000',
+      originalPrice: '₹7,999',
+      savings: 'Save ₹1,700',
+      benefits: ['Flexible Payment', 'Start Now, Pay Later', 'No Interest'],
+      popular: false
+    },
+    {
+      id: 'monthly',
+      name: 'Monthly Payment',
+      price: '₹3,299/month x 2',
+      originalPrice: '₹7,999',
+      savings: 'Save ₹1,400',
+      benefits: ['Cash Flow Friendly', 'Easy on Budget', 'No Hidden Fees'],
+      popular: false
+    }
+  ];
 
   const seatsLeft = 20 - currentEnrolled;
   const progressPercentage = (currentEnrolled / 20) * 100;
@@ -273,9 +223,9 @@ const DefensiveMasteryLandingPage = () => {
             >
               <div className="grid md:grid-cols-2 gap-8 items-center">
                 <div>
-                  <div className="text-6xl font-bold text-purple-300 mb-2">{pricingLoading ? '₹—' : formatPrice(coursePricing?.['defensive-mastery']?.finalPrice || 5999)}</div>
-                  <div className="text-lg text-gray-300 mb-1 line-through">{pricingLoading ? '' : formatPrice(coursePricing?.['defensive-mastery']?.originalPrice || 8999)}</div>
-                  <div className="text-green-400 font-semibold">{pricingLoading ? '' : `Save ${formatPrice((coursePricing?.['defensive-mastery']?.originalPrice || 8999) - (coursePricing?.['defensive-mastery']?.finalPrice || 5999))} with full payment`}</div>
+                  <div className="text-6xl font-bold text-purple-300 mb-2">₹5,999</div>
+                  <div className="text-lg text-gray-300 mb-1 line-through">₹8,999</div>
+                  <div className="text-green-400 font-semibold">Save ₹3,000 with full payment</div>
                 </div>
                 
                 <div>
@@ -637,7 +587,7 @@ const DefensiveMasteryLandingPage = () => {
             className="bg-white text-purple-900 font-bold py-3 px-8 rounded-full text-lg hover:bg-gray-100 transition-all duration-300"
             onClick={() => setIsEnrollmentModalOpen(true)}
           >
-            Reserve Premium Seat - {pricingLoading ? '₹—' : formatPrice(coursePricing?.['defensive-mastery']?.finalPrice || 5999)}
+            Reserve Premium Seat - ₹5,999
           </button>
         </div>
       </AnimatedBackground>
@@ -648,7 +598,6 @@ const DefensiveMasteryLandingPage = () => {
         onClose={() => setIsEnrollmentModalOpen(false)}
         courseType="defensive-mastery"
         courseName="2-Month Defensive Security Mastery"
-        coursePrice={pricingLoading ? undefined : (coursePricing?.['defensive-mastery']?.finalPrice)}
         onEnrollmentSuccess={(result) => {
           console.log('Defensive mastery enrollment successful:', result);
           // You can add success tracking or analytics here
