@@ -2,21 +2,14 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import { modules } from '@/data/modules.js';
-import { useNavigate } from 'react-router-dom';
 
 const TechnologyTrainingLandingPage = () => {
-  const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
-  const coursePricingData = useCoursePricing();
-  const coursePricing = coursePricingData?.pricing || {};
-  const pricingLoading = coursePricingData?.loading || false;
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // --- Hybrid Approach: Module mapping for technology training ---

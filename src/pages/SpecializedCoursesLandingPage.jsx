@@ -592,7 +592,7 @@ const SpecializedCoursesLandingPage = () => {
     : specializedCourses.filter(course => course.category === selectedCategory);
 
   const handleEnrollment = (course) => {
-    const courseType = titleToIdMap[course.title];
+    const courseType = course.title.toLowerCase().replace(/\s+/g, '-');
     setEnrollmentModal({ isOpen: true, courseType, courseName: course.title });
   };
 
@@ -1033,7 +1033,6 @@ const SpecializedCoursesLandingPage = () => {
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
         courseType={enrollmentModal.courseType}
         courseName={enrollmentModal.courseName}
-        coursePrice={pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
