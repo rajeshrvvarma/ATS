@@ -24,15 +24,15 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <div className="min-h-screen flex items-center justify-center bg-gradient-blue bg-fixed">
-                <section id="home" className="container mx-auto px-6">
+            <div className="min-h-[45vh] flex items-center justify-center bg-gradient-blue bg-fixed py-8 md:py-12">
+                <section id="home" className="container mx-auto px-4 md:px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 1 }}
-                        className="text-center mb-12"
+                        className="text-center mb-6"
                     >
-                        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+                        <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                             Learn{' '}
                             <span className="text-gradient-cyan">
                                 Any Skill
@@ -41,13 +41,13 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                             <span className="text-3xl md:text-5xl text-gradient-blue">One Module at a Time</span>
                         </h1>
 
-                        <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed">
+                        <p className="text-lg md:text-xl text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed">
                             Choose from <strong className="text-blue-400">{modules.length}+ Expert Modules</strong> across 
                             <strong className="text-purple-400"> Technology</strong>, <strong className="text-red-400">Cybersecurity</strong>, 
                             and <strong className="text-green-400">Programming</strong>. Build your custom learning path.
                         </p>
 
-                        <div className="flex flex-wrap justify-center gap-8 mb-12 text-center">
+                        <div className="flex flex-wrap justify-center gap-6 mb-6 text-center">
                             <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
                                 <BookOpen className="w-5 h-5 text-blue-400" />
                                 <span className="text-white font-semibold">{modules.length}+ Learning Modules</span>

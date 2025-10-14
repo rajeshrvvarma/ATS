@@ -11,7 +11,14 @@
 - Creation of `VIBRANT_DESIGN_REFERENCE.md` as a comprehensive guide for the new design system.
 - Public folder checked and confirmed to have no styling issues.
 
-### Next steps
-- Update minor internal components (e.g., StudyGroups.jsx and any other low-priority components) to ensure full compliance with the vibrant design system.
-- Monitor and update any new pages or components using the reference guide to maintain consistency.
-- When the above tasks are completed, update this document with a new entry and date, summarizing the completed work.
+
+## October 15, 2025 (Planned)
+
+### Todo
+- Remove all AnimatedBackground animation components from the entire site (replace with static gradients for performance).
+- Refactor all pages and components to use only static gradient backgrounds.
+- Review and improve the color palette for better vibrancy, accessibility, and consistency.
+- Document any new color palette changes in `VIBRANT_DESIGN_REFERENCE.md`.
+
+### Notes
+- After completing the above, update this document with a summary of the changes and the completion date.
