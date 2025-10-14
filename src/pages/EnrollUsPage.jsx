@@ -6,60 +6,77 @@ import { getBatchById, getActiveBatches, getBatchesByCourse, getUrgencyColor } f
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
 
 export default function EnrollUsPage({ onNavigate }) {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-        course: '',
-        batchId: '',
-        experience: 'beginner',
-        background: '',
-        goals: '',
-        startDate: '',
-        source: 'website'
-    });
-    
-    const [selectedBatch, setSelectedBatch] = useState(null);
-    const [availableBatches, setAvailableBatches] = useState([]);
-    
-    // Handle URL parameters for targeted enrollment
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const courseParam = urlParams.get('course');
-        const batchParam = urlParams.get('batch');
-        
-        if (courseParam) {
-            setFormData(prev => ({
-                ...prev,
-                course: courseParam,
-                source: 'banner_targeted'
-            }));
-            
-            // Get available batches for this course
-            const courseBatches = getBatchesByCourse(courseParam);
-            setAvailableBatches(courseBatches);
-            
-            if (batchParam) {
-                const batch = getBatchById(batchParam);
-                if (batch) {
-                    setSelectedBatch(batch);
-                    setFormData(prev => ({
-                        ...prev,
-                        batchId: batchParam,
-                        source: 'banner_specific'
-                    }));
-                }
-            }
-        } else {
-            // Load all active batches for general enrollment
-            setAvailableBatches(getActiveBatches());
-        }
-    }, []);
+        // Modular pricing options
+        const pricingOptions = [
+                { label: 'Individual Module', modules: 1, price: 699 },
+                { label: 'Mini Path (3 modules)', modules: 3, price: 1899 },
+                { label: 'Standard Path (5 modules)', modules: 5, price: 3199 },
+                { label: 'Advanced Path (7 modules)', modules: 7, price: 4399 },
+                { label: 'Add-on Module (existing students)', modules: 1, price: 599 },
+                { label: 'Specialization Combo (Programming + DSA)', modules: 2, price: 1299 },
+        ];
+
+        // Import the 102+ modules from the catalog (sync with ModuleCatalog.jsx)
+        const moduleCategories = [
+            { name: 'Programming Foundation', modules: [
+                'C Programming Fundamentals', 'C++ Object-Oriented Programming', 'Java Programming', 'Python Programming', 'JavaScript & ES6+', 'Go Programming', 'Rust Programming', 'Data Structures & Algorithms',
+            ] },
+            { name: 'Web Development Frontend', modules: [
+                'HTML5 & CSS3 Mastery', 'Responsive Web Design', 'JavaScript DOM & APIs', 'React.js Development', 'Angular Framework', 'Vue.js Framework',
+            ] },
+            { name: 'Web Development Backend', modules: [
+                'Node.js & Express', 'Python Web Frameworks', 'Java Spring Boot', 'PHP & Laravel', 'Ruby on Rails', 'ASP.NET Core', 'RESTful API Design',
+            ] },
+            { name: 'Database Technologies', modules: [
+                'SQL Fundamentals', 'Advanced Database Design', 'NoSQL Databases', 'Redis & Caching', 'Elasticsearch & Search', 'Database Administration', 'Data Warehousing', 'Graph Databases',
+            ] },
+            { name: 'Cloud Platforms', modules: [
+                'AWS Fundamentals', 'AWS Advanced Services', 'AWS Solutions Architecture', 'Azure Fundamentals', 'Azure Advanced Services', 'Azure Solutions Architecture', 'Google Cloud Platform', 'Multi-Cloud Architecture', 'Cloud Cost Optimization', 'Serverless Computing', 'Cloud Networking', 'Cloud Storage Solutions',
+            ] },
+            { name: 'DevOps & Infrastructure', modules: [
+                'Linux System Administration', 'Docker & Containerization', 'Kubernetes Orchestration', 'CI/CD Pipeline Development', 'Infrastructure as Code', 'Configuration Management', 'Monitoring & Logging', 'GitOps & Version Control', 'Site Reliability Engineering', 'DevSecOps',
+            ] },
+            { name: 'Mobile Development', modules: [
+                'Android Native Development', 'iOS Native Development', 'React Native Cross-Platform', 'Flutter Development', 'Mobile Backend Services', 'Mobile App Testing & Deployment',
+            ] },
+            { name: 'Data Science & Analytics', modules: [
+                'Statistics for Data Science', 'Data Analysis with Python', 'Data Analysis with R', 'Machine Learning Fundamentals', 'Advanced Machine Learning', 'Deep Learning & Neural Networks', 'Natural Language Processing', 'Computer Vision', 'Big Data Processing', 'MLOps & Model Deployment',
+            ] },
+            { name: 'Artificial Intelligence', modules: [
+                'AI Fundamentals', 'Generative AI & LLMs', 'AI Model Development', 'AI Integration & APIs', 'Computer Vision AI', 'AI for Business Applications',
+            ] },
+            { name: 'Cybersecurity', modules: [
+                'Information Security Basics', 'Network Security', 'Web Application Security', 'Cloud Security', 'Incident Response & Forensics', 'Security Operations Center', 'Ethical Hacking & Pen Testing', 'Compliance & Governance',
+            ] },
+            { name: 'Software Testing', modules: [
+                'Manual Testing Fundamentals', 'Test Automation with Selenium', 'API Testing', 'Performance Testing', 'Mobile App Testing',
+            ] },
+            { name: 'Specialized Technologies', modules: [
+                'Blockchain Development', 'IoT & Embedded Systems', 'Game Development', 'AR/VR Development', 'Quantum Computing Basics', 'Edge Computing', 'Microservices Architecture', 'Enterprise Integration',
+            ] },
+        ];
+
+        // Flatten all modules for selection
+        const allModules = moduleCategories.flatMap(cat => cat.modules.map(title => ({ title, category: cat.name })));
+
+        const [formData, setFormData] = useState({
+                name: '',
+                email: '',
+                phone: '',
+                selectedModules: [],
+                pricingOption: pricingOptions[0],
+                experience: 'beginner',
+                background: '',
+                goals: '',
+                startDate: '',
+                source: 'website'
+        });
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [paymentLoading, setPaymentLoading] = useState(false);
     const [paymentMsg, setPaymentMsg] = useState('');
     const [lastOrderId, setLastOrderId] = useState('');
+
 
     const handleInputChange = (e) => {
         setFormData({
@@ -68,31 +85,54 @@ export default function EnrollUsPage({ onNavigate }) {
         });
     };
 
+    // Handle module selection (checkboxes)
+    const handleModuleSelect = (title) => {
+        setFormData(prev => {
+            const already = prev.selectedModules.includes(title);
+            return {
+                ...prev,
+                selectedModules: already
+                    ? prev.selectedModules.filter(m => m !== title)
+                    : [...prev.selectedModules, title]
+            };
+        });
+    };
+
+    // Handle pricing option change
+    const handlePricingOptionChange = (option) => {
+        setFormData(prev => ({ ...prev, pricingOption: option }));
+    };
+
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setSubmitting(true);
-
         try {
+            // Validate module count matches pricing option
+            if (formData.selectedModules.length !== formData.pricingOption.modules && formData.pricingOption.label !== 'Add-on Module (existing students)' && formData.pricingOption.label !== 'Specialization Combo (Programming + DSA)') {
+                alert(`Please select exactly ${formData.pricingOption.modules} module(s) for the chosen pricing option.`);
+                setSubmitting(false);
+                return;
+            }
             // Send enrollment inquiry via Netlify Forms
             const result = await sendEnrollmentInquiry({
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
-                course: formData.course,
+                modules: formData.selectedModules,
+                pricingOption: formData.pricingOption.label,
                 experience: formData.experience,
                 message: `Background: ${formData.background}\nGoals: ${formData.goals}\nPreferred Start Date: ${formData.startDate}`,
-                source: 'enrollment-page'
+                source: 'modular-enrollment-page'
             });
-
             if (result.success) {
                 setSubmitted(true);
-                // Reset form
                 setFormData({
                     name: '',
                     email: '',
                     phone: '',
-                    course: '',
-                    batchId: '',
+                    selectedModules: [],
+                    pricingOption: pricingOptions[0],
                     experience: 'beginner',
                     background: '',
                     goals: '',
@@ -111,86 +151,7 @@ export default function EnrollUsPage({ onNavigate }) {
         }
     };
 
-    const courses = [
-        // 7-Day Bootcamps
-        { 
-            id: 'defensiveBootcamp', 
-            name: '7-Day Defensive Security Bootcamp', 
-            price: 'Starting ₹499',
-            razorpayPrice: 499,
-            category: '7-Day Bootcamps'
-        },
-        { 
-            id: 'offensiveBootcamp', 
-            name: '7-Day Ethical Hacking Bootcamp', 
-            price: 'Starting ₹599',
-            razorpayPrice: 599,
-            category: '7-Day Bootcamps'
-        },
-        
-        // 2-Month Premium Programs
-        { 
-            id: 'defensiveMastery', 
-            name: '2-Month Defensive Security Mastery Program', 
-            price: '₹5,999',
-            razorpayPrice: 5999,
-            category: '2-Month Premium Programs'
-        },
-        { 
-            id: 'offensiveMastery', 
-            name: '2-Month Elite Hacker Program', 
-            price: '₹7,999',
-            razorpayPrice: 7999,
-            category: '2-Month Premium Programs'
-        },
-        
-        // Specialized Courses
-        { 
-            id: 'cloudSecurity', 
-            name: 'Cloud Security Specialist (AWS/Azure)', 
-            price: 'Starting ₹3,999',
-            razorpayPrice: 3999,
-            category: 'Specialized Courses'
-        },
-        { 
-            id: 'digitalForensics', 
-            name: 'Digital Forensics Expert', 
-            price: 'Starting ₹4,999',
-            razorpayPrice: 4999,
-            category: 'Specialized Courses'
-        },
-        { 
-            id: 'incidentResponse', 
-            name: 'Incident Response & Recovery', 
-            price: 'Starting ₹3,499',
-            razorpayPrice: 3499,
-            category: 'Specialized Courses'
-        },
-        
-        // Foundation/Workshop
-        { 
-            id: 'workshop', 
-            name: 'Free Cybersecurity Workshop', 
-            price: 'Free',
-            razorpayPrice: 0,
-            category: 'Foundation Programs'
-        },
-        { 
-            id: 'workshopPremium', 
-            name: 'Premium Workshop Bundle', 
-            price: '₹499',
-            razorpayPrice: 499,
-            category: 'Foundation Programs'
-        },
-        { 
-            id: 'collegeTraining', 
-            name: 'College Bulk Training Program (100-200 Students)', 
-            price: 'Starting ₹299/student',
-            razorpayPrice: 299,
-            category: 'College Programs',
-            description: 'Specialized cybersecurity training for engineering colleges, designed for 100-200 student batches with placement-focused curriculum'
-        }
-    ];
+
 
     const experienceLevels = [
         { id: 'beginner', name: 'Complete Beginner', description: 'New to cybersecurity' },
