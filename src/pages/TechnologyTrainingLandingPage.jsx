@@ -12,156 +12,6 @@ const TechnologyTrainingLandingPage = () => {
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
-  // --- Hybrid Approach: Module mapping for technology training ---
-  // Filter modules relevant to technology training (programming, web dev, cloud, data science, etc.)
-  const technologyModules = modules.filter(mod => 
-    mod.category === 'Programming Foundation' || 
-    mod.category === 'Web Development Frontend' ||
-    mod.category === 'Web Development Backend' ||
-    mod.category === 'Database Technologies' ||
-    mod.category === 'Cloud Platforms' ||
-    mod.category === 'DevOps & Infrastructure' ||
-    mod.category === 'Mobile Development' ||
-    mod.category === 'Data Science & Analytics' ||
-    mod.category === 'Artificial Intelligence' ||
-    mod.category === 'Software Testing'
-  );
-
-  // Course to modules mapping - showing which modules are included in each course
-  const courseModulesMapping = {
-    'MERN Stack Developer': [
-      { id: 'mod_1', title: 'JavaScript ES6+', price: 1499, category: 'Programming Foundation' },
-      { id: 'mod_7', title: 'React.js', price: 1999, category: 'Web Development Frontend' },
-      { id: 'mod_10', title: 'Node.js', price: 1799, category: 'Web Development Backend' },
-      { id: 'mod_13', title: 'MongoDB', price: 1599, category: 'Database Technologies' },
-      { id: 'mod_12', title: 'Express.js', price: 1299, category: 'Web Development Backend' }
-    ],
-    'Full Stack Python Developer': [
-      { id: 'mod_2', title: 'Python Programming', price: 1399, category: 'Programming Foundation' },
-      { id: 'mod_11', title: 'Django Framework', price: 1899, category: 'Web Development Backend' },
-      { id: 'mod_9', title: 'HTML5 & CSS3', price: 999, category: 'Web Development Frontend' },
-      { id: 'mod_14', title: 'PostgreSQL', price: 1499, category: 'Database Technologies' },
-      { id: 'mod_8', title: 'Bootstrap', price: 799, category: 'Web Development Frontend' }
-    ],
-    'Java Full Stack Developer': [
-      { id: 'mod_3', title: 'Java Programming', price: 1699, category: 'Programming Foundation' },
-      { id: 'mod_7', title: 'React.js', price: 1999, category: 'Web Development Frontend' },
-      { id: 'mod_15', title: 'Spring Boot', price: 2199, category: 'Web Development Backend' },
-      { id: 'mod_16', title: 'MySQL', price: 1399, category: 'Database Technologies' },
-      { id: 'mod_17', title: 'Hibernate', price: 1599, category: 'Database Technologies' }
-    ],
-    'AWS Cloud Architect': [
-      { id: 'mod_18', title: 'AWS Fundamentals', price: 1499, category: 'Cloud Platforms' },
-      { id: 'mod_19', title: 'AWS Security Services', price: 1999, category: 'Cloud Platforms' },
-      { id: 'mod_23', title: 'Docker Fundamentals', price: 1399, category: 'DevOps & Infrastructure' },
-      { id: 'mod_24', title: 'Kubernetes', price: 1899, category: 'DevOps & Infrastructure' },
-      { id: 'mod_25', title: 'CI/CD Pipelines', price: 1599, category: 'DevOps & Infrastructure' }
-    ],
-    'DevOps Engineer Bootcamp': [
-      { id: 'mod_23', title: 'Docker Fundamentals', price: 1399, category: 'DevOps & Infrastructure' },
-      { id: 'mod_24', title: 'Kubernetes', price: 1899, category: 'DevOps & Infrastructure' },
-      { id: 'mod_25', title: 'CI/CD Pipelines', price: 1599, category: 'DevOps & Infrastructure' },
-      { id: 'mod_26', title: 'Linux Administration', price: 1299, category: 'DevOps & Infrastructure' },
-      { id: 'mod_27', title: 'Terraform', price: 1699, category: 'DevOps & Infrastructure' }
-    ],
-    'Azure Cloud Solutions': [
-      { id: 'mod_20', title: 'Microsoft Azure Fundamentals', price: 1499, category: 'Cloud Platforms' },
-      { id: 'mod_21', title: 'Azure Security Center', price: 1999, category: 'Cloud Platforms' },
-      { id: 'mod_23', title: 'Docker Fundamentals', price: 1399, category: 'DevOps & Infrastructure' },
-      { id: 'mod_24', title: 'Kubernetes', price: 1899, category: 'DevOps & Infrastructure' }
-    ],
-    'Data Science with Python': [
-      { id: 'mod_2', title: 'Python Programming', price: 1399, category: 'Programming Foundation' },
-      { id: 'mod_28', title: 'Pandas & NumPy', price: 1599, category: 'Data Science & Analytics' },
-      { id: 'mod_29', title: 'Data Visualization', price: 1499, category: 'Data Science & Analytics' },
-      { id: 'mod_30', title: 'Machine Learning Basics', price: 1999, category: 'Data Science & Analytics' },
-      { id: 'mod_31', title: 'Statistical Analysis', price: 1699, category: 'Data Science & Analytics' }
-    ],
-    'AI & Machine Learning Engineer': [
-      { id: 'mod_2', title: 'Python Programming', price: 1399, category: 'Programming Foundation' },
-      { id: 'mod_32', title: 'TensorFlow', price: 2199, category: 'Artificial Intelligence' },
-      { id: 'mod_33', title: 'PyTorch', price: 2199, category: 'Artificial Intelligence' },
-      { id: 'mod_34', title: 'Deep Learning', price: 2499, category: 'Artificial Intelligence' },
-      { id: 'mod_35', title: 'Computer Vision', price: 2299, category: 'Artificial Intelligence' }
-    ],
-    'Business Intelligence Analyst': [
-      { id: 'mod_36', title: 'Power BI', price: 1699, category: 'Data Science & Analytics' },
-      { id: 'mod_37', title: 'Tableau', price: 1799, category: 'Data Science & Analytics' },
-      { id: 'mod_31', title: 'Statistical Analysis', price: 1699, category: 'Data Science & Analytics' },
-      { id: 'mod_38', title: 'SQL for Analytics', price: 1399, category: 'Database Technologies' }
-    ],
-    'Automation Testing Engineer': [
-      { id: 'mod_1', title: 'JavaScript ES6+', price: 1499, category: 'Programming Foundation' },
-      { id: 'mod_39', title: 'Selenium WebDriver', price: 1899, category: 'Software Testing' },
-      { id: 'mod_40', title: 'TestNG Framework', price: 1399, category: 'Software Testing' },
-      { id: 'mod_41', title: 'API Testing', price: 1599, category: 'Software Testing' }
-    ],
-    'Manual Testing Specialist': [
-      { id: 'mod_42', title: 'Software Testing Fundamentals', price: 1199, category: 'Software Testing' },
-      { id: 'mod_43', title: 'Test Case Design', price: 1399, category: 'Software Testing' },
-      { id: 'mod_44', title: 'Bug Tracking & Reporting', price: 1199, category: 'Software Testing' },
-      { id: 'mod_45', title: 'Agile Testing', price: 1299, category: 'Software Testing' }
-    ],
-    'React Native Developer': [
-      { id: 'mod_1', title: 'JavaScript ES6+', price: 1499, category: 'Programming Foundation' },
-      { id: 'mod_7', title: 'React.js', price: 1999, category: 'Web Development Frontend' },
-      { id: 'mod_46', title: 'React Native', price: 2199, category: 'Mobile Development' },
-      { id: 'mod_47', title: 'Mobile UI/UX', price: 1699, category: 'Mobile Development' }
-    ],
-    'Flutter App Developer': [
-      { id: 'mod_48', title: 'Dart Programming', price: 1399, category: 'Programming Foundation' },
-      { id: 'mod_49', title: 'Flutter Framework', price: 2199, category: 'Mobile Development' },
-      { id: 'mod_47', title: 'Mobile UI/UX', price: 1699, category: 'Mobile Development' },
-      { id: 'mod_50', title: 'Firebase Integration', price: 1599, category: 'Mobile Development' }
-    ]
-  };
-
-  // Helper function to get modules for a course
-  const getCourseModules = (courseTitle) => {
-    return courseModulesMapping[courseTitle] || [];
-  };
-
-  // Helper function to calculate total module price and adjusted course price
-  const getModulePricing = (courseTitle) => {
-    const courseModules = getCourseModules(courseTitle);
-    const totalModulePrice = courseModules.reduce((sum, mod) => sum + mod.price, 0);
-    const adjustedCoursePrice = Math.round(totalModulePrice * 0.70); // 30% discount for course bundle
-    return { totalModulePrice, adjustedCoursePrice, moduleCount: courseModules.length };
-  };
-
-  // Mapping from course titles to centralized pricing IDs
-  const titleToIdMap = {
-    'MERN Stack Developer': 'mern-stack-developer',
-    'Full Stack Python Developer': 'full-stack-python-developer',
-    'Java Full Stack Developer': 'java-full-stack-developer',
-    'AWS Cloud Architect': 'aws-cloud-architect',
-    'DevOps Engineer Bootcamp': 'devops-engineer-bootcamp',
-    'Azure Cloud Solutions': 'azure-cloud-solutions',
-    'Data Science with Python': 'data-science-with-python',
-    'AI & Machine Learning Engineer': 'ai-ml-engineer',
-    'Business Intelligence Analyst': 'business-intelligence-analyst',
-    'Automation Testing Engineer': 'automation-testing-engineer',
-    'Manual Testing Specialist': 'manual-testing-specialist',
-    'React Native Developer': 'react-native-developer',
-    'Flutter App Developer': 'flutter-app-developer'
-  };
-
-  // Helper function to get pricing info
-  const getPricing = (title) => {
-    const courseId = titleToIdMap[title];
-    if (pricingLoading) {
-      return { finalPrice: '...', originalPrice: '...' };
-    }
-    if (coursePricing && courseId && coursePricing[courseId]) {
-      return {
-        finalPrice: formatPrice(coursePricing[courseId].finalPrice),
-        originalPrice: formatPrice(coursePricing[courseId].originalPrice)
-      };
-    }
-    // Fallback to hardcoded prices if not found
-    return null;
-  };
-
   const categories = [
     { id: 'all', name: 'All Programs', icon: Target },
     { id: 'fullstack', name: 'Full Stack Development', icon: Code },
@@ -852,7 +702,7 @@ const TechnologyTrainingLandingPage = () => {
     : technologyPrograms.filter(program => program.category === selectedCategory);
 
   const handleEnrollment = (courseTitle) => {
-    const courseType = titleToIdMap[courseTitle];
+    const courseType = courseTitle.toLowerCase().replace(/\s+/g, '-');
     setEnrollmentModal({ isOpen: true, courseType, courseName: courseTitle });
   };
 
@@ -944,32 +794,6 @@ const TechnologyTrainingLandingPage = () => {
         </div>
       </section>
 
-      {/* --- Hybrid Approach: Modular Integration --- */}
-      <section className="py-12 bg-slate-800">
-        <div className="container mx-auto px-6">
-          <div className="bg-blue-900/80 border-l-4 border-blue-400 rounded-xl p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between shadow-lg">
-            <div>
-              <div className="text-lg font-bold text-blue-200 mb-1">Enhanced Learning Experience!</div>
-              <div className="text-blue-100 text-base">Our predefined technology training programs now show you exactly which modules are included. You can enroll in complete programs or customize by selecting individual modules.</div>
-            </div>
-            <div className="mt-4 md:mt-0 flex gap-3">
-              <button
-                className="bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-blue-600 hover:to-purple-600 transition-all"
-                onClick={() => navigate('/module-catalog')}
-              >
-                Browse All Modules
-              </button>
-              <button
-                className="bg-gradient-to-r from-green-500 to-blue-500 text-white font-bold px-6 py-3 rounded-lg shadow hover:from-green-600 hover:to-blue-600 transition-all"
-                onClick={() => navigate('/course-builder')}
-              >
-                Build Custom Path
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Programs Grid */}
       <section className="py-12">
         <div className="container mx-auto px-6">
@@ -995,20 +819,8 @@ const TechnologyTrainingLandingPage = () => {
                       {program.level}
                     </div>
                     <div className="text-right">
-                      {(() => {
-                        const dynamicPricing = getPricing(program.title);
-                        return dynamicPricing ? (
-                          <>
-                            <div className="text-2xl font-bold text-white">{dynamicPricing.finalPrice}</div>
-                            <div className="text-sm text-gray-400 line-through">{dynamicPricing.originalPrice}</div>
-                          </>
-                        ) : (
-                          <>
-                            <div className="text-2xl font-bold text-white">{program.price}</div>
-                            <div className="text-sm text-gray-400 line-through">{program.originalPrice}</div>
-                          </>
-                        );
-                      })()}
+                      <div className="text-2xl font-bold text-white">{program.price}</div>
+                      <div className="text-sm text-gray-400 line-through">{program.originalPrice}</div>
                     </div>
                   </div>
                   
@@ -1060,44 +872,6 @@ const TechnologyTrainingLandingPage = () => {
                   </div>
                 </div>
 
-                {/* Course Modules */}
-                {(() => {
-                  const courseModules = getCourseModules(program.title);
-                  const modulePricing = getModulePricing(program.title);
-                  
-                  if (courseModules.length > 0) {
-                    return (
-                      <div className="mb-4 bg-slate-900/50 rounded-lg p-4 border border-slate-700">
-                        <h4 className="font-semibold text-gray-300 mb-3 flex items-center gap-2">
-                          <span className="text-sm">🧩</span> Included Modules ({courseModules.length})
-                        </h4>
-                        <div className="space-y-2 mb-3">
-                          {courseModules.map((module, idx) => (
-                            <div key={idx} className="flex justify-between items-center text-sm">
-                              <span className="text-gray-400">{module.title}</span>
-                              <span className="text-green-400 font-medium">₹{module.price}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="border-t border-slate-600 pt-2 flex justify-between items-center text-sm">
-                          <span className="text-gray-300">Individual Total:</span>
-                          <span className="text-gray-400 line-through">₹{modulePricing.totalModulePrice}</span>
-                        </div>
-                        <div className="flex justify-between items-center text-sm">
-                          <span className="text-blue-300 font-medium">Program Bundle:</span>
-                          <span className="text-green-400 font-bold">₹{modulePricing.adjustedCoursePrice}</span>
-                        </div>
-                        <div className="text-center mt-2">
-                          <span className="text-xs text-green-300 bg-green-900/30 px-2 py-1 rounded-full">
-                            Save ₹{modulePricing.totalModulePrice - modulePricing.adjustedCoursePrice} (30% off)
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  }
-                  return null;
-                })()}
-
                 {/* Enrollment Progress */}
                 <div className="mb-4">
                   <div className="flex justify-between items-center text-sm text-gray-400 mb-1">
@@ -1124,18 +898,6 @@ const TechnologyTrainingLandingPage = () => {
                   >
                     <Info size={16} />
                     Course Details
-                  </motion.button>
-                  
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => navigate('/course-builder')}
-                    className="w-full bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs">🧩</span>
-                      Build Custom Path
-                    </div>
                   </motion.button>
                   
                   <motion.button
@@ -1315,10 +1077,7 @@ const TechnologyTrainingLandingPage = () => {
             <div className="mt-8 pt-6 border-t border-slate-700 flex flex-col sm:flex-row gap-4 justify-between items-center">
               <div className="text-center sm:text-left">
                 <div className="text-2xl font-bold text-sky-400">
-                  {(() => {
-                    const dynamicPricing = getPricing(courseDetailsModal.course?.title);
-                    return dynamicPricing ? dynamicPricing.finalPrice : courseDetailsModal.course?.price;
-                  })()}
+                  {courseDetailsModal.course?.price}
                 </div>
                 <div className="text-sm text-slate-300">Duration: {courseDetailsModal.course?.duration}</div>
               </div>
@@ -1343,7 +1102,6 @@ const TechnologyTrainingLandingPage = () => {
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
         courseType={enrollmentModal.courseType}
         courseName={enrollmentModal.courseName}
-        coursePrice={pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
       
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
