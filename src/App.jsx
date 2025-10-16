@@ -33,6 +33,7 @@ const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/Specializ
 const TechnologyTrainingLandingPage = React.lazy(() => import('@/pages/TechnologyTrainingLandingPage.jsx'));
 const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrainingLandingPage.jsx'));
 const ModuleCatalog = React.lazy(() => import('@/pages/ModuleCatalog.jsx'));
+const ModuleDetailPage = React.lazy(() => import('@/pages/ModuleDetailPage.jsx'));
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
 const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
@@ -91,6 +92,7 @@ export default function App() {
     login: '/login',
     'trainer-signup': '/trainer-signup',
     moduleCatalog: '/module-catalog',
+        moduleDetail: '/module-detail',
     courseBuilder: '/course-builder',
     }), []);
 
@@ -125,6 +127,7 @@ export default function App() {
     '/login': 'login',
     '/trainer-signup': 'trainer-signup',
     '/module-catalog': 'moduleCatalog',
+        '/module-detail': 'moduleDetail',
     '/course-builder': 'courseBuilder',
     }), []);
 
@@ -140,6 +143,14 @@ export default function App() {
             navigate(url);
             return;
         }
+            // If navigating to moduleDetail with a moduleId, add ?id=...
+            if (pageKey === 'moduleDetail') {
+                const path = pageToPath[pageKey] || '/module-detail';
+                const moduleId = params.moduleId || '';
+                const url = moduleId ? `${path}?id=${encodeURIComponent(moduleId)}` : path;
+                navigate(url);
+                return;
+            }
         // Handle navigation with query parameters (e.g., "video-learning?course=xyz")
         if (typeof pageKey === 'string' && pageKey.includes('?')) {
             const [key, queryString] = pageKey.split('?');
@@ -209,6 +220,7 @@ export default function App() {
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
                             <Route path="/trainer-signup" element={<TrainerSignUp onNavigate={go} />} />
                             <Route path="/module-catalog" element={<ModuleCatalog onNavigate={go} />} />
+                                <Route path="/module-detail" element={<ModuleDetailPage onNavigate={go} />} />
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                         </motion.div>

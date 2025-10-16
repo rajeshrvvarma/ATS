@@ -254,59 +254,72 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
 
                         </motion.div>
                         {/* Modules Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-                            {featuredModules.map((module, index) => {
-                                const IconComponent = getCategoryIcon(module.category);
-                                const colorClass = getCategoryColor(module.category);
-                                return (
-                                    <motion.div
-                                        key={module.id}
-                                        initial={{ opacity: 0, y: 50 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.5, delay: index * 0.1 }}
-                                        viewport={{ once: true }}
-                                        whileHover={{ y: -5 }}
-                                        className="content-card hover:border-blue-500/50 transition-all duration-300 group"
-                                    >
-                                        <div className="flex items-start gap-4 mb-4">
-                                            <div className={`p-3 bg-${colorClass}-500/20 rounded-lg`}>
-                                                <IconComponent className={`w-6 h-6 text-${colorClass}-400`} />
-                                            </div>
-                                            <div className="flex-1">
-                                                <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-400 transition-colors">
-                                                    {module.title}
-                                                </h3>
-                                                <div className="text-sm text-slate-400 mb-2">
-                                                    {module.category}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                                {featuredModules.map((module, index) => {
+                                    const IconComponent = getCategoryIcon(module.category);
+                                    const colorClass = getCategoryColor(module.category);
+                                    return (
+                                        <motion.div
+                                            key={module.id}
+                                            initial={{ opacity: 0, y: 50 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            transition={{ duration: 0.5, delay: index * 0.1 }}
+                                            viewport={{ once: true }}
+                                            whileHover={{ y: -5 }}
+                                            className="content-card hover:border-blue-500/50 transition-all duration-300 group"
+                                        >
+                                            <div className="flex items-start gap-4 mb-6">
+                                                <div className={`p-4 bg-${colorClass}-500/20 rounded-lg`}>
+                                                    <IconComponent className={`w-8 h-8 text-${colorClass}-400`} />
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
+                                                        {module.title}
+                                                    </h3>
+                                                    <div className="text-sm text-slate-400 mb-2">
+                                                        {module.category}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <p className="text-slate-300 text-sm mb-4 line-clamp-3">
-                                            {module.description}
-                                        </p>
-                                        <div className="flex items-center justify-between mb-4">
-                                            <div className="flex items-center gap-2 text-sm text-slate-400">
-                                                <Clock className="w-4 h-4" />
-                                                {module.duration}
+                                            <p className="text-slate-300 mb-6 leading-relaxed line-clamp-3">
+                                                {module.description}
+                                            </p>
+                                            <div className="flex items-center justify-between mb-6">
+                                                <div className="flex items-center gap-2 text-sm text-slate-400">
+                                                    <Clock className="w-4 h-4" />
+                                                    {module.duration}
+                                                </div>
+                                                <div className="text-xl font-bold text-blue-400">
+                                                    ₹{module.price}
+                                                </div>
                                             </div>
-                                            <div className="text-lg font-bold text-blue-400">
-                                                ₹{module.price}
+                                            <div className="mb-6">
+                                                {module.learningPaths && module.learningPaths.length > 0 && (
+                                                    <>
+                                                        <div className="text-sm text-slate-400 mb-3">Learning Paths:</div>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {module.learningPaths.slice(0, 3).map((path, idx) => (
+                                                                <span key={idx} className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded-full">
+                                                                    {path}
+                                                                </span>
+                                                            ))}
+                                                            {module.learningPaths.length > 3 && (
+                                                                <span className="text-xs text-slate-400">+{module.learningPaths.length - 3} more</span>
+                                                            )}
+                                                        </div>
+                                                    </>
+                                                )}
                                             </div>
-                                        </div>
-                                        <div className="flex gap-2">
-                                            <button 
+                                            <button
                                                 onClick={() => onNavigate('moduleDetail', { moduleId: module.id })}
-                                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors text-sm font-medium"
+                                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                                             >
                                                 Learn More
+                                                <ArrowRight className="w-4 h-4" />
                                             </button>
-                                            <button className="p-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
-                                                <BookmarkPlus className="w-4 h-4" />
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+                                        </motion.div>
+                                    );
+                                })}
                         </div>
                         {/* View All Modules Button */}
                         <motion.div
