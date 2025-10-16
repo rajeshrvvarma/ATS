@@ -574,7 +574,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                           {/* Price & CTA */}
                           <div className="flex items-center justify-between pt-4 border-t border-slate-700">
                             <div>
-                              {loading ? (
+                              {pricingLoading ? (
                                 <div className="text-lg font-bold text-blue-400">₹...</div>
                               ) : coursePrice ? (
                                 <>
@@ -748,7 +748,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
         courseType={enrollmentModal.courseType}
         courseName={enrollmentModal.courseName}
         batchId={enrollmentModal.batchId}
-        coursePrice={loading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice)}
+        coursePrice={pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
