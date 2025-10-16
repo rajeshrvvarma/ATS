@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, DollarSign, BookOpen, Globe, Zap, Grid3X3, Layers, Map, Eye, RotateCcw, Laptop, Cloud, Database, TestTube, Search, Filter, Play, BookmarkPlus, ChevronDown } from 'lucide-react';
+import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, DollarSign, BookOpen, Globe, Zap, Grid3X3, Layers, Map, Eye, RotateCcw, Laptop, Cloud, Database, TestTube, Search, Filter, Play, BookmarkPlus, ChevronDown, ArrowDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SectionTitle from '@/components/SectionTitle.jsx';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
@@ -78,15 +78,12 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                             ))}
                         </div>
                         {/* Animated SVG arrows pointing to Section 2 */}
-                        <div className="flex justify-center gap-16 mt-2">
-                            <svg width="180" height="120" viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M90 20 Q90 100 40 110" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="10" fill="none" strokeLinecap="round" />
-                                <polygon points="28,110 52,120 40,90" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
-                            </svg>
-                            <svg width="180" height="120" viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M90 20 Q90 100 140 110" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="10" fill="none" strokeLinecap="round" />
-                                <polygon points="152,110 128,120 140,90" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
-                            </svg>
+                        <div className="flex justify-center gap-8 mt-2">
+                            {/* Animated arrow icons pointing to Section 2 */}
+                            <div className="flex justify-center gap-32 mt-2">
+                                <ArrowDown className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} style={{ marginRight: '-6rem' }} />
+                                <ArrowDown className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} style={{ marginLeft: '-6rem' }} />
+                            </div>
                         </div>
                         {/* Left/right arrows for toggle */}
                         <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
