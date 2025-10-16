@@ -6,6 +6,7 @@ import { sendContactForm } from '@/services/netlifyFormsService.js';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 
 
 // Module-Focused Hero Section
@@ -69,7 +70,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 
 
 // Combined Modules & Traditional Courses Section with Tabs
-const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, searchFilter, setSearchFilter, expandedCard, setExpandedCard }) => {
+const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, searchFilter, setSearchFilter, expandedCard, setExpandedCard, setCourseDetailsModal, setEnrollmentModal }) => {
     // --- Module Section Logic ---
     const [selectedCategory, setSelectedCategory] = useState('All');
     // Make searchTerm fully controlled by searchFilter prop
@@ -312,39 +313,35 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                                             </div>
                                             <div className="flex flex-col gap-3">
                                                 <button
-                                                    onClick={() => setExpandedCard(idx => idx === module.id ? null : module.id)}
+                                                    onClick={() => setCourseDetailsModal({ 
+                                                        isOpen: true, 
+                                                        course: {
+                                                            ...module,
+                                                            highlights: [
+                                                                'Industry-standard curriculum',
+                                                                'Hands-on practical projects',
+                                                                'Expert instructor guidance',
+                                                                'Lifetime access to materials',
+                                                                'Certificate of completion'
+                                                            ]
+                                                        }
+                                                    })}
                                                     className="w-full bg-slate-700 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
                                                 >
                                                     Course Details
                                                     <ArrowRight className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() => window.open(module.enrollUrl || '#', '_blank')}
+                                                    onClick={() => setEnrollmentModal({ 
+                                                        isOpen: true, 
+                                                        courseType: 'module', 
+                                                        courseName: module.title 
+                                                    })}
                                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
                                                 >
                                                     Enroll Now
                                                 </button>
                                             </div>
-                                            {/* Expandable details section */}
-                                            {expandedCard === module.id && (
-                                                <div className="mt-4 bg-slate-700/80 rounded-lg p-4 text-slate-200 animate-fade-in">
-                                                    <div className="mb-2"><span className="font-semibold">Full Description:</span> {module.fullDescription || module.description}</div>
-                                                    {module.topics && module.topics.length > 0 && (
-                                                        <div className="mb-2">
-                                                            <span className="font-semibold">Topics Covered:</span>
-                                                            <ul className="list-disc list-inside ml-4 mt-1 text-sm">
-                                                                {module.topics.map((topic, i) => <li key={topic + i}>{topic}</li>)}
-                                                            </ul>
-                                                        </div>
-                                                    )}
-                                                    {module.prerequisites && (
-                                                        <div className="mb-2"><span className="font-semibold">Prerequisites:</span> {module.prerequisites}</div>
-                                                    )}
-                                                    {module.instructor && (
-                                                        <div className="mb-2"><span className="font-semibold">Instructor:</span> {module.instructor}</div>
-                                                    )}
-                                                </div>
-                                            )}
                                         </motion.div>
                                     );
                                 })}
@@ -807,6 +804,8 @@ const HomePage = ({ onNavigate }) => {
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('modules');
     const [expandedCard, setExpandedCard] = useState(null);
+    const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
+    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
     // Read filter from URL query param on mount
     const getInitialFilter = () => {
         if (typeof window !== 'undefined') {
@@ -877,6 +876,8 @@ const HomePage = ({ onNavigate }) => {
                 setSearchFilter={setSearchFilter}
                 expandedCard={expandedCard}
                 setExpandedCard={setExpandedCard}
+                setCourseDetailsModal={setCourseDetailsModal}
+                setEnrollmentModal={setEnrollmentModal}
             />
             <SuccessMetrics />
             <Testimonials />
@@ -893,6 +894,127 @@ const HomePage = ({ onNavigate }) => {
             </div>
             <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
             <ScrollNavigation />
+            
+            {/* Course Details Modal */}
+            <AnimatePresence>
+                {courseDetailsModal.isOpen && courseDetailsModal.course && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="bg-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
+                                className="absolute top-4 right-4 text-slate-400 hover:text-white z-10"
+                            >
+                                <X size={24} />
+                            </button>
+
+                            <div className="p-8">
+                                <h2 className="text-3xl font-bold text-white mb-4">{courseDetailsModal.course.title}</h2>
+                                <p className="text-slate-300 mb-6">{courseDetailsModal.course.description}</p>
+
+                                {/* Course Highlights */}
+                                <div className="mb-6">
+                                    <h3 className="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
+                                        <BookOpen size={20} />
+                                        Course Highlights
+                                    </h3>
+                                    <ul className="space-y-2">
+                                        {courseDetailsModal.course.highlights?.map((highlight, idx) => (
+                                            <li key={idx} className="flex items-start gap-2 text-slate-300">
+                                                <ArrowRight size={16} className="text-blue-400 mt-1 flex-shrink-0" />
+                                                {highlight}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+
+                                {/* Curriculum */}
+                                {courseDetailsModal.course.curriculum && courseDetailsModal.course.curriculum.length > 0 && (
+                                    <div className="mb-6">
+                                        <h3 className="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
+                                            <Play size={20} />
+                                            Curriculum
+                                        </h3>
+                                        <div className="space-y-2">
+                                            {courseDetailsModal.course.curriculum.map((item, idx) => (
+                                                <div key={idx} className="flex items-start gap-2 text-slate-300">
+                                                    <ArrowRight size={16} className="text-purple-400 mt-1 flex-shrink-0" />
+                                                    {item}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Prerequisites */}
+                                {courseDetailsModal.course.prerequisites && (
+                                    <div className="mb-6">
+                                        <h3 className="text-xl font-bold text-green-400 mb-3">Prerequisites</h3>
+                                        <p className="text-slate-300">{courseDetailsModal.course.prerequisites}</p>
+                                    </div>
+                                )}
+
+                                {/* Career Outcomes */}
+                                {courseDetailsModal.course.learningPaths && courseDetailsModal.course.learningPaths.length > 0 && (
+                                    <div className="mb-6">
+                                        <h3 className="text-xl font-bold text-cyan-400 mb-3">Career Outcomes</h3>
+                                        <div className="flex flex-wrap gap-2">
+                                            {courseDetailsModal.course.learningPaths.map((path, idx) => (
+                                                <span key={idx} className="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm">
+                                                    {path}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Footer with Price and Enroll */}
+                                <div className="mt-8 pt-6 border-t border-slate-700 flex flex-col sm:flex-row gap-4 justify-between items-center">
+                                    <div className="text-center sm:text-left">
+                                        <div className="text-2xl font-bold text-blue-400">
+                                            ₹{courseDetailsModal.course.price}
+                                        </div>
+                                        <div className="text-sm text-slate-400">{courseDetailsModal.course.duration}</div>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setCourseDetailsModal({ isOpen: false, course: null });
+                                            setEnrollmentModal({ 
+                                                isOpen: true, 
+                                                courseType: 'module', 
+                                                courseName: courseDetailsModal.course.title 
+                                            });
+                                        }}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
+                                    >
+                                        Enroll Now
+                                        <ArrowRight size={20} />
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Enrollment Modal */}
+            <EnhancedEnrollmentModal
+                isOpen={enrollmentModal.isOpen}
+                onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+                courseType={enrollmentModal.courseType}
+                courseName={enrollmentModal.courseName}
+            />
         </>
     );
 };
