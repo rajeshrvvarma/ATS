@@ -158,6 +158,86 @@ const EventsBatchesPage = ({ onNavigate }) => {
         'Small premium batch',
         'Job guarantee'
       ]
+    },
+    {
+      id: 'offensive-mastery-apr2025',
+      courseId: 'offensive-mastery',
+      title: '2-Month Offensive Security Mastery',
+      category: 'offensive',
+      startDate: '2025-04-15',
+      endDate: '2025-06-15',
+      duration: '2 Months',
+      mode: 'Weekday Evenings',
+      location: 'Online Live',
+      maxStudents: 20,
+      currentEnrolled: 8,
+      trainer: {
+        name: 'Rajesh Kumar',
+        experience: '10+ Years',
+        certifications: ['OSCP', 'OSCE', 'CEH'],
+        avatar: '/images/trainer-rajesh.jpg'
+      },
+      schedule: [
+        { day: 'Week 1-2', topic: 'Advanced Penetration Testing' },
+        { day: 'Week 3-4', topic: 'Web App Security & Exploitation' },
+        { day: 'Week 5-6', topic: 'Network & Active Directory Attacks' },
+        { day: 'Week 7-8', topic: 'Red Team Operations & Reporting' }
+      ],
+      price: 'offensive-mastery',
+      features: [
+        'Evening sessions (7-9 PM)',
+        'OSCP preparation focused',
+        'Virtual lab environment',
+        'Real-world penetration testing',
+        'Certification support',
+        'Career mentoring'
+      ],
+      highlights: [
+        'Flexible evening schedule',
+        'OSCP-aligned curriculum',
+        'Hands-on labs',
+        'Industry projects'
+      ]
+    },
+    {
+      id: 'soc-analyst-feb2025',
+      courseId: 'defensive-bootcamp',
+      title: 'SOC Analyst Intensive Training',
+      category: 'defensive',
+      startDate: '2025-02-20',
+      endDate: '2025-03-20',
+      duration: '1 Month',
+      mode: 'Hybrid (Online + Offline)',
+      location: 'Hyderabad & Online',
+      maxStudents: 25,
+      currentEnrolled: 18,
+      trainer: {
+        name: 'Priya Sharma',
+        experience: '7+ Years',
+        certifications: ['GCIA', 'GCIH', 'Security+'],
+        avatar: '/images/trainer-priya.jpg'
+      },
+      schedule: [
+        { day: 'Week 1', topic: 'SIEM Tools & Log Analysis' },
+        { day: 'Week 2', topic: 'Incident Response Fundamentals' },
+        { day: 'Week 3', topic: 'Threat Hunting & Detection' },
+        { day: 'Week 4', topic: 'Capstone: Real SOC Scenarios' }
+      ],
+      price: 'defensive-bootcamp',
+      features: [
+        'Industry-standard SIEM tools',
+        'Real incident response drills',
+        'Job-ready skills',
+        'Certificate of completion',
+        'Placement assistance',
+        'Community support'
+      ],
+      highlights: [
+        'Fast-track to SOC jobs',
+        'Hands-on SIEM training',
+        'Hybrid learning',
+        'Limited seats'
+      ]
     }
   ];
 
@@ -165,12 +245,36 @@ const EventsBatchesPage = ({ onNavigate }) => {
   const freeWorkshops = [
     {
       id: 'free-cyber-workshop-jan2025',
-      title: 'Free Cybersecurity Workshop',
+      title: 'Introduction to Cybersecurity Careers',
       date: '2025-01-25',
       time: '6:00 PM - 8:00 PM',
-      location: 'Online',
-      description: 'Introductory workshop for beginners. Covers basics of cybersecurity, career paths, and Q&A with experts.',
-      registrationLink: '#'
+      location: 'Online (Zoom)',
+      description: 'Discover cybersecurity career paths, required skills, certifications, and how to get started. Open Q&A with industry experts.',
+      registrationLink: '#',
+      instructor: 'Santosh Kumar',
+      topics: ['Career Paths', 'Certifications', 'Skills Required', 'Industry Insights']
+    },
+    {
+      id: 'free-siem-workshop-feb2025',
+      title: 'Free SIEM Workshop: Splunk Basics',
+      date: '2025-02-10',
+      time: '5:00 PM - 7:00 PM',
+      location: 'Online (Zoom)',
+      description: 'Hands-on introduction to SIEM tools using Splunk. Learn log analysis, search queries, and basic threat detection.',
+      registrationLink: '#',
+      instructor: 'Priya Sharma',
+      topics: ['Splunk Basics', 'Log Analysis', 'Search Queries', 'Threat Detection']
+    },
+    {
+      id: 'free-webapp-workshop-mar2025',
+      title: 'Web Application Security 101',
+      date: '2025-03-05',
+      time: '6:30 PM - 8:30 PM',
+      location: 'Online (Zoom)',
+      description: 'Learn common web vulnerabilities (OWASP Top 10), how to identify them, and basic defense techniques.',
+      registrationLink: '#',
+      instructor: 'Rajesh Kumar',
+      topics: ['OWASP Top 10', 'SQL Injection', 'XSS', 'Secure Coding']
     }
   ];
 
@@ -319,37 +423,206 @@ const EventsBatchesPage = ({ onNavigate }) => {
             {/* Tab 2: Bootcamps */}
             <div>
               {bootcamps.length === 0 ? (
-                <div className="text-slate-400 mb-8">No bootcamps scheduled at the moment.</div>
+                <div className="text-center py-16">
+                  <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-slate-400 mb-2">No bootcamps scheduled</h3>
+                  <p className="text-slate-500">Check back soon for upcoming intensive bootcamp programs.</p>
+                </div>
               ) : (
-                <div className="grid md:grid-cols-2 gap-8 mb-8">
-                  {bootcamps.map((camp) => (
-                    <div key={camp.id} className="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow">
-                      <h3 className="text-xl font-semibold text-white mb-2">{camp.title}</h3>
-                      <div className="text-slate-400 mb-2">{camp.startDate} to {camp.endDate} &bull; {camp.location}</div>
-                      <div className="text-slate-300 mb-2">Trainer: {camp.trainer.name} ({camp.trainer.experience})</div>
-                      <div className="text-slate-400 mb-2">{camp.duration} &bull; {camp.mode}</div>
-                      <ul className="list-disc ml-6 text-slate-400 mb-2">
-                        {camp.features.map((f, i) => <li key={i}>{f}</li>)}
-                      </ul>
-                      <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={() => handleEnrollment(camp)}>Enroll</button>
-                    </div>
-                  ))}
+                <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {bootcamps.map((camp, index) => {
+                    const daysUntilStart = getDaysUntilStart(camp.startDate);
+                    const spotsLeft = camp.maxStudents - camp.currentEnrolled;
+                    const coursePrice = pricing?.[camp.price];
+
+                    return (
+                      <motion.div
+                        key={camp.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group shadow-lg hover:shadow-xl"
+                      >
+                        {/* Header with gradient */}
+                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h3 className="text-xl font-bold text-white mb-1">{camp.title}</h3>
+                              <div className="flex items-center gap-2 text-sm text-blue-100">
+                                <Calendar className="w-4 h-4" />
+                                <span>{formatDate(camp.startDate)} - {formatDate(camp.endDate)}</span>
+                              </div>
+                            </div>
+                            {daysUntilStart <= 7 && daysUntilStart > 0 && (
+                              <span className="bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full animate-pulse">
+                                Starting Soon!
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="p-6">
+                          {/* Trainer Info */}
+                          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-slate-700">
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                              <User className="w-6 h-6 text-white" />
+                            </div>
+                            <div>
+                              <div className="font-semibold text-white">{camp.trainer.name}</div>
+                              <div className="text-sm text-slate-400">{camp.trainer.experience}</div>
+                            </div>
+                          </div>
+
+                          {/* Details */}
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-center gap-2 text-sm text-slate-300">
+                              <Clock className="w-4 h-4 text-blue-400" />
+                              <span>{camp.duration} • {camp.mode}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-slate-300">
+                              <MapPin className="w-4 h-4 text-green-400" />
+                              <span>{camp.location}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-slate-300">
+                              <Users className="w-4 h-4 text-purple-400" />
+                              <span>{spotsLeft} seats left of {camp.maxStudents}</span>
+                            </div>
+                          </div>
+
+                          {/* Features */}
+                          <div className="mb-4">
+                            <h4 className="text-sm font-semibold text-slate-400 mb-2">What's Included:</h4>
+                            <div className="grid grid-cols-2 gap-2">
+                              {camp.features.slice(0, 4).map((feature, idx) => (
+                                <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-300">
+                                  <CheckCircle className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" />
+                                  <span>{feature}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Price & CTA */}
+                          <div className="flex items-center justify-between pt-4 border-t border-slate-700">
+                            <div>
+                              {loading ? (
+                                <div className="text-lg font-bold text-blue-400">₹...</div>
+                              ) : coursePrice ? (
+                                <>
+                                  <div className="text-2xl font-bold text-blue-400">
+                                    {formatPrice(coursePrice.finalPrice)}
+                                  </div>
+                                  {coursePrice.originalPrice !== coursePrice.finalPrice && (
+                                    <div className="text-xs text-slate-500 line-through">
+                                      {formatPrice(coursePrice.originalPrice)}
+                                    </div>
+                                  )}
+                                </>
+                              ) : (
+                                <div className="text-lg font-bold text-blue-400">₹999</div>
+                              )}
+                            </div>
+                            <button
+                              onClick={() => handleEnrollment(camp)}
+                              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 group-hover:scale-105"
+                            >
+                              Enroll Now
+                              <ArrowRight className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               )}
             </div>
             {/* Tab 3: Free Workshops */}
             <div>
               {freeWorkshops.length === 0 ? (
-                <div className="text-slate-400 mb-8">No free workshops scheduled at the moment.</div>
+                <div className="text-center py-16">
+                  <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-slate-400 mb-2">No workshops scheduled</h3>
+                  <p className="text-slate-500">Subscribe to our newsletter to get notified about upcoming free workshops.</p>
+                </div>
               ) : (
-                <div className="grid md:grid-cols-2 gap-8 mb-8">
-                  {freeWorkshops.map((ws) => (
-                    <div key={ws.id} className="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow">
-                      <h3 className="text-xl font-semibold text-white mb-2">{ws.title}</h3>
-                      <div className="text-slate-400 mb-2">{ws.date} &bull; {ws.time} &bull; {ws.location}</div>
-                      <div className="text-slate-300 mb-2">{ws.description}</div>
-                      <a href={ws.registrationLink} className="mt-2 inline-block px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Register</a>
-                    </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {freeWorkshops.map((ws, index) => (
+                    <motion.div
+                      key={ws.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 hover:border-green-500 transition-all duration-300 overflow-hidden group shadow-lg hover:shadow-xl"
+                    >
+                      {/* Header Badge */}
+                      <div className="bg-gradient-to-r from-green-600 to-teal-600 px-4 py-2">
+                        <div className="flex items-center justify-between">
+                          <span className="text-white font-bold text-sm">FREE WORKSHOP</span>
+                          <Sparkles className="w-4 h-4 text-yellow-300" />
+                        </div>
+                      </div>
+
+                      <div className="p-6">
+                        {/* Title */}
+                        <h3 className="text-lg font-bold text-white mb-3 group-hover:text-green-400 transition-colors">
+                          {ws.title}
+                        </h3>
+
+                        {/* Date & Time */}
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Calendar className="w-4 h-4 text-green-400" />
+                            <span>{ws.date}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Clock className="w-4 h-4 text-blue-400" />
+                            <span>{ws.time}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-slate-300">
+                            <Video className="w-4 h-4 text-purple-400" />
+                            <span>{ws.location}</span>
+                          </div>
+                        </div>
+
+                        {/* Instructor */}
+                        {ws.instructor && (
+                          <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-700">
+                            <User className="w-4 h-4 text-blue-400" />
+                            <span className="text-sm text-slate-300">by {ws.instructor}</span>
+                          </div>
+                        )}
+
+                        {/* Description */}
+                        <p className="text-sm text-slate-400 mb-4 line-clamp-3">
+                          {ws.description}
+                        </p>
+
+                        {/* Topics */}
+                        {ws.topics && ws.topics.length > 0 && (
+                          <div className="mb-4">
+                            <div className="flex flex-wrap gap-1.5">
+                              {ws.topics.map((topic, idx) => (
+                                <span
+                                  key={idx}
+                                  className="bg-slate-700/50 text-green-400 text-xs px-2 py-1 rounded-full border border-green-500/30"
+                                >
+                                  {topic}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* CTA */}
+                        <a
+                          href={ws.registrationLink}
+                          className="block w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 group-hover:scale-105"
+                        >
+                          Register Free
+                        </a>
+                      </div>
+                    </motion.div>
                   ))}
                 </div>
               )}

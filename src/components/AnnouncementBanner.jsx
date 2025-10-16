@@ -30,15 +30,10 @@ const AnnouncementBanner = ({ onNavigate }) => {
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 text-white overflow-hidden relative cursor-pointer"
-                role="button"
-                tabIndex={0}
-                aria-label="View Events & Batches"
-                onClick={() => onNavigate && onNavigate('events-batches')}
-                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNavigate && onNavigate('events-batches'); } }}
+                className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 text-white overflow-hidden relative"
             >
                 {/* Animated Background Pattern */}
-                <div className="absolute inset-0 opacity-20">
+                <div className="absolute inset-0 opacity-20 pointer-events-none">
                     <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/10 animate-pulse"></div>
                 </div>
 
@@ -89,25 +84,32 @@ const AnnouncementBanner = ({ onNavigate }) => {
                                 </div>
                             </div>
 
-                            {/* CTA Button */}
-                            <button
-                                onClick={(e) => { e.stopPropagation(); onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`); }}
-                                className={`hidden sm:flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
-                                    currentBatch.urgency === 'high'
-                                        ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
-                                        : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
-                                }`}
-                            >
-                                <span>
-                                    {currentBatch.urgency === 'high' ? 'Grab Last Seats!' : 'Register Now'}
-                                </span>
-                                <ArrowRight className="w-3 h-3" />
-                            </button>
-                        </div>
-
-                        {/* Close Button */}
+                            {/* CTA Buttons - Enroll & View All */}
+                            <div className="hidden sm:flex items-center space-x-2">
+                                <button
+                                    onClick={() => onNavigate && onNavigate('events-batches')}
+                                    className="flex items-center space-x-1 px-3 py-2 rounded-full text-xs font-semibold transition-all duration-200 bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                                >
+                                    <span>View All</span>
+                                    <ArrowRight className="w-3 h-3" />
+                                </button>
+                                <button
+                                    onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                                    className={`flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
+                                        currentBatch.urgency === 'high'
+                                            ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
+                                            : 'bg-white/90 hover:bg-white text-blue-600 border-white'
+                                    }`}
+                                >
+                                    <span>
+                                        {currentBatch.urgency === 'high' ? 'Grab Last Seats!' : 'Register Now'}
+                                    </span>
+                                    <ArrowRight className="w-3 h-3" />
+                                </button>
+                            </div>
+                        </div>                        {/* Close Button */}
                         <button
-                            onClick={(e) => { e.stopPropagation(); setIsVisible(false); }}
+                            onClick={() => setIsVisible(false)}
                             className="ml-4 p-1 hover:bg-white/20 rounded-full transition-all duration-200 flex-shrink-0"
                             aria-label="Close announcement"
                         >
@@ -116,23 +118,27 @@ const AnnouncementBanner = ({ onNavigate }) => {
                     </div>
 
                     {/* Mobile CTA */}
-                    <div className="sm:hidden mt-2 text-center">
+                    <div className="sm:hidden mt-2 flex justify-center gap-2">
                         <button
-                            onClick={(e) => { e.stopPropagation(); onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`); }}
+                            onClick={() => onNavigate && onNavigate('events-batches')}
+                            className="inline-flex items-center space-x-1 px-3 py-2 rounded-full text-xs font-semibold transition-all duration-200 bg-white/20 hover:bg-white/30 text-white border border-white/30"
+                        >
+                            <span>View All</span>
+                        </button>
+                        <button
+                            onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
                             className={`inline-flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
                                 currentBatch.urgency === 'high'
                                     ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
-                                    : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
+                                    : 'bg-white/90 hover:bg-white text-blue-600 border-white'
                             }`}
                         >
                             <span>
-                                {currentBatch.urgency === 'high' ? 'Grab Last Seats!' : `Register - ${currentBatch.price}`}
+                                {currentBatch.urgency === 'high' ? 'Last Seats!' : 'Register'}
                             </span>
                             <ArrowRight className="w-3 h-3" />
                         </button>
-                    </div>
-
-                    {/* Batch rotation indicator for multiple batches */}
+                    </div>                    {/* Batch rotation indicator for multiple batches */}
                     {activeBatches.length > 1 && (
                         <div className="mt-2 flex justify-center space-x-1">
                             {activeBatches.map((_, index) => (
