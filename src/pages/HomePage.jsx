@@ -993,7 +993,9 @@ const HomePage = ({ onNavigate }) => {
                                             setEnrollmentModal({ 
                                                 isOpen: true, 
                                                 courseType: 'module', 
-                                                courseName: courseDetailsModal.course.title 
+                                                courseName: courseDetailsModal.course.title,
+                                                coursePrice: courseDetailsModal.course.price,
+                                                courseDuration: courseDetailsModal.course.duration
                                             });
                                         }}
                                         className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
@@ -1011,9 +1013,11 @@ const HomePage = ({ onNavigate }) => {
             {/* Enrollment Modal */}
             <EnhancedEnrollmentModal
                 isOpen={enrollmentModal.isOpen}
-                onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+                onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '', coursePrice: '', courseDuration: '' })}
                 courseType={enrollmentModal.courseType}
                 courseName={enrollmentModal.courseName}
+                coursePrice={enrollmentModal.coursePrice}
+                courseDuration={enrollmentModal.courseDuration}
             />
         </>
     );
