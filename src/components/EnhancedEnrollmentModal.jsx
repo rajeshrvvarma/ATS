@@ -19,6 +19,7 @@ const EnhancedEnrollmentModal = ({
   courseType, 
   courseName,
   coursePrice,
+  courseDuration,
   onEnrollmentSuccess 
 }) => {
   const [step, setStep] = useState(1); // 1: Form, 2: Payment, 3: Confirmation
