@@ -169,7 +169,7 @@ const EnhancedEnrollmentModal = ({
     course = {
       name: courseName,
       price: coursePrice,
-      duration: props.courseDuration,
+      duration: courseDuration,
       features: [
         'Live interactive sessions',
         'Hands-on labs and exercises',
