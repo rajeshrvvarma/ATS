@@ -38,7 +38,7 @@ export default function FreeWorkshopPage({ onNavigate }) {
         }
     };
     return (
-        <div className="bg-gradient-sky text-white min-h-screen">
+        <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                  <button onClick={() => onNavigate('home')} className="flex items-center text-white hover:text-sky-200 transition-colors mb-8">
                     <ArrowLeft size={20} className="mr-2" />

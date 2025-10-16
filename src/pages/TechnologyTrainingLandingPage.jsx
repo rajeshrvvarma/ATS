@@ -722,7 +722,7 @@ const TechnologyTrainingLandingPage = () => {
 
   return (
     <div className="min-h-screen text-white">
-      <div className="bg-gradient-cyan">
+      <div className="bg-slate-900">
       {/* Hero Section */}
       <section className="relative py-20">
         <div className="container mx-auto px-6">
@@ -917,7 +917,7 @@ const TechnologyTrainingLandingPage = () => {
       </div>
 
       {/* Call to Action */}
-      <div className="bg-gradient-teal py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

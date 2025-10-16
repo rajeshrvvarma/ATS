@@ -601,7 +601,7 @@ const SpecializedCoursesLandingPage = () => {
 
   return (
     <div className="min-h-screen text-white">
-      <div className="bg-gradient-cyan">
+      <div className="bg-slate-900">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-gray-900 py-20">
         <div className="container mx-auto px-6">

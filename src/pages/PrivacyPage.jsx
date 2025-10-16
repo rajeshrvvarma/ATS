@@ -58,11 +58,11 @@ export default function PrivacyPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-gradient-cyan bg-fixed text-white min-h-screen">
+        <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
-                    className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
+                    className="flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home

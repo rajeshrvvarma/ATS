@@ -63,7 +63,7 @@ const ModuleCatalog = () => {
     return matchesCategory;
   });
   return (
-    <div className="min-h-screen bg-gradient-blue py-12">
+    <div className="min-h-screen bg-slate-900 py-12">
       <div className="container mx-auto px-6">
         <h1 className="text-4xl font-bold text-white mb-4 text-center">Complete Technology Module Catalog ({modules.length} Modules)</h1>
         {error && (<div className="text-center text-amber-400 text-sm mb-4">{error}</div>)}

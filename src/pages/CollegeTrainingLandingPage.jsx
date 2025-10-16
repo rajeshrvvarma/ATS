@@ -258,7 +258,7 @@ const CollegeTrainingLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <div className="bg-gradient-violet pt-20 pb-16">
+      <div className="bg-slate-900 pt-20 pb-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -357,7 +357,7 @@ const CollegeTrainingLandingPage = () => {
       </div>
 
       {/* Success Stories */}
-      <div className="bg-gradient-teal py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -400,7 +400,7 @@ const CollegeTrainingLandingPage = () => {
       </div>
 
       {/* Pricing Section */}
-      <div className="bg-gradient-violet py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -473,7 +473,7 @@ const CollegeTrainingLandingPage = () => {
       </div>
 
       {/* Benefits Section */}
-      <div className="bg-gradient-cyan py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -504,7 +504,7 @@ const CollegeTrainingLandingPage = () => {
       </div>
 
       {/* Curriculum Section */}
-      <div className="bg-gradient-purple py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -546,7 +546,7 @@ const CollegeTrainingLandingPage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-teal py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

@@ -56,7 +56,7 @@ export default function CancellationRefundPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-gradient-slate min-h-screen text-white">
+        <div className="bg-slate-900 min-h-screen text-white">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <motion.button 
                     onClick={() => onNavigate('home')} 

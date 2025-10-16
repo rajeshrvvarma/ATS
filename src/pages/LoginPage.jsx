@@ -163,7 +163,7 @@ export default function LoginPage({ onNavigate, onLogin }) {
         {/* Right: Login Form - Area 2 & 3: Dark background with form styling */}
         <div className="flex-1 p-8 flex flex-col justify-center bg-gradient-to-br from-slate-700/90 to-slate-800/90">
           <div className="max-w-sm mx-auto w-full">
-            <h3 className="text-2xl font-bold text-gradient-blue mb-2 text-center">Sign In</h3>
+            <h3 className="text-2xl font-bold text-blue-400 mb-2 text-center">Sign In</h3>
             <p className="text-slate-300 text-center mb-6">Access your learning dashboard</p>
             {/* Error Message */}
             {error && (

@@ -15,20 +15,21 @@ export default {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        // Professional color palette - Blues, Teals, Purples, Grays
-        'gradient-blue': 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',           // Deep blue to medium blue
-        'gradient-sky': 'linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)',            // Deep sky to bright sky
-        'gradient-cyan': 'linear-gradient(135deg, #0e7490 0%, #06b6d4 100%)',           // Deep cyan to bright cyan
-        'gradient-teal': 'linear-gradient(135deg, #0f766e 0%, #14b8a6 100%)',           // Deep teal to bright teal
-        'gradient-purple': 'linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%)',         // Deep purple to medium purple
-        'gradient-indigo': 'linear-gradient(135deg, #4338ca 0%, #6366f1 100%)',         // Deep indigo to medium indigo
-        'gradient-violet': 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)',         // Deep violet to light violet
-        'gradient-slate': 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',          // Deep slate to medium slate
-        'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',           // Very dark to dark slate
-        'gradient-navy': 'linear-gradient(135deg, #172554 0%, #1e40af 100%)',           // Deep navy to blue
+      // Clean professional colors - minimal approach
+      colors: {
+        primary: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          200: '#bae6fd',
+          300: '#7dd3fc',
+          400: '#38bdf8',
+          500: '#0ea5e9',  // Main brand color
+          600: '#0284c7',
+          700: '#0369a1',
+          800: '#075985',
+          900: '#0c4a6e',
+        },
       },
-      textGradient: theme => theme('backgroundImage'),
     },
   },
   plugins: [],

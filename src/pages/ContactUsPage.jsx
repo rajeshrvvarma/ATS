@@ -132,7 +132,7 @@ export default function ContactUsPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-gradient-teal text-white min-h-screen">
+        <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
@@ -169,7 +169,7 @@ export default function ContactUsPage({ onNavigate }) {
                     {/* Contact Form */}
                     <div className="grid lg:grid-cols-2 gap-12">
                         <div className="form-card">
-                            <h2 className="text-2xl font-bold text-gradient-green mb-6 flex items-center">
+                            <h2 className="text-2xl font-bold text-green-400 mb-6 flex items-center">
                                 <Send size={24} className="mr-3 text-green-400" />
                                 Send us a Message
                             </h2>

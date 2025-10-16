@@ -6,20 +6,12 @@ import UserMenu from '@/components/UserMenu.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
-// Vibrant gradient backgrounds for header
-const headerGradients = [
-  'bg-gradient-blue',
-  'bg-gradient-green',
-  'bg-gradient-purple',
-  'bg-gradient-orange',
-  'bg-gradient-pink',
-  'bg-gradient-violet',
-  'bg-gradient-cyan',
-];
+// Clean header background - no gradients
+const headerBackground = 'bg-slate-900';
 
 export default function Header({ onNavigate, currentPage }) {
-  // Pick a gradient based on the current page for variety
-  const gradientClass = headerGradients[Math.abs(currentPage?.length || 0) % headerGradients.length];
+  // Use clean header background
+  const gradientClass = headerBackground;
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
     

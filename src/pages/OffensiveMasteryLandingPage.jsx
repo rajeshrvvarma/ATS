@@ -193,7 +193,7 @@ const OffensiveMasteryLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <div className="bg-gradient-indigo py-20">
+      <div className="bg-slate-900 py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -292,7 +292,7 @@ const OffensiveMasteryLandingPage = () => {
       </div>
 
       {/* Elite Benefits */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Elite Offensive Program?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -316,7 +316,7 @@ const OffensiveMasteryLandingPage = () => {
       </div>
 
       {/* Detailed Curriculum */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Comprehensive 8-Week Elite Curriculum</h2>
           <div className="space-y-6">
@@ -388,7 +388,7 @@ const OffensiveMasteryLandingPage = () => {
       </div>
 
       {/* What's Included */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Elite Package Includes</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
@@ -409,7 +409,7 @@ const OffensiveMasteryLandingPage = () => {
       </div>
 
       {/* Payment Plans */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Investment Plan</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -474,7 +474,7 @@ const OffensiveMasteryLandingPage = () => {
       </div>
 
       {/* Footer CTA */}
-      <div className="bg-gradient-indigo py-12">
+      <div className="bg-slate-900 py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Limited to 15 Elite Hackers Only</h2>
           <p className="text-xl text-gray-200 mb-6">

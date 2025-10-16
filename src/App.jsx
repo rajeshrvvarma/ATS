@@ -158,7 +158,7 @@ export default function App() {
         <ThemeProvider>
         <SettingsProvider>
         <ToastProvider>
-        <div className="min-h-screen bg-gradient-blue bg-fixed antialiased">
+        <div className="min-h-screen bg-slate-900 antialiased">
                 {/* Initialize notification service for authenticated users */}
                 <NotificationInitializer />
                 

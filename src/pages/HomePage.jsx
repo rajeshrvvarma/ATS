@@ -23,7 +23,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <div className="min-h-[45vh] flex items-center justify-center bg-gradient-blue bg-fixed py-8 md:py-12">
+            <div className="min-h-[45vh] flex items-center justify-center bg-slate-900 bg-fixed py-8 md:py-12">
                 <section id="home" className="container mx-auto px-4 md:px-6">
                     <motion.div
                         initial={{ opacity: 0, y: 50 }}
@@ -33,11 +33,11 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                     >
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
                             Learn{' '}
-                            <span className="text-gradient-cyan">
+                            <span className="text-cyan-400">
                                 Any Skill
                             </span>
                             <br />
-                            <span className="text-3xl md:text-5xl text-gradient-blue">One Module at a Time</span>
+                            <span className="text-3xl md:text-5xl text-blue-400">One Module at a Time</span>
                         </h1>
 
                         <p className="text-lg md:text-xl text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed">
@@ -230,7 +230,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                             className="text-center mb-10"
                         >
                             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                                Featured <span className="text-gradient-green">Learning Modules</span>
+                                Featured <span className="text-green-400">Learning Modules</span>
                             </h2>
                             <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
                                 Expertly crafted modules covering everything from programming fundamentals to advanced cybersecurity. Start with any module that matches your interests and career goals.
@@ -337,7 +337,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                             className="text-center mb-10"
                         >
                             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-                                Traditional <span className="text-gradient-purple">Course Programs</span>
+                                Traditional <span className="text-purple-400">Course Programs</span>
                             </h2>
                             <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
                                 Structured learning paths with mentorship, job guarantees, and comprehensive curriculum. Perfect for those who prefer guided learning experiences.
@@ -418,7 +418,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
 
 // Success Metrics & Why Choose Us Section
 const SuccessMetrics = () => (
-    <div className="py-20 bg-gradient-cyan bg-fixed">
+    <div className="py-20 bg-slate-900 bg-fixed">
         <section id="success-metrics" className="container mx-auto px-6">
             <motion.div
                 initial={{ opacity: 0, y: 50 }}
@@ -429,7 +429,7 @@ const SuccessMetrics = () => (
             >
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
                     Proven{' '}
-                    <span className="text-gradient-cyan">
+                    <span className="text-cyan-400">
                         Results
                     </span>
                 </h2>
@@ -537,7 +537,7 @@ const Testimonials = () => {
     }, [items.length]);
 
     return (
-        <div className="py-20 bg-gradient-blue bg-fixed">
+        <div className="py-20 bg-slate-900 bg-fixed">
             <section id="testimonials" className="container mx-auto px-6">
                 <SectionTitle>What Our Students Say</SectionTitle>
                 <div className="text-center mb-12">
@@ -608,7 +608,7 @@ const Contact = ({ onNavigate }) => {
     };
 
     return (
-        <div className="py-20 bg-gradient-purple bg-fixed">
+        <div className="py-20 bg-slate-900 bg-fixed">
             <section id="contact" className="container mx-auto px-6">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -648,7 +648,7 @@ const Contact = ({ onNavigate }) => {
                         </div>
                         
                         <div className="content-card">
-                            <h4 className="text-lg font-semibold text-gradient-green mb-4">Why Choose Our Training?</h4>
+                            <h4 className="text-lg font-semibold text-green-400 mb-4">Why Choose Our Training?</h4>
                             <ul className="space-y-3 text-slate-300">
                                 <li className="flex items-center gap-3">
                                     <CheckCircle className="w-5 h-5 text-green-400" />

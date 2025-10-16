@@ -71,7 +71,7 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
   return (
     <div className="min-h-screen bg-slate-900">
       {/* Welcome Banner with static gradient background */}
-      <section className="relative border-b border-slate-800 bg-gradient-blue">
+      <section className="relative border-b border-slate-800 bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h2 className="text-2xl font-bold text-white mb-2">
             {user ? `Welcome ${user.displayName || user.email || 'User'},` : 'Welcome,'}
@@ -87,7 +87,7 @@ export default function DashboardLayout({ children, title, user, onNavigate }) {
       </section>
 
       {/* Main Content with static gradient background */}
-      <div className="relative bg-gradient-slate">
+      <div className="relative bg-slate-900">
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {children}
         </main>

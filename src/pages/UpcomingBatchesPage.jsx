@@ -197,7 +197,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
   return (
     <div className="min-h-screen text-white pt-20">
       {/* Hero Section */}
-      <div className="bg-gradient-blue py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -469,7 +469,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
       </section>
 
       {/* CTA Section */}
-      <div className="bg-gradient-cyan py-16">
+      <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}

@@ -132,7 +132,7 @@ const OffensiveBootcampLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <div className="bg-gradient-indigo py-20">
+      <div className="bg-slate-900 py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -228,7 +228,7 @@ const OffensiveBootcampLandingPage = () => {
       </div>
 
       {/* Key Benefits */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Ethical Hacking?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -273,7 +273,7 @@ const OffensiveBootcampLandingPage = () => {
       </div>
 
       {/* Curriculum */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">7-Day Intensive Curriculum</h2>
           <div className="space-y-6">
@@ -325,7 +325,7 @@ const OffensiveBootcampLandingPage = () => {
       </div>
 
       {/* What's Included */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Everything You Get</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
@@ -346,7 +346,7 @@ const OffensiveBootcampLandingPage = () => {
       </div>
 
       {/* Tools & Technologies */}
-      <div className="bg-gradient-indigo py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Tools You'll Master</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -370,7 +370,7 @@ const OffensiveBootcampLandingPage = () => {
       </div>
 
       {/* Footer CTA */}
-      <div className="bg-gradient-indigo py-12">
+      <div className="bg-slate-900 py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Start Your Ethical Hacking Journey!</h2>
           <p className="text-xl text-gray-200 mb-6">

@@ -96,7 +96,7 @@ ${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paym
                         </div>
                     </div>
 
-                    <h1 className="text-4xl md:text-6xl font-bold text-gradient-green text-center mb-4">Payment Successful!</h1>
+                    <h1 className="text-4xl md:text-6xl font-bold text-green-400 text-center mb-4">Payment Successful!</h1>
                     
                     <div className="bg-slate-800 rounded-lg p-8 border border-slate-700 mb-8">
                         <h3 className="text-2xl font-bold text-white mb-6">Enrollment Confirmed</h3>

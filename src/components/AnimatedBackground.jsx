@@ -49,7 +49,7 @@ const AnimatedBackground = ({
             particles: { color: 'bg-cyan-400', count: 40 }
         },
         offensive: {
-            gradient: 'bg-gradient-orange bg-fixed',
+            gradient: 'bg-slate-900 bg-fixed',
             overlay: 'bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-orange-800/25 via-red-800/15 to-transparent',
             particles: { color: 'bg-orange-400', count: 50 }
         },
@@ -79,7 +79,7 @@ const AnimatedBackground = ({
             particles: { color: 'bg-slate-400', count: 28 }
         },
         error: {
-            gradient: 'bg-gradient-orange bg-fixed',
+            gradient: 'bg-slate-900 bg-fixed',
             overlay: 'bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-red-800/25 via-pink-800/15 to-transparent',
             particles: { color: 'bg-red-400', count: 32 }
         },

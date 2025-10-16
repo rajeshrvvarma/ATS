@@ -191,7 +191,7 @@ const DefensiveMasteryLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <div className="bg-gradient-violet py-20">
+      <div className="bg-slate-900 py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -290,7 +290,7 @@ const DefensiveMasteryLandingPage = () => {
       </div>
 
       {/* Premium Benefits */}
-      <div className="bg-gradient-violet py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Premium Program?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -314,7 +314,7 @@ const DefensiveMasteryLandingPage = () => {
       </div>
 
       {/* Detailed Curriculum */}
-      <div className="bg-gradient-violet py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Comprehensive 8-Week Curriculum</h2>
           <div className="space-y-6">
@@ -386,7 +386,7 @@ const DefensiveMasteryLandingPage = () => {
       </div>
 
       {/* What's Included */}
-      <div className="bg-gradient-violet py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Premium Package Includes</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
@@ -407,7 +407,7 @@ const DefensiveMasteryLandingPage = () => {
       </div>
 
       {/* Payment Plans */}
-      <div className="bg-gradient-violet py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Payment Plan</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -472,7 +472,7 @@ const DefensiveMasteryLandingPage = () => {
       </div>
 
       {/* Enrollment Form */}
-      <div className="bg-gradient-violet py-16">
+      <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-8 border border-gray-600">
             <h2 className="text-3xl font-bold text-center mb-8">Reserve Your Premium Seat</h2>
@@ -576,7 +576,7 @@ const DefensiveMasteryLandingPage = () => {
       </div>
 
       {/* Footer CTA */}
-      <div className="bg-gradient-violet py-12">
+      <div className="bg-slate-900 py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Limited to 20 Premium Students Only</h2>
           <p className="text-xl text-gray-200 mb-6">
