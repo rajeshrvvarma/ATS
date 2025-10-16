@@ -78,18 +78,14 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                             ))}
                         </div>
                         {/* Animated SVG arrows pointing to Section 2 */}
-                        <div className="flex justify-center gap-8 mt-2">
-                            <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M40 10 Q40 40 20 50" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="4" fill="none">
-                                    <animate attributeName="stroke-dasharray" values="0,100;40,60;0,100" dur="1.5s" repeatCount="indefinite" />
-                                </path>
-                                <polygon points="15,50 25,55 20,45" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
+                        <div className="flex justify-center gap-16 mt-2">
+                            <svg width="180" height="120" viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M90 20 Q90 100 40 110" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="10" fill="none" strokeLinecap="round" />
+                                <polygon points="28,110 52,120 40,90" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
                             </svg>
-                            <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M40 10 Q40 40 60 50" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="4" fill="none">
-                                    <animate attributeName="stroke-dasharray" values="0,100;40,60;0,100" dur="1.5s" repeatCount="indefinite" />
-                                </path>
-                                <polygon points="65,50 55,55 60,45" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
+                            <svg width="180" height="120" viewBox="0 0 180 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M90 20 Q90 100 140 110" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="10" fill="none" strokeLinecap="round" />
+                                <polygon points="152,110 128,120 140,90" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
                             </svg>
                         </div>
                         {/* Left/right arrows for toggle */}
