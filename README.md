@@ -1,8 +1,8 @@
 # 🚀 Agnidhra Cybersecurity LMS - Master Documentation
 
-**Last Updated**: October 10, 2025  
-**Version**: Social Learning Platform v3.0  
-**Status**: Production Ready with Advanced Social Features
+**Last Updated**: October 16, 2025  
+**Version**: Social Learning Platform v4.0  
+**Status**: Production Ready — Core LMS complete + UI/Performance Refactor complete
 
 ---
 
@@ -15,6 +15,7 @@
 5. [**DEPLOYMENT GUIDE**](#deployment-guide)
 6. [**SECURITY & COMPLIANCE**](#security--compliance)
 7. [**MAINTENANCE & UPDATES**](#maintenance--updates)
+8. [**WHAT'S NEW (OCT 15–16, 2025)**](#whats-new-oct-15–16-2025)
 
 ---
 
@@ -32,6 +33,7 @@ Create a comprehensive, zero-cost cybersecurity training platform with advanced 
 - **Analytics**: Custom Firebase Analytics + Chart.js
 - **Email**: Netlify Forms (Unlimited)
 - **Collaboration**: Firebase Real-time Database + Canvas API
+ - **Design System Update (Oct 2025)**: Clean professional theme using standard Tailwind palette (no custom gradient classes); Tailwind built-in gradient utilities used sparingly for buttons/accents
 
 ### **💰 Cost Structure**
 - **Current Costs**: ₹0/month (All free tiers)
@@ -883,3 +885,21 @@ VITE_OPENAI_API_KEY=your_openai_key
 **Last Reviewed**: October 10, 2025  
 **Next Review**: November 10, 2025  
 **Phase Status**: Core AI-Powered LMS Complete ✅
+
+---
+
+## 🆕 What's New (Oct 15–16, 2025)
+
+### UI & Performance Refactor (Completed)
+- Removed all AnimatedBackground components site-wide (0 JS animation overhead)
+- Replaced custom gradient backgrounds with a clean, professional dark theme
+- Simplified `tailwind.config.js` — removed 10 custom gradient classes; standardized primary palette
+- Ensured high-contrast typography across all sections (WCAG AA compliant)
+- Performance gains: noticeably faster page loads and smoother scrolling
+
+### Modules UX Upgrade
+- Introduced dedicated `ModuleDetailPage.jsx` with full curriculum, highlights, and CTAs
+- Redesigned `ModuleCatalog.jsx` to professional card layout; direct navigation to detail pages
+- Updated routing in `src/App.jsx` for `moduleDetail` with query param support
+
+References: see `ANIMATION_REMOVAL_COMPLETE.md`, `CLEAN_DESIGN_COMPLETE.md`, and `MODULE_ENHANCEMENT_COMPLETE.md` for full details.
