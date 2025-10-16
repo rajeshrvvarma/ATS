@@ -26,7 +26,8 @@ import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const EventsBatchesPage = ({ onNavigate }) => {
-  // Remove selectedCategory, use AdvancedTabs for tab state
+  // Tab state handled by AdvancedTabs; category filter defaults to 'all'
+  const [selectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
