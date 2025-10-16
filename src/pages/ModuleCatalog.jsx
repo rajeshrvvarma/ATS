@@ -8,6 +8,7 @@ const ModuleCatalog = ({ onNavigate }) => {
   const [modules, setModules] = React.useState(staticModules || []);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
+  const [expandedCard, setExpandedCard] = React.useState(null);
   const location = useLocation();
 
   // Category icon mapping
@@ -178,13 +179,41 @@ const ModuleCatalog = ({ onNavigate }) => {
                     </div>
                   )}
                 </div>
-                <button
-                  onClick={() => onNavigate('moduleDetail', { moduleId: mod.id })}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  Learn More
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => setExpandedCard(idx => idx === mod.id ? null : mod.id)}
+                    className="w-full bg-slate-700 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    Course Details
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => window.open(mod.enrollUrl || '#', '_blank')}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
+                  >
+                    Enroll Now
+                  </button>
+                </div>
+                {/* Expandable details section */}
+                {expandedCard === mod.id && (
+                  <div className="mt-4 bg-slate-700/80 rounded-lg p-4 text-slate-200 animate-fade-in">
+                    <div className="mb-2"><span className="font-semibold">Full Description:</span> {mod.fullDescription || mod.description}</div>
+                    {mod.topics && mod.topics.length > 0 && (
+                      <div className="mb-2">
+                        <span className="font-semibold">Topics Covered:</span>
+                        <ul className="list-disc list-inside ml-4 mt-1 text-sm">
+                          {mod.topics.map((topic, i) => <li key={topic + i}>{topic}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                    {mod.prerequisites && (
+                      <div className="mb-2"><span className="font-semibold">Prerequisites:</span> {mod.prerequisites}</div>
+                    )}
+                    {mod.instructor && (
+                      <div className="mb-2"><span className="font-semibold">Instructor:</span> {mod.instructor}</div>
+                    )}
+                  </div>
+                )}
               </div>
             );
           })}
