@@ -51,7 +51,7 @@ const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
 const TrainerSignUp = React.lazy(() => import('@/pages/TrainerSignUp.jsx'));
 const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
 const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
-const UpcomingBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
+const EventsBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
 
 /**
  * App.jsx is the root component of the application.
@@ -172,7 +172,7 @@ export default function App() {
         <div className="min-h-screen bg-slate-900 antialiased">
                 {/* Initialize notification service for authenticated users */}
                 <NotificationInitializer />
-                
+
                 <AnnouncementBanner onNavigate={go} />
                 <Header onNavigate={go} currentPage={currentPage} />
             <main>
@@ -199,7 +199,7 @@ export default function App() {
                             <Route path="/specialized-courses" element={<SpecializedCoursesLandingPage onNavigate={go} />} />
                             <Route path="/technology-training" element={<TechnologyTrainingLandingPage onNavigate={go} />} />
                             <Route path="/college-bulk-training" element={<CollegeTrainingLandingPage onNavigate={go} />} />
-                            <Route path="/upcoming-batches" element={<UpcomingBatchesPage onNavigate={go} />} />
+                            <Route path="/events-batches" element={<EventsBatchesPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
                             <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />

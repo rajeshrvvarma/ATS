@@ -1,14 +1,14 @@
-// Upcoming Batches Page - Shows courses with available trainers and scheduled batches
+// Events & Batches Page - Shows upcoming batches, bootcamps, and free workshops
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
-  Clock, 
-  Users, 
-  MapPin, 
-  Video, 
-  CheckCircle, 
-  ArrowRight, 
+import {
+  Calendar,
+  Clock,
+  Users,
+  MapPin,
+  Video,
+  CheckCircle,
+  ArrowRight,
   Star,
   User,
   BookOpen,
@@ -24,7 +24,7 @@ import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
-const UpcomingBatchesPage = ({ onNavigate }) => {
+const EventsBatchesPage = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
@@ -32,8 +32,8 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
 
   const { pricing, loading } = useCoursePricing();
 
-  // Current available batches with trainer information
-  const upcomingBatches = [
+  // Separate arrays for batches, bootcamps, and workshops
+  const bootcamps = [
     {
       id: 'defensive-bootcamp-jan2025',
       courseId: 'defensive-bootcamp',
@@ -113,7 +113,10 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
         'Expert-led training',
         'Interactive sessions'
       ]
-    },
+    }
+  ];
+
+  const upcomingBatches = [
     {
       id: 'defensive-mastery-mar2025',
       courseId: 'defensive-mastery',
@@ -156,9 +159,22 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
     }
   ];
 
+  // Placeholder for free workshops
+  const freeWorkshops = [
+    {
+      id: 'free-cyber-workshop-jan2025',
+      title: 'Free Cybersecurity Workshop',
+      date: '2025-01-25',
+      time: '6:00 PM - 8:00 PM',
+      location: 'Online',
+      description: 'Introductory workshop for beginners. Covers basics of cybersecurity, career paths, and Q&A with experts.',
+      registrationLink: '#'
+    }
+  ];
+
   // Filter batches by category
-  const filteredBatches = selectedCategory === 'all' 
-    ? upcomingBatches 
+  const filteredBatches = selectedCategory === 'all'
+    ? upcomingBatches
     : upcomingBatches.filter(batch => batch.category === selectedCategory);
 
   const categories = [
@@ -209,17 +225,17 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
               <Calendar className="w-4 h-4 text-blue-400" />
               <span className="text-blue-300 text-sm">Live Training Batches</span>
             </div>
-            
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
               Upcoming Training Batches
             </h1>
-            
+
             <p className="text-xl md:text-2xl text-slate-300 mb-8">
               Join our next live training sessions with expert instructors
             </p>
-            
+
             <p className="text-lg text-slate-400 mb-8 max-w-2xl mx-auto">
-              Small batch sizes, experienced trainers, and hands-on learning. 
+              Small batch sizes, experienced trainers, and hands-on learning.
               Secure your spot in our upcoming cybersecurity training programs.
             </p>
 
@@ -304,8 +320,8 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
             </div>
           ) : (
             <div className={`grid gap-8 ${
-              viewMode === 'grid' 
-                ? 'md:grid-cols-2 lg:grid-cols-3' 
+              viewMode === 'grid'
+                ? 'md:grid-cols-2 lg:grid-cols-3'
                 : 'grid-cols-1 max-w-4xl mx-auto'
             }`}>
               {filteredBatches.map((batch, index) => {
@@ -399,7 +415,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
                           <span>{Math.round((batch.currentEnrolled / batch.maxStudents) * 100)}%</span>
                         </div>
                         <div className="w-full bg-slate-700 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full"
                             style={{ width: `${(batch.currentEnrolled / batch.maxStudents) * 100}%` }}
                           ></div>
@@ -483,7 +499,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
             <p className="text-slate-300 text-lg mb-8">
               Contact us to get notified about upcoming batches or discuss custom training schedules for your needs.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={() => onNavigate('contact')}
@@ -492,7 +508,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
                 Contact Us
                 <ArrowRight className="w-5 h-5" />
               </button>
-              
+
               <button
                 onClick={() => setIsAdvisorOpen(true)}
                 className="border border-slate-600 hover:border-blue-500 px-8 py-4 rounded-lg font-semibold transition-colors"
@@ -513,11 +529,11 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
         batchId={enrollmentModal.batchId}
         coursePrice={loading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice)}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>
   );
 };
 
-export default UpcomingBatchesPage;
+export default EventsBatchesPage;

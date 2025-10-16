@@ -32,7 +32,7 @@ export default function Header({ onNavigate, currentPage }) {
 
     // Mobile navigation items - dynamic based on user status
     const mobileNavItems = [
-        { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
+    { name: "Events & Batches", action: () => onNavigate('events-batches') },
         { name: "All Modules Catalog", action: () => onNavigate('moduleCatalog') },
         { name: "About Us", action: () => scrollToSection('about') },
         ...(user && user.enrolledCourses && user.enrolledCourses.length > 0
@@ -195,10 +195,10 @@ export default function Header({ onNavigate, currentPage }) {
                             />
                             {/* Remove search bar from here, now beside Agnidhra Technologies */}
                             <button
-                                onClick={() => onNavigate('upcoming-batches')}
+                                onClick={() => onNavigate('events-batches')}
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
                             >
-                                Upcoming Batches
+                                Events & Batches
                             </button>
                             {/* About Us and Contact Us links removed */}
                         </div>
