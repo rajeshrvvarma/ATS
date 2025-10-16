@@ -6,9 +6,9 @@ import { getActiveBatches, getUrgencyColor } from '@/data/activeBatches.js';
 const AnnouncementBanner = ({ onNavigate }) => {
     const [isVisible, setIsVisible] = useState(true);
     const [currentBatchIndex, setCurrentBatchIndex] = useState(0);
-    
+
     const activeBatches = getActiveBatches();
-    
+
     // Rotate between batches every 8 seconds if multiple batches exist
     useEffect(() => {
         if (activeBatches.length > 1) {
@@ -20,17 +20,22 @@ const AnnouncementBanner = ({ onNavigate }) => {
     }, [activeBatches.length]);
 
     if (!isVisible || activeBatches.length === 0) return null;
-    
+
     const currentBatch = activeBatches[currentBatchIndex] || activeBatches[0];
 
     return (
         <AnimatePresence>
-            <motion.div 
+            <motion.div
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 text-white overflow-hidden relative"
+                className="bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 text-white overflow-hidden relative cursor-pointer"
+                role="button"
+                tabIndex={0}
+                aria-label="View Events & Batches"
+                onClick={() => onNavigate && onNavigate('events-batches')}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNavigate && onNavigate('events-batches'); } }}
             >
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 opacity-20">
@@ -45,7 +50,7 @@ const AnnouncementBanner = ({ onNavigate }) => {
                                 <Sparkles className="w-5 h-5 animate-spin" />
                                 <Calendar className="w-4 h-4" />
                             </div>
-                            
+
                             <div className="flex flex-col sm:flex-row items-center text-center sm:text-left space-y-1 sm:space-y-0 sm:space-x-3">
                                 <div className="flex items-center space-x-2">
                                     <span className="font-bold text-sm md:text-base">
@@ -53,7 +58,7 @@ const AnnouncementBanner = ({ onNavigate }) => {
                                     </span>
                                     <span className="hidden md:inline text-yellow-300">|</span>
                                 </div>
-                                
+
                                 <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2">
                                     <span className="text-xs md:text-sm font-medium">
                                         Starting {currentBatch.startDate}
@@ -67,13 +72,13 @@ const AnnouncementBanner = ({ onNavigate }) => {
                                         <span className={`text-xs md:text-sm ${
                                             currentBatch.urgency === 'high' ? 'text-red-300 font-semibold' : 'text-white'
                                         }`}>
-                                            {currentBatch.urgency === 'high' 
-                                                ? `Only ${currentBatch.seatsLeft} seats left!` 
+                                            {currentBatch.urgency === 'high'
+                                                ? `Only ${currentBatch.seatsLeft} seats left!`
                                                 : `${currentBatch.seatsLeft} seats available`
                                             }
                                         </span>
                                     </div>
-                                    
+
                                     {/* Price indicator */}
                                     <div className="flex items-center space-x-1">
                                         <span className="text-yellow-300">•</span>
@@ -85,11 +90,11 @@ const AnnouncementBanner = ({ onNavigate }) => {
                             </div>
 
                             {/* CTA Button */}
-                            <button 
-                                onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`); }}
                                 className={`hidden sm:flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
-                                    currentBatch.urgency === 'high' 
-                                        ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse' 
+                                    currentBatch.urgency === 'high'
+                                        ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
                                         : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
                                 }`}
                             >
@@ -102,7 +107,7 @@ const AnnouncementBanner = ({ onNavigate }) => {
 
                         {/* Close Button */}
                         <button
-                            onClick={() => setIsVisible(false)}
+                            onClick={(e) => { e.stopPropagation(); setIsVisible(false); }}
                             className="ml-4 p-1 hover:bg-white/20 rounded-full transition-all duration-200 flex-shrink-0"
                             aria-label="Close announcement"
                         >
@@ -112,11 +117,11 @@ const AnnouncementBanner = ({ onNavigate }) => {
 
                     {/* Mobile CTA */}
                     <div className="sm:hidden mt-2 text-center">
-                        <button 
-                            onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                        <button
+                            onClick={(e) => { e.stopPropagation(); onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`); }}
                             className={`inline-flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
-                                currentBatch.urgency === 'high' 
-                                    ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse' 
+                                currentBatch.urgency === 'high'
+                                    ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
                                     : 'bg-white/20 hover:bg-white/30 text-white border-white/20'
                             }`}
                         >
@@ -144,7 +149,7 @@ const AnnouncementBanner = ({ onNavigate }) => {
 
                 {/* Animated Progress Bar */}
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/30">
-                    <motion.div 
+                    <motion.div
                         className="h-full bg-white/60"
                         initial={{ width: "0%" }}
                         animate={{ width: "100%" }}
