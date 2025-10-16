@@ -42,24 +42,6 @@ const SpecializedCoursesLandingPage = () => {
       maxSeats: 50,
       highlights: ['AWS Certified Security Preparation', 'Real AWS Environment Labs', 'Industry Projects'],
       color: 'blue',
-      curriculum: [
-        {
-          title: 'AWS Security Fundamentals',
-          topics: ['AWS Shared Responsibility Model', 'IAM Policies & Roles', 'Security Groups & NACLs', 'AWS CloudTrail & CloudWatch']
-        },
-        {
-          title: 'Data Protection in AWS',
-          topics: ['KMS Key Management', 'S3 Bucket Security', 'RDS Encryption', 'Secrets Manager']
-        },
-        {
-          title: 'Network Security',
-          topics: ['VPC Security', 'AWS WAF', 'Shield & DDoS Protection', 'Private Link & VPN']
-        },
-        {
-          title: 'Compliance & Monitoring',
-          topics: ['AWS Config Rules', 'Security Hub', 'GuardDuty', 'Macie for Data Discovery']
-        }
-      ],
       prerequisites: [
         'Basic AWS cloud knowledge',
         'Understanding of network security concepts',
@@ -586,8 +568,8 @@ const SpecializedCoursesLandingPage = () => {
     }
   ];
 
-  const filteredCourses = selectedCategory === 'all' 
-    ? specializedCourses 
+  const filteredCourses = selectedCategory === 'all'
+    ? specializedCourses
     : specializedCourses.filter(course => course.category === selectedCategory);
 
   const handleEnrollment = (course) => {
@@ -659,7 +641,7 @@ const SpecializedCoursesLandingPage = () => {
             <h2 className="text-3xl font-bold mb-4">Choose Your Specialization</h2>
             <p className="text-gray-400">Filter courses by domain expertise</p>
           </div>
-          
+
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((category) => {
               const IconComponent = category.icon;
@@ -691,7 +673,7 @@ const SpecializedCoursesLandingPage = () => {
             {filteredCourses.map((course, index) => {
               const progressPercentage = (course.enrolled / course.maxSeats) * 100;
               const seatsLeft = course.maxSeats - course.enrolled;
-              
+
               return (
                 <motion.div
                   key={course.id}
@@ -773,7 +755,7 @@ const SpecializedCoursesLandingPage = () => {
                         <div className={`text-sm font-semibold text-${course.color}-400`}>Limited Seats</div>
                       </div>
                     </div>
-                    
+
                     {/* Action Buttons */}
                     <div className="space-y-3">
                       <motion.button
@@ -785,7 +767,7 @@ const SpecializedCoursesLandingPage = () => {
                         <Info size={16} />
                         Course Details
                       </motion.button>
-                      
+
                       <button
                         onClick={() => handleEnrollment(course)}
                         className={`w-full bg-gradient-to-r from-${course.color}-600 to-${course.color}-700 hover:from-${course.color}-700 hover:to-${course.color}-800 text-white font-bold py-3 rounded-lg transition-all duration-300 flex items-center justify-center`}
@@ -811,7 +793,7 @@ const SpecializedCoursesLandingPage = () => {
               Deep dive into specific domains and become a recognized expert in your chosen field
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="bg-purple-600 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
@@ -822,7 +804,7 @@ const SpecializedCoursesLandingPage = () => {
                 Develop deep, specialized knowledge that makes you indispensable in your chosen domain
               </p>
             </div>
-            
+
             <div className="text-center">
               <div className="bg-blue-600 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                 <Award className="h-8 w-8 text-white" />
@@ -832,7 +814,7 @@ const SpecializedCoursesLandingPage = () => {
                 Gain certifications and skills that are highly valued by industry leaders and employers
               </p>
             </div>
-            
+
             <div className="text-center">
               <div className="bg-green-600 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
                 <Users className="h-8 w-8 text-white" />
@@ -859,7 +841,7 @@ const SpecializedCoursesLandingPage = () => {
             <p className="text-slate-300 text-lg mb-8">
               Join hundreds of professionals who have advanced their careers with our specialized cybersecurity training programs
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -869,7 +851,7 @@ const SpecializedCoursesLandingPage = () => {
               >
                 Get Career Guidance
               </motion.button>
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -1033,7 +1015,7 @@ const SpecializedCoursesLandingPage = () => {
         courseType={enrollmentModal.courseType}
         courseName={enrollmentModal.courseName}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

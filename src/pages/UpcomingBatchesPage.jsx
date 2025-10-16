@@ -21,11 +21,12 @@ import {
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import AdvancedTabs from '@/components/AdvancedTabs.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const EventsBatchesPage = ({ onNavigate }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  // Remove selectedCategory, use AdvancedTabs for tab state
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
@@ -262,225 +263,90 @@ const EventsBatchesPage = ({ onNavigate }) => {
         </section>
       </div>
 
-      {/* Filters and View Options */}
+      {/* Tabbed Sections for Events & Batches */}
       <section className="py-8 bg-slate-900">
         <div className="container mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            {/* Category Filters */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    selectedCategory === category.id
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700'
-                  }`}
-                >
-                  {category.name} ({category.count})
-                </button>
-              ))}
-            </div>
+          <AdvancedTabs>
+            {/* Tab 1: Upcoming Batches */}
+            <div>
+              {/* ...existing batches grid/list rendering... */}
+              {/* Use filteredBatches and viewMode logic here */}
+              {filteredBatches.length === 0 ? (
+                <div className="text-center py-16">
+                  <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-slate-400 mb-2">No batches found</h3>
+                  <p className="text-slate-500">Try selecting a different category or check back later for new batches.</p>
+                </div>
+              ) : (
+                <div className={`grid gap-8 ${
+                  viewMode === 'grid'
+                    ? 'md:grid-cols-2 lg:grid-cols-3'
+                    : 'grid-cols-1 max-w-4xl mx-auto'
+                }`}>
+                  {filteredBatches.map((batch, index) => {
+                    const daysUntilStart = getDaysUntilStart(batch.startDate);
+                    const isStartingSoon = daysUntilStart <= 7 && daysUntilStart > 0;
+                    const hasStarted = daysUntilStart < 0;
+                    const spotsLeft = batch.maxStudents - batch.currentEnrolled;
+                    const coursePrice = pricing?.[batch.price];
 
-            {/* View Mode Toggle */}
-            <div className="flex items-center gap-2">
-              <span className="text-slate-400 text-sm">View:</span>
-              <div className="flex bg-slate-800 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded ${
-                    viewMode === 'grid' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <Grid className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded ${
-                    viewMode === 'list' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <List className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Batches Grid/List */}
-      <section className="py-8 bg-slate-900">
-        <div className="container mx-auto px-6">
-          {filteredBatches.length === 0 ? (
-            <div className="text-center py-16">
-              <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-slate-400 mb-2">No batches found</h3>
-              <p className="text-slate-500">Try selecting a different category or check back later for new batches.</p>
-            </div>
-          ) : (
-            <div className={`grid gap-8 ${
-              viewMode === 'grid'
-                ? 'md:grid-cols-2 lg:grid-cols-3'
-                : 'grid-cols-1 max-w-4xl mx-auto'
-            }`}>
-              {filteredBatches.map((batch, index) => {
-                const daysUntilStart = getDaysUntilStart(batch.startDate);
-                const isStartingSoon = daysUntilStart <= 7 && daysUntilStart > 0;
-                const hasStarted = daysUntilStart < 0;
-                const spotsLeft = batch.maxStudents - batch.currentEnrolled;
-                const coursePrice = pricing?.[batch.price];
-
-                return (
-                  <motion.div
-                    key={batch.id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className={`bg-slate-800 rounded-xl border border-slate-700 hover:border-slate-600 transition-all duration-300 overflow-hidden ${
-                      viewMode === 'list' ? 'flex' : ''
-                    }`}
-                  >
-                    {/* Batch Header */}
-                    <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-xl font-semibold text-white">{batch.title}</h3>
-                            {isStartingSoon && (
-                              <span className="bg-orange-500/20 text-orange-400 px-2 py-1 rounded text-xs">
-                                Starting Soon
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-4 text-sm text-slate-400 mb-3">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {formatDate(batch.startDate)} - {formatDate(batch.endDate)}
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {batch.duration}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Trainer Info */}
-                      <div className="bg-slate-700/50 rounded-lg p-4 mb-4">
-                        <div className="flex items-center gap-3 mb-2">
-                          <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                            <User className="w-5 h-5 text-white" />
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-white">{batch.trainer.name}</h4>
-                            <p className="text-sm text-slate-400">{batch.trainer.experience}</p>
-                          </div>
-                        </div>
-                        <div className="flex flex-wrap gap-1">
-                          {batch.trainer.certifications.map((cert, idx) => (
-                            <span key={idx} className="bg-blue-500/20 text-blue-400 px-2 py-1 rounded text-xs">
-                              {cert}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Batch Details */}
-                      <div className="space-y-3 mb-4">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-400">Mode:</span>
-                          <span className="text-white">{batch.mode}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-400">Location:</span>
-                          <span className="text-white">{batch.location}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-400">Batch Size:</span>
-                          <span className="text-white">{batch.currentEnrolled}/{batch.maxStudents} students</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-slate-400">Spots Left:</span>
-                          <span className={`font-semibold ${spotsLeft <= 5 ? 'text-orange-400' : 'text-green-400'}`}>
-                            {spotsLeft} remaining
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Progress Bar */}
-                      <div className="mb-4">
-                        <div className="flex justify-between text-xs text-slate-400 mb-1">
-                          <span>Enrollment Progress</span>
-                          <span>{Math.round((batch.currentEnrolled / batch.maxStudents) * 100)}%</span>
-                        </div>
-                        <div className="w-full bg-slate-700 rounded-full h-2">
-                          <div
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full"
-                            style={{ width: `${(batch.currentEnrolled / batch.maxStudents) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-
-                      {/* Pricing */}
-                      <div className="border-t border-slate-700 pt-4 mb-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="text-2xl font-bold text-white">
-                              {loading ? '₹...' : (coursePrice ? formatPrice(coursePrice.finalPrice) : '₹999')}
-                            </div>
-                            {coursePrice && coursePrice.originalPrice !== coursePrice.finalPrice && (
-                              <div className="text-sm text-slate-400 line-through">
-                                {formatPrice(coursePrice.originalPrice)}
-                              </div>
-                            )}
-                          </div>
-                          <div className="text-right">
-                            <div className="text-sm text-slate-400">
-                              {daysUntilStart > 0 ? `Starts in ${daysUntilStart} days` : 'Started'}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* CTA Button */}
-                      <button
-                        onClick={() => handleEnrollment(batch)}
-                        disabled={hasStarted || spotsLeft === 0}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                    return (
+                      <motion.div
+                        key={batch.id}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                        className={`bg-slate-800 rounded-xl border border-slate-700 hover:border-slate-600 transition-all duration-300 overflow-hidden ${
+                          viewMode === 'list' ? 'flex' : ''
+                        }`}
                       >
-                        {hasStarted ? (
-                          'Batch Started'
-                        ) : spotsLeft === 0 ? (
-                          'Batch Full'
-                        ) : (
-                          <>
-                            Reserve Your Seat
-                            <ArrowRight className="w-4 h-4" />
-                          </>
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Schedule Sidebar (Grid View Only) */}
-                    {viewMode === 'grid' && (
-                      <div className="p-6 border-t border-slate-700">
-                        <h4 className="font-semibold text-white mb-3">Training Schedule</h4>
-                        <div className="space-y-2">
-                          {batch.schedule.map((item, idx) => (
-                            <div key={idx} className="text-sm">
-                              <div className="font-medium text-blue-400">{item.day}</div>
-                              <div className="text-slate-400">{item.topic}</div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </motion.div>
-                );
-              })}
+                        {/* ...existing batch card rendering... */}
+                        {/* ...existing code... */}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          )}
+            {/* Tab 2: Bootcamps */}
+            <div>
+              {bootcamps.length === 0 ? (
+                <div className="text-slate-400 mb-8">No bootcamps scheduled at the moment.</div>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  {bootcamps.map((camp) => (
+                    <div key={camp.id} className="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow">
+                      <h3 className="text-xl font-semibold text-white mb-2">{camp.title}</h3>
+                      <div className="text-slate-400 mb-2">{camp.startDate} to {camp.endDate} &bull; {camp.location}</div>
+                      <div className="text-slate-300 mb-2">Trainer: {camp.trainer.name} ({camp.trainer.experience})</div>
+                      <div className="text-slate-400 mb-2">{camp.duration} &bull; {camp.mode}</div>
+                      <ul className="list-disc ml-6 text-slate-400 mb-2">
+                        {camp.features.map((f, i) => <li key={i}>{f}</li>)}
+                      </ul>
+                      <button className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" onClick={() => handleEnrollment(camp)}>Enroll</button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Tab 3: Free Workshops */}
+            <div>
+              {freeWorkshops.length === 0 ? (
+                <div className="text-slate-400 mb-8">No free workshops scheduled at the moment.</div>
+              ) : (
+                <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  {freeWorkshops.map((ws) => (
+                    <div key={ws.id} className="bg-slate-800 rounded-xl p-6 border border-slate-700 shadow">
+                      <h3 className="text-xl font-semibold text-white mb-2">{ws.title}</h3>
+                      <div className="text-slate-400 mb-2">{ws.date} &bull; {ws.time} &bull; {ws.location}</div>
+                      <div className="text-slate-300 mb-2">{ws.description}</div>
+                      <a href={ws.registrationLink} className="mt-2 inline-block px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Register</a>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </AdvancedTabs>
         </div>
       </section>
 
