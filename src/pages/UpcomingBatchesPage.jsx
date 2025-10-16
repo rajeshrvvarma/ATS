@@ -26,6 +26,7 @@ import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AdvancedTabs from '@/components/AdvancedTabs.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import { getAllEvents } from '@/data/allEventsData.js';
 
 const EventsBatchesPage = ({ onNavigate }) => {
   // Tab state handled by AdvancedTabs; category filter defaults to 'all'
@@ -34,9 +35,31 @@ const EventsBatchesPage = ({ onNavigate }) => {
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
-  const { pricing, loading } = useCoursePricing();
+  // State for dynamic events from Firestore (will be merged with static data)
+  const [firestoreEvents, setFirestoreEvents] = useState([]);
+  const [loadingFirestore, setLoadingFirestore] = useState(true);
 
-  // Separate arrays for batches, bootcamps, and workshops
+  const { pricing, loading: pricingLoading } = useCoursePricing();
+
+  // Fetch events from Firestore on component mount
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoadingFirestore(true);
+        const allEvents = await getAllEvents();
+        setFirestoreEvents(allEvents);
+      } catch (error) {
+        console.error('Error fetching events from Firestore:', error);
+        // Keep empty array if fetch fails
+      } finally {
+        setLoadingFirestore(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // Static/hardcoded data (will be kept until admin adds data through panel)
   const bootcamps = [
     {
       id: 'defensive-bootcamp-jan2025',
@@ -280,15 +303,54 @@ const EventsBatchesPage = ({ onNavigate }) => {
     }
   ];
 
+  // Merge Firestore events with hardcoded data
+  // Separate Firestore events by type
+  const firestoreBatches = firestoreEvents.filter(event => event.type === 'batch');
+  const firestoreBootcamps = firestoreEvents.filter(event => event.type === 'bootcamp');
+  const firestoreWorkshops = firestoreEvents.filter(event => event.type === 'workshop');
+
+  // Merge and deduplicate (Firestore events take priority over hardcoded if same ID)
+  const mergedBatches = [...upcomingBatches];
+  firestoreBatches.forEach(fbEvent => {
+    const existingIndex = mergedBatches.findIndex(b => b.id === fbEvent.id);
+    if (existingIndex >= 0) {
+      // Replace hardcoded with Firestore version
+      mergedBatches[existingIndex] = { ...mergedBatches[existingIndex], ...fbEvent };
+    } else {
+      // Add new Firestore event
+      mergedBatches.push(fbEvent);
+    }
+  });
+
+  const mergedBootcamps = [...bootcamps];
+  firestoreBootcamps.forEach(fbEvent => {
+    const existingIndex = mergedBootcamps.findIndex(b => b.id === fbEvent.id);
+    if (existingIndex >= 0) {
+      mergedBootcamps[existingIndex] = { ...mergedBootcamps[existingIndex], ...fbEvent };
+    } else {
+      mergedBootcamps.push(fbEvent);
+    }
+  });
+
+  const mergedWorkshops = [...freeWorkshops];
+  firestoreWorkshops.forEach(fbEvent => {
+    const existingIndex = mergedWorkshops.findIndex(w => w.id === fbEvent.id);
+    if (existingIndex >= 0) {
+      mergedWorkshops[existingIndex] = { ...mergedWorkshops[existingIndex], ...fbEvent };
+    } else {
+      mergedWorkshops.push(fbEvent);
+    }
+  });
+
   // Filter batches by category
   const filteredBatches = selectedCategory === 'all'
-    ? upcomingBatches
-    : upcomingBatches.filter(batch => batch.category === selectedCategory);
+    ? mergedBatches
+    : mergedBatches.filter(batch => batch.category === selectedCategory);
 
   const categories = [
-    { id: 'all', name: 'All Batches', count: upcomingBatches.length },
-    { id: 'defensive', name: 'Defensive Security', count: upcomingBatches.filter(b => b.category === 'defensive').length },
-    { id: 'offensive', name: 'Offensive Security', count: upcomingBatches.filter(b => b.category === 'offensive').length }
+    { id: 'all', name: 'All Batches', count: mergedBatches.length },
+    { id: 'defensive', name: 'Defensive Security', count: mergedBatches.filter(b => b.category === 'defensive').length },
+    { id: 'offensive', name: 'Offensive Security', count: mergedBatches.filter(b => b.category === 'offensive').length }
   ];
 
   // Calculate days until start
@@ -424,7 +486,12 @@ const EventsBatchesPage = ({ onNavigate }) => {
             </div>
             {/* Tab 2: Bootcamps */}
             <div>
-              {bootcamps.length === 0 ? (
+              {loadingFirestore && bootcamps.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                  <p className="text-slate-400">Loading bootcamps...</p>
+                </div>
+              ) : mergedBootcamps.length === 0 ? (
                 <div className="text-center py-16">
                   <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-slate-400 mb-2">No bootcamps scheduled</h3>
@@ -432,7 +499,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
-                  {bootcamps.map((camp, index) => {
+                  {mergedBootcamps.map((camp, index) => {
                     const daysUntilStart = getDaysUntilStart(camp.startDate);
                     const spotsLeft = camp.maxStudents - camp.currentEnrolled;
                     const coursePrice = pricing?.[camp.price];
@@ -541,7 +608,12 @@ const EventsBatchesPage = ({ onNavigate }) => {
             </div>
             {/* Tab 3: Free Workshops */}
             <div>
-              {freeWorkshops.length === 0 ? (
+              {loadingFirestore && freeWorkshops.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mx-auto mb-4"></div>
+                  <p className="text-slate-400">Loading workshops...</p>
+                </div>
+              ) : mergedWorkshops.length === 0 ? (
                 <div className="text-center py-16">
                   <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-slate-400 mb-2">No workshops scheduled</h3>
@@ -549,7 +621,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {freeWorkshops.map((ws, index) => (
+                  {mergedWorkshops.map((ws, index) => (
                     <motion.div
                       key={ws.id}
                       initial={{ opacity: 0, y: 20 }}

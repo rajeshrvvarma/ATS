@@ -1,13 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getUpcomingEvents, getSeatsLeft, calculateUrgency } from '@/data/allEventsData.js';
+import { getUpcomingEventsSync, getUpcomingEvents, getSeatsLeft, calculateUrgency } from '@/data/allEventsData.js';
 
 const AnnouncementBanner = ({ onNavigate }) => {
     const [isVisible, setIsVisible] = useState(true);
     const [currentEventIndex, setCurrentEventIndex] = useState(0);
+    const [allEvents, setAllEvents] = useState([]);
 
-    const allEvents = getUpcomingEvents();
+    // Load events (static first, then Firestore)
+    useEffect(() => {
+        // Start with static data for immediate display
+        const staticEvents = getUpcomingEventsSync();
+        setAllEvents(staticEvents);
+
+        // Then fetch from Firestore to get latest data
+        const loadFirestoreEvents = async () => {
+            try {
+                const events = await getUpcomingEvents();
+                setAllEvents(events);
+            } catch (error) {
+                console.error('Error loading Firestore events:', error);
+                // Keep using static data if Firestore fails
+            }
+        };
+        loadFirestoreEvents();
+    }, []);
 
     // Rotate between all events every 6 seconds
     useEffect(() => {

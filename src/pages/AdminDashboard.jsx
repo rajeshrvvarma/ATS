@@ -11,6 +11,7 @@ import InstructorContentManagement from "@/components/InstructorContentManagemen
 import AdminDeletionRequests from "@/components/admin/AdminDeletionRequests.jsx";
 import AdminIndexAlerts from "@/components/admin/AdminIndexAlerts.jsx";
 import IndexAlertBanner from "@/components/IndexAlertBanner.jsx";
+import AdminEventsManagement from "@/components/admin/AdminEventsManagement.jsx";
 
 const db = getFirestore(app);
 const statusColors = {
@@ -38,27 +39,27 @@ function UserRepliesSection() {
       // Get all users
       const usersCol = collection(db, "users");
       const usersSnapshot = await getDocs(usersCol);
-      
+
       const allReplies = [];
-      
+
       // For each user, check for replies to notes
       for (const userDoc of usersSnapshot.docs) {
         const userId = userDoc.id;
         const userData = userDoc.data();
-        
+
         // Get notes for this user
         const notesCol = collection(db, 'users', userId, 'notes');
         const notesSnapshot = await getDocs(notesCol);
-        
+
         // For each note, check for replies
         for (const noteDoc of notesSnapshot.docs) {
           const noteId = noteDoc.id;
           const noteData = noteDoc.data();
-          
+
           const repliesCol = collection(db, 'users', userId, 'notes', noteId, 'replies');
           const repliesQuery = query(repliesCol, orderBy('createdAt', 'desc'));
           const repliesSnapshot = await getDocs(repliesQuery);
-          
+
           repliesSnapshot.docs.forEach(replyDoc => {
             const replyData = replyDoc.data();
             allReplies.push({
@@ -72,10 +73,10 @@ function UserRepliesSection() {
           });
         }
       }
-      
+
       // Sort by creation date (newest first)
       allReplies.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
-      
+
       setReplies(allReplies.slice(0, 10)); // Show only recent 10 replies
     } catch (err) {
       console.error('Failed to load user replies:', err);
@@ -271,6 +272,7 @@ function AdminDashboard({ onNavigate }) {
   const tabs = [
     { key: "overview", label: "Overview" },
     { key: "user", label: "User Management" },
+    { key: "events", label: "Events Management" },
     { key: "content-management", label: "Content Management" },
   { key: "approval-requests", label: "Deletion Requests" },
   { key: "index-alerts", label: "Index Alerts" },
@@ -737,6 +739,8 @@ function AdminDashboard({ onNavigate }) {
           </>
         )}
 
+
+        {tab === "events" && <AdminEventsManagement />}
 
         {tab === "pricing" && <AdminCoursePricing />}
 

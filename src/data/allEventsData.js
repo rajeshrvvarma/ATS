@@ -1,5 +1,13 @@
 // Centralized data for all events: batches, bootcamps, and workshops
 // Used by AnnouncementBanner to rotate through all upcoming events
+// Now supports both static data and Firestore data
+
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import app from '@/config/firebase';
+
+const db = getFirestore(app);
+
+// Static fallback data (used when Firestore is unavailable or for initial load)
 
 export const upcomingBatches = [
   {
@@ -114,8 +122,53 @@ export const freeWorkshops = [
   }
 ];
 
-// Get all events combined and sorted by start date
-export const getAllEvents = () => {
+// Fetch events from Firestore
+export const fetchEventsFromFirestore = async () => {
+  try {
+    const eventsCol = collection(db, 'events');
+    const snapshot = await getDocs(eventsCol);
+    const firestoreEvents = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    return firestoreEvents;
+  } catch (error) {
+    console.error('Error fetching events from Firestore:', error);
+    return [];
+  }
+};
+
+// Get all events combined (static + Firestore) and sorted by start date
+export const getAllEvents = async () => {
+  // Fetch from Firestore
+  const firestoreEvents = await fetchEventsFromFirestore();
+
+  // Combine static and Firestore events
+  const allEvents = [
+    ...upcomingBatches,
+    ...bootcamps,
+    ...freeWorkshops,
+    ...firestoreEvents
+  ];
+
+  // Remove duplicates based on id
+  const uniqueEvents = allEvents.reduce((acc, event) => {
+    if (!acc.find(e => e.id === event.id)) {
+      acc.push(event);
+    }
+    return acc;
+  }, []);
+
+  // Sort by start date (earliest first)
+  return uniqueEvents.sort((a, b) => {
+    const dateA = new Date(a.startDate);
+    const dateB = new Date(b.startDate);
+    return dateA - dateB;
+  });
+};
+
+// Get all events synchronously (static data only - for initial render)
+export const getAllEventsSync = () => {
   const allEvents = [
     ...upcomingBatches,
     ...bootcamps,
@@ -131,11 +184,24 @@ export const getAllEvents = () => {
 };
 
 // Get only upcoming events (not started yet)
-export const getUpcomingEvents = () => {
+export const getUpcomingEvents = async () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  return getAllEvents().filter(event => {
+  const allEvents = await getAllEvents();
+
+  return allEvents.filter(event => {
+    const startDate = new Date(event.startDate);
+    return startDate >= today;
+  });
+};
+
+// Get upcoming events synchronously (static data only - for initial render)
+export const getUpcomingEventsSync = () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return getAllEventsSync().filter(event => {
     const startDate = new Date(event.startDate);
     return startDate >= today;
   });

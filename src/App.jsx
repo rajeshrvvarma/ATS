@@ -23,7 +23,6 @@ import Footer from '@/components/Footer.jsx';
 
 // Lazy-loaded pages
 const HomePage = React.lazy(() => import('@/pages/HomePage.jsx'));
-const FreeWorkshopPage = React.lazy(() => import('@/pages/WorkshopPage.jsx'));
 const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
 const DefensiveBootcampLandingPage = React.lazy(() => import('@/pages/DefensiveBootcampLandingPage.jsx'));
 const DefensiveMasteryLandingPage = React.lazy(() => import('@/pages/DefensiveMasteryLandingPage.jsx'));
@@ -63,7 +62,6 @@ export default function App() {
 
     const pageToPath = useMemo(() => ({
         home: '/',
-        workshop: '/workshop',
         defensiveBootcamp: '/bootcamp/defensive',
         offensiveBootcamp: '/bootcamp/offensive',
         defensiveBootcampLanding: '/defensive-security-bootcamp',
@@ -99,7 +97,6 @@ export default function App() {
 
     const pathToPage = useMemo(() => ({
         '/': 'home',
-        '/workshop': 'workshop',
         '/bootcamp/defensive': 'defensiveBootcamp',
         '/bootcamp/offensive': 'offensiveBootcamp',
         '/defensive-security-bootcamp': 'defensiveBootcampLanding',
@@ -191,7 +188,7 @@ export default function App() {
                         <Routes>
                             <Route path="/course-builder" element={<CourseBuilder />} />
                             <Route path="/" element={<HomePage onNavigate={go} />} />
-                            <Route path="/workshop" element={<FreeWorkshopPage onNavigate={go} />} />
+                            <Route path="/workshop" element={<Navigate to="/events-batches" replace />} />
                             <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
                             <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
                             <Route path="/defensive-security-bootcamp" element={<DefensiveBootcampLandingPage onNavigate={go} />} />
