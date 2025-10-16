@@ -71,8 +71,16 @@ body {
 .content-dark h1, .content-dark h2, .content-dark h3, .content-dark h4 {
   @apply text-white;
 }
-.content-dark .muted { 
-  @apply text-slate-400; 
+.content-dark .muted {
+  @apply text-slate-400;
+}
+
+/* Custom animation delays for staggered bounce */
+.animation-delay-300 {
+  animation-delay: 0.3s !important;
+}
+.animation-delay-600 {
+  animation-delay: 0.6s !important;
 }
 
 @layer components {
