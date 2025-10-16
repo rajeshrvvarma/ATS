@@ -163,7 +163,25 @@ const EnhancedEnrollmentModal = ({
     return features[type] || features['7-day-bootcamp'];
   };
 
-  const course = getCourseDetails();
+  // Use passed-in props for module enrollments
+  let course;
+  if (courseType === 'module') {
+    course = {
+      name: courseName,
+      price: coursePrice,
+      duration: props.courseDuration,
+      features: [
+        'Live interactive sessions',
+        'Hands-on labs and exercises',
+        'Industry expert mentorship',
+        'Course completion certificate',
+        'Lifetime access to materials',
+        'Job placement assistance'
+      ]
+    };
+  } else {
+    course = getCourseDetails();
+  }
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
