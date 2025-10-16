@@ -207,7 +207,7 @@ const ModuleCatalog = ({ onNavigate }) => {
                     onClick={() => setEnrollmentModal({ 
                       isOpen: true, 
                       courseType: 'module', 
-                      courseName: mod.title 
+                      course: mod
                     })}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
                   >
@@ -347,9 +347,11 @@ const ModuleCatalog = ({ onNavigate }) => {
       {/* Enrollment Modal */}
       <EnhancedEnrollmentModal
         isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', course: null })}
         courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.courseName}
+        courseName={enrollmentModal.course?.title || ''}
+        coursePrice={enrollmentModal.course?.price}
+        courseDuration={enrollmentModal.course?.duration}
       />
     </div>
   );
