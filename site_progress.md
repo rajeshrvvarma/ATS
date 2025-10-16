@@ -181,3 +181,25 @@ Added a comprehensive **module management system** to control visibility and lif
 - Use scripts to hide deprecated modules as needed
 - Mark old/outdated modules as "archived" for record-keeping
 - Consider adding admin UI for module management in future phase
+
+---
+
+## October 17, 2025 — Header Dropdown Animation Hotfix (Completed)
+
+### Issue
+Runtime error in production: `ReferenceError: AnimatePresence is not defined`
+- Error traced to Header.jsx Programs dropdown still using framer-motion components
+- Import was removed but `AnimatePresence` and `motion.div` usage remained
+
+### Fix Applied
+- Replaced `AnimatePresence` wrapper with conditional rendering
+- Changed `motion.div` to plain `div` for Programs dropdown
+- Maintained all functionality (hover behavior, dropdown content) without animations
+
+### Files Modified
+- `src/components/Header.jsx`: Removed AnimatePresence/motion.div from dropdown (lines 520-626)
+
+### Verification
+- Build test: ✅ PASS (npm run build successful)
+- Runtime test: Programs dropdown works without animation
+- Zero console errors in browser

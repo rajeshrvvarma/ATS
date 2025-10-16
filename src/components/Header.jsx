@@ -517,15 +517,9 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
                 <ChevronDown className="ml-1 h-4 w-4" />
             </button>
 
-            <AnimatePresence>
-                {isProgramsOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.2 }}
-                        className="absolute top-full left-0 mt-2 w-[800px] bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden z-50"
-                    >
+            {isProgramsOpen && (
+                <div className="absolute top-full left-0 mt-2 w-[800px] bg-slate-800 rounded-xl shadow-2xl border border-slate-700 overflow-hidden z-50"
+                >
                         <div className="flex">
                             {/* Left sidebar - Categories */}
                             <div className="w-64 bg-slate-900 p-4 border-r border-slate-700">
@@ -621,9 +615,8 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
                                 </div>
                             </div>
                         </div>
-                    </motion.div>
+                    </div>
                 )}
-            </AnimatePresence>
         </div>
     );
 };

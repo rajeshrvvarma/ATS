@@ -911,6 +911,7 @@ VITE_OPENAI_API_KEY=your_openai_key
 - Hidden modules are invisible in catalog and blocked from direct access
 - Backward compatible: modules without status default to active
 - Documentation: `MODULE_MANAGEMENT_GUIDE.md`
+- **Hotfix**: Removed remaining AnimatePresence from Header dropdown to fix runtime error
 
 ### Modules UX Upgrade
 - Introduced dedicated `ModuleDetailPage.jsx` with full curriculum, highlights, and CTAs
