@@ -67,7 +67,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <div className="min-h-[45vh] flex items-center justify-center bg-slate-900 bg-fixed py-6 md:py-10 relative">
+            <div className="min-h-[45vh] flex items-center justify-center bg-slate-900 bg-fixed py-3 md:py-07 relative">
                 <section id="home" className="container mx-auto px-4 md:px-6">
                     <div className="text-center mb-6 relative">
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
