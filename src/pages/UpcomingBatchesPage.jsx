@@ -213,21 +213,27 @@ const EventsBatchesPage = ({ onNavigate }) => {
 
   return (
     <div className="min-h-screen text-white pt-20">
-      {/* Hero Section */}
+      {/* Hero Section - now clickable */}
       <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto"
+            className="text-center max-w-4xl mx-auto cursor-pointer group"
+            onClick={() => onNavigate && onNavigate('events-batches')}
+            tabIndex={0}
+            role="button"
+            aria-label="Go to Events & Batches"
+            onKeyPress={e => { if (e.key === 'Enter' || e.key === ' ') { onNavigate && onNavigate('events-batches'); } }}
+            style={{ outline: 'none' }}
           >
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6">
+            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 rounded-full px-4 py-2 mb-6 group-hover:bg-blue-500/20">
               <Calendar className="w-4 h-4 text-blue-400" />
               <span className="text-blue-300 text-sm">Live Training Batches</span>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight group-hover:text-blue-400 transition-colors">
               Upcoming Training Batches
             </h1>
 
@@ -259,6 +265,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                 <span>Job Placement Support</span>
               </div>
             </div>
+            <div className="mt-4 text-xs text-blue-400 opacity-70">Click anywhere on this banner to view all Events & Batches</div>
           </motion.div>
         </section>
       </div>

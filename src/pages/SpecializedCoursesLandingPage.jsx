@@ -42,6 +42,24 @@ const SpecializedCoursesLandingPage = () => {
       maxSeats: 50,
       highlights: ['AWS Certified Security Preparation', 'Real AWS Environment Labs', 'Industry Projects'],
       color: 'blue',
+            curriculum: [
+        {
+          title: 'AWS Security Fundamentals',
+          topics: ['AWS Shared Responsibility Model', 'IAM Policies & Roles', 'Security Groups & NACLs', 'AWS CloudTrail & CloudWatch']
+        },
+        {
+          title: 'Data Protection in AWS',
+          topics: ['KMS Key Management', 'S3 Bucket Security', 'RDS Encryption', 'Secrets Manager']
+        },
+        {
+          title: 'Network Security',
+          topics: ['VPC Security', 'AWS WAF', 'Shield & DDoS Protection', 'Private Link & VPN']
+        },
+        {
+          title: 'Compliance & Monitoring',
+          topics: ['AWS Config Rules', 'Security Hub', 'GuardDuty', 'Macie for Data Discovery']
+        }
+      ],
       prerequisites: [
         'Basic AWS cloud knowledge',
         'Understanding of network security concepts',
