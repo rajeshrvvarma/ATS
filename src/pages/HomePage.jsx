@@ -335,7 +335,9 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                                                     onClick={() => setEnrollmentModal({ 
                                                         isOpen: true, 
                                                         courseType: 'module', 
-                                                        courseName: module.title 
+                                                        courseName: module.title,
+                                                        coursePrice: module.price,
+                                                        courseDuration: module.duration
                                                     })}
                                                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
                                                 >
@@ -805,7 +807,7 @@ const HomePage = ({ onNavigate }) => {
     const [activeTab, setActiveTab] = useState('modules');
     const [expandedCard, setExpandedCard] = useState(null);
     const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
-    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '', coursePrice: '', courseDuration: '' });
     // Read filter from URL query param on mount
     const getInitialFilter = () => {
         if (typeof window !== 'undefined') {
