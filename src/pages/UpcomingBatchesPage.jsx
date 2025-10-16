@@ -532,44 +532,54 @@ const EventsBatchesPage = ({ onNavigate }) => {
 
                         <div className="p-6">
                           {/* Trainer Info */}
-                          <div className="flex items-center gap-3 mb-4 pb-4 border-b border-slate-700">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                              <User className="w-6 h-6 text-white" />
+                          {camp.trainer && (
+                            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-slate-700">
+                              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                                <User className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <div className="font-semibold text-white">{camp.trainer.name}</div>
+                                <div className="text-sm text-slate-400">{camp.trainer.experience}</div>
+                              </div>
                             </div>
-                            <div>
-                              <div className="font-semibold text-white">{camp.trainer.name}</div>
-                              <div className="text-sm text-slate-400">{camp.trainer.experience}</div>
-                            </div>
-                          </div>
+                          )}
 
                           {/* Details */}
                           <div className="space-y-3 mb-4">
-                            <div className="flex items-center gap-2 text-sm text-slate-300">
-                              <Clock className="w-4 h-4 text-blue-400" />
-                              <span>{camp.duration} • {camp.mode}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-slate-300">
-                              <MapPin className="w-4 h-4 text-green-400" />
-                              <span>{camp.location}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-slate-300">
-                              <Users className="w-4 h-4 text-purple-400" />
-                              <span>{spotsLeft} seats left of {camp.maxStudents}</span>
-                            </div>
+                            {camp.duration && (
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <Clock className="w-4 h-4 text-blue-400" />
+                                <span>{camp.duration}{camp.mode && ` • ${camp.mode}`}</span>
+                              </div>
+                            )}
+                            {camp.location && (
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <MapPin className="w-4 h-4 text-green-400" />
+                                <span>{camp.location}</span>
+                              </div>
+                            )}
+                            {camp.maxStudents && (
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <Users className="w-4 h-4 text-purple-400" />
+                                <span>{spotsLeft} seats left of {camp.maxStudents}</span>
+                              </div>
+                            )}
                           </div>
 
                           {/* Features */}
-                          <div className="mb-4">
-                            <h4 className="text-sm font-semibold text-slate-400 mb-2">What's Included:</h4>
-                            <div className="grid grid-cols-2 gap-2">
-                              {camp.features.slice(0, 4).map((feature, idx) => (
-                                <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-300">
-                                  <CheckCircle className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" />
-                                  <span>{feature}</span>
-                                </div>
-                              ))}
+                          {camp.features && camp.features.length > 0 && (
+                            <div className="mb-4">
+                              <h4 className="text-sm font-semibold text-slate-400 mb-2">What's Included:</h4>
+                              <div className="grid grid-cols-2 gap-2">
+                                {camp.features.slice(0, 4).map((feature, idx) => (
+                                  <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-300">
+                                    <CheckCircle className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" />
+                                    <span>{feature}</span>
+                                  </div>
+                                ))}
+                              </div>
                             </div>
-                          </div>
+                          )}
 
                           {/* Price & CTA */}
                           <div className="flex items-center justify-between pt-4 border-t border-slate-700">
@@ -647,16 +657,20 @@ const EventsBatchesPage = ({ onNavigate }) => {
                         <div className="space-y-2 mb-4">
                           <div className="flex items-center gap-2 text-sm text-slate-300">
                             <Calendar className="w-4 h-4 text-green-400" />
-                            <span>{ws.date}</span>
+                            <span>{ws.date || formatDate(ws.startDate)}</span>
                           </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-300">
-                            <Clock className="w-4 h-4 text-blue-400" />
-                            <span>{ws.time}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-slate-300">
-                            <Video className="w-4 h-4 text-purple-400" />
-                            <span>{ws.location}</span>
-                          </div>
+                          {ws.time && (
+                            <div className="flex items-center gap-2 text-sm text-slate-300">
+                              <Clock className="w-4 h-4 text-blue-400" />
+                              <span>{ws.time}</span>
+                            </div>
+                          )}
+                          {ws.location && (
+                            <div className="flex items-center gap-2 text-sm text-slate-300">
+                              <Video className="w-4 h-4 text-purple-400" />
+                              <span>{ws.location}</span>
+                            </div>
+                          )}
                         </div>
 
                         {/* Instructor */}
@@ -668,9 +682,11 @@ const EventsBatchesPage = ({ onNavigate }) => {
                         )}
 
                         {/* Description */}
-                        <p className="text-sm text-slate-400 mb-4 line-clamp-3">
-                          {ws.description}
-                        </p>
+                        {ws.description && (
+                          <p className="text-sm text-slate-400 mb-4 line-clamp-3">
+                            {ws.description}
+                          </p>
+                        )}
 
                         {/* Topics */}
                         {ws.topics && ws.topics.length > 0 && (
@@ -690,7 +706,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
 
                         {/* CTA */}
                         <a
-                          href={ws.registrationLink}
+                          href={ws.registrationLink || '#'}
                           className="block w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 group-hover:scale-105"
                         >
                           Register Free
