@@ -17,7 +17,9 @@ import {
   AlertCircle,
   Filter,
   Grid,
-  List
+  List,
+  Sparkles,
+  Zap
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';

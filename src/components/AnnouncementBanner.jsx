@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap } from 'lucide-react';
+import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getActiveBatches, getUrgencyColor } from '@/data/activeBatches.js';
+import { getUpcomingEvents, getSeatsLeft, calculateUrgency } from '@/data/allEventsData.js';
 
 const AnnouncementBanner = ({ onNavigate }) => {
     const [isVisible, setIsVisible] = useState(true);
-    const [currentBatchIndex, setCurrentBatchIndex] = useState(0);
+    const [currentEventIndex, setCurrentEventIndex] = useState(0);
 
-    const activeBatches = getActiveBatches();
+    const allEvents = getUpcomingEvents();
 
-    // Rotate between batches every 8 seconds if multiple batches exist
+    // Rotate between all events every 6 seconds
     useEffect(() => {
-        if (activeBatches.length > 1) {
+        if (allEvents.length > 1) {
             const interval = setInterval(() => {
-                setCurrentBatchIndex(prev => (prev + 1) % activeBatches.length);
-            }, 8000);
+                setCurrentEventIndex(prev => (prev + 1) % allEvents.length);
+            }, 6000);
             return () => clearInterval(interval);
         }
-    }, [activeBatches.length]);
+    }, [allEvents.length]);
 
-    if (!isVisible || activeBatches.length === 0) return null;
+    if (!isVisible || allEvents.length === 0) return null;
 
-    const currentBatch = activeBatches[currentBatchIndex] || activeBatches[0];
+    const currentEvent = allEvents[currentEventIndex] || allEvents[0];
+    const seatsLeft = getSeatsLeft(currentEvent);
+    const urgency = calculateUrgency(currentEvent);
 
     return (
         <AnimatePresence>
@@ -42,34 +44,52 @@ const AnnouncementBanner = ({ onNavigate }) => {
                         {/* Main Announcement Content */}
                         <div className="flex items-center justify-center flex-1 space-x-3 md:space-x-4">
                             <div className="hidden sm:flex items-center space-x-2 text-yellow-300">
-                                <Sparkles className="w-5 h-5 animate-spin" />
+                                {currentEvent.type === 'workshop' ? (
+                                    <BookOpen className="w-5 h-5" />
+                                ) : currentEvent.type === 'bootcamp' ? (
+                                    <Zap className="w-5 h-5" />
+                                ) : (
+                                    <Sparkles className="w-5 h-5 animate-spin" />
+                                )}
                                 <Calendar className="w-4 h-4" />
                             </div>
 
                             <div className="flex flex-col sm:flex-row items-center text-center sm:text-left space-y-1 sm:space-y-0 sm:space-x-3">
                                 <div className="flex items-center space-x-2">
+                                    {/* Event type badge */}
+                                    <span className={`text-xs font-bold px-2 py-0.5 rounded ${
+                                        currentEvent.type === 'workshop'
+                                            ? 'bg-green-500/30 text-green-300'
+                                            : currentEvent.type === 'bootcamp'
+                                            ? 'bg-purple-500/30 text-purple-300'
+                                            : 'bg-blue-500/30 text-blue-300'
+                                    }`}>
+                                        {currentEvent.type === 'workshop' ? 'FREE' : currentEvent.type.toUpperCase()}
+                                    </span>
                                     <span className="font-bold text-sm md:text-base">
-                                        {currentBatch.title}
+                                        {currentEvent.title}
                                     </span>
                                     <span className="hidden md:inline text-yellow-300">|</span>
                                 </div>
 
                                 <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2">
                                     <span className="text-xs md:text-sm font-medium">
-                                        Starting {currentBatch.startDate}
+                                        Starting {new Date(currentEvent.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                     </span>
                                     <div className="flex items-center space-x-2">
-                                        {currentBatch.urgency === 'high' ? (
+                                        {urgency === 'high' ? (
                                             <Zap className="w-3 h-3 md:w-4 md:h-4 text-red-400 animate-pulse" />
                                         ) : (
                                             <Users className="w-3 h-3 md:w-4 md:h-4" />
                                         )}
                                         <span className={`text-xs md:text-sm ${
-                                            currentBatch.urgency === 'high' ? 'text-red-300 font-semibold' : 'text-white'
+                                            urgency === 'high' ? 'text-red-300 font-semibold' : 'text-white'
                                         }`}>
-                                            {currentBatch.urgency === 'high'
-                                                ? `Only ${currentBatch.seatsLeft} seats left!`
-                                                : `${currentBatch.seatsLeft} seats available`
+                                            {urgency === 'high'
+                                                ? `Only ${seatsLeft} seats left!`
+                                                : currentEvent.type === 'workshop'
+                                                ? `Free Workshop`
+                                                : `${seatsLeft} seats available`
                                             }
                                         </span>
                                     </div>
@@ -77,8 +97,10 @@ const AnnouncementBanner = ({ onNavigate }) => {
                                     {/* Price indicator */}
                                     <div className="flex items-center space-x-1">
                                         <span className="text-yellow-300">•</span>
-                                        <span className="text-xs md:text-sm font-semibold text-green-300">
-                                            {currentBatch.price}
+                                        <span className={`text-xs md:text-sm font-semibold ${
+                                            currentEvent.type === 'workshop' ? 'text-green-300' : 'text-green-300'
+                                        }`}>
+                                            {currentEvent.price}
                                         </span>
                                     </div>
                                 </div>
@@ -94,20 +116,35 @@ const AnnouncementBanner = ({ onNavigate }) => {
                                     <ArrowRight className="w-3 h-3" />
                                 </button>
                                 <button
-                                    onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                                    onClick={() => {
+                                        if (currentEvent.type === 'workshop') {
+                                            onNavigate && onNavigate('events-batches');
+                                        } else {
+                                            onNavigate && onNavigate(`enroll?course=${currentEvent.courseId}&batch=${currentEvent.id}`);
+                                        }
+                                    }}
                                     className={`flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
-                                        currentBatch.urgency === 'high'
+                                        urgency === 'high'
                                             ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
+                                            : currentEvent.type === 'workshop'
+                                            ? 'bg-green-500/90 hover:bg-green-600 text-white border-green-400'
                                             : 'bg-white/90 hover:bg-white text-blue-600 border-white'
                                     }`}
                                 >
                                     <span>
-                                        {currentBatch.urgency === 'high' ? 'Grab Last Seats!' : 'Register Now'}
+                                        {urgency === 'high'
+                                            ? 'Grab Last Seats!'
+                                            : currentEvent.type === 'workshop'
+                                            ? 'Register Free'
+                                            : 'Register Now'
+                                        }
                                     </span>
                                     <ArrowRight className="w-3 h-3" />
                                 </button>
                             </div>
-                        </div>                        {/* Close Button */}
+                        </div>
+
+                        {/* Close Button */}
                         <button
                             onClick={() => setIsVisible(false)}
                             className="ml-4 p-1 hover:bg-white/20 rounded-full transition-all duration-200 flex-shrink-0"
@@ -126,26 +163,41 @@ const AnnouncementBanner = ({ onNavigate }) => {
                             <span>View All</span>
                         </button>
                         <button
-                            onClick={() => onNavigate && onNavigate(`enroll?course=${currentBatch.courseId}&batch=${currentBatch.id}`)}
+                            onClick={() => {
+                                if (currentEvent.type === 'workshop') {
+                                    onNavigate && onNavigate('events-batches');
+                                } else {
+                                    onNavigate && onNavigate(`enroll?course=${currentEvent.courseId}&batch=${currentEvent.id}`);
+                                }
+                            }}
                             className={`inline-flex items-center space-x-1 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 backdrop-blur-sm border ${
-                                currentBatch.urgency === 'high'
+                                urgency === 'high'
                                     ? 'bg-red-500/90 hover:bg-red-500 text-white border-red-400 animate-pulse'
+                                    : currentEvent.type === 'workshop'
+                                    ? 'bg-green-500/90 hover:bg-green-600 text-white border-green-400'
                                     : 'bg-white/90 hover:bg-white text-blue-600 border-white'
                             }`}
                         >
                             <span>
-                                {currentBatch.urgency === 'high' ? 'Last Seats!' : 'Register'}
+                                {urgency === 'high'
+                                    ? 'Last Seats!'
+                                    : currentEvent.type === 'workshop'
+                                    ? 'Free'
+                                    : 'Register'
+                                }
                             </span>
                             <ArrowRight className="w-3 h-3" />
                         </button>
-                    </div>                    {/* Batch rotation indicator for multiple batches */}
-                    {activeBatches.length > 1 && (
+                    </div>
+
+                    {/* Event rotation indicator */}
+                    {allEvents.length > 1 && (
                         <div className="mt-2 flex justify-center space-x-1">
-                            {activeBatches.map((_, index) => (
+                            {allEvents.map((_, index) => (
                                 <div
                                     key={index}
                                     className={`h-1 w-6 rounded-full transition-all duration-300 ${
-                                        index === currentBatchIndex ? 'bg-white/70' : 'bg-white/20'
+                                        index === currentEventIndex ? 'bg-white/70' : 'bg-white/20'
                                     }`}
                                 />
                             ))}
