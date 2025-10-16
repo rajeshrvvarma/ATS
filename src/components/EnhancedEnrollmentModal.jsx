@@ -169,8 +169,9 @@ const EnhancedEnrollmentModal = ({
   if (courseType === 'module') {
     course = {
       name: courseName,
-      price: coursePrice,
-      duration: courseDuration,
+      price: Number(coursePrice) || 0,
+      originalPrice: Number(coursePrice) || 0, // No discount for modules
+      duration: courseDuration || 'N/A',
       features: [
         'Live interactive sessions',
         'Hands-on labs and exercises',
@@ -183,6 +184,13 @@ const EnhancedEnrollmentModal = ({
   } else {
     course = getCourseDetails();
   }
+
+  // Update payment amount when course price is available
+  useEffect(() => {
+    if (course.price) {
+      setPaymentData(prev => ({ ...prev, amount: course.price }));
+    }
+  }, [course.price]);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -438,7 +446,9 @@ const EnhancedEnrollmentModal = ({
                     <span className="text-slate-300">Duration: {course.duration}</span>
                     <div className="text-right">
                       <span className="text-2xl font-bold text-sky-400">₹{course.price}</span>
-                      <span className="text-slate-400 line-through ml-2">₹{course.originalPrice}</span>
+                      {course.originalPrice > course.price && (
+                        <span className="text-slate-400 line-through ml-2">₹{course.originalPrice}</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -558,10 +568,12 @@ const EnhancedEnrollmentModal = ({
                     <span className="text-slate-300">Course Fee</span>
                     <span className="text-white">₹{course.price}</span>
                   </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-slate-300">Discount</span>
-                    <span className="text-green-400">-₹{course.originalPrice - course.price}</span>
-                  </div>
+                  {course.originalPrice > course.price && (
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-slate-300">Discount</span>
+                      <span className="text-green-400">-₹{course.originalPrice - course.price}</span>
+                    </div>
+                  )}
                   <hr className="border-slate-600 my-2" />
                   <div className="flex items-center justify-between font-semibold">
                     <span className="text-white">Total Amount</span>
