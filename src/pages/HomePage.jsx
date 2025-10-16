@@ -16,6 +16,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 
     // Get unique categories from modules
     const categories = ['All', ...new Set(modules.map(module => module.category))];
+    const [expandedCard, setExpandedCard] = useState(null);
 
     if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
     if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
