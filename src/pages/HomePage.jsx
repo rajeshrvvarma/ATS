@@ -16,7 +16,6 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 
     // Get unique categories from modules
     const categories = ['All', ...new Set(modules.map(module => module.category))];
-    const [expandedCard, setExpandedCard] = useState(null);
 
     if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
     if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
@@ -70,7 +69,7 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
 
 
 // Combined Modules & Traditional Courses Section with Tabs
-const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, searchFilter, setSearchFilter }) => {
+const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, searchFilter, setSearchFilter, expandedCard, setExpandedCard }) => {
     // --- Module Section Logic ---
     const [selectedCategory, setSelectedCategory] = useState('All');
     // Make searchTerm fully controlled by searchFilter prop
@@ -807,6 +806,7 @@ const HomePage = ({ onNavigate }) => {
     const [error, setError] = useState(null);
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
     const [activeTab, setActiveTab] = useState('modules');
+    const [expandedCard, setExpandedCard] = useState(null);
     // Read filter from URL query param on mount
     const getInitialFilter = () => {
         if (typeof window !== 'undefined') {
@@ -875,6 +875,8 @@ const HomePage = ({ onNavigate }) => {
                 setActiveTab={setActiveTab}
                 searchFilter={searchFilter}
                 setSearchFilter={setSearchFilter}
+                expandedCard={expandedCard}
+                setExpandedCard={setExpandedCard}
             />
             <SuccessMetrics />
             <Testimonials />
