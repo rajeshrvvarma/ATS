@@ -8,8 +8,8 @@ const ModuleCatalog = ({ onNavigate }) => {
   const [modules, setModules] = React.useState(staticModules || []);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(null);
-  const [expandedCard, setExpandedCard] = React.useState(null);
   const location = useLocation();
+  const [expandedCard, setExpandedCard] = React.useState(null);
 
   // Category icon mapping
   const getCategoryIcon = (category) => {
