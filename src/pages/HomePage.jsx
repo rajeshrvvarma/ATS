@@ -12,56 +12,106 @@ import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 // Module-Focused Hero Section
 const HeroSection = ({ onNavigate, modules, loading, error }) => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
-
-    // Get unique categories from modules
+    const [activeHero, setActiveHero] = useState(0); // 0: modular, 1: traditional
     const categories = ['All', ...new Set(modules.map(module => module.category))];
 
     if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
     if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
 
+    // Hero panel data
+    const heroPanels = [
+        {
+            title: <>
+                Learn <span className="text-cyan-400">Any Skill</span><br />
+                <span className="text-3xl md:text-5xl text-blue-400">One Module at a Time</span>
+            </>,
+            description: <>
+                Choose from <strong className="text-blue-400">{modules.length}+ Expert Modules</strong> across
+                <strong className="text-purple-400"> Technology</strong>, <strong className="text-red-400">Cybersecurity</strong>,
+                and <strong className="text-green-400">Programming</strong>. Build your custom learning path.<br />
+                <span className="text-green-400 font-semibold">Self-paced, flexible, skill-focused.</span>
+            </>,
+            features: [
+                { icon: BookOpen, text: `${modules.length}+ Learning Modules` },
+                { icon: Layers, text: `${categories.length - 1} Categories` },
+                { icon: TrendingUp, text: 'Self-Paced Learning' },
+            ],
+            label: 'Modular Learning',
+        },
+        {
+            title: <>
+                <span className="text-yellow-400">Traditional Training Programs</span><br />
+                <span className="text-3xl md:text-5xl text-blue-400">Comprehensive Course Paths</span>
+            </>,
+            description: <>
+                Enroll in <strong className="text-yellow-400">Specialized Security Courses</strong> and
+                <strong className="text-blue-400"> Full-Length Programs</strong> for a guided, instructor-led experience.<br />
+                <span className="text-yellow-400 font-semibold">Structured, cohort-based, certification-ready.</span>
+            </>,
+            features: [
+                { icon: Star, text: 'Instructor-Led Sessions' },
+                { icon: Users, text: 'Cohort-Based Learning' },
+                { icon: Clock, text: 'Fixed Timelines' },
+            ],
+            label: 'Traditional Courses',
+        },
+    ];
+
     return (
         <>
             <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-            <div className="min-h-[45vh] flex items-center justify-center bg-slate-900 bg-fixed py-8 md:py-12">
+            <div className="min-h-[45vh] flex items-center justify-center bg-slate-900 bg-fixed py-8 md:py-12 relative">
                 <section id="home" className="container mx-auto px-4 md:px-6">
-                    <motion.div
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 1 }}
-                        className="text-center mb-6"
-                    >
+                    <div className="text-center mb-6 relative">
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-                            Learn{' '}
-                            <span className="text-cyan-400">
-                                Any Skill
-                            </span>
-                            <br />
-                            <span className="text-3xl md:text-5xl text-blue-400">One Module at a Time</span>
+                            {heroPanels[activeHero].title}
                         </h1>
-
                         <p className="text-lg md:text-xl text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed">
-                            Choose from <strong className="text-blue-400">{modules.length}+ Expert Modules</strong> across
-                            <strong className="text-purple-400"> Technology</strong>, <strong className="text-red-400">Cybersecurity</strong>,
-                            and <strong className="text-green-400">Programming</strong>. Build your custom learning path.
+                            {heroPanels[activeHero].description}
                         </p>
-
                         <div className="flex flex-wrap justify-center gap-6 mb-6 text-center">
-                            <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                                <BookOpen className="w-5 h-5 text-blue-400" />
-                                <span className="text-white font-semibold">{modules.length}+ Learning Modules</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                                <Layers className="w-5 h-5 text-purple-400" />
-                                <span className="text-white font-semibold">{categories.length - 1} Categories</span>
-                            </div>
-                            <div className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                                <TrendingUp className="w-5 h-5 text-green-400" />
-                                <span className="text-white font-semibold">Self-Paced Learning</span>
-                            </div>
+                            {heroPanels[activeHero].features.map((f, i) => (
+                                <div key={i} className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
+                                    <f.icon className={`w-5 h-5 ${activeHero === 0 ? 'text-blue-400' : 'text-yellow-400'}`} />
+                                    <span className="text-white font-semibold">{f.text}</span>
+                                </div>
+                            ))}
                         </div>
-                    </motion.div>
+                        {/* Animated SVG arrows pointing to Section 2 */}
+                        <div className="flex justify-center gap-8 mt-2">
+                            <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M40 10 Q40 40 20 50" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="4" fill="none">
+                                    <animate attributeName="stroke-dasharray" values="0,100;40,60;0,100" dur="1.5s" repeatCount="indefinite" />
+                                </path>
+                                <polygon points="15,50 25,55 20,45" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
+                            </svg>
+                            <svg width="80" height="60" viewBox="0 0 80 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M40 10 Q40 40 60 50" stroke={activeHero === 0 ? '#22d3ee' : '#facc15'} strokeWidth="4" fill="none">
+                                    <animate attributeName="stroke-dasharray" values="0,100;40,60;0,100" dur="1.5s" repeatCount="indefinite" />
+                                </path>
+                                <polygon points="65,50 55,55 60,45" fill={activeHero === 0 ? '#22d3ee' : '#facc15'} />
+                            </svg>
+                        </div>
+                        {/* Left/right arrows for toggle */}
+                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
+                            <button
+                                aria-label="Previous hero panel"
+                                onClick={() => setActiveHero((activeHero + heroPanels.length - 1) % heroPanels.length)}
+                                className="bg-slate-800 text-white rounded-full p-2 shadow hover:bg-slate-700 transition-all"
+                            >
+                                <ChevronDown style={{ transform: 'rotate(90deg)' }} className="w-6 h-6" />
+                            </button>
+                        </div>
+                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
+                            <button
+                                aria-label="Next hero panel"
+                                onClick={() => setActiveHero((activeHero + 1) % heroPanels.length)}
+                                className="bg-slate-800 text-white rounded-full p-2 shadow hover:bg-slate-700 transition-all"
+                            >
+                                <ChevronDown style={{ transform: 'rotate(-90deg)' }} className="w-6 h-6" />
+                            </button>
+                        </div>
+                    </div>
                 </section>
             </div>
         </>
