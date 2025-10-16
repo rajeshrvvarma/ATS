@@ -32,7 +32,7 @@ export default function ShippingPage({ onNavigate }) {
         {
             zone: "Tier 1 Cities",
             areas: "State capitals and major cities",
-            timeframe: "3-5 business days", 
+            timeframe: "3-5 business days",
             cost: "₹300"
         },
         {
@@ -50,10 +50,10 @@ export default function ShippingPage({ onNavigate }) {
     ];
 
     return (
-        <div className="bg-gradient-pink bg-fixed text-white min-h-screen">
+        <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
-                <button 
-                    onClick={() => onNavigate('home')} 
+                <button
+                    onClick={() => onNavigate('home')}
                     className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
@@ -73,8 +73,8 @@ export default function ShippingPage({ onNavigate }) {
                             <div>
                                 <h3 className="text-blue-300 font-semibold mb-2">Digital-First Education</h3>
                                 <p className="text-blue-100 text-sm">
-                                    Our courses are primarily delivered digitally. All essential materials, certificates, and course access 
-                                    are provided online for immediate access. Physical shipping applies only to optional hardware kits 
+                                    Our courses are primarily delivered digitally. All essential materials, certificates, and course access
+                                    are provided online for immediate access. Physical shipping applies only to optional hardware kits
                                     and premium add-ons.
                                 </p>
                             </div>
@@ -96,7 +96,7 @@ export default function ShippingPage({ onNavigate }) {
                                             <p className="text-slate-400 text-sm">{method.description}</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="grid grid-cols-2 gap-4 mb-6">
                                         <div className="text-center p-3 bg-slate-900 rounded-lg">
                                             <Clock size={20} className="text-sky-400 mx-auto mb-1" />
@@ -109,7 +109,7 @@ export default function ShippingPage({ onNavigate }) {
                                             <div className="font-semibold text-white">{method.cost}</div>
                                         </div>
                                     </div>
-                                    
+
                                     <h4 className="font-semibold text-white mb-3">What's Included:</h4>
                                     <ul className="space-y-2">
                                         {method.items.map((item, itemIndex) => (
@@ -130,7 +130,7 @@ export default function ShippingPage({ onNavigate }) {
                             <MapPin size={24} className="mr-3 text-sky-400" />
                             Physical Delivery Zones (India)
                         </h2>
-                        
+
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {deliveryZones.map((zone, index) => (
                                 <div key={index} className="bg-slate-900 p-6 rounded-lg border border-slate-600">
@@ -149,11 +149,11 @@ export default function ShippingPage({ onNavigate }) {
                                 </div>
                             ))}
                         </div>
-                        
+
                         <div className="mt-6 p-4 bg-yellow-900/20 border border-yellow-700 rounded-lg">
                             <p className="text-yellow-100 text-sm">
-                                <strong>Note:</strong> Delivery times are estimates and may vary during festivals, 
-                                natural disasters, or other unforeseen circumstances. Tracking information will be 
+                                <strong>Note:</strong> Delivery times are estimates and may vary during festivals,
+                                natural disasters, or other unforeseen circumstances. Tracking information will be
                                 provided for all physical shipments.
                             </p>
                         </div>
@@ -162,7 +162,7 @@ export default function ShippingPage({ onNavigate }) {
                     {/* Digital Delivery Process */}
                     <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                         <h2 className="text-2xl font-bold text-white mb-8">Digital Delivery Process</h2>
-                        
+
                         <div className="grid md:grid-cols-3 gap-6">
                             <div className="text-center">
                                 <div className="bg-sky-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
@@ -173,7 +173,7 @@ export default function ShippingPage({ onNavigate }) {
                                     Once payment is confirmed, you'll receive an immediate email confirmation with next steps.
                                 </p>
                             </div>
-                            
+
                             <div className="text-center">
                                 <div className="bg-sky-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                     <span className="text-2xl font-bold text-white">2</span>
@@ -183,7 +183,7 @@ export default function ShippingPage({ onNavigate }) {
                                     Your learning account is activated within 24 hours with full course access and materials.
                                 </p>
                             </div>
-                            
+
                             <div className="text-center">
                                 <div className="bg-sky-600 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
                                     <span className="text-2xl font-bold text-white">3</span>
@@ -200,7 +200,7 @@ export default function ShippingPage({ onNavigate }) {
                     <div className="grid lg:grid-cols-2 gap-8">
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6">Shipping Terms & Conditions</h2>
-                            
+
                             <ul className="space-y-3 text-sm text-slate-300">
                                 <li className="flex items-start">
                                     <CheckCircle size={16} className="text-green-400 mr-3 mt-1 flex-shrink-0" />
@@ -231,7 +231,7 @@ export default function ShippingPage({ onNavigate }) {
 
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6">International Students</h2>
-                            
+
                             <div className="space-y-4">
                                 <div className="p-4 bg-blue-900/30 rounded-lg border border-blue-700">
                                     <h4 className="font-semibold text-blue-300 mb-2">Digital Access</h4>
@@ -239,14 +239,14 @@ export default function ShippingPage({ onNavigate }) {
                                         Full course access available worldwide. All materials delivered digitally.
                                     </p>
                                 </div>
-                                
+
                                 <div className="p-4 bg-orange-900/30 rounded-lg border border-orange-700">
                                     <h4 className="font-semibold text-orange-300 mb-2">Physical Materials</h4>
                                     <p className="text-orange-100 text-sm">
                                         Currently not available for international shipping. Digital alternatives provided.
                                     </p>
                                 </div>
-                                
+
                                 <div className="p-4 bg-green-900/30 rounded-lg border border-green-700">
                                     <h4 className="font-semibold text-green-300 mb-2">Certificates</h4>
                                     <p className="text-green-100 text-sm">
@@ -263,14 +263,14 @@ export default function ShippingPage({ onNavigate }) {
                         <p className="text-purple-100 mb-6">
                             Questions about delivery? Our support team is here to help track your order and resolve any issues.
                         </p>
-                        
+
                         <div className="grid md:grid-cols-2 gap-4">
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <h4 className="font-semibold mb-2">Order Tracking</h4>
                                 <p className="text-sm text-purple-200">shipping@agnidhra.com</p>
                                 <p className="text-xs text-purple-300">Track your physical orders</p>
                             </div>
-                            
+
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <h4 className="font-semibold mb-2">Delivery Issues</h4>
                                 <p className="text-sm text-purple-200">+91-9876543210</p>

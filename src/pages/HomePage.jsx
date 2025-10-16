@@ -42,8 +42,8 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                         </h1>
 
                         <p className="text-lg md:text-xl text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed">
-                            Choose from <strong className="text-blue-400">{modules.length}+ Expert Modules</strong> across 
-                            <strong className="text-purple-400"> Technology</strong>, <strong className="text-red-400">Cybersecurity</strong>, 
+                            Choose from <strong className="text-blue-400">{modules.length}+ Expert Modules</strong> across
+                            <strong className="text-purple-400"> Technology</strong>, <strong className="text-red-400">Cybersecurity</strong>,
                             and <strong className="text-green-400">Programming</strong>. Build your custom learning path.
                         </p>
 
@@ -202,7 +202,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
     ];
 
     return (
-        <div className="py-20 bg-gradient-green bg-fixed" id="courses-tabbed-section">
+        <div className="py-20 bg-slate-900" id="courses-tabbed-section">
             <section className="container mx-auto px-6">
                 {/* Tab Switcher */}
                 <div className="flex justify-center mb-10">
@@ -313,8 +313,8 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                                             </div>
                                             <div className="flex flex-col gap-3">
                                                 <button
-                                                    onClick={() => setCourseDetailsModal({ 
-                                                        isOpen: true, 
+                                                    onClick={() => setCourseDetailsModal({
+                                                        isOpen: true,
                                                         course: {
                                                             ...module,
                                                             highlights: [
@@ -332,9 +332,9 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
                                                     <ArrowRight className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() => setEnrollmentModal({ 
-                                                        isOpen: true, 
-                                                        courseType: 'module', 
+                                                    onClick={() => setEnrollmentModal({
+                                                        isOpen: true,
+                                                        courseType: 'module',
                                                         courseName: module.title,
                                                         coursePrice: module.price,
                                                         courseDuration: module.duration
@@ -542,7 +542,7 @@ const SuccessMetrics = () => (
 // Testimonials Section
 const Testimonials = () => {
     const [index, setIndex] = useState(0);
-    
+
     const items = [
         {
             quote: "The cybersecurity training was exceptional. Within 3 months, I landed a job as a SOC Analyst at a leading fintech company.",
@@ -585,7 +585,7 @@ const Testimonials = () => {
                         Over 1000+ students have transformed their careers with us
                     </p>
                 </div>
-                
+
                 <div className="max-w-4xl mx-auto">
                     <motion.div
                         key={index}
@@ -606,9 +606,9 @@ const Testimonials = () => {
                         </div>
                         <div className="absolute right-4 top-4 flex gap-2">
                             {items.map((_, i) => (
-                                <button 
-                                    key={i} 
-                                    onClick={() => setIndex(i)} 
+                                <button
+                                    key={i}
+                                    onClick={() => setIndex(i)}
                                     className={`w-3 h-3 rounded-full transition-all duration-300 ${i === index ? 'bg-blue-500' : 'bg-slate-600'}`}
                                 ></button>
                             ))}
@@ -635,7 +635,7 @@ const Contact = ({ onNavigate }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+
         try {
             await sendContactForm(formData);
             setSubmitted(true);
@@ -686,7 +686,7 @@ const Contact = ({ onNavigate }) => {
                                 <span>+91 9876543210</span>
                             </div>
                         </div>
-                        
+
                         <div className="content-card">
                             <h4 className="text-lg font-semibold text-green-400 mb-4">Why Choose Our Training?</h4>
                             <ul className="space-y-3 text-slate-300">
@@ -896,7 +896,7 @@ const HomePage = ({ onNavigate }) => {
             </div>
             <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
             <ScrollNavigation />
-            
+
             {/* Course Details Modal */}
             <AnimatePresence>
                 {courseDetailsModal.isOpen && courseDetailsModal.course && (
@@ -992,9 +992,9 @@ const HomePage = ({ onNavigate }) => {
                                     <button
                                         onClick={() => {
                                             setCourseDetailsModal({ isOpen: false, course: null });
-                                            setEnrollmentModal({ 
-                                                isOpen: true, 
-                                                courseType: 'module', 
+                                            setEnrollmentModal({
+                                                isOpen: true,
+                                                courseType: 'module',
                                                 courseName: courseDetailsModal.course.title,
                                                 coursePrice: courseDetailsModal.course.price,
                                                 courseDuration: courseDetailsModal.course.duration

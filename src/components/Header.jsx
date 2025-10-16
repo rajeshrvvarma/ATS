@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star, Users, BrainCircuit } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+// Removed framer-motion to eliminate header animations
 import NotificationBell from '@/components/NotificationBell.jsx';
 import UserMenu from '@/components/UserMenu.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
@@ -14,15 +14,15 @@ export default function Header({ onNavigate, currentPage }) {
   const gradientClass = headerBackground;
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
-    
+
     // Get authentication state for notification bell
     const { user, logout } = useAuth();
-    
+
     // Load centralized pricing
     const coursePricingData = useCoursePricing();
     const coursePricing = coursePricingData?.pricing || {};
     const pricingLoading = coursePricingData?.loading || false;
-    
+
     // Production debugging
     React.useEffect(() => {
         console.log('🔧 Header mounted in production:', { currentPage, timestamp: new Date().toISOString() });
@@ -35,8 +35,8 @@ export default function Header({ onNavigate, currentPage }) {
         { name: "Upcoming Batches", action: () => onNavigate('upcoming-batches') },
         { name: "All Modules Catalog", action: () => onNavigate('moduleCatalog') },
         { name: "About Us", action: () => scrollToSection('about') },
-        ...(user && user.enrolledCourses && user.enrolledCourses.length > 0 
-            ? [{ name: "My Learning", action: () => onNavigate('dashboard') }] 
+        ...(user && user.enrolledCourses && user.enrolledCourses.length > 0
+            ? [{ name: "My Learning", action: () => onNavigate('dashboard') }]
             : []
         ),
         { name: "Contact Us", action: () => onNavigate('contact') },
@@ -95,10 +95,10 @@ export default function Header({ onNavigate, currentPage }) {
     const scrollToSection = (id) => {
         try {
             setActiveLink(id);
-            
+
             // Handle different navigation scenarios
             const targetId = id.toLowerCase().replace(/\s+/g, '-');
-            
+
             // If we are not on the home page, navigate there first, then scroll
             if (currentPage !== 'home') {
                 // Pass the section to scroll to via URL hash so Home can handle it after navigation
@@ -148,10 +148,10 @@ export default function Header({ onNavigate, currentPage }) {
     };
 
     return (
-        <header 
-            className={`shadow-lg sticky top-0 w-full ${gradientClass} bg-fixed`} 
+        <header
+            className={`shadow-lg sticky top-0 w-full ${gradientClass} bg-fixed`}
             style={{
-                zIndex: 50, 
+                zIndex: 50,
                 display: 'block',
                 minHeight: '80px'
             }}
@@ -162,15 +162,15 @@ export default function Header({ onNavigate, currentPage }) {
                      style={{display: 'flex', alignItems: 'center'}}>
                     {/* Left - Logo & Company Name */}
                     <div className="flex items-center space-x-3 flex-shrink-0 mr-8">
-                        <button 
-                            onClick={() => onNavigate('home')} 
+                        <button
+                            onClick={() => onNavigate('home')}
                             className="flex items-center space-x-3 group"
                         >
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center hover:scale-105 transition-all duration-300 shadow-lg">
-                                <img 
-                                    src="/logo.png" 
-                                    alt="AT Logo" 
-                                    className="w-10 h-10 rounded-full group-hover:scale-110 transition-transform duration-200" 
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+                                <img
+                                    src="/logo.png"
+                                    alt="AT Logo"
+                                    className="w-10 h-10 rounded-full"
                                 />
                             </div>
                             <div className="flex items-center space-x-2 lg:space-x-4">
@@ -187,8 +187,8 @@ export default function Header({ onNavigate, currentPage }) {
                     {/* Center - Main Navigation */}
                     <nav className="flex-1 flex justify-center">
                         <div className="flex items-center space-x-4 lg:space-x-6">
-                            <MegaMenuPrograms 
-                                onNavigate={onNavigate} 
+                            <MegaMenuPrograms
+                                onNavigate={onNavigate}
                                 scrollToSection={scrollToSection}
                                 coursePricing={coursePricing}
                                 pricingLoading={pricingLoading}
@@ -208,11 +208,11 @@ export default function Header({ onNavigate, currentPage }) {
                     <div className="flex items-center space-x-4 flex-shrink-0 ml-8">
                         {/* Enroll Now button removed as enrollment is now per-course */}
                         {user ? (
-                            <UserMenu 
-                                user={user} 
-                                onProfile={() => onNavigate('profile')} 
+                            <UserMenu
+                                user={user}
+                                onProfile={() => onNavigate('profile')}
                                 onDashboard={() => onNavigate('dashboard')}
-                                onLogout={logout} 
+                                onLogout={logout}
                             />
                         ) : (
                             <>
@@ -232,19 +232,19 @@ export default function Header({ onNavigate, currentPage }) {
                         )}
                     </div>
                 </div>
-                
+
                 {/* Mobile Menu Button */}
                 <div className="hidden" style={{display: 'none'}}>
-                    <button 
-                        onClick={() => onNavigate('home')} 
+                    <button
+                        onClick={() => onNavigate('home')}
                         className="flex items-center space-x-3"
                     >
                         <img src="/logo.png" alt="AT Logo" className="w-10 h-10 rounded-full" />
                         <span className="text-lg font-bold text-white">Agnidhra Technologies</span>
                     </button>
-                    
-                    <button 
-                        onClick={() => setIsOpen(!isOpen)} 
+
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
                         className="text-slate-300 focus:outline-none"
                     >
                         {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -272,33 +272,25 @@ export default function Header({ onNavigate, currentPage }) {
                                             expandedMobileCategory === key ? 'rotate-180' : ''
                                         }`} />
                                     </button>
-                                    
-                                    <AnimatePresence>
-                                        {expandedMobileCategory === key && (
-                                            <motion.div
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: 'auto' }}
-                                                exit={{ opacity: 0, height: 0 }}
-                                                transition={{ duration: 0.2 }}
-                                                className="overflow-hidden"
-                                            >
-                                                <div className="pl-4 space-y-1">
-                                                    {category.courses.map((course, courseIndex) => (
-                                                        <button
-                                                            key={courseIndex}
-                                                            onClick={() => { course.action(); setIsOpen(false); setExpandedMobileCategory(null); }}
-                                                            className="block w-full text-left px-3 py-2 text-sm text-slate-400 hover:text-blue-400 hover:bg-slate-800/30 rounded-md"
-                                                        >
-                                                            {course.name}
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
+
+                                    {expandedMobileCategory === key && (
+                                        <div className="overflow-hidden">
+                                            <div className="pl-4 space-y-1">
+                                                {category.courses.map((course, courseIndex) => (
+                                                    <button
+                                                        key={courseIndex}
+                                                        onClick={() => { course.action(); setIsOpen(false); setExpandedMobileCategory(null); }}
+                                                        className="block w-full text-left px-3 py-2 text-sm text-slate-400 hover:text-blue-400 hover:bg-slate-800/30 rounded-md"
+                                                    >
+                                                        {course.name}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
-                            
+
                             <button
                                 onClick={() => { scrollToSection('programs'); setIsOpen(false); }}
                                 className="w-full text-center px-3 py-2 text-blue-400 hover:text-blue-300 text-sm font-medium"
@@ -313,15 +305,15 @@ export default function Header({ onNavigate, currentPage }) {
                         {/* Other Navigation Items */}
                         {mobileNavItems.map((item, index) => (
                             <li key={index}>
-                                <button 
-                                    onClick={() => { item.action(); setIsOpen(false); }} 
+                                <button
+                                    onClick={() => { item.action(); setIsOpen(false); }}
                                     className="block w-full text-left px-3 py-3 rounded-md text-base font-medium text-slate-300 hover:text-blue-500 hover:bg-slate-800/50"
                                 >
                                     {item.name}
                                 </button>
                             </li>
                         ))}
-                        
+
                         {/* CTA Button */}
                         <li className="pt-2 border-t border-slate-700">
                             {/* Enroll Now button removed from mobile menu */}
@@ -515,7 +507,7 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
     };
 
     return (
-        <div 
+        <div
             className="relative"
             onMouseEnter={() => setIsProgramsOpen(true)}
             onMouseLeave={() => setIsProgramsOpen(false)}
@@ -524,7 +516,7 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
                 Programs
                 <ChevronDown className="ml-1 h-4 w-4" />
             </button>
-            
+
             <AnimatePresence>
                 {isProgramsOpen && (
                     <motion.div
@@ -544,14 +536,14 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
                                         const isActive = activeCategory === key;
                                         const colorClasses = getColorClasses(category.color);
                                         const hoverClasses = getHoverClasses(category.color);
-                                        
+
                                         return (
                                             <button
                                                 key={key}
                                                 onMouseEnter={() => setActiveCategory(key)}
                                                 className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${
-                                                    isActive 
-                                                        ? `bg-slate-700 ${category.color === 'blue' ? 'text-blue-400' : category.color === 'red' ? 'text-red-400' : category.color === 'green' ? 'text-green-400' : category.color === 'purple' ? 'text-purple-400' : category.color === 'indigo' ? 'text-indigo-400' : 'text-orange-400'}` 
+                                                    isActive
+                                                        ? `bg-slate-700 ${category.color === 'blue' ? 'text-blue-400' : category.color === 'red' ? 'text-red-400' : category.color === 'green' ? 'text-green-400' : category.color === 'purple' ? 'text-purple-400' : category.color === 'indigo' ? 'text-indigo-400' : 'text-orange-400'}`
                                                         : `text-slate-300 ${hoverClasses}`
                                                 }`}
                                             >

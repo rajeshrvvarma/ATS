@@ -215,10 +215,10 @@ export default function EnrollUsPage({ onNavigate }) {
     };
 
     return (
-        <div className="bg-gradient-green bg-fixed text-white min-h-screen">
+        <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
-                <button 
-                    onClick={() => onNavigate('home')} 
+                <button
+                    onClick={() => onNavigate('home')}
                     className="flex items-center text-blue-400 hover:text-blue-300 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
@@ -235,7 +235,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                 {selectedBatch.batchName} - Limited Time Enrollment
                             </p>
                         </div>
-                        
+
                         {/* Batch Information Card */}
                         <div className={`max-w-4xl mx-auto mb-8 p-6 rounded-xl border ${getUrgencyColor(selectedBatch.urgency)} backdrop-blur-sm`}>
                             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
@@ -263,7 +263,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                     <p className="text-xs text-slate-400 line-through">{selectedBatch.originalPrice}</p>
                                 </div>
                             </div>
-                            
+
                             {selectedBatch.urgency === 'high' && (
                                 <div className="mt-4 p-3 bg-red-900/30 border border-red-500 rounded-lg flex items-center justify-center">
                                     <Zap className="w-5 h-5 text-red-400 mr-2 animate-pulse" />
@@ -272,7 +272,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                     </span>
                                 </div>
                             )}
-                            
+
                             <div className="mt-4 text-center">
                                 <p className="text-sm text-slate-300">
                                     📚 <strong>{selectedBatch.features.length} Key Benefits:</strong> {selectedBatch.features.join(' • ')}
@@ -374,7 +374,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-blue-500 focus:border-blue-500 disabled:opacity-50"
                                         >
                                             <option value="">Select a course</option>
-                                            
+
                                             {/* Group courses by category */}
                                             <optgroup label="🔥 7-Day Bootcamps (Popular)">
                                                 {courses.filter(course => course.category === '7-Day Bootcamps').map(course => (
@@ -383,7 +383,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                                     </option>
                                                 ))}
                                             </optgroup>
-                                            
+
                                             <optgroup label="🏆 2-Month Premium Programs">
                                                 {courses.filter(course => course.category === '2-Month Premium Programs').map(course => (
                                                     <option key={course.id} value={course.id}>
@@ -391,7 +391,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                                     </option>
                                                 ))}
                                             </optgroup>
-                                            
+
                                             <optgroup label="🎯 Specialized Courses">
                                                 {courses.filter(course => course.category === 'Specialized Courses').map(course => (
                                                     <option key={course.id} value={course.id}>
@@ -399,7 +399,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                                     </option>
                                                 ))}
                                             </optgroup>
-                                            
+
                                             <optgroup label="🚀 Foundation Programs">
                                                 {courses.filter(course => course.category === 'Foundation Programs').map(course => (
                                                     <option key={course.id} value={course.id}>
@@ -407,7 +407,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                                     </option>
                                                 ))}
                                             </optgroup>
-                                            
+
                                             <optgroup label="🎨 Custom Programs">
                                                 {courses.filter(course => course.category === 'Custom Programs').map(course => (
                                                     <option key={course.id} value={course.id}>
@@ -416,14 +416,14 @@ export default function EnrollUsPage({ onNavigate }) {
                                                 ))}
                                             </optgroup>
                                         </select>
-                                        
+
                                         {selectedBatch && (
                                             <p className="text-sm text-blue-300 mt-1">
                                                 ✅ Pre-selected from banner: {selectedBatch.courseName}
                                             </p>
                                         )}
                                     </div>
-                                    
+
                                     {/* Batch Selection (when course is selected and multiple batches available) */}
                                     {availableBatches.length > 0 && formData.course && !selectedBatch && (
                                         <div>
@@ -449,7 +449,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             </select>
                                         </div>
                                     )}
-                                    
+
                                     {selectedBatch && (
                                         <div>
                                             <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -581,17 +581,17 @@ export default function EnrollUsPage({ onNavigate }) {
                                     >
                                         {(() => {
                                             if (paymentLoading) return 'Processing…';
-                                            
+
                                             const selectedCourse = courses.find(course => course.id === formData.course);
                                             if (!selectedCourse) return 'Select a course first';
                                             if (selectedCourse.razorpayPrice === 0) return 'Free Course - Submit Form';
                                             if (selectedCourse.razorpayPrice === null) return 'Contact for Custom Pricing';
-                                            
+
                                             const batchInfo = selectedBatch || (formData.batchId ? getBatchById(formData.batchId) : null);
                                             if (batchInfo) {
                                                 return `Secure Seat in ${batchInfo.batchName} - ${batchInfo.price}`;
                                             }
-                                            
+
                                             return `Pay via UPI (${selectedCourse.price})`;
                                         })()}
                                     </button>
@@ -614,7 +614,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                     <Target size={24} className="mr-3 text-sky-400" />
                                     What Happens Next?
                                 </h3>
-                                
+
                                 <div className="space-y-4">
                                     <div className="flex items-start">
                                         <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">1</div>
@@ -623,7 +623,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             <p className="text-slate-300 text-sm">Our admissions counselor will call you within 24 hours to understand your goals and recommend the best program.</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="flex items-start">
                                         <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">2</div>
                                         <div>
@@ -631,7 +631,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             <p className="text-slate-300 text-sm">We'll create a personalized curriculum based on your experience level and career objectives.</p>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="flex items-start">
                                         <div className="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1 flex-shrink-0">3</div>
                                         <div>
@@ -645,7 +645,7 @@ export default function EnrollUsPage({ onNavigate }) {
                             {/* Enrollment Benefits */}
                             <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                                 <h3 className="text-2xl font-bold text-white mb-6">Why Enroll Through This Form?</h3>
-                                
+
                                 <ul className="space-y-3">
                                     {benefits.map((benefit, index) => (
                                         <li key={index} className="flex items-start">
@@ -662,7 +662,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                 <p className="text-sky-100 mb-4">
                                     Speak directly with our admissions team for personalized guidance.
                                 </p>
-                                
+
                                 <div className="space-y-3">
                                     <div className="bg-white/10 p-3 rounded-lg">
                                         <div className="font-semibold">Admissions Hotline</div>

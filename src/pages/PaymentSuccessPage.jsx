@@ -87,7 +87,7 @@ ${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paym
     }
 
     return (
-        <div className="bg-gradient-green bg-fixed text-white min-h-screen">
+        <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="flex justify-center mb-8">
@@ -97,17 +97,17 @@ ${siteConfig.brandName} - PAYMENT RECEIPT\n===============\n\nPayment ID: ${paym
                     </div>
 
                     <h1 className="text-4xl md:text-6xl font-bold text-green-400 text-center mb-4">Payment Successful!</h1>
-                    
+
                     <div className="bg-slate-800 rounded-lg p-8 border border-slate-700 mb-8">
                         <h3 className="text-2xl font-bold text-white mb-6">Enrollment Confirmed</h3>
-                        
+
                         <div className="grid md:grid-cols-2 gap-6 text-left">
                             <div>
                                 <h4 className="font-semibold text-slate-300 mb-2">Course Details</h4>
                                 <p className="text-white font-medium">{paymentDetails.planName}</p>
                                 <p className="text-slate-400">Student: {paymentDetails.customerName}</p>
                             </div>
-                            
+
                             <div>
                                 <h4 className="font-semibold text-slate-300 mb-2">Payment Information</h4>
                                 <p className="text-white">Payment ID: <span className="font-mono text-sm">{paymentDetails.paymentId}</span></p>

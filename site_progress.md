@@ -31,7 +31,7 @@
 ### Updated Color Palette
 **New Professional Gradients:**
 - `bg-gradient-blue`: Deep blue to medium blue
-- `bg-gradient-sky`: Deep sky to bright sky  
+- `bg-gradient-sky`: Deep sky to bright sky
 - `bg-gradient-cyan`: Deep cyan to bright cyan
 - `bg-gradient-teal`: Deep teal to bright teal
 - `bg-gradient-purple`: Deep purple to medium purple
@@ -90,3 +90,45 @@
 
 ### References
 - See `CLEAN_DESIGN_COMPLETE.md` for full details and verification commands
+
+---
+
+## October 17, 2025 — Header/Footer Animation Removal & Final Cleanup (Completed)
+
+### ✅ Completed Tasks
+- **Header animations removed**: Eliminated framer-motion from Header component
+  - Removed logo hover scaling and animated transitions
+  - Replaced AnimatePresence mobile menu expand/collapse with static display
+  - Kept gradient accent on logo badge (static, allowed for visual interest)
+- **Footer animations removed**: Eliminated all animated overlays
+  - Removed floating particles (10 animated divs)
+  - Removed floating geometric shapes (3 large blurred circles)
+  - Replaced animated background with clean static `bg-slate-900`
+- **Component cleanup**: Deleted deprecated animation files
+  - Removed `src/components/AnimatedBackground.jsx` (224 lines)
+  - Removed `src/components/BackgroundDecor.jsx` (stub file)
+  - Kept `src/pages/HomePage_backup.jsx` for reference (as requested)
+  - Deleted `StudentDashboard_backup.jsx` and `ModuleCatalog.jsx.bak`
+- **Page background cleanup**: Replaced remaining custom gradient wrappers
+  - `ShippingPage.jsx`: bg-gradient-pink → bg-slate-900
+  - `PaymentSuccessPage.jsx`: bg-gradient-green → bg-slate-900
+  - `EnrollUsPage.jsx`: bg-gradient-green → bg-slate-900
+  - `HomePage.jsx` courses section: bg-gradient-green → bg-slate-900
+
+### Impact
+- **Zero animation overhead**: Complete removal of framer-motion animations from header/footer
+- **Cleaner codebase**: Removed 300+ lines of animation-related code
+- **Static UI**: 100% predictable, accessible interface with no motion distractions
+- **Better performance**: Eliminated JavaScript animation loops and GPU compositing
+- **Successful build**: Vite build passed with no errors after cleanup
+
+### Verification
+- Build test: ✅ PASS (npm run build successful)
+- Component search: AnimatedBackground and BackgroundDecor references eliminated
+- Visual check: Header and footer render correctly with static backgrounds
+- Backup files: Only HomePage_backup.jsx retained as requested
+
+### Next Steps
+- Deploy to production to realize performance gains
+- Monitor user feedback on static interface
+- Consider adding subtle CSS transitions if needed for specific interactions
