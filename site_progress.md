@@ -132,3 +132,52 @@
 - Deploy to production to realize performance gains
 - Monitor user feedback on static interface
 - Consider adding subtle CSS transitions if needed for specific interactions
+
+---
+
+## October 17, 2025 — Module Management System Implementation (Completed)
+
+### What Was Implemented
+Added a comprehensive **module management system** to control visibility and lifecycle of the 102 learning modules in the catalog without deleting data.
+
+### Technical Implementation
+- **Status Field**: Added optional `status` property to module schema in `modules.json`
+  - Values: `"active"` (visible), `"hidden"` (temporarily removed), `"archived"` (permanently retired)
+  - Backward compatible: Modules without status field default to `"active"`
+
+- **Filtering Logic**: Implemented client-side filtering across all module-consuming components
+  - `ModuleCatalog.jsx`: Filters to show only active modules in catalog grid
+  - `HomePage.jsx`: Filters featured modules on landing page
+  - `ModuleDetailPage.jsx`: Blocks direct access to hidden/archived modules (shows 404)
+  - Filter logic: `m => !m.status || m.status === 'active'`
+
+- **Management Tools**: Created PowerShell scripts for bulk operations
+  - `scripts/update-module-status.ps1`: Bulk update module status by ID
+  - `scripts/list-modules.ps1`: Report modules grouped by status with colored output
+
+### Files Modified
+- `src/pages/ModuleCatalog.jsx` (lines 73-97): Added status filtering during module fetch
+- `src/pages/HomePage.jsx` (lines 837-850): Added active module filter
+- `src/pages/ModuleDetailPage.jsx` (lines 19-32): Added status check to block hidden modules
+
+### Files Created
+- `MODULE_MANAGEMENT_GUIDE.md`: 300+ line comprehensive documentation
+- `scripts/update-module-status.ps1`: Bulk status update tool
+- `scripts/list-modules.ps1`: Module reporting tool with summary statistics
+
+### Impact
+- **Flexibility**: Can temporarily hide modules without deleting data
+- **Control**: Three-tier status system for different use cases
+- **Tools**: Command-line scripts for non-technical bulk operations
+- **Compatibility**: Existing 102 modules continue working without modification
+
+### Verification
+- Build test: ✅ PASS (npm run build successful)
+- Module filtering: Active modules display correctly in catalog
+- Detail page blocking: Hidden/archived modules show "Module Not Found"
+- Script validation: PowerShell tools tested with sample module IDs
+
+### Next Steps
+- Use scripts to hide deprecated modules as needed
+- Mark old/outdated modules as "archived" for record-keeping
+- Consider adding admin UI for module management in future phase

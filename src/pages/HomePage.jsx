@@ -842,7 +842,9 @@ const HomePage = ({ onNavigate }) => {
                     throw new Error(`Failed to fetch modules: ${response.status} ${response.statusText}`);
                 }
                 const data = await response.json();
-                setModules(data);
+                // Filter to show only active modules (hide hidden/archived)
+                const activeModules = data.filter(m => !m.status || m.status === 'active');
+                setModules(activeModules);
                 setLoading(false);
             } catch (err) {
                 setError(`Failed to load modules: ${err.message}`);

@@ -18,12 +18,16 @@ const ModuleDetailPage = ({ onNavigate }) => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const moduleId = params.get('id') || location.state?.moduleId;
-    
+
     if (moduleId) {
       // Find module from static data
       const foundModule = staticModules.find(m => m.id === moduleId);
-      if (foundModule) {
+      // Check if module is active (not hidden or archived)
+      if (foundModule && (!foundModule.status || foundModule.status === 'active')) {
         setModule(foundModule);
+      } else if (foundModule && (foundModule.status === 'hidden' || foundModule.status === 'archived')) {
+        // Module exists but is not accessible
+        setModule(null);
       }
     }
     setLoading(false);

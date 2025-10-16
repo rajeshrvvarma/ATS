@@ -904,9 +904,17 @@ VITE_OPENAI_API_KEY=your_openai_key
 - Cleaned up backup files (kept HomePage_backup for reference)
 - Final result: 100% static UI with zero animation overhead
 
+### Module Management System (Completed Oct 17)
+- Implemented module status field: `active`, `hidden`, `archived`
+- Updated ModuleCatalog, HomePage, ModuleDetailPage to filter by status
+- Created PowerShell scripts for bulk module status updates
+- Hidden modules are invisible in catalog and blocked from direct access
+- Backward compatible: modules without status default to active
+- Documentation: `MODULE_MANAGEMENT_GUIDE.md`
+
 ### Modules UX Upgrade
 - Introduced dedicated `ModuleDetailPage.jsx` with full curriculum, highlights, and CTAs
 - Redesigned `ModuleCatalog.jsx` to professional card layout; direct navigation to detail pages
 - Updated routing in `src/App.jsx` for `moduleDetail` with query param support
 
-References: see `ANIMATION_REMOVAL_COMPLETE.md`, `CLEAN_DESIGN_COMPLETE.md`, and `MODULE_ENHANCEMENT_COMPLETE.md` for full details.
+References: see `ANIMATION_REMOVAL_COMPLETE.md`, `CLEAN_DESIGN_COMPLETE.md`, `MODULE_ENHANCEMENT_COMPLETE.md`, and `MODULE_MANAGEMENT_GUIDE.md` for full details.

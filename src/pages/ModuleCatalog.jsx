@@ -79,11 +79,17 @@ const ModuleCatalog = ({ onNavigate }) => {
         if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
         const data = await res.json();
         if (!cancelled) {
-          setModules(Array.isArray(data) ? data : staticModules);
+          // Filter out hidden and archived modules
+          const activeModules = Array.isArray(data)
+            ? data.filter(m => !m.status || m.status === 'active')
+            : staticModules.filter(m => !m.status || m.status === 'active');
+          setModules(activeModules);
         }
       } catch (e) {
         if (!cancelled) {
-          setModules(staticModules);
+          // Filter static modules too
+          const activeStaticModules = staticModules.filter(m => !m.status || m.status === 'active');
+          setModules(activeStaticModules);
           setError('Using fallback module data');
         }
       } finally {
@@ -94,7 +100,7 @@ const ModuleCatalog = ({ onNavigate }) => {
     return () => { cancelled = true; };
   }, []);
 
-  // Get unique categories
+  // Get unique categories (from active modules only)
   const categories = ['All', ...new Set(modules.map(mod => mod.category))];
 
   // Filter modules based on search and category
@@ -109,7 +115,7 @@ const ModuleCatalog = ({ onNavigate }) => {
         <h1 className="text-4xl font-bold text-white mb-4 text-center">Complete Technology Module Catalog ({modules.length} Modules)</h1>
         {error && (<div className="text-center text-amber-400 text-sm mb-4">{error}</div>)}
         {loading && (<div className="text-center text-slate-300 py-8">Loading modules...</div>)}
-        
+
         {/* Category Filter Only Section */}
         <div className="mb-8 space-y-4">
           <div className="flex flex-wrap justify-center gap-2">
@@ -145,8 +151,8 @@ const ModuleCatalog = ({ onNavigate }) => {
             const IconComponent = getCategoryIcon(mod.category);
             const colorClass = getCategoryColor(mod.category);
             return (
-              <div 
-                key={mod.id || mod.title + idx} 
+              <div
+                key={mod.id || mod.title + idx}
                 className="bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-700 hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
@@ -185,8 +191,8 @@ const ModuleCatalog = ({ onNavigate }) => {
                 </div>
                 <div className="flex flex-col gap-3">
                   <button
-                    onClick={() => setCourseDetailsModal({ 
-                      isOpen: true, 
+                    onClick={() => setCourseDetailsModal({
+                      isOpen: true,
                       course: {
                         ...mod,
                         highlights: [
@@ -204,9 +210,9 @@ const ModuleCatalog = ({ onNavigate }) => {
                     <ArrowRight className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => setEnrollmentModal({ 
-                      isOpen: true, 
-                      courseType: 'module', 
+                    onClick={() => setEnrollmentModal({
+                      isOpen: true,
+                      courseType: 'module',
                       course: mod
                     })}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-200 flex items-center justify-center gap-2"
@@ -326,10 +332,10 @@ const ModuleCatalog = ({ onNavigate }) => {
                   <button
                     onClick={() => {
                       setCourseDetailsModal({ isOpen: false, course: null });
-                      setEnrollmentModal({ 
-                        isOpen: true, 
-                        courseType: 'module', 
-                        courseName: courseDetailsModal.course.title 
+                      setEnrollmentModal({
+                        isOpen: true,
+                        courseType: 'module',
+                        courseName: courseDetailsModal.course.title
                       });
                     }}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
