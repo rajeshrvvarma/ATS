@@ -79,8 +79,8 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                         </div>
                         {/* Three animated arrows pointing to Section 2 */}
                         <div className="flex flex-col items-center mt-2">
-                            <ArrowDown className={`w-16 h-16 mb-[-1.5rem] ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} />
-                            <div className="flex justify-center gap-32 mt-[-1.5rem]">
+                            <ArrowDown className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} />
+                            <div className="flex justify-center gap-32 mt-6">
                                 <ArrowDownLeft className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} />
                                 <ArrowDownRight className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} />
                             </div>
