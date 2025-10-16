@@ -16,14 +16,17 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-blue': 'linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)',
-        'gradient-green': 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-        'gradient-purple': 'linear-gradient(135deg, #7c3aed 0%, #a21caf 100%)',
-        'gradient-orange': 'linear-gradient(135deg, #f59e42 0%, #f43f5e 100%)',
-        'gradient-pink': 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)',
-        'gradient-violet': 'linear-gradient(135deg, #6366f1 0%, #a21caf 100%)',
-        'gradient-cyan': 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
-        'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #334155 100%)',
+        // Professional color palette - Blues, Teals, Purples, Grays
+        'gradient-blue': 'linear-gradient(135deg, #1e40af 0%, #3b82f6 100%)',           // Deep blue to medium blue
+        'gradient-sky': 'linear-gradient(135deg, #0369a1 0%, #0ea5e9 100%)',            // Deep sky to bright sky
+        'gradient-cyan': 'linear-gradient(135deg, #0e7490 0%, #06b6d4 100%)',           // Deep cyan to bright cyan
+        'gradient-teal': 'linear-gradient(135deg, #0f766e 0%, #14b8a6 100%)',           // Deep teal to bright teal
+        'gradient-purple': 'linear-gradient(135deg, #6d28d9 0%, #8b5cf6 100%)',         // Deep purple to medium purple
+        'gradient-indigo': 'linear-gradient(135deg, #4338ca 0%, #6366f1 100%)',         // Deep indigo to medium indigo
+        'gradient-violet': 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)',         // Deep violet to light violet
+        'gradient-slate': 'linear-gradient(135deg, #1e293b 0%, #475569 100%)',          // Deep slate to medium slate
+        'gradient-dark': 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',           // Very dark to dark slate
+        'gradient-navy': 'linear-gradient(135deg, #172554 0%, #1e40af 100%)',           // Deep navy to blue
       },
       textGradient: theme => theme('backgroundImage'),
     },

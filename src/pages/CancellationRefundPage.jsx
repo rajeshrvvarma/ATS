@@ -2,7 +2,6 @@ import React from 'react';
 import { ArrowLeft, RefreshCw, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import SectionTitle from '../components/SectionTitle';
-import AnimatedBackground from '../components/AnimatedBackground';
 
 export default function CancellationRefundPage({ onNavigate }) {
     const refundTimeline = [
@@ -57,13 +56,13 @@ export default function CancellationRefundPage({ onNavigate }) {
     ];
 
     return (
-        <AnimatedBackground variant="contact" className="min-h-screen text-white">
+        <div className="bg-gradient-slate min-h-screen text-white">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <motion.button 
                     onClick={() => onNavigate('home')} 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8"
+                    className="flex items-center text-white hover:text-slate-200 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home
@@ -250,6 +249,6 @@ export default function CancellationRefundPage({ onNavigate }) {
                     </div>
                 </div>
             </div>
-        </AnimatedBackground>
+        </div>
     );
 }

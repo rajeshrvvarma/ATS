@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target, Sword, Zap, Shield } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
@@ -133,7 +132,7 @@ const OffensiveBootcampLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <AnimatedBackground variant="offensive" className="py-20">
+      <div className="bg-gradient-indigo py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -226,10 +225,10 @@ const OffensiveBootcampLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Key Benefits */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Ethical Hacking?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -255,7 +254,7 @@ const OffensiveBootcampLandingPage = () => {
                 <Zap className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-3 text-white">High Demand Skills</h3>
-              <p className="text-orange-100">Penetration testers are among the highest paid cybersecurity professionals.</p>
+              <p className="text-indigo-100">Penetration testers are among the highest paid cybersecurity professionals.</p>
             </motion.div>
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
@@ -271,10 +270,10 @@ const OffensiveBootcampLandingPage = () => {
             </motion.div>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Curriculum */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">7-Day Intensive Curriculum</h2>
           <div className="space-y-6">
@@ -323,10 +322,10 @@ const OffensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* What's Included */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Everything You Get</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
@@ -344,10 +343,10 @@ const OffensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Tools & Technologies */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Tools You'll Master</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -368,10 +367,10 @@ const OffensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Footer CTA */}
-      <AnimatedBackground variant="offensive" className="py-12">
+      <div className="bg-gradient-indigo py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Start Your Ethical Hacking Journey!</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -384,7 +383,7 @@ const OffensiveBootcampLandingPage = () => {
             Join Now - {pricing.price}
           </button>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Enrollment Modal - centralized pricing */}
       <EnhancedEnrollmentModal

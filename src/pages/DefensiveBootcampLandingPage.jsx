@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
@@ -134,7 +133,7 @@ const DefensiveBootcampLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <AnimatedBackground variant="bootcamp" className="py-20">
+      <div className="bg-gradient-purple py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -142,7 +141,7 @@ const DefensiveBootcampLandingPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gradient-purple">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
                 7-Day Defensive Security Bootcamp
               </h1>
               <p className="text-2xl md:text-3xl text-gray-300 mb-8">
@@ -227,10 +226,10 @@ const DefensiveBootcampLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Key Benefits */}
-      <AnimatedBackground variant="bootcamp" className="py-16">
+      <div className="bg-gradient-purple py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Our Bootcamp?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -272,9 +271,9 @@ const DefensiveBootcampLandingPage = () => {
             </motion.div>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
-      <AnimatedBackground variant="bootcamp" className="py-16">
+      <div className="bg-gradient-purple py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">7-Day Intensive Curriculum</h2>
           <div className="space-y-6">
@@ -323,10 +322,10 @@ const DefensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* What's Included */}
-      <AnimatedBackground variant="bootcamp" className="py-16">
+      <div className="bg-gradient-purple py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Everything You Get</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-4xl mx-auto">
@@ -344,10 +343,10 @@ const DefensiveBootcampLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Enrollment Form */}
-      <AnimatedBackground variant="bootcamp" className="py-16">
+      <div className="bg-gradient-purple py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gray-800 rounded-2xl p-8 border border-gray-700">
             <h2 className="text-3xl font-bold text-center mb-8">Secure Your Seat Now!</h2>
@@ -427,10 +426,10 @@ const DefensiveBootcampLandingPage = () => {
             </form>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Footer CTA */}
-      <AnimatedBackground variant="bootcamp" className="py-12">
+      <div className="bg-gradient-purple py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Don't Miss This Opportunity!</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -443,7 +442,7 @@ const DefensiveBootcampLandingPage = () => {
             Join Now - {pricing.price}
           </button>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Enrollment Modal */}
       <EnhancedEnrollmentModal

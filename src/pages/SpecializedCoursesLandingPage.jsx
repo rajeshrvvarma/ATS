@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -602,7 +601,7 @@ const SpecializedCoursesLandingPage = () => {
 
   return (
     <div className="min-h-screen text-white">
-      <AnimatedBackground variant="specialized">
+      <div className="bg-gradient-cyan">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-purple-900 via-blue-900 to-gray-900 py-20">
         <div className="container mx-auto px-6">
@@ -891,7 +890,7 @@ const SpecializedCoursesLandingPage = () => {
           </motion.div>
         </div>
       </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Course Details Modal */}
       {courseDetailsModal.isOpen && (
@@ -953,7 +952,7 @@ const SpecializedCoursesLandingPage = () => {
                     <ul className="space-y-2">
                       {courseDetailsModal.course.prerequisites.map((prereq, index) => (
                         <li key={index} className="flex items-start gap-2 text-slate-300">
-                          <ArrowRight size={14} className="text-orange-400 mt-1 flex-shrink-0" />
+                          <ArrowRight size={14} className="text-indigo-400 mt-1 flex-shrink-0" />
                           {prereq}
                         </li>
                       ))}

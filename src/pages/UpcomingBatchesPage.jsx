@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -198,7 +197,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
   return (
     <div className="min-h-screen text-white pt-20">
       {/* Hero Section */}
-      <AnimatedBackground variant="programs" className="py-16">
+      <div className="bg-gradient-blue py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -245,7 +244,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
             </div>
           </motion.div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Filters and View Options */}
       <section className="py-8 bg-slate-900">
@@ -470,7 +469,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
       </section>
 
       {/* CTA Section */}
-      <AnimatedBackground variant="contact" className="py-16">
+      <div className="bg-gradient-cyan py-16">
         <section className="container mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -503,7 +502,7 @@ const UpcomingBatchesPage = ({ onNavigate }) => {
             </div>
           </motion.div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Enhanced Enrollment Modal */}
       <EnhancedEnrollmentModal

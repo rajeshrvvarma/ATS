@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';
-import AnimatedBackground from '../components/AnimatedBackground';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const CollegeTrainingLandingPage = () => {
@@ -58,7 +57,7 @@ const CollegeTrainingLandingPage = () => {
       description: "Students receive industry-recognized certificates that boost their resume value"
     },
     {
-      icon: <Briefcase className="w-8 h-8 text-orange-500" />,
+      icon: <Briefcase className="w-8 h-8 text-indigo-500" />,
       title: "Job Placement Support",
       description: "Direct connections with hiring partners and dedicated placement assistance"
     },
@@ -259,7 +258,7 @@ const CollegeTrainingLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <AnimatedBackground variant="premium" className="pt-20 pb-16">
+      <div className="bg-gradient-violet pt-20 pb-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -355,10 +354,10 @@ const CollegeTrainingLandingPage = () => {
             </div>
           </motion.div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Success Stories */}
-      <AnimatedBackground variant="success" className="py-16">
+      <div className="bg-gradient-teal py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -398,10 +397,10 @@ const CollegeTrainingLandingPage = () => {
             ))}
           </div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Pricing Section */}
-      <AnimatedBackground variant="premium" className="py-16">
+      <div className="bg-gradient-violet py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -471,10 +470,10 @@ const CollegeTrainingLandingPage = () => {
             ))}
           </div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Benefits Section */}
-      <AnimatedBackground variant="specialized" className="py-16">
+      <div className="bg-gradient-cyan py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -502,10 +501,10 @@ const CollegeTrainingLandingPage = () => {
             ))}
           </div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Curriculum Section */}
-      <AnimatedBackground variant="bootcamp" className="py-16">
+      <div className="bg-gradient-purple py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -544,10 +543,10 @@ const CollegeTrainingLandingPage = () => {
             ))}
           </div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* CTA Section */}
-      <AnimatedBackground variant="contact" className="py-16">
+      <div className="bg-gradient-teal py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -588,7 +587,7 @@ const CollegeTrainingLandingPage = () => {
             </p>
           </motion.div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       <EnhancedEnrollmentModal 
         isOpen={enrollmentModal.isOpen}

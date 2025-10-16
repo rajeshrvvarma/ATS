@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -723,7 +722,7 @@ const TechnologyTrainingLandingPage = () => {
 
   return (
     <div className="min-h-screen text-white">
-      <AnimatedBackground variant="specialized">
+      <div className="bg-gradient-cyan">
       {/* Hero Section */}
       <section className="relative py-20">
         <div className="container mx-auto px-6">
@@ -915,10 +914,10 @@ const TechnologyTrainingLandingPage = () => {
           </motion.div>
         </div>
       </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Call to Action */}
-      <AnimatedBackground variant="contact" className="py-16">
+      <div className="bg-gradient-teal py-16">
         <section className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -960,7 +959,7 @@ const TechnologyTrainingLandingPage = () => {
             </div>
           </motion.div>
         </section>
-      </AnimatedBackground>
+      </div>
 
       {/* Modals */}
       {/* Course Details Modal */}
@@ -1023,7 +1022,7 @@ const TechnologyTrainingLandingPage = () => {
                     <ul className="space-y-2">
                       {courseDetailsModal.course.prerequisites.map((prereq, index) => (
                         <li key={index} className="flex items-start gap-2 text-slate-300">
-                          <ArrowRight size={14} className="text-orange-400 mt-1 flex-shrink-0" />
+                          <ArrowRight size={14} className="text-indigo-400 mt-1 flex-shrink-0" />
                           {prereq}
                         </li>
                       ))}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Target } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
 
 export default function FreeWorkshopPage({ onNavigate }) {
@@ -39,9 +38,9 @@ export default function FreeWorkshopPage({ onNavigate }) {
         }
     };
     return (
-        <AnimatedBackground variant="workshop" className="text-white min-h-screen">
+        <div className="bg-gradient-sky text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
-                 <button onClick={() => onNavigate('home')} className="flex items-center text-sky-400 hover:text-sky-300 transition-colors mb-8">
+                 <button onClick={() => onNavigate('home')} className="flex items-center text-white hover:text-sky-200 transition-colors mb-8">
                     <ArrowLeft size={20} className="mr-2" />
                     Back to All Programs
                 </button>
@@ -81,7 +80,7 @@ export default function FreeWorkshopPage({ onNavigate }) {
                     </div>
                 </div>
             </div>
-        </AnimatedBackground>
+        </div>
     );
 }
 

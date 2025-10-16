@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -192,7 +191,7 @@ const DefensiveMasteryLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <AnimatedBackground variant="premium" className="py-20">
+      <div className="bg-gradient-violet py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -288,10 +287,10 @@ const DefensiveMasteryLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Premium Benefits */}
-      <AnimatedBackground variant="premium" className="py-16">
+      <div className="bg-gradient-violet py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Premium Program?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -312,10 +311,10 @@ const DefensiveMasteryLandingPage = () => {
             </div>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Detailed Curriculum */}
-      <AnimatedBackground variant="premium" className="py-16">
+      <div className="bg-gradient-violet py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Comprehensive 8-Week Curriculum</h2>
           <div className="space-y-6">
@@ -384,10 +383,10 @@ const DefensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* What's Included */}
-      <AnimatedBackground variant="premium" className="py-16">
+      <div className="bg-gradient-violet py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Premium Package Includes</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
@@ -405,10 +404,10 @@ const DefensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Payment Plans */}
-      <AnimatedBackground variant="premium" className="py-16">
+      <div className="bg-gradient-violet py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Payment Plan</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -470,10 +469,10 @@ const DefensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Enrollment Form */}
-      <AnimatedBackground variant="premium" className="py-16">
+      <div className="bg-gradient-violet py-16">
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-8 border border-gray-600">
             <h2 className="text-3xl font-bold text-center mb-8">Reserve Your Premium Seat</h2>
@@ -574,10 +573,10 @@ const DefensiveMasteryLandingPage = () => {
             </form>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Footer CTA */}
-      <AnimatedBackground variant="premium" className="py-12">
+      <div className="bg-gradient-violet py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Limited to 20 Premium Students Only</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -590,7 +589,7 @@ const DefensiveMasteryLandingPage = () => {
             Reserve Premium Seat - ₹5,999
           </button>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Enhanced Enrollment Modal */}
       <EnhancedEnrollmentModal

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp, Sword, Zap, Code2 } from 'lucide-react';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -194,7 +193,7 @@ const OffensiveMasteryLandingPage = () => {
   return (
     <div className="min-h-screen text-white">
       {/* Hero Section */}
-      <AnimatedBackground variant="offensive" className="py-20">
+      <div className="bg-gradient-indigo py-20">
         <div className="container mx-auto px-6">
           <div className="text-center max-w-4xl mx-auto">
             <motion.div
@@ -227,7 +226,7 @@ const OffensiveMasteryLandingPage = () => {
                 <div>
                   <div className="text-6xl font-bold text-red-300 mb-2">₹7,999</div>
                   <div className="text-lg text-gray-300 mb-1 line-through">₹12,999</div>
-                  <div className="text-orange-400 font-semibold">Save ₹5,000 with full payment</div>
+                  <div className="text-indigo-400 font-semibold">Save ₹5,000 with full payment</div>
                 </div>
                 
                 <div>
@@ -266,7 +265,7 @@ const OffensiveMasteryLandingPage = () => {
                 <div className="text-sm text-gray-300">Only 15 students for intensive mentorship</div>
               </div>
               <div className="bg-orange-800 bg-opacity-50 rounded-lg p-4 border border-orange-600">
-                <Zap className="h-8 w-8 text-orange-300 mb-2" />
+                <Zap className="h-8 w-8 text-indigo-300 mb-2" />
                 <div className="font-semibold">Real-World Labs</div>
                 <div className="text-sm text-gray-300">Advanced labs with enterprise environments</div>
               </div>
@@ -290,10 +289,10 @@ const OffensiveMasteryLandingPage = () => {
             </motion.button>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Elite Benefits */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Elite Offensive Program?</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -303,7 +302,7 @@ const OffensiveMasteryLandingPage = () => {
               <p className="text-gray-200">Master zero-day exploitation, custom payload development, and red team operations.</p>
             </div>
             <div className="text-center bg-gradient-to-br from-orange-700 to-orange-800 rounded-xl p-6 border border-orange-600">
-              <BookOpen className="h-12 w-12 text-orange-300 mx-auto mb-4" />
+              <BookOpen className="h-12 w-12 text-indigo-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold mb-3">Elite Curriculum</h3>
               <p className="text-gray-200">120+ hours of advanced content with 15+ hands-on projects and custom labs.</p>
             </div>
@@ -314,10 +313,10 @@ const OffensiveMasteryLandingPage = () => {
             </div>
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Detailed Curriculum */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Comprehensive 8-Week Elite Curriculum</h2>
           <div className="space-y-6">
@@ -371,11 +370,11 @@ const OffensiveMasteryLandingPage = () => {
                     </ul>
                   </div>
                   <div>
-                    <h4 className="font-semibold mb-3 text-orange-300">Elite Projects:</h4>
+                    <h4 className="font-semibold mb-3 text-indigo-300">Elite Projects:</h4>
                     <ul className="space-y-2">
                       {week.projects.map((project, idx) => (
                         <li key={idx} className="text-gray-300 flex items-start">
-                          <Star className="h-5 w-5 text-orange-400 mr-2 mt-0.5 flex-shrink-0" />
+                          <Star className="h-5 w-5 text-indigo-400 mr-2 mt-0.5 flex-shrink-0" />
                           {project}
                         </li>
                       ))}
@@ -386,10 +385,10 @@ const OffensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* What's Included */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Elite Package Includes</h2>
           <div className="grid md:grid-cols-2 gap-4 max-w-5xl mx-auto">
@@ -407,10 +406,10 @@ const OffensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Payment Plans */}
-      <AnimatedBackground variant="offensive" className="py-16">
+      <div className="bg-gradient-indigo py-16">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Choose Your Investment Plan</h2>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -437,7 +436,7 @@ const OffensiveMasteryLandingPage = () => {
                   <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                   <div className="text-3xl font-bold text-red-300 mb-1">{plan.price}</div>
                   <div className="text-gray-400 line-through text-sm mb-1">{plan.originalPrice}</div>
-                  <div className="text-orange-400 font-semibold text-sm">{plan.savings}</div>
+                  <div className="text-indigo-400 font-semibold text-sm">{plan.savings}</div>
                 </div>
 
                 <ul className="space-y-2 mb-6">
@@ -472,10 +471,10 @@ const OffensiveMasteryLandingPage = () => {
             ))}
           </div>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Footer CTA */}
-      <AnimatedBackground variant="offensive" className="py-12">
+      <div className="bg-gradient-indigo py-12">
         <div className="container mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold mb-4">Limited to 15 Elite Hackers Only</h2>
           <p className="text-xl text-gray-200 mb-6">
@@ -488,7 +487,7 @@ const OffensiveMasteryLandingPage = () => {
             Reserve Elite Seat - ₹7,999
           </button>
         </div>
-      </AnimatedBackground>
+      </div>
 
       {/* Enhanced Enrollment Modal - centralized pricing */}
       <EnhancedEnrollmentModal

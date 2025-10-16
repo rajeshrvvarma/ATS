@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
-import AnimatedBackground from '@/components/AnimatedBackground.jsx';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
 
 export default function ContactUsPage({ onNavigate }) {
@@ -133,18 +132,18 @@ export default function ContactUsPage({ onNavigate }) {
     ];
 
     return (
-        <AnimatedBackground variant="contact" className="text-white min-h-screen">
+        <div className="bg-gradient-teal text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
                 <button 
                     onClick={() => onNavigate('home')} 
-                    className="flex items-center text-green-400 hover:text-green-300 transition-colors mb-8"
+                    className="flex items-center text-white hover:text-teal-200 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
                     Back to Home
                 </button>
 
-                <h1 className="text-4xl md:text-6xl font-bold text-gradient-green text-center mb-4">Support & Help Center</h1>
-                <p className="text-center text-xl text-green-200 mb-12">
+                <h1 className="text-4xl md:text-6xl font-bold text-white text-center mb-4">Support & Help Center</h1>
+                <p className="text-center text-xl text-teal-100 mb-12">
                     Get support for payments, technical issues, and policy inquiries
                 </p>
 
@@ -398,12 +397,12 @@ export default function ContactUsPage({ onNavigate }) {
                             </div>
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <div className="text-2xl font-bold mb-1">&lt; 48 Hours</div>
-                                <div className="text-sm text-green-200">Complex queries</div>
+                                <div className="text-sm text-teal-200">Complex queries</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </AnimatedBackground>
+        </div>
     );
 }
