@@ -112,3 +112,128 @@ node scripts/reconcileOrders.js
 
 ---
 If you want, I can also add a short helper that formats the `FIREBASE_SERVICE_ACCOUNT` JSON into a single-line string suitable for pasting into Netlify/GitHub secrets. Want that helper added?
+
+## Appendix: Helpers to add (recommended)
+
+1) Helper: `scripts/format-service-account.js`
+
+Purpose: Convert a multi-line `service-account.json` to a single-line JSON string that you can copy-paste into Netlify/GitHub Secrets.
+
+Usage (example):
+
+```powershell
+node scripts/format-service-account.js ./service-account.json
+```
+
+Output: Prints a single-line JSON string to stdout. You can copy that string into Netlify or GitHub Secrets.
+
+2) Helper: `scripts/webhook-test.js`
+
+Purpose: Send a signed Razorpay-style webhook POST to your deployed `/razorpay-webhook` endpoint to verify signature verification and write behavior.
+
+Usage (example):
+
+```powershell
+node scripts/webhook-test.js https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook <your_razorpay_secret>
+```
+
+Output: Logs response HTTP status and body; check Firestore for `orders` and `webhook_logs` entries.
+
+## Local smoke test (what I ran)
+
+I ran a quick local smoke test to validate the helpers and the local webhook receiver. Steps and results:
+
+1. Start a simple local receiver:
+
+```powershell
+node scripts/dev-webhook-receiver.js
+# listens on http://localhost:9000/webhook
+```
+
+2. Format the sample service account JSON:
+
+```powershell
+node scripts/format-service-account.js scripts/sample-service-account.json
+# prints a single-line JSON string
+```
+
+3. Send a signed test webhook to the local receiver:
+
+```powershell
+node scripts/webhook-test.js http://127.0.0.1:9000/webhook fake_secret_for_test
+# receiver logged headers and body; returned { ok: true }
+```
+
+Observed results:
+- `dev-webhook-receiver` printed the incoming request URL, headers (including `x-razorpay-signature`) and the JSON body.
+- `webhook-test.js` printed Status: 200 and Response body: { ok: true }.
+
+How to stop the local receiver (PowerShell):
+
+```powershell
+# Find node processes and stop the receiver (careful if you have other node processes):
+Get-Process node | Where-Object { $_.Path -like '*node*' } | ForEach-Object { Stop-Process -Id $_.Id -Force }
+```
+
+Notes:
+- Local receiver is for convenience only. For real webhook verification, test against the deployed Netlify function and the Razorpay dashboard.
+
+## Tomorrow checklist (exact steps to run)
+
+Follow these steps in order tomorrow after you set the environment variables in Netlify/GitHub:
+
+1) Verify env vars locally (optional quick check)
+
+```powershell
+# Replace path with where you keep your real service account JSON locally
+$env:FIREBASE_SERVICE_ACCOUNT = Get-Content -Raw .\service-account.json
+$env:RAZORPAY_KEY_ID = '<your_razorpay_key_id>'
+$env:RAZORPAY_KEY_SECRET = '<your_razorpay_key_secret>'
+$env:ENROLLMENT_API_SECRET = '<a_strong_random_secret>'
+$env:SITE_URL = 'https://<your-site>.netlify.app'
+```
+
+2) Build & deploy
+
+```powershell
+cd "d:\my website\AT-CS"
+npm ci
+npm run build
+# push your branch and monitor Netlify deploy
+git add .
+git commit -m "deploy: enrollment + razorpay functions and recon helpers"
+git push
+```
+
+3) Configure Razorpay webhook
+
+Use the Razorpay dashboard and set:
+- Webhook URL: `https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook`
+- Webhook secret: the same value as `RAZORPAY_KEY_SECRET`
+- Events: at minimum `payment.captured`
+
+4) Quick verification (deployed)
+
+```powershell
+# Run the formatter (optional):
+node scripts/format-service-account.js ./service-account.json
+
+# Test webhook against deployed endpoint (use your real secret):
+node scripts/webhook-test.js https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook <your_razorpay_key_secret>
+```
+
+5) Verify in Firestore & Admin UI
+
+- Check `orders`, `enrollments`, and `webhook_logs` collections in Firestore.
+- Login as admin and visit Admin -> Payments Reconcile. Reprocess any missing orders if needed.
+
+6) If something fails
+
+- Inspect Netlify Function logs for `razorpay-webhook` and `process-enrollment`.
+- Check that `RAZORPAY_KEY_SECRET` in Netlify matches the webhook secret in Razorpay.
+
+---
+Mark tasks as done in this file as you complete them.
+
+
+
