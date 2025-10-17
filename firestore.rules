@@ -52,16 +52,16 @@ service cloud.firestore {
     // Orders collection (payment data)
     match /orders/{orderId} {
       allow read: if isAdmin() || isAuthenticated();
-      // creation: allow server or authenticated clients (if needed); updates/deletes limited to admin/server
-      allow create: if isAdmin() || isAuthenticated() || isServer();
-      allow update, delete: if isAdmin() || isServer();
+  // creation: allow admin or authenticated clients (students creating their own enrollment)
+  allow create: if isAdmin() || isAuthenticated();
+  allow update, delete: if isAdmin();
     }
 
     // Webhooks collection (payment callbacks) - prefer server-only writes
     match /webhooks_phonepe/{webhookId} {
       allow read: if isAdmin();
-      allow create: if isServer() || isAdmin();
-      allow update, delete: if isAdmin();
+  allow create: if isAdmin();
+  allow update, delete: if isAdmin();
     }
 
     // Analytics events - users can create, admins can read all
@@ -143,11 +143,12 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // isServer() - checks if the request is coming from a trusted service account
-    // Replace 'SERVICE_ACCOUNT_UID' with the UID of your service account or a dedicated admin user that the server uses.
-    // Example: set SERVICE_ACCOUNT_UID = 'U2vc...'
+    // Server writes should be performed with the Firebase Admin SDK from your server/functions.
+    // Admin SDK calls bypass security rules, so you don't need `isServer()` checks when using Admin SDK.
+    // If you must use client-authenticated server users, keep a tight scope and rotate credentials regularly.
     function isServer() {
-      return request.auth != null && request.auth.uid == 'A1GX2UcLg1fsTNGU30AMFsWScH62';
+      // Legacy placeholder kept for compatibility; prefer Admin SDK instead.
+      return false;
     }
   }
 }
