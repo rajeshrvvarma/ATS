@@ -139,7 +139,7 @@
                               "Full Stack Developer",
                               "Backend Developer (Node.js)"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "go-programming",
@@ -645,7 +645,7 @@
                               "Data Scientist",
                               "Full Stack Developer"
                           ],
-        "status":  "hidden"
+        "status":  "active"
     },
     {
         "id":  "advanced-database-design",
@@ -676,7 +676,7 @@
                               "Data Analyst / BI Developer",
                               "SRE / Systems Engineer"
                           ],
-        "status":  "hidden"
+        "status":  "active"
     },
     {
         "id":  "nosql-databases",
@@ -819,7 +819,7 @@
                               "Data Analyst / BI Developer",
                               "Data Scientist"
                           ],
-        "status":  "hidden"
+        "status":  "active"
     },
     {
         "id":  "graph-databases",
@@ -2404,7 +2404,7 @@
                               "QA Automation Engineer",
                               "DevOps Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "api-testing",
@@ -2492,7 +2492,7 @@
                               "QA Automation Engineer",
                               "Mobile Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "business-analytics-fundamentals",
@@ -2598,7 +2598,7 @@
         "learningPaths":  [
                               "Data Analyst / BI Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "blockchain-development",
@@ -2914,7 +2914,7 @@
                               "SRE / Systems Engineer",
                               "Solutions Architect"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "tech-career-development",
