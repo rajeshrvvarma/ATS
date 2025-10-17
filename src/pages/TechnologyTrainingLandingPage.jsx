@@ -4,6 +4,7 @@ import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, S
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
 const TechnologyTrainingLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -1252,6 +1253,13 @@ const TechnologyTrainingLandingPage = () => {
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
+
+      {/* WhatsApp Contact Button - Floating */}
+      <WhatsAppContactButton
+        variant="floating"
+        courseContext="technology courses"
+        showQuickActions={true}
+      />
     </div>
   );
 };

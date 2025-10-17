@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Users, Award, Target, BookOpen, Play, CheckCircle, ArrowRight, Phone, Calendar, Download, Star, Shield, Code, Database } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
+import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
 const CoursePageTemplate = ({ courseData }) => {
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false });
   const [activeTab, setActiveTab] = useState('overview');
 
   const {
@@ -49,9 +50,7 @@ const CoursePageTemplate = ({ courseData }) => {
 
   const handleEnrollment = (programType = 'premium') => {
     setEnrollmentModal({
-      isOpen: true,
-      courseType: programType,
-      courseName: title
+      isOpen: true
     });
   };
 
@@ -88,18 +87,27 @@ const CoursePageTemplate = ({ courseData }) => {
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={() => handleEnrollment()}
-                  className="bg-white text-gray-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center"
-                >
-                  Enroll Now
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </button>
-                <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-gray-900 transition-colors duration-200 flex items-center justify-center">
-                  <Phone className="mr-2 w-5 h-5" />
-                  Call: +91 9515151992
-                </button>
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={() => handleEnrollment()}
+                    className="bg-white text-gray-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors duration-200 flex items-center justify-center"
+                  >
+                    Enroll Now
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </button>
+                  <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-gray-900 transition-colors duration-200 flex items-center justify-center">
+                    <Phone className="mr-2 w-5 h-5" />
+                    Call: +91 9515151992
+                  </button>
+                </div>
+
+                {/* WhatsApp Hero CTA */}
+                <WhatsAppContactButton
+                  variant="inline"
+                  courseContext={title}
+                  className="w-full sm:w-auto"
+                />
               </div>
             </motion.div>
 
@@ -408,15 +416,19 @@ const CoursePageTemplate = ({ courseData }) => {
         </div>
       </section>
 
-      {/* Enrollment Modal */}
-      {enrollmentModal.isOpen && (
-        <EnhancedEnrollmentModal
-          isOpen={enrollmentModal.isOpen}
-          onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-          courseType={enrollmentModal.courseType}
-          courseName={enrollmentModal.courseName}
-        />
-      )}
+      {/* Modern Enrollment Modal */}
+      <ModernEnrollmentModal
+        isOpen={enrollmentModal.isOpen}
+        onClose={() => setEnrollmentModal({ isOpen: false })}
+        courseData={courseData}
+      />
+
+      {/* WhatsApp Contact Button - Floating */}
+      <WhatsAppContactButton
+        variant="floating"
+        courseContext={title}
+        showQuickActions={true}
+      />
     </div>
   );
 };

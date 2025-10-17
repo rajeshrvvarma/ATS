@@ -6,6 +6,7 @@ import { sendContactForm } from '@/services/netlifyFormsService.js';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
 
 
@@ -656,6 +657,13 @@ const HomePage = ({ onNavigate }) => {
             </div>
             <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
             <ScrollNavigation />
+
+            {/* WhatsApp Contact Button - Floating */}
+            <WhatsAppContactButton
+                variant="floating"
+                courseContext="cybersecurity courses"
+                showQuickActions={true}
+            />
         </>
     );
 };

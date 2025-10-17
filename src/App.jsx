@@ -260,7 +260,7 @@ export default function App() {
                 <Footer onNavigate={go} />
                 <ToastContainer />
                 <SettingsDrawer />
-                <WhatsAppWidget />
+                {/* WhatsApp widget temporarily removed - will be repositioned per page */}
         </div>
         </ToastProvider>
         </SettingsProvider>
