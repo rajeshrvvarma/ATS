@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCap, Target, Calendar, Users, Clock, Zap } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
+import { courses } from '@/data/courses.js';
 import { initiatePayment, verifyPayment } from '@/services/phonepe.js';
 import { getBatchById, getActiveBatches, getBatchesByCourse, getUrgencyColor } from '@/data/activeBatches.js';
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
@@ -59,9 +60,10 @@ export default function EnrollUsPage({ onNavigate }) {
         // Flatten all modules for selection
         const allModules = moduleCategories.flatMap(cat => cat.modules.map(title => ({ title, category: cat.name })));
 
-        const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
                 name: '',
                 email: '',
+        course: '',
                 phone: '',
                 selectedModules: [],
                 pricingOption: pricingOptions[0],
