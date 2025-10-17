@@ -81,6 +81,7 @@ export default function EnrollUsPage({ onNavigate }) {
     const [paymentMsg, setPaymentMsg] = useState('');
     const [lastOrderId, setLastOrderId] = useState('');
     const [selectedBatch, setSelectedBatch] = useState(null);
+    const [availableBatches, setAvailableBatches] = useState([]);
 
 
     const handleInputChange = (e) => {
@@ -107,6 +108,28 @@ export default function EnrollUsPage({ onNavigate }) {
     const handlePricingOptionChange = (option) => {
         setFormData(prev => ({ ...prev, pricingOption: option }));
     };
+
+        // Update available batches when course selection changes
+        useEffect(() => {
+            if (formData.course) {
+                try {
+                    const list = getBatchesByCourse(formData.course) || [];
+                    setAvailableBatches(list);
+                } catch (e) {
+                    setAvailableBatches([]);
+                }
+            } else {
+                setAvailableBatches([]);
+            }
+        }, [formData.course]);
+
+        // When a batchId is selected in the form, synchronize selectedBatch state
+        useEffect(() => {
+            if (formData.batchId) {
+                const b = getBatchById(formData.batchId);
+                if (b) setSelectedBatch(b);
+            }
+        }, [formData.batchId]);
 
 
     const handleSubmit = async (e) => {
