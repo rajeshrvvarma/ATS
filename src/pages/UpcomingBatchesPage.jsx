@@ -3,17 +3,18 @@
 //
 // [UPDATE LOG: 2025-10-17]
 // Recent changes:
-// - Merged Firestore events with hardcoded arrays for batches, bootcamps, workshops
-// - Added null checks for all optional fields (trainer, features, topics, etc.)
-// - Fallback logic for date, description, registrationLink
-// - Validated build and error-free rendering
+// - ✅ COMPLETED: Event data duplication fixed - now uses centralized getAllEvents()
+// - ✅ COMPLETED: Banner events clickability fixed - banner content shows event details modal
+// - ✅ COMPLETED: EventDetailModal integration for View Details functionality
+// - ✅ COMPLETED: Single source of truth for all events (static + Firestore merged)
+// - ✅ COMPLETED: Removed duplicate static data arrays and merging logic
+// - ✅ COMPLETED: Simplified event filtering by type from centralized data
 //
-// TODO for tomorrow:
-// - Banner events not clickable (should link to details/enroll)
-// - Data double population (events appear twice)
-// - Upcoming batches not populated from Firestore
+// Remaining tasks:
+// - Fix Upcoming Batches Firestore Integration (in progress)
+// - Validate Events Page Functionality
 //
-// Refactor event merging logic, fix banner click, deduplicate events, ensure batches tab is populated.
+// All events now properly loaded from centralized allEventsData.js with Firestore integration.
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
