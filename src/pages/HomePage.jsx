@@ -11,20 +11,6 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 // PREMIUM COURSES SECTION - Revenue Focus
 const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
-    const getUrgencyColor = (urgency) => {
-        switch(urgency) {
-            case 'high': return 'text-red-400';
-            case 'medium': return 'text-yellow-400';
-            default: return 'text-green-400';
-        }
-    };
-
-    const getUrgencyMessage = (seatsLeft, urgency) => {
-        if (urgency === 'high') return `Only ${seatsLeft} seats left!`;
-        if (urgency === 'medium') return `${seatsLeft} seats available`;
-        return `${seatsLeft} seats available`;
-    };
-
     return (
         <>
             <section className="bg-slate-900 py-20">
@@ -66,17 +52,9 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                                     whileInView={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.6, delay: index * 0.2 }}
                                     viewport={{ once: true }}
-                                    className="bg-slate-800 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group relative"
+                                    className="bg-slate-800 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group relative cursor-pointer"
+                                    onClick={() => onNavigate(course.courseUrl)}
                                 >
-                                    {/* Urgency Banner */}
-                                    <div className={`absolute top-4 left-4 z-10 px-3 py-1 rounded-full text-sm font-bold
-                                        ${course.urgency === 'high' ? 'bg-red-500 text-white animate-pulse' :
-                                          course.urgency === 'medium' ? 'bg-yellow-500 text-black' : 'bg-green-500 text-white'}`}>
-                                        {course.urgency === 'high' && '🔥 FILLING FAST'}
-                                        {course.urgency === 'medium' && '⚡ LIMITED SEATS'}
-                                        {course.urgency === 'low' && '✅ SEATS AVAILABLE'}
-                                    </div>
-
                                     {/* Course Header */}
                                     <div className={`bg-gradient-to-br ${course.gradient} p-6 text-white relative`}>
                                         <IconComponent className="w-12 h-12 mb-4" />
@@ -88,18 +66,6 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                                     <div className="p-6">
                                         <p className="text-slate-300 mb-6">{course.description}</p>
 
-                                        {/* Key Stats */}
-                                        <div className="grid grid-cols-2 gap-4 mb-6">
-                                            <div className="text-center bg-slate-700/50 rounded-lg p-3">
-                                                <div className="text-2xl font-bold text-green-400">{course.placementRate}</div>
-                                                <div className="text-sm text-slate-400">Placement Rate</div>
-                                            </div>
-                                            <div className="text-center bg-slate-700/50 rounded-lg p-3">
-                                                <div className="text-2xl font-bold text-blue-400">{course.avgSalary}</div>
-                                                <div className="text-sm text-slate-400">Avg Salary</div>
-                                            </div>
-                                        </div>
-
                                         {/* Course Details */}
                                         <div className="space-y-3 mb-6">
                                             <div className="flex justify-between">
@@ -107,42 +73,20 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                                                 <span className="text-white font-semibold">{course.duration}</span>
                                             </div>
                                             <div className="flex justify-between">
-                                                <span className="text-slate-400">Schedule:</span>
-                                                <span className="text-white font-semibold">{course.schedule}</span>
+                                                <span className="text-slate-400">Level:</span>
+                                                <span className="text-white font-semibold">{course.level}</span>
                                             </div>
                                             <div className="flex justify-between">
                                                 <span className="text-slate-400">Next Batch:</span>
                                                 <span className="text-yellow-400 font-semibold">{course.nextBatch}</span>
                                             </div>
-                                            <div className="flex justify-between">
-                                                <span className="text-slate-400">Enrolled:</span>
-                                                <span className="text-blue-400 font-semibold">{course.enrolled}+ students</span>
-                                            </div>
                                         </div>
 
-                                        {/* Seats Left */}
-                                        <div className="mb-6">
-                                            <div className="flex justify-between items-center mb-2">
-                                                <span className="text-slate-400">Seats:</span>
-                                                <span className={`font-bold ${getUrgencyColor(course.urgency)}`}>
-                                                    {getUrgencyMessage(course.seatsLeft, course.urgency)}
-                                                </span>
-                                            </div>
-                                            <div className="w-full bg-slate-700 rounded-full h-2">
-                                                <div
-                                                    className={`h-2 rounded-full transition-all duration-300
-                                                        ${course.urgency === 'high' ? 'bg-red-500' :
-                                                          course.urgency === 'medium' ? 'bg-yellow-500' : 'bg-green-500'}`}
-                                                    style={{ width: `${(course.totalSeats - course.seatsLeft) / course.totalSeats * 100}%` }}
-                                                ></div>
-                                            </div>
-                                        </div>
-
-                                        {/* Features */}
+                                        {/* Features Preview */}
                                         <div className="mb-6">
                                             <h4 className="text-white font-semibold mb-3">What You'll Learn:</h4>
                                             <div className="space-y-2">
-                                                {course.features.slice(0, 4).map((feature, idx) => (
+                                                {course.features.map((feature, idx) => (
                                                     <div key={idx} className="flex items-center">
                                                         <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
                                                         <span className="text-slate-300 text-sm">{feature}</span>
@@ -154,7 +98,7 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                                         {/* Pricing */}
                                         <div className="text-center mb-6">
                                             <div className="mb-2">
-                                                <span className="text-3xl font-bold text-green-400">₹{course.currentPrice.replace('₹', '')}</span>
+                                                <span className="text-3xl font-bold text-green-400">{course.currentPrice}</span>
                                                 <span className="text-lg text-slate-400 line-through ml-2">{course.originalPrice}</span>
                                             </div>
                                             <div className="text-red-400 font-semibold">
@@ -162,21 +106,17 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                                             </div>
                                         </div>
 
-                                        {/* Action Buttons */}
-                                        <div className="space-y-3">
-                                            <button
-                                                onClick={course.action}
-                                                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105
-                                                    ${course.urgency === 'high'
-                                                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
-                                                        : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
-                                            >
-                                                {course.urgency === 'high' ? '🔥 Grab Last Seats!' : '🚀 Enroll Now'}
-                                            </button>
-                                            <button className="w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-blue-500 hover:text-blue-400 transition-all duration-300">
-                                                💬 Book Free Consultation
-                                            </button>
-                                        </div>
+                                        {/* Action Button */}
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onNavigate(course.courseUrl);
+                                            }}
+                                            className="w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
+                                        >
+                                            Learn More & Enroll
+                                            <ArrowRight className="w-5 h-5" />
+                                        </button>
                                     </div>
                                 </motion.div>
                             );
@@ -193,127 +133,17 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                     >
                         <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8">
                             <h3 className="text-3xl font-bold text-white mb-4">
-                                Not Sure Which Course to Choose?
+                                Explore Our Technology Courses Too!
                             </h3>
                             <p className="text-xl text-blue-100 mb-6">
-                                Book a free 30-minute consultation with our cybersecurity expert
+                                Master MERN Stack, Python, Data Science, Cloud Computing, and Software Testing
                             </p>
                             <button
-                                onClick={() => onNavigate('contact')}
-                                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+                                onClick={() => onNavigate('/technology-academy')}
+                                className="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
                             >
-                                📞 Book Free Consultation
+                                🚀 View Technology Courses
                             </button>
-                        </div>
-                    </motion.div>
-
-                    {/* Specialized Courses Add-ons */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, delay: 0.8 }}
-                        viewport={{ once: true }}
-                        className="mt-16"
-                    >
-                        <div className="text-center mb-8">
-                            <h3 className="text-3xl font-bold text-white mb-4">
-                                🎯 Specialized Course Add-ons
-                            </h3>
-                            <p className="text-xl text-slate-300">
-                                Enhance your cybersecurity expertise with specialized skills
-                            </p>
-                        </div>
-
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {[
-                                {
-                                    title: 'Cloud Security Mastery',
-                                    description: 'AWS/Azure/GCP security, compliance & monitoring',
-                                    price: '₹8,999',
-                                    duration: '4 weeks',
-                                    icon: '☁️',
-                                    features: ['Multi-cloud security', 'IAM policies', 'Cloud monitoring', 'Compliance auditing']
-                                },
-                                {
-                                    title: 'Digital Forensics & Investigation',
-                                    description: 'Advanced forensics tools and investigation techniques',
-                                    price: '₹7,999',
-                                    duration: '3 weeks',
-                                    icon: '🔍',
-                                    features: ['Evidence collection', 'Memory analysis', 'Network forensics', 'Court reporting']
-                                },
-                                {
-                                    title: 'Malware Analysis & Reverse Engineering',
-                                    description: 'Dissect malware and understand attack vectors',
-                                    price: '₹9,999',
-                                    duration: '4 weeks',
-                                    icon: '🦠',
-                                    features: ['Static analysis', 'Dynamic analysis', 'Reverse engineering', 'Threat intelligence']
-                                },
-                                {
-                                    title: 'GRC & Compliance',
-                                    description: 'Governance, Risk & Compliance frameworks',
-                                    price: '₹6,999',
-                                    duration: '3 weeks',
-                                    icon: '📋',
-                                    features: ['ISO 27001', 'SOX compliance', 'Risk assessment', 'Audit management']
-                                },
-                                {
-                                    title: 'Incident Response & Threat Hunting',
-                                    description: 'Advanced incident response and proactive hunting',
-                                    price: '₹8,999',
-                                    duration: '4 weeks',
-                                    icon: '🎯',
-                                    features: ['NIST framework', 'Threat hunting', 'Forensic analysis', 'Recovery planning']
-                                },
-                                {
-                                    title: 'Red Team Operations',
-                                    description: 'Advanced persistent threat simulation',
-                                    price: '₹12,999',
-                                    duration: '6 weeks',
-                                    icon: '⚔️',
-                                    features: ['APT simulation', 'Social engineering', 'Evasion techniques', 'Campaign planning']
-                                }
-                            ].map((addon, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                                    viewport={{ once: true }}
-                                    className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-purple-500 transition-all duration-300"
-                                >
-                                    <div className="text-4xl mb-4">{addon.icon}</div>
-                                    <h4 className="text-xl font-bold text-white mb-2">{addon.title}</h4>
-                                    <p className="text-slate-300 mb-4">{addon.description}</p>
-                                    <div className="flex justify-between items-center mb-4">
-                                        <span className="text-2xl font-bold text-purple-400">{addon.price}</span>
-                                        <span className="text-slate-400">{addon.duration}</span>
-                                    </div>
-                                    <div className="space-y-2 mb-6">
-                                        {addon.features.map((feature, idx) => (
-                                            <div key={idx} className="flex items-center">
-                                                <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
-                                                <span className="text-slate-300 text-sm">{feature}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <button className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all duration-300">
-                                        Add to Cart
-                                    </button>
-                                </motion.div>
-                            ))}
-                        </div>
-
-                        <div className="text-center mt-8">
-                            <p className="text-slate-400 mb-4">
-                                💡 <strong className="text-yellow-400">Bundle Discount:</strong> Add any 2 specializations with your premium course for 30% off
-                            </p>
-                            <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-xl p-4">
-                                <p className="text-purple-300">
-                                    <strong>Pro Tip:</strong> Most of our students add Cloud Security + Incident Response for complete cybersecurity mastery
-                                </p>
-                            </div>
                         </div>
                     </motion.div>
                 </div>
@@ -748,20 +578,13 @@ const HomePage = ({ onNavigate }) => {
             originalPrice: '₹35,000',
             currentPrice: '₹20,000',
             duration: '8 Weeks',
-            schedule: 'Weekends (Fri-Sun)',
             level: 'Beginner to Advanced',
             icon: Shield,
             color: 'blue',
-            features: ['SIEM Mastery (Splunk/QRadar)', 'Incident Response', 'Threat Hunting', 'Security Tools', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 3,
-            totalSeats: 8,
-            enrolled: '12',
-            placementRate: '85%',
-            avgSalary: '4-8 LPA',
+            features: ['SIEM Mastery', 'Incident Response', 'Threat Hunting', 'Job Assistance'],
             nextBatch: 'Dec 15, 2025',
-            action: () => handleNavigate('enroll?course=defensive-security-professional'),
-            gradient: 'from-blue-600 to-blue-800',
-            urgency: 'high'
+            courseUrl: '/courses/defensive-security-professional',
+            gradient: 'from-blue-600 to-blue-800'
         },
         {
             id: 'offensive-security-mastery',
@@ -771,20 +594,13 @@ const HomePage = ({ onNavigate }) => {
             originalPrice: '₹40,000',
             currentPrice: '₹20,000',
             duration: '8 Weeks',
-            schedule: 'Weekends (Fri-Sun)',
             level: 'Intermediate to Advanced',
             icon: Sword,
             color: 'red',
-            features: ['Web App Penetration Testing', 'Network Security Testing', 'OSCP Preparation', 'Report Writing', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 5,
-            totalSeats: 8,
-            enrolled: '8',
-            placementRate: '80%',
-            avgSalary: '5-10 LPA',
+            features: ['Penetration Testing', 'OSCP Preparation', 'Red Team Operations', 'Job Assistance'],
             nextBatch: 'Jan 5, 2026',
-            action: () => handleNavigate('enroll?course=offensive-security-mastery'),
-            gradient: 'from-red-600 to-red-800',
-            urgency: 'medium'
+            courseUrl: '/courses/offensive-security-mastery',
+            gradient: 'from-red-600 to-red-800'
         },
         {
             id: 'multicloud-devops-mastery',
@@ -794,20 +610,13 @@ const HomePage = ({ onNavigate }) => {
             originalPrice: '₹30,000',
             currentPrice: '₹20,000',
             duration: '8 Weeks',
-            schedule: 'Weekends (Sat-Sun)',
             level: 'Intermediate to Advanced',
             icon: Cloud,
             color: 'cyan',
-            features: ['Multi-Cloud Architecture', 'DevOps CI/CD Pipelines', 'Infrastructure as Code', 'Container Orchestration', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 4,
-            totalSeats: 10,
-            enrolled: '12',
-            placementRate: '82%',
-            avgSalary: '8-15 LPA',
+            features: ['Multi-Cloud Architecture', 'DevOps CI/CD', 'Infrastructure as Code', 'Job Assistance'],
             nextBatch: 'Dec 22, 2025',
-            action: () => handleNavigate('enroll?course=multicloud-devops-mastery'),
-            gradient: 'from-cyan-600 to-cyan-800',
-            urgency: 'medium'
+            courseUrl: '/courses/multi-cloud-devops-mastery',
+            gradient: 'from-cyan-600 to-cyan-800'
         }
     ];
 

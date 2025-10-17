@@ -107,6 +107,7 @@ const TechnologyTrainingLandingPage = () => {
       priceKey: 'mern-stack-developer', // Add priceKey for dynamic pricing
       price: '₹30,000', // Fallback price
       originalPrice: '₹45,000', // Fallback original price
+      courseUrl: '/courses/mern-stack-developer', // Link to dedicated course page
       description: 'Master full-stack development with MongoDB, Express.js, React, and Node.js.',
       detailedDescription: 'Become a professional MERN Stack developer with comprehensive training in modern web development. Learn to build scalable, full-stack applications using the most in-demand technologies in the industry.',
       features: [
@@ -150,6 +151,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner to Advanced',
       price: '₹28,000',
       originalPrice: '₹42,000',
+      courseUrl: '/courses/fullstack-python-developer', // Link to dedicated course page
       description: 'Complete Python web development with Django/Flask frameworks.',
       features: [
         'Python Programming Mastery',
@@ -254,6 +256,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Intermediate to Advanced',
       price: '₹25,000',
       originalPrice: '₹35,000',
+      courseUrl: '/courses/aws-cloud-engineer', // Link to dedicated course page
       description: 'Master AWS cloud services and architecture patterns.',
       features: [
         'AWS Core Services (EC2, S3, RDS)',
@@ -409,6 +412,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner to Advanced',
       price: '₹20,000',
       originalPrice: '₹30,000',
+      courseUrl: '/courses/data-science-ai', // Link to dedicated course page
       description: 'Comprehensive data science program with machine learning.',
       features: [
         'Python for Data Analysis',
@@ -568,6 +572,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner to Advanced',
       price: '₹18,000',
       originalPrice: '₹28,000',
+      courseUrl: '/courses/software-testing-qa', // Link to dedicated course page
       description: 'Comprehensive test automation with modern frameworks.',
       features: [
         'Selenium WebDriver Automation',
@@ -928,25 +933,41 @@ const TechnologyTrainingLandingPage = () => {
 
                 {/* Action Buttons */}
                 <div className="space-y-3">
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleCourseDetails(program)}
-                    className="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    <Info size={16} />
-                    Course Details
-                  </motion.button>
+                  {program.courseUrl ? (
+                    /* If course has dedicated page, show Learn More button */
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => onNavigate(program.courseUrl)}
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                    >
+                      Learn More & Enroll
+                      <ArrowRight size={16} />
+                    </motion.button>
+                  ) : (
+                    /* Fallback to old enrollment system for courses without dedicated pages */
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleCourseDetails(program)}
+                        className="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        <Info size={16} />
+                        Course Details
+                      </motion.button>
 
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => handleEnrollment(program.title)}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                  >
-                    Enroll Now
-                    <ArrowRight size={16} />
-                  </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => handleEnrollment(program.title)}
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                      >
+                        Enroll Now
+                        <ArrowRight size={16} />
+                      </motion.button>
+                    </>
+                  )}
                 </div>
               </motion.div>
             ))}

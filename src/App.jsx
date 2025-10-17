@@ -47,6 +47,16 @@ const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
 const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
 const EventsBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
 
+// Course Pages
+const DefensiveSecurityProfessional = React.lazy(() => import('@/pages/courses/DefensiveSecurityProfessional.jsx'));
+const OffensiveSecurityMastery = React.lazy(() => import('@/pages/courses/OffensiveSecurityMastery.jsx'));
+const MultiCloudDevOpsMastery = React.lazy(() => import('@/pages/courses/MultiCloudDevOpsMastery.jsx'));
+const MERNStackDeveloper = React.lazy(() => import('@/pages/courses/MERNStackDeveloper.jsx'));
+const FullStackPythonDeveloper = React.lazy(() => import('@/pages/courses/FullStackPythonDeveloper.jsx'));
+const DataScienceAI = React.lazy(() => import('@/pages/courses/DataScienceAI.jsx'));
+const AWSCloudEngineer = React.lazy(() => import('@/pages/courses/AWSCloudEngineer.jsx'));
+const SoftwareTestingQA = React.lazy(() => import('@/pages/courses/SoftwareTestingQA.jsx'));
+
 /**
  * App.jsx is the root component of the application.
  * It acts as a simple router to manage which "page" is currently visible.
@@ -170,6 +180,17 @@ export default function App() {
                             <Route path="/technology-academy" element={<TechnologyTrainingLandingPage onNavigate={go} />} />
                             <Route path="/college-bulk-training" element={<CollegeTrainingLandingPage onNavigate={go} />} />
                             <Route path="/events-batches" element={<EventsBatchesPage onNavigate={go} />} />
+
+                            {/* Course Pages */}
+                            <Route path="/courses/defensive-security-professional" element={<DefensiveSecurityProfessional onNavigate={go} />} />
+                            <Route path="/courses/offensive-security-mastery" element={<OffensiveSecurityMastery onNavigate={go} />} />
+                            <Route path="/courses/multi-cloud-devops-mastery" element={<MultiCloudDevOpsMastery onNavigate={go} />} />
+                            <Route path="/courses/mern-stack-developer" element={<MERNStackDeveloper onNavigate={go} />} />
+                            <Route path="/courses/fullstack-python-developer" element={<FullStackPythonDeveloper onNavigate={go} />} />
+                            <Route path="/courses/data-science-ai" element={<DataScienceAI onNavigate={go} />} />
+                            <Route path="/courses/aws-cloud-engineer" element={<AWSCloudEngineer onNavigate={go} />} />
+                            <Route path="/courses/software-testing-qa" element={<SoftwareTestingQA onNavigate={go} />} />
+
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
                             <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
