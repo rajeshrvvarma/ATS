@@ -523,6 +523,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner to Intermediate',
       price: '₹18,000',
       originalPrice: '₹25,000',
+      courseUrl: '/courses/business-intelligence-analyst', // Link to dedicated course page
       description: 'Business analytics with Power BI, Tableau, and SQL.',
       features: [
         'Advanced SQL & Database Design',
@@ -628,6 +629,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner',
       price: '₹12,000',
       originalPrice: '₹18,000',
+      courseUrl: '/courses/manual-testing-specialist', // Link to dedicated course page
       description: 'Foundation in manual testing methodologies and processes.',
       features: [
         'Software Testing Fundamentals',
@@ -681,6 +683,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Intermediate',
       price: '₹22,000',
       originalPrice: '₹32,000',
+      courseUrl: '/courses/react-native-developer', // Link to dedicated course page
       description: 'Cross-platform mobile app development with React Native.',
       features: [
         'React Native Framework',
@@ -736,6 +739,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner to Intermediate',
       price: '₹20,000',
       originalPrice: '₹30,000',
+      courseUrl: '/courses/flutter-app-developer', // Link to dedicated course page
       description: 'Google Flutter framework for beautiful mobile applications.',
       features: [
         'Dart Programming Language',
