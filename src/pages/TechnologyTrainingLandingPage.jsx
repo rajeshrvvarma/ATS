@@ -47,7 +47,7 @@ const TechnologyTrainingLandingPage = () => {
           topics: ['React Fundamentals', 'State Management (Redux)', 'Component Architecture', 'Hooks & Context API', 'UI Libraries (Material-UI, Tailwind)']
         },
         {
-          module: 'Backend Development', 
+          module: 'Backend Development',
           topics: ['Node.js & Express.js', 'API Design & Development', 'Middleware & Authentication', 'File Handling & Uploads', 'Error Handling']
         },
         {
@@ -71,7 +71,7 @@ const TechnologyTrainingLandingPage = () => {
       category: 'fullstack',
       title: 'Full Stack Python Developer',
       duration: '6 months',
-      level: 'Beginner to Advanced', 
+      level: 'Beginner to Advanced',
       price: '₹28,000',
       originalPrice: '₹42,000',
       description: 'Complete Python web development with Django/Flask frameworks.',
@@ -124,7 +124,7 @@ const TechnologyTrainingLandingPage = () => {
       duration: '7 months',
       level: 'Beginner to Advanced',
       price: '₹32,000',
-      originalPrice: '₹48,000', 
+      originalPrice: '₹48,000',
       description: 'Enterprise Java development with Spring Boot and modern frameworks.',
       features: [
         'Core Java & Advanced Concepts',
@@ -647,7 +647,7 @@ const TechnologyTrainingLandingPage = () => {
       id: 13,
       category: 'mobile',
       title: 'Flutter App Developer',
-      duration: '4 months', 
+      duration: '4 months',
       level: 'Beginner to Intermediate',
       price: '₹20,000',
       originalPrice: '₹30,000',
@@ -696,8 +696,8 @@ const TechnologyTrainingLandingPage = () => {
     }
   ];
 
-  const filteredPrograms = selectedCategory === 'all' 
-    ? technologyPrograms 
+  const filteredPrograms = selectedCategory === 'all'
+    ? technologyPrograms
     : technologyPrograms.filter(program => program.category === selectedCategory);
 
   const handleEnrollment = (courseTitle) => {
@@ -733,13 +733,13 @@ const TechnologyTrainingLandingPage = () => {
             className="text-center max-w-6xl mx-auto"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              Technology Training Programs
+              AT-CS Tech Academy
             </h1>
             <p className="text-2xl md:text-3xl text-gray-300 mb-8">
-              Master Modern Tech Stack • Build Your Career
+              Master Modern Tech Stack • Launch Your Career • Build the Future
             </p>
             <p className="text-xl text-gray-400 mb-12 max-w-4xl mx-auto">
-              Comprehensive technology training programs designed for developers, cloud engineers, data scientists, and IT professionals
+              Comprehensive technology training programs designed for developers, cloud engineers, data scientists, and IT professionals. Separate from our cybersecurity courses.
             </p>
 
             {/* Stats Banner */}
@@ -822,13 +822,13 @@ const TechnologyTrainingLandingPage = () => {
                       <div className="text-sm text-gray-400 line-through">{program.originalPrice}</div>
                     </div>
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">
                     {program.title}
                   </h3>
-                  
+
                   <p className="text-gray-400 text-sm mb-3">{program.description}</p>
-                  
+
                   <div className="flex items-center gap-4 text-sm text-gray-300 mb-4">
                     <div className="flex items-center gap-1">
                       <Clock size={14} />
@@ -898,7 +898,7 @@ const TechnologyTrainingLandingPage = () => {
                     <Info size={16} />
                     Course Details
                   </motion.button>
-                  
+
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -916,6 +916,85 @@ const TechnologyTrainingLandingPage = () => {
       </section>
       </div>
 
+      {/* Cross-selling: Cybersecurity Courses */}
+      <div className="bg-gradient-to-br from-slate-800 to-slate-900 py-16">
+        <section className="container mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center max-w-4xl mx-auto"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              🛡️ Also Explore Our <span className="text-blue-400">Cybersecurity Courses</span>
+            </h2>
+            <p className="text-slate-300 text-lg mb-8">
+              Protect what you build! Add cybersecurity skills to your tech expertise and become a complete professional.
+            </p>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {[
+                {
+                  title: 'Defensive Security Professional',
+                  price: '₹20,000',
+                  duration: '8 weeks',
+                  description: 'SOC Analyst to Security Engineer path',
+                  icon: '🛡️'
+                },
+                {
+                  title: 'Offensive Security Mastery',
+                  price: '₹20,000',
+                  duration: '8 weeks',
+                  description: 'Ethical Hacker to Penetration Tester',
+                  icon: '⚔️'
+                },
+                {
+                  title: '7-Day Security Bootcamps',
+                  price: '₹499+',
+                  duration: '1 week',
+                  description: 'Quick introduction to cybersecurity',
+                  icon: '⚡'
+                }
+              ].map((course, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-blue-500 transition-all duration-300"
+                >
+                  <div className="text-4xl mb-4">{course.icon}</div>
+                  <h3 className="text-xl font-bold text-white mb-2">{course.title}</h3>
+                  <div className="text-blue-400 font-bold text-lg mb-2">{course.price}</div>
+                  <div className="text-slate-400 text-sm mb-3">{course.duration}</div>
+                  <p className="text-slate-300 text-sm">{course.description}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.open('/', '_blank')}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
+              >
+                🚀 Explore Cybersecurity Courses
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => window.open('/events-batches', '_blank')}
+                className="border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300"
+              >
+                ⚡ Try Security Bootcamps
+              </motion.button>
+            </div>
+          </motion.div>
+        </section>
+      </div>
+
       {/* Call to Action */}
       <div className="bg-slate-900 py-16">
         <section className="container mx-auto px-6">
@@ -929,7 +1008,7 @@ const TechnologyTrainingLandingPage = () => {
             <p className="text-slate-300 text-lg mb-8">
               Join thousands of students who have transformed their careers with our industry-focused training programs
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -939,7 +1018,7 @@ const TechnologyTrainingLandingPage = () => {
               >
                 Get Career Guidance
               </motion.button>
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -1095,14 +1174,14 @@ const TechnologyTrainingLandingPage = () => {
           </motion.div>
         </motion.div>
       )}
-      
-      <EnhancedEnrollmentModal 
+
+      <EnhancedEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
         courseType={enrollmentModal.courseType}
         courseName={enrollmentModal.courseName}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

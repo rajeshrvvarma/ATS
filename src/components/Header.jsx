@@ -33,6 +33,7 @@ export default function Header({ onNavigate, currentPage }) {
     // Mobile navigation items - dynamic based on user status
     const mobileNavItems = [
     { name: "Events & Batches", action: () => onNavigate('events-batches') },
+    { name: "Tech Academy", action: () => onNavigate('technologyTraining') },
         // Module catalog archived - premium courses only
         { name: "About Us", action: () => scrollToSection('about') },
         ...(user && user.enrolledCourses && user.enrolledCourses.length > 0
@@ -191,6 +192,12 @@ export default function Header({ onNavigate, currentPage }) {
                                 className="text-slate-300 hover:text-blue-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
                             >
                                 Events & Batches
+                            </button>
+                            <button
+                                onClick={() => onNavigate('technologyTraining')}
+                                className="text-slate-300 hover:text-green-400 font-medium transition-colors duration-200 whitespace-nowrap px-2"
+                            >
+                                Tech Academy
                             </button>
                             {/* About Us and Contact Us links removed */}
                         </div>

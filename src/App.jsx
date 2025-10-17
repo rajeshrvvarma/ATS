@@ -25,6 +25,7 @@ import Footer from '@/components/Footer.jsx';
 const HomePage = React.lazy(() => import('@/pages/HomePage.jsx'));
 const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
 // Landing pages archived - content moved to Events & Batches and Premium Courses
+const TechnologyTrainingLandingPage = React.lazy(() => import('@/pages/TechnologyTrainingLandingPage.jsx'));
 const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrainingLandingPage.jsx'));
 // Module pages archived - focusing on premium courses only
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
@@ -59,6 +60,7 @@ export default function App() {
         defensiveBootcamp: '/bootcamp/defensive',
         offensiveBootcamp: '/bootcamp/offensive',
         // Landing pages archived - content moved to Events & Batches
+        technologyTraining: '/technology-academy',
         collegeTraining: '/college-bulk-training',
         'upcoming-batches': '/upcoming-batches',
         'events-batches': '/events-batches',
@@ -88,6 +90,7 @@ export default function App() {
         '/bootcamp/defensive': 'defensiveBootcamp',
         '/bootcamp/offensive': 'offensiveBootcamp',
         // Landing pages archived - redirecting to events-batches
+        '/technology-academy': 'technologyTraining',
         '/college-bulk-training': 'collegeTraining',
         '/upcoming-batches': 'upcoming-batches',
         '/events-batches': 'events-batches',
@@ -163,7 +166,8 @@ export default function App() {
                             <Route path="/ethical-hacking-bootcamp" element={<Navigate to="/events-batches" replace />} />
                             <Route path="/offensive-security-mastery" element={<Navigate to="/" replace />} />
                             <Route path="/specialized-courses" element={<Navigate to="/" replace />} />
-                            <Route path="/technology-training" element={<Navigate to="/" replace />} />
+                            <Route path="/technology-training" element={<Navigate to="/technology-academy" replace />} />
+                            <Route path="/technology-academy" element={<TechnologyTrainingLandingPage onNavigate={go} />} />
                             <Route path="/college-bulk-training" element={<CollegeTrainingLandingPage onNavigate={go} />} />
                             <Route path="/events-batches" element={<EventsBatchesPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
