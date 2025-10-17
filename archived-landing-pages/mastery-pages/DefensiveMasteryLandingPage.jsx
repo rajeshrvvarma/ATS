@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 
 const DefensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(7); // Dynamic counter for small batch
@@ -28,7 +28,7 @@ const DefensiveMasteryLandingPage = () => {
       modules: ['Network Security Fundamentals', 'Information Security Management'],
       sessions: [
         'Cybersecurity Landscape & Career Paths',
-        'Network Security Fundamentals', 
+        'Network Security Fundamentals',
         'Operating System Security',
         'Cryptography Basics',
         'Security Frameworks Overview'
@@ -43,7 +43,7 @@ const DefensiveMasteryLandingPage = () => {
       sessions: [
         'Threat Intelligence Fundamentals',
         'OSINT Techniques',
-        'Malware Analysis Basics', 
+        'Malware Analysis Basics',
         'Threat Hunting Concepts',
         'IOC Analysis'
       ],
@@ -143,7 +143,7 @@ const DefensiveMasteryLandingPage = () => {
     'All sessions recorded for lifetime access',
     '10+ hands-on projects and labs',
     'Comprehensive course materials & resources',
-    'Industry-recognized certificate of completion', 
+    'Industry-recognized certificate of completion',
     'Advanced resume review and optimization',
     'Mock interviews with real hiring managers',
     'Direct connections to hiring partners',
@@ -167,7 +167,7 @@ const DefensiveMasteryLandingPage = () => {
     },
     {
       id: 'installment',
-      name: 'Two Installments', 
+      name: 'Two Installments',
       price: '₹3,299 + ₹3,000',
       originalPrice: '₹7,999',
       savings: 'Save ₹1,700',
@@ -226,18 +226,17 @@ const DefensiveMasteryLandingPage = () => {
                   <div className="text-lg text-gray-300 mb-1 line-through">₹8,999</div>
                   <div className="text-green-400 font-semibold">Save ₹3,000 with full payment</div>
                 </div>
-                
+
                 <div>
-                  <div className="flex justify-between mb-2">
-                    <span className="text-gray-200">Premium Seats Taken</span>
-                    <span className="text-white font-semibold">{currentEnrolled}/20</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
-                    <div 
-                      className="bg-gradient-to-r from-purple-500 to-blue-500 h-4 rounded-full transition-all duration-1000"
-                      style={{ width: `${progressPercentage}%` }}
-                    />
-                  </div>
+          <ModernEnrollmentModal
+            isOpen={isEnrollmentModalOpen}
+            onClose={() => setIsEnrollmentModalOpen(false)}
+            courseData={{ title: 'Defensive Security Mastery', price: '₹5,999', duration: '8 Weeks' }}
+            onEnrollmentSuccess={(result) => {
+              console.log('Defensive mastery enrollment successful:', result);
+              // You can add success tracking or analytics here
+            }}
+          />
                   {seatsLeft <= 5 ? (
                     <div className="text-red-400 font-semibold flex items-center">
                       <Award className="h-5 w-5 mr-2" />
@@ -338,7 +337,7 @@ const DefensiveMasteryLandingPage = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Modules Covered This Week */}
                 {week.modules && week.modules.length > 0 && (
                   <div className="mb-4 bg-slate-800/50 rounded-lg p-4 border border-purple-600/30">
@@ -418,8 +417,8 @@ const DefensiveMasteryLandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className={`relative bg-gray-800 rounded-xl p-6 border-2 cursor-pointer transition-all duration-300 ${
-                  selectedPaymentPlan === plan.id 
-                    ? 'border-purple-500 bg-purple-900 bg-opacity-20' 
+                  selectedPaymentPlan === plan.id
+                    ? 'border-purple-500 bg-purple-900 bg-opacity-20'
                     : 'border-gray-600 hover:border-gray-500'
                 } ${plan.popular ? 'ring-2 ring-purple-500 ring-opacity-50' : ''}`}
                 onClick={() => setSelectedPaymentPlan(plan.id)}
@@ -429,7 +428,7 @@ const DefensiveMasteryLandingPage = () => {
                     Most Popular
                   </div>
                 )}
-                
+
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                   <div className="text-3xl font-bold text-purple-300 mb-1">{plan.price}</div>
@@ -456,8 +455,8 @@ const DefensiveMasteryLandingPage = () => {
                     className="sr-only"
                   />
                   <div className={`w-6 h-6 rounded-full border-2 mx-auto ${
-                    selectedPaymentPlan === plan.id 
-                      ? 'bg-purple-500 border-purple-500' 
+                    selectedPaymentPlan === plan.id
+                      ? 'bg-purple-500 border-purple-500'
                       : 'border-gray-400'
                   }`}>
                     {selectedPaymentPlan === plan.id && (
@@ -476,7 +475,7 @@ const DefensiveMasteryLandingPage = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gradient-to-br from-gray-800 to-gray-700 rounded-2xl p-8 border border-gray-600">
             <h2 className="text-3xl font-bold text-center mb-8">Reserve Your Premium Seat</h2>
-            
+
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -591,18 +590,13 @@ const DefensiveMasteryLandingPage = () => {
         </div>
       </div>
 
-      {/* Enhanced Enrollment Modal */}
-      <EnhancedEnrollmentModal
+      {/* Modern Enrollment Modal */}
+      <ModernEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="defensive-mastery"
-        courseName="2-Month Defensive Security Mastery"
-        onEnrollmentSuccess={(result) => {
-          console.log('Defensive mastery enrollment successful:', result);
-          // You can add success tracking or analytics here
-        }}
+        courseData={{ title: 'Defensive Security Mastery', price: '₹5,999', duration: '8 Weeks' }}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Clock, ArrowRight, Code, Globe, Cloud, Database, Shield, Server, Eye, Target, Laptop, TestTube, BrainCircuit, BookOpen, X, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { modules as staticModules } from '@/data/modules.js';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 
 const ModuleCatalog = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = React.useState('All');
@@ -351,13 +351,10 @@ const ModuleCatalog = ({ onNavigate }) => {
       </AnimatePresence>
 
       {/* Enrollment Modal */}
-      <EnhancedEnrollmentModal
+      <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', course: null })}
-        courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.course?.title || ''}
-        coursePrice={enrollmentModal.course?.price}
-        courseDuration={enrollmentModal.course?.duration}
+        courseData={enrollmentModal.course || null}
       />
     </div>
   );

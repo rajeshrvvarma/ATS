@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+// Legacy enhanced modal kept as fallback - prefer ModernEnrollmentModal
+// import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
@@ -11,7 +13,7 @@ const CollegeTrainingLandingPage = () => {
   const [visitorCount, setVisitorCount] = useState(2847);
   const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
-  
+
   // Load centralized pricing with simpler pattern
   const coursePricingData = useCoursePricing();
   const coursePricing = coursePricingData?.pricing || {};
@@ -48,7 +50,7 @@ const CollegeTrainingLandingPage = () => {
     },
     {
       icon: <Target className="w-8 h-8 text-green-500" />,
-      title: "Placement-Ready Skills", 
+      title: "Placement-Ready Skills",
       description: "Skills specifically chosen by recruiters from top companies for immediate employment"
     },
     {
@@ -81,7 +83,7 @@ const CollegeTrainingLandingPage = () => {
       topCompany: "TCS, Wipro, Infosys"
     },
     {
-      college: "SRM University", 
+      college: "SRM University",
       studentsPlaced: 134,
       avgSalary: "₹4.8 LPA",
       topCompany: "Accenture, HCL, Tech Mahindra"
@@ -89,7 +91,7 @@ const CollegeTrainingLandingPage = () => {
     {
       college: "Amity University",
       studentsPlaced: 178,
-      avgSalary: "₹5.5 LPA", 
+      avgSalary: "₹5.5 LPA",
       topCompany: "IBM, Capgemini, DXC Technology"
     }
   ];
@@ -105,13 +107,13 @@ const CollegeTrainingLandingPage = () => {
           topics: ["Network Security Basics", "Threat Landscape", "Security Frameworks", "Risk Assessment"]
         },
         {
-          week: "Week 3-4", 
+          week: "Week 3-4",
           title: "Defensive Security Skills",
           topics: ["SOC Operations", "Incident Response", "Log Analysis", "Security Monitoring"]
         },
         {
           week: "Week 5-6",
-          title: "Ethical Hacking Basics", 
+          title: "Ethical Hacking Basics",
           topics: ["Penetration Testing", "Vulnerability Assessment", "Web Application Security", "Network Scanning"]
         },
         {
@@ -131,13 +133,13 @@ const CollegeTrainingLandingPage = () => {
           topics: ["Python/Java Basics", "Data Structures", "Algorithms", "Object-Oriented Programming"]
         },
         {
-          week: "Week 4-6", 
+          week: "Week 4-6",
           title: "Web Development Stack",
           topics: ["Frontend (React/Angular)", "Backend (Node.js/Spring)", "Database Design", "API Development"]
         },
         {
           week: "Week 7-9",
-          title: "Cloud & DevOps", 
+          title: "Cloud & DevOps",
           topics: ["AWS/Azure Basics", "Docker Containers", "CI/CD Pipelines", "Infrastructure as Code"]
         },
         {
@@ -178,7 +180,7 @@ const CollegeTrainingLandingPage = () => {
         features: [
           "8-week intensive training",
           "Advanced hands-on labs",
-          "Premium certification", 
+          "Premium certification",
           "Dedicated support manager",
           "Priority placement support",
           "Industry mentor sessions"
@@ -195,7 +197,7 @@ const CollegeTrainingLandingPage = () => {
           "Real-world project assignments",
           "Elite certification with portfolio",
           "24/7 support & mentorship",
-          "Guaranteed placement assistance", 
+          "Guaranteed placement assistance",
           "Direct recruiter connects",
           "Alumni network access"
         ]
@@ -226,7 +228,7 @@ const CollegeTrainingLandingPage = () => {
         features: [
           "12-week intensive training",
           "Advanced project-based learning",
-          "Premium certification", 
+          "Premium certification",
           "Dedicated support manager",
           "Priority placement support",
           "Industry mentor sessions",
@@ -244,7 +246,7 @@ const CollegeTrainingLandingPage = () => {
           "Real-world industry projects",
           "Elite certification with portfolio",
           "24/7 support & mentorship",
-          "Guaranteed placement assistance", 
+          "Guaranteed placement assistance",
           "Direct recruiter connects",
           "Alumni network access",
           "Specialization tracks"
@@ -270,7 +272,7 @@ const CollegeTrainingLandingPage = () => {
               <Users className="w-4 h-4 text-blue-400" />
               <span className="text-blue-300 text-sm">College Bulk Training Program</span>
             </div>
-            
+
             {/* Program Selection Tabs */}
             <div className="flex justify-center mb-8">
               <div className="bg-slate-800/50 rounded-full p-1 backdrop-blur-sm border border-slate-700">
@@ -307,17 +309,17 @@ const CollegeTrainingLandingPage = () => {
                 {selectedProgram === 'cybersecurity' ? 'Cybersecurity' : 'Technology'} Professionals
               </span>
             </h1>
-            
+
             <p className="text-xl text-slate-300 mb-8 max-w-4xl mx-auto">
               {currentProgram.description}. Train 100-200 students with industry-focused curriculum and guaranteed placement support.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-              <motion.button 
-                onClick={() => setEnrollmentModal({ 
-                  isOpen: true, 
-                  courseType: 'college-training', 
-                  courseName: `${currentProgram.title} - Bulk Training Program` 
+              <motion.button
+                onClick={() => setEnrollmentModal({
+                  isOpen: true,
+                  courseType: 'college-training',
+                  courseName: `${currentProgram.title} - Bulk Training Program`
                 })}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -327,8 +329,8 @@ const CollegeTrainingLandingPage = () => {
                 Get Bulk Pricing Quote
                 <ArrowRight className="w-5 h-5" />
               </motion.button>
-              
-              <motion.button 
+
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="border border-slate-600 hover:border-blue-500 px-8 py-4 rounded-lg font-semibold transition-colors"
@@ -368,7 +370,7 @@ const CollegeTrainingLandingPage = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">College Success Stories</h2>
             <p className="text-slate-300 text-lg">Real results from engineering colleges across India</p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {successStories.map((story, index) => (
               <motion.div
@@ -411,7 +413,7 @@ const CollegeTrainingLandingPage = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Flexible Pricing for Every College</h2>
             <p className="text-slate-300 text-lg">Choose the perfect plan based on your student batch size</p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {currentPricingTiers.map((tier, index) => (
               <motion.div
@@ -420,8 +422,8 @@ const CollegeTrainingLandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`relative bg-slate-800/50 rounded-xl p-6 border transition-all duration-300 backdrop-blur-sm ${
-                  tier.popular 
-                    ? 'border-blue-500 scale-105 shadow-lg shadow-blue-500/25' 
+                  tier.popular
+                    ? 'border-blue-500 scale-105 shadow-lg shadow-blue-500/25'
                     : 'border-slate-700 hover:border-blue-500/50'
                 }`}
               >
@@ -430,7 +432,7 @@ const CollegeTrainingLandingPage = () => {
                     Most Popular
                   </div>
                 )}
-                
+
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-semibold mb-2">{tier.name}</h3>
                   <div className="text-slate-400 text-sm mb-3">{tier.students}</div>
@@ -440,7 +442,7 @@ const CollegeTrainingLandingPage = () => {
                     <span className="text-slate-400 text-sm">/student</span>
                   </div>
                 </div>
-                
+
                 <ul className="space-y-3 mb-6">
                   {tier.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-start gap-2">
@@ -449,18 +451,18 @@ const CollegeTrainingLandingPage = () => {
                     </li>
                   ))}
                 </ul>
-                
+
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setEnrollmentModal({ 
-                    isOpen: true, 
-                    courseType: tier.courseId, 
-                    courseName: `${currentProgram.title} - ${tier.name}` 
+                  onClick={() => setEnrollmentModal({
+                    isOpen: true,
+                    courseType: tier.courseId,
+                    courseName: `${currentProgram.title} - ${tier.name}`
                   })}
                   className={`w-full py-3 rounded-lg font-semibold transition-colors ${
-                    tier.popular 
-                      ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                    tier.popular
+                      ? 'bg-blue-600 hover:bg-blue-700 text-white'
                       : 'border border-slate-600 hover:border-blue-500 text-slate-300'
                   }`}
                 >
@@ -484,7 +486,7 @@ const CollegeTrainingLandingPage = () => {
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Our College Training Program?</h2>
             <p className="text-slate-300 text-lg">Designed specifically for engineering students and fresh graduates</p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {benefits.map((benefit, index) => (
               <motion.div
@@ -519,7 +521,7 @@ const CollegeTrainingLandingPage = () => {
               {currentProgram.title} program designed by industry experts
             </p>
           </motion.div>
-          
+
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {currentProgram.curriculum.map((week, index) => (
               <motion.div
@@ -558,21 +560,21 @@ const CollegeTrainingLandingPage = () => {
             <p className="text-slate-300 text-lg mb-8">
               Join 500+ engineering colleges that have successfully trained over 15,000 students with our proven curriculum.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setEnrollmentModal({ 
-                  isOpen: true, 
-                  courseType: 'college-training', 
-                  courseName: `${currentProgram.title} - College Training Program` 
+                onClick={() => setEnrollmentModal({
+                  isOpen: true,
+                  courseType: 'college-training',
+                  courseName: `${currentProgram.title} - College Training Program`
                 })}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
               >
                 Start Your Program Today
               </motion.button>
-              
+
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -589,14 +591,19 @@ const CollegeTrainingLandingPage = () => {
         </section>
       </div>
 
-      <EnhancedEnrollmentModal 
+      <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.courseName}
-        coursePrice={pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice)}
+        courseData={enrollmentModal.isOpen ? {
+          title: enrollmentModal.courseName,
+          courseId: enrollmentModal.courseType,
+          duration: '',
+          price: pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice ? `₹${coursePricing?.[enrollmentModal.courseType]?.finalPrice}` : undefined),
+          originalPrice: pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.originalPrice ? `₹${coursePricing?.[enrollmentModal.courseType]?.originalPrice}` : undefined),
+          batchInfo: { date: '', time: '' }
+        } : null}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye, X, BookOpen, Play, ArrowLeft, Users, Star, TrendingUp, Globe, Cloud, Database, Laptop, TestTube } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { modules as staticModules } from '@/data/modules.js';
@@ -99,11 +99,10 @@ const ModuleDetailPage = ({ onNavigate }) => {
   return (
     <>
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-      <EnhancedEnrollmentModal
+      <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.courseName}
+        courseData={enrollmentModal.course ? enrollmentModal.course : { title: enrollmentModal.courseName }}
       />
       <ScrollNavigation />
 

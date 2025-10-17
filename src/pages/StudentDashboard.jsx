@@ -4,13 +4,13 @@ import { useAccessControl } from '@/context/AccessControlContext.jsx';
 import DashboardLayout from '@/components/DashboardLayout.jsx';
 import VideoCourse from '@/components/VideoCourse.jsx';
 import SecureContentViewer from '@/components/SecureContentViewer.jsx';
-import EnhancedEnrollmentButton from '@/components/EnhancedEnrollmentButton.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import { loadCourses } from '@/services/courseService.js';
-import { 
-  BookOpen, 
-  Award, 
-  Clock, 
-  TrendingUp, 
+import {
+  BookOpen,
+  Award,
+  Clock,
+  TrendingUp,
   Calendar,
   Download,
   Settings,
@@ -42,9 +42,9 @@ const db = getFirestore(app);
  */
 export default function StudentDashboard({ onNavigate }) {
   const { user } = useAuth();
-  const { 
-    enrollments, 
-    activeEnrollments, 
+  const {
+    enrollments,
+    activeEnrollments,
     checkCourseAccess,
     getCourseProgress,
     getCompletedLessons,
@@ -54,16 +54,16 @@ export default function StudentDashboard({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
+
   // LMS Integration states
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [allCourses, setAllCourses] = useState([]);
   const [cart, setCart] = useState([]);
-  
+
   // Content viewer states
   const [viewingContent, setViewingContent] = useState(null); // { course, lesson }
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
-  
+
   // Real data states
   const [studentStats, setStudentStats] = useState({
     coursesEnrolled: 0,
@@ -81,6 +81,8 @@ export default function StudentDashboard({ onNavigate }) {
   const [showNotesPopup, setShowNotesPopup] = useState(false);
   const [replyingToNote, setReplyingToNote] = useState(null);
   const [replyText, setReplyText] = useState('');
+  // Enrollment modal state (use ModernEnrollmentModal as new default)
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseData: null });
 
   useEffect(() => {
     if (user) {
@@ -93,10 +95,10 @@ export default function StudentDashboard({ onNavigate }) {
 
   const loadStudentData = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     setError('');
-    
+
     try {
       // Load student's enrolled courses
       const enrollmentsQuery = query(
@@ -105,11 +107,11 @@ export default function StudentDashboard({ onNavigate }) {
       );
       const enrollmentsSnapshot = await getDocs(enrollmentsQuery);
       const enrollments = enrollmentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      
+
       // Load courses details for enrolled courses
       const courseIds = enrollments.map(e => e.courseId);
       const courses = [];
-      
+
       if (courseIds.length > 0) {
         // In a real app, you'd batch fetch courses
         for (const courseId of courseIds) {
@@ -127,9 +129,9 @@ export default function StudentDashboard({ onNavigate }) {
           });
         }
       }
-      
+
       setEnrolledCourses(courses);
-      
+
       // Load student certificates
       const certificatesQuery = query(
         collection(db, 'certificates'),
@@ -138,7 +140,7 @@ export default function StudentDashboard({ onNavigate }) {
       const certificatesSnapshot = await getDocs(certificatesQuery);
       const userCertificates = certificatesSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setCertificates(userCertificates);
-      
+
       // Load recent activity
       const activityQuery = query(
         collection(db, 'studentActivity'),
@@ -149,7 +151,7 @@ export default function StudentDashboard({ onNavigate }) {
       const activitySnapshot = await getDocs(activityQuery);
       const activities = activitySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setRecentActivity(activities);
-      
+
       // Calculate stats
       const stats = {
         coursesEnrolled: courses.length,
@@ -160,18 +162,18 @@ export default function StudentDashboard({ onNavigate }) {
         totalPoints: enrollments.reduce((total, e) => total + (e.points || 0), 0)
       };
       setStudentStats(stats);
-      
+
     } catch (err) {
       console.error('Error loading student data:', err);
       setError('Failed to load dashboard data');
     }
-    
+
     setLoading(false);
   };
 
   const loadAdminNotes = async () => {
     if (!user) return;
-    
+
     try {
       // Fetch admin notes subcollection
       const notesCol = collection(db, 'users', user.uid, 'notes');
@@ -179,7 +181,7 @@ export default function StudentDashboard({ onNavigate }) {
       const notesSnap = await getDocs(notesQuery);
       const notesList = notesSnap.docs.map(d => ({ id: d.id, ...d.data() }));
       setAdminNotes(notesList);
-      
+
       // Show popup if there are unread notes
       const unreadNotes = notesList.filter(note => !note.readByUser);
       if (unreadNotes.length > 0) {
@@ -192,7 +194,7 @@ export default function StudentDashboard({ onNavigate }) {
 
   const handleReplyToNote = async (noteId) => {
     if (!replyText.trim()) return;
-    
+
     try {
       const repliesCol = collection(db, 'users', user.uid, 'notes', noteId, 'replies');
       await addDoc(repliesCol, {
@@ -201,7 +203,7 @@ export default function StudentDashboard({ onNavigate }) {
         userName: user.displayName || user.email,
         createdAt: serverTimestamp()
       });
-      
+
       setReplyText('');
       setReplyingToNote(null);
       loadAdminNotes(); // Refresh notes
@@ -215,18 +217,18 @@ export default function StudentDashboard({ onNavigate }) {
     // Mark all unread notes as read when popup is closed
     try {
       const unreadNotes = adminNotes.filter(note => !note.readByUser);
-      
+
       // Update each unread note to mark as read
       for (const note of unreadNotes) {
         const noteRef = doc(db, 'users', user.uid, 'notes', note.id);
         await updateDoc(noteRef, { readByUser: true });
       }
-      
+
       // Update local state
-      setAdminNotes(prevNotes => 
+      setAdminNotes(prevNotes =>
         prevNotes.map(note => ({ ...note, readByUser: true }))
       );
-      
+
       setShowNotesPopup(false);
     } catch (err) {
       console.error('Failed to mark notes as read:', err);
@@ -248,13 +250,13 @@ export default function StudentDashboard({ onNavigate }) {
 
   const handleNextLesson = () => {
     if (!viewingContent) return;
-    
+
     const nextIndex = currentLessonIndex + 1;
     if (nextIndex < viewingContent.course.lessons.length) {
       const nextLesson = viewingContent.course.lessons[nextIndex];
-      setViewingContent({ 
-        course: viewingContent.course, 
-        lesson: nextLesson 
+      setViewingContent({
+        course: viewingContent.course,
+        lesson: nextLesson
       });
       setCurrentLessonIndex(nextIndex);
     }
@@ -262,13 +264,13 @@ export default function StudentDashboard({ onNavigate }) {
 
   const handlePreviousLesson = () => {
     if (!viewingContent) return;
-    
+
     const prevIndex = currentLessonIndex - 1;
     if (prevIndex >= 0) {
       const prevLesson = viewingContent.course.lessons[prevIndex];
-      setViewingContent({ 
-        course: viewingContent.course, 
-        lesson: prevLesson 
+      setViewingContent({
+        course: viewingContent.course,
+        lesson: prevLesson
       });
       setCurrentLessonIndex(prevIndex);
     }
@@ -277,6 +279,15 @@ export default function StudentDashboard({ onNavigate }) {
   const handleCloseViewer = () => {
     setViewingContent(null);
     setCurrentLessonIndex(0);
+  };
+
+  // Open modern enrollment modal
+  const openEnrollmentModal = (course) => {
+    setEnrollmentModal({ isOpen: true, courseData: course });
+  };
+
+  const closeEnrollmentModal = () => {
+    setEnrollmentModal({ isOpen: false, courseData: null });
   };
 
   const tabs = [
@@ -299,15 +310,15 @@ export default function StudentDashboard({ onNavigate }) {
               {enrolledCourses.length > 0 ? 'Your Learning Hub' : 'Welcome to Your Dashboard'}
             </h3>
             <p className="text-xs text-slate-300 mt-1">
-              {enrolledCourses.length > 0 
-                ? 'Access your courses, track progress, and continue learning' 
+              {enrolledCourses.length > 0
+                ? 'Access your courses, track progress, and continue learning'
                 : 'Browse courses, enroll, and start your cybersecurity journey'
               }
             </p>
           </div>
         </div>
       </div>
-      
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
@@ -331,7 +342,7 @@ export default function StudentDashboard({ onNavigate }) {
             <Video className="w-8 h-8 text-sky-400" />
           </div>
         </div>
-        
+
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <div className="flex items-center justify-between">
             <div>
@@ -341,7 +352,7 @@ export default function StudentDashboard({ onNavigate }) {
             <Clock className="w-8 h-8 text-green-400" />
           </div>
         </div>
-        
+
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <div className="flex items-center justify-between">
             <div>
@@ -351,7 +362,7 @@ export default function StudentDashboard({ onNavigate }) {
             <Award className="w-8 h-8 text-yellow-400" />
           </div>
         </div>
-        
+
         <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
           <div className="flex items-center justify-between">
             <div>
@@ -379,7 +390,7 @@ export default function StudentDashboard({ onNavigate }) {
                     {note.createdAt.toDate ? note.createdAt.toDate().toLocaleString() : ''}
                   </div>
                 )}
-                
+
                 {/* Reply Section */}
                 {replyingToNote === note.id ? (
                   <div className="mt-3">
@@ -494,7 +505,7 @@ export default function StudentDashboard({ onNavigate }) {
     if (selectedCourse) {
       const course = enrolledCourses.find(c => c.id === selectedCourse) || allCourses.find(c => c.id === selectedCourse);
       const isEnrolled = enrolledCourses.some(c => c.id === selectedCourse);
-      
+
       if (!isEnrolled) {
         return (
           <div className="space-y-6">
@@ -505,7 +516,7 @@ export default function StudentDashboard({ onNavigate }) {
               <ArrowLeft className="w-5 h-5" />
               Back to My Learning
             </button>
-            
+
             <div className="bg-slate-800 rounded-lg p-8 text-center">
               <Lock className="w-16 h-16 text-slate-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-white mb-2">Course Not Accessible</h2>
@@ -520,7 +531,7 @@ export default function StudentDashboard({ onNavigate }) {
           </div>
         );
       }
-      
+
       return (
         <div className="space-y-6">
           <button
@@ -530,9 +541,9 @@ export default function StudentDashboard({ onNavigate }) {
             <ArrowLeft className="w-5 h-5" />
             Back to My Learning
           </button>
-          
-          <VideoCourse 
-            course={course} 
+
+          <VideoCourse
+            course={course}
             onCourseComplete={(course) => {
               // Handle course completion
               console.log('Course completed:', course);
@@ -548,7 +559,7 @@ export default function StudentDashboard({ onNavigate }) {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">My Learning</h2>
-          <button 
+          <button
             onClick={() => setActiveTab('browse')}
             className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
           >
@@ -561,7 +572,7 @@ export default function StudentDashboard({ onNavigate }) {
             <BookOpen className="w-16 h-16 text-slate-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-white mb-2">Start Your Learning Journey</h3>
             <p className="text-slate-400 text-lg mb-6">No enrolled courses yet. Browse our catalog to get started!</p>
-            <button 
+            <button
               onClick={() => setActiveTab('browse')}
               className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
             >
@@ -590,28 +601,28 @@ export default function StudentDashboard({ onNavigate }) {
                       {course.difficulty || 'Intermediate'}
                     </span>
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-slate-400">Progress</span>
                       <span className="text-white font-medium">{Math.round(progress)}%</span>
                     </div>
-                  
+
                   <div className="w-full bg-slate-700 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-sky-500 h-2 rounded-full transition-all duration-300"
                       style={{ width: `${Math.round(progress)}%` }}
                     ></div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between text-sm text-slate-400">
                     <span>{completedLessons}/{totalLessons} lessons</span>
                     <span>{course.duration || 'Self-paced'}</span>
                   </div>
-                  
+
                   <div className="pt-2 border-t border-slate-700">
                     <p className="text-sm text-slate-400 mb-2">Next: {course.nextLesson || 'Start Course'}</p>
-                    <button 
+                    <button
                       onClick={() => handleOpenLesson(course.id, 0)}
                       className="w-full flex items-center justify-center space-x-2 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors"
                     >
@@ -632,7 +643,7 @@ export default function StudentDashboard({ onNavigate }) {
   // Browse Courses Section
   const renderBrowseCourses = () => {
     // Filter courses: only show published and coming-soon courses
-    const availableCourses = allCourses.filter(course => 
+    const availableCourses = allCourses.filter(course =>
       course.status === 'published' || course.status === 'coming-soon'
     );
 
@@ -644,7 +655,7 @@ export default function StudentDashboard({ onNavigate }) {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">Browse Courses</h2>
           {cart.length > 0 && (
-            <button 
+            <button
               onClick={() => onNavigate('enroll')}
               className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
             >
@@ -665,13 +676,13 @@ export default function StudentDashboard({ onNavigate }) {
               {publishedCourses.map((course) => {
                 const isEnrolled = activeEnrollments.some(enrollment => enrollment.courseId === course.id);
                 const inCart = cart.includes(course.id);
-                
+
                 return (
                   <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-slate-600 transition-colors">
                     <div className="relative">
                       {course.thumbnail ? (
-                        <img 
-                          src={course.thumbnail} 
+                        <img
+                          src={course.thumbnail}
                           alt={course.title}
                           className="w-full h-40 object-cover"
                         />
@@ -689,13 +700,13 @@ export default function StudentDashboard({ onNavigate }) {
                         Available
                       </div>
                     </div>
-                    
+
                     <div className="p-6">
                       <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
                       <p className="text-slate-400 text-sm mb-4 line-clamp-2">
                         {course.shortDescription || course.description}
                       </p>
-                      
+
                       <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
@@ -720,9 +731,9 @@ export default function StudentDashboard({ onNavigate }) {
                           {course.price > 0 ? `₹${course.price}` : 'Free'}
                         </span>
                       </div>
-                      
+
                       {isEnrolled ? (
-                        <button 
+                        <button
                           onClick={() => setSelectedCourse(course.id)}
                           className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                         >
@@ -731,22 +742,21 @@ export default function StudentDashboard({ onNavigate }) {
                         </button>
                       ) : (
                         <div className="space-y-2">
-                          <button 
+                          <button
                             onClick={() => setSelectedCourse(course.id)}
                             className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
                           >
                             <Eye className="w-4 h-4" />
                             Preview Course
                           </button>
-                          <EnhancedEnrollmentButton
-                            course={course}
-                            user={user}
-                            onEnrollmentSuccess={async (courseId) => {
-                              await refreshEnrollments();
-                              setCart(cart.filter(id => id !== courseId));
-                            }}
-                            className="w-full text-sm"
-                          />
+              {/* Modern enrollment modal trigger */}
+                          <button
+                            onClick={() => openEnrollmentModal(course)}
+                            className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg transition-colors text-sm flex items-center justify-center gap-2"
+                          >
+                            <CreditCard className="w-4 h-4" />
+                            <span>{course.price > 0 ? `Enroll for ₹${course.price}` : 'Enroll Free'}</span>
+                          </button>
                         </div>
                       )}
                     </div>
@@ -769,8 +779,8 @@ export default function StudentDashboard({ onNavigate }) {
                 <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 opacity-75">
                   <div className="relative">
                     {course.thumbnail ? (
-                      <img 
-                        src={course.thumbnail} 
+                      <img
+                        src={course.thumbnail}
                         alt={course.title}
                         className="w-full h-40 object-cover"
                       />
@@ -789,13 +799,13 @@ export default function StudentDashboard({ onNavigate }) {
                       Coming Soon
                     </div>
                   </div>
-                  
+
                   <div className="p-6">
                     <h3 className="text-lg font-semibold text-white mb-2">{course.title}</h3>
                     <p className="text-slate-400 text-sm mb-4 line-clamp-2">
                       {course.shortDescription || course.description}
                     </p>
-                    
+
                     <div className="flex items-center justify-between text-sm text-slate-400 mb-2">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
@@ -820,8 +830,8 @@ export default function StudentDashboard({ onNavigate }) {
                         {course.price > 0 ? `₹${course.price}` : 'Free'}
                       </span>
                     </div>
-                    
-                    <button 
+
+                    <button
                       disabled
                       className="w-full py-2 bg-slate-700 text-slate-400 rounded-lg cursor-not-allowed flex items-center justify-center gap-2"
                     >
@@ -882,12 +892,12 @@ export default function StudentDashboard({ onNavigate }) {
                   <p className="text-sm text-slate-400">Grade: {cert.grade}</p>
                 </div>
               </div>
-              
+
               <div className="space-y-2 text-sm text-slate-400">
                 <p>Issued: {cert.issueDate}</p>
                 <p>ID: {cert.credentialId}</p>
               </div>
-              
+
               <button className="w-full mt-4 flex items-center justify-center space-x-2 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
                 <Download className="w-4 h-4" />
                 <span>Download Certificate</span>
@@ -910,7 +920,7 @@ export default function StudentDashboard({ onNavigate }) {
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {allCourses
               .filter(course => course.status === 'published')
@@ -918,13 +928,13 @@ export default function StudentDashboard({ onNavigate }) {
               .map((course) => {
                 const isEnrolled = activeEnrollments.some(enrollment => enrollment.courseId === course.id);
                 const inCart = cart.includes(course.id);
-                
+
                 return (
                   <div key={course.id} className="bg-slate-800 rounded-lg overflow-hidden border border-slate-700 hover:border-slate-600 transition-colors">
                     <div className="relative">
                       {course.thumbnail ? (
-                        <img 
-                          src={course.thumbnail} 
+                        <img
+                          src={course.thumbnail}
                           alt={course.title}
                           className="w-full h-32 object-cover"
                         />
@@ -939,13 +949,13 @@ export default function StudentDashboard({ onNavigate }) {
                         </div>
                       )}
                     </div>
-                    
+
                     <div className="p-4">
                       <h4 className="font-semibold text-white mb-1">{course.title}</h4>
                       <p className="text-slate-400 text-sm mb-3 line-clamp-2">
                         {course.shortDescription || course.description}
                       </p>
-                      
+
                       <div className="flex items-center justify-between text-xs text-slate-400 mb-3">
                         <span className="flex items-center gap-1">
                           <BookOpen className="w-3 h-3" />
@@ -955,9 +965,9 @@ export default function StudentDashboard({ onNavigate }) {
                           {course.price > 0 ? `₹${course.price}` : 'Free'}
                         </span>
                       </div>
-                      
+
                       {isEnrolled ? (
-                        <button 
+                        <button
                           onClick={() => setSelectedCourse(course.id)}
                           className="w-full py-2 bg-sky-600 hover:bg-sky-700 text-white rounded text-sm transition-colors"
                         >
@@ -965,13 +975,13 @@ export default function StudentDashboard({ onNavigate }) {
                         </button>
                       ) : (
                         <div className="flex gap-2">
-                          <button 
+                          <button
                             onClick={() => setSelectedCourse(course.id)}
                             className="flex-1 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded text-sm transition-colors"
                           >
                             Preview
                           </button>
-                          <button 
+                          <button
                             onClick={() => {
                               if (inCart) {
                                 setCart(cart.filter(id => id !== course.id));
@@ -980,8 +990,8 @@ export default function StudentDashboard({ onNavigate }) {
                               }
                             }}
                             className={`flex-1 py-2 rounded text-sm transition-colors ${
-                              inCart 
-                                ? 'bg-orange-600 hover:bg-orange-700 text-white' 
+                              inCart
+                                ? 'bg-orange-600 hover:bg-orange-700 text-white'
                                 : 'bg-blue-600 hover:bg-blue-700 text-white'
                             }`}
                           >
@@ -1008,7 +1018,7 @@ export default function StudentDashboard({ onNavigate }) {
                 <p className="text-slate-400 text-sm">New courses in development</p>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {allCourses
                 .filter(course => course.status === 'coming-soon')
@@ -1028,7 +1038,7 @@ export default function StudentDashboard({ onNavigate }) {
                   </div>
                 ))}
             </div>
-            
+
             {allCourses.filter(course => course.status === 'coming-soon').length > 2 && (
               <button
                 onClick={() => setActiveTab('browse')}
@@ -1046,7 +1056,7 @@ export default function StudentDashboard({ onNavigate }) {
   const renderProgress = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-white">Learning Progress</h2>
-      
+
       {/* Progress Overview */}
       <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
         <h3 className="text-lg font-semibold text-white mb-4">Overall Progress</h3>
@@ -1074,7 +1084,7 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <p className="text-slate-400 mt-2">Course Completion</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-20 h-20 mx-auto relative">
               <svg className="w-20 h-20" viewBox="0 0 36 36">
@@ -1098,7 +1108,7 @@ export default function StudentDashboard({ onNavigate }) {
             </div>
             <p className="text-slate-400 mt-2">Assignment Score</p>
           </div>
-          
+
           <div className="text-center">
             <div className="w-20 h-20 mx-auto relative">
               <svg className="w-20 h-20" viewBox="0 0 36 36">
@@ -1130,7 +1140,7 @@ export default function StudentDashboard({ onNavigate }) {
   const renderSettings = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-white">Account Settings</h2>
-      
+
       {/* Profile editing is now handled via the Profile page, accessible from the user menu. */}
       {/* Learning Preferences */}
       <div className="bg-slate-800 rounded-lg p-6 border border-slate-700">
@@ -1249,6 +1259,12 @@ export default function StudentDashboard({ onNavigate }) {
           user={user}
         />
       )}
+      {/* Modern Enrollment Modal (opened from enroll buttons) */}
+      <ModernEnrollmentModal
+        isOpen={enrollmentModal.isOpen}
+        onClose={closeEnrollmentModal}
+        courseData={enrollmentModal.courseData}
+      />
     </DashboardLayout>
   );
 }

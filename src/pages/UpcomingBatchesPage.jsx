@@ -38,7 +38,9 @@ import {
   Zap
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+// Legacy enhanced modal kept as fallback - prefer ModernEnrollmentModal
+// import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import EventDetailModal from '@/components/EventDetailModal.jsx';
 import AdvancedTabs from '@/components/AdvancedTabs.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
@@ -638,14 +640,18 @@ const EventsBatchesPage = ({ onNavigate }) => {
         </section>
       </div>
 
-      {/* Enhanced Enrollment Modal */}
-      <EnhancedEnrollmentModal
+      {/* Modern Enrollment Modal (replaces EnhancedEnrollmentModal) */}
+      <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.courseName}
-        batchId={enrollmentModal.batchId}
-        coursePrice={pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice)}
+        courseData={enrollmentModal.isOpen ? {
+          title: enrollmentModal.courseName,
+          courseId: enrollmentModal.courseType,
+          duration: '',
+          price: pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice ? `₹${pricing?.[enrollmentModal.courseType]?.finalPrice}` : undefined),
+          originalPrice: pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.originalPrice ? `₹${pricing?.[enrollmentModal.courseType]?.originalPrice}` : undefined),
+          batchInfo: { date: '', time: '' }
+        } : null}
       />
 
       <EventDetailModal

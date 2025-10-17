@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target, Sword, Zap, Shield } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
@@ -11,7 +11,7 @@ const OffensiveBootcampLandingPage = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 12, hours: 6, minutes: 32 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
-  
+
   // Get centralized pricing
   const coursePricingData = useCoursePricing();
   const coursePricing = coursePricingData?.pricing || {};
@@ -49,7 +49,7 @@ const OffensiveBootcampLandingPage = () => {
       highlights: ['Hacker mindset development', 'Legal compliance essentials']
     },
     {
-      day: 2, 
+      day: 2,
       title: 'Information Gathering & Reconnaissance',
       sessions: ['OSINT Techniques', 'Footprinting & Scanning'],
       duration: '3 hours',
@@ -59,7 +59,7 @@ const OffensiveBootcampLandingPage = () => {
       day: 3,
       title: 'Vulnerability Assessment',
       sessions: ['Vulnerability Scanning', 'Manual Testing Techniques'],
-      duration: '3 hours', 
+      duration: '3 hours',
       highlights: ['Nessus & OpenVAS hands-on', 'Custom vulnerability validation']
     },
     {
@@ -78,7 +78,7 @@ const OffensiveBootcampLandingPage = () => {
     },
     {
       day: 6,
-      title: 'Wireless Security & Social Engineering', 
+      title: 'Wireless Security & Social Engineering',
       sessions: ['WiFi Penetration Testing', 'Social Engineering Attacks'],
       duration: '3 hours',
       highlights: ['Aircrack-ng usage', 'Phishing campaign creation']
@@ -97,7 +97,7 @@ const OffensiveBootcampLandingPage = () => {
     'All sessions recorded for lifetime access',
     'Kali Linux VM setup and tools',
     'Hands-on lab exercises with real targets',
-    'Industry-recognized ethical hacker certificate', 
+    'Industry-recognized ethical hacker certificate',
     'Professional penetration testing toolkit',
     'Resume review for cybersecurity roles',
     'Job placement assistance in pentesting',
@@ -109,7 +109,7 @@ const OffensiveBootcampLandingPage = () => {
   const getCurrentPrice = () => {
     // Use centralized pricing if available, otherwise fallback to tiered pricing
     const offensiveBootcampPrice = coursePricing?.['offensive-bootcamp'];
-    
+
     if (offensiveBootcampPrice && !pricingLoading) {
       return {
         price: formatPrice(offensiveBootcampPrice.finalPrice),
@@ -118,7 +118,7 @@ const OffensiveBootcampLandingPage = () => {
         originalPrice: formatPrice(offensiveBootcampPrice.originalPrice)
       };
     }
-    
+
     // Fallback to tiered pricing logic
     if (currentEnrolled < 40) return { price: '₹599', label: 'Early Bird Special', savings: 'Save ₹400!' };
     if (currentEnrolled < 70) return { price: '₹899', label: 'Regular Price', savings: 'Save ₹200!' };
@@ -164,14 +164,14 @@ const OffensiveBootcampLandingPage = () => {
                   <div className="text-lg text-gray-300 mb-1">{pricing.label}</div>
                   <div className="text-red-400 font-semibold">{pricing.savings}</div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-300">Hackers Enrolled</span>
                     <span className="text-white font-semibold">{currentEnrolled}/80</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-red-500 to-orange-500 h-4 rounded-full transition-all duration-1000"
                       style={{ width: `${progressPercentage}%` }}
                     />
@@ -232,7 +232,7 @@ const OffensiveBootcampLandingPage = () => {
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Ethical Hacking?</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -244,7 +244,7 @@ const OffensiveBootcampLandingPage = () => {
               <h3 className="text-xl font-semibold mb-3 text-white">Think Like a Hacker</h3>
               <p className="text-red-100">Learn the offensive mindset to better defend against real threats.</p>
             </motion.div>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -256,7 +256,7 @@ const OffensiveBootcampLandingPage = () => {
               <h3 className="text-xl font-semibold mb-3 text-white">High Demand Skills</h3>
               <p className="text-indigo-100">Penetration testers are among the highest paid cybersecurity professionals.</p>
             </motion.div>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -385,15 +385,13 @@ const OffensiveBootcampLandingPage = () => {
         </div>
       </div>
 
-      {/* Enrollment Modal - centralized pricing */}
-      <EnhancedEnrollmentModal
+      {/* Modern Enrollment Modal */}
+      <ModernEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="offensive-bootcamp"
-        courseName="7-Day Ethical Hacking Bootcamp"
-        coursePrice={pricingLoading ? undefined : (coursePricing?.['offensive-bootcamp']?.finalPrice)}
+        courseData={{ title: '7-Day Ethical Hacking Bootcamp', price: pricing.price || undefined, duration: '7 Days' }}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

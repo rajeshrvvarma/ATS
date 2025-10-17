@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // ...existing code...
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
@@ -13,7 +13,7 @@ const DefensiveBootcampLandingPage = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 8, minutes: 42 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
-  
+
   // Get centralized pricing
   const coursePricingData = useCoursePricing();
   const coursePricing = coursePricingData?.pricing || {};
@@ -51,7 +51,7 @@ const DefensiveBootcampLandingPage = () => {
       highlights: ['Live Q&A with industry expert', 'Career roadmap session']
     },
     {
-      day: 2, 
+      day: 2,
       title: 'Network Security Essentials',
       sessions: ['Network Security Basics', 'Hands-on with Security Tools'],
       duration: '3 hours',
@@ -61,7 +61,7 @@ const DefensiveBootcampLandingPage = () => {
       day: 3,
       title: 'Incident Response & SIEM',
       sessions: ['Incident Response Process', 'SIEM Tools Introduction'],
-      duration: '3 hours', 
+      duration: '3 hours',
       highlights: ['Real incident case studies', 'SIEM dashboard walkthrough']
     },
     {
@@ -80,7 +80,7 @@ const DefensiveBootcampLandingPage = () => {
     },
     {
       day: 6,
-      title: 'Compliance & Risk Management', 
+      title: 'Compliance & Risk Management',
       sessions: ['Security Frameworks', 'Risk Assessment'],
       duration: '3 hours',
       highlights: ['ISO 27001 overview', 'Risk calculation methods']
@@ -99,7 +99,7 @@ const DefensiveBootcampLandingPage = () => {
     'All sessions recorded for lifetime access',
     'Comprehensive course materials (PDFs)',
     'Hands-on lab exercises and tools',
-    'Industry-recognized certificate of completion', 
+    'Industry-recognized certificate of completion',
     'Resume review and optimization',
     'Job placement assistance and referrals',
     'Access to exclusive alumni network',
@@ -110,7 +110,7 @@ const DefensiveBootcampLandingPage = () => {
   const getCurrentPrice = () => {
     // Use centralized pricing if available, otherwise fallback to tiered pricing
     const defensiveBootcampPrice = coursePricing?.['defensive-bootcamp'];
-    
+
     if (defensiveBootcampPrice && !pricingLoading) {
       return {
         price: formatPrice(defensiveBootcampPrice.finalPrice),
@@ -119,7 +119,7 @@ const DefensiveBootcampLandingPage = () => {
         originalPrice: formatPrice(defensiveBootcampPrice.originalPrice)
       };
     }
-    
+
     // Fallback to tiered pricing logic
     if (currentEnrolled < 50) return { price: '₹499', label: 'Early Bird Special', savings: 'Save ₹500!' };
     if (currentEnrolled < 90) return { price: '₹799', label: 'Regular Price', savings: 'Save ₹200!' };
@@ -165,14 +165,14 @@ const DefensiveBootcampLandingPage = () => {
                   <div className="text-lg text-white mb-1">{pricing.label}</div>
                   <div className="text-green-400 font-semibold bg-green-500/10 px-3 py-1 rounded-full inline-block">{pricing.savings}</div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-300">Seats Filled</span>
                     <span className="text-white font-semibold">{currentEnrolled}/100</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-blue-500 to-purple-500 h-4 rounded-full transition-all duration-1000"
                       style={{ width: `${progressPercentage}%` }}
                     />
@@ -233,7 +233,7 @@ const DefensiveBootcampLandingPage = () => {
         <div className="container mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Why Choose Our Bootcamp?</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -245,7 +245,7 @@ const DefensiveBootcampLandingPage = () => {
               <h3 className="text-xl font-semibold mb-3 text-white">Job-Ready Skills</h3>
               <p className="text-blue-100">Learn practical skills that employers actually want. No theory overload.</p>
             </motion.div>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -257,7 +257,7 @@ const DefensiveBootcampLandingPage = () => {
               <h3 className="text-xl font-semibold mb-3 text-white">Learn with Peers</h3>
               <p className="text-purple-100">Join 100+ like-minded individuals on the same cybersecurity journey.</p>
             </motion.div>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
@@ -350,7 +350,7 @@ const DefensiveBootcampLandingPage = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-2xl mx-auto bg-gray-800 rounded-2xl p-8 border border-gray-700">
             <h2 className="text-3xl font-bold text-center mb-8">Secure Your Seat Now!</h2>
-            
+
             <form className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -445,14 +445,17 @@ const DefensiveBootcampLandingPage = () => {
       </div>
 
       {/* Enrollment Modal */}
-      <EnhancedEnrollmentModal
+      <ModernEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="defensive-bootcamp"
-        courseName="7-Day Intensive Cybersecurity Bootcamp"
-        coursePrice={pricingLoading ? undefined : (coursePricing?.['defensive-bootcamp']?.finalPrice)}
+        courseData={{
+          title: '7-Day Intensive Cybersecurity Bootcamp',
+          price: pricing.price || undefined,
+          originalPrice: pricing.originalPrice || undefined,
+          duration: '7 Days'
+        }}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

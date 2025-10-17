@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp, Sword, Zap, Code2 } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -29,7 +29,7 @@ const OffensiveMasteryLandingPage = () => {
       sessions: [
         'Advanced OSINT & Social Engineering',
         'Network Reconnaissance Techniques',
-        'Target Profiling & Attack Surface Analysis', 
+        'Target Profiling & Attack Surface Analysis',
         'Custom Tool Development for Recon',
         'Threat Intelligence Integration'
       ],
@@ -143,7 +143,7 @@ const OffensiveMasteryLandingPage = () => {
     'All sessions recorded for lifetime access',
     '15+ hands-on projects and real-world labs',
     'Custom penetration testing lab environment',
-    'Industry-recognized ethical hacker certification', 
+    'Industry-recognized ethical hacker certification',
     'Advanced toolkit and custom scripts',
     'Direct connections to cybersecurity firms',
     'Guaranteed interview opportunities',
@@ -169,7 +169,7 @@ const OffensiveMasteryLandingPage = () => {
     },
     {
       id: 'installment',
-      name: 'Two Installments', 
+      name: 'Two Installments',
       price: '₹4,499 + ₹4,000',
       originalPrice: '₹11,999',
       savings: 'Save ₹3,500',
@@ -181,7 +181,7 @@ const OffensiveMasteryLandingPage = () => {
       name: 'Monthly Payment',
       price: '₹4,499/month x 2',
       originalPrice: '₹11,999',
-      savings: 'Save ₹3,000', 
+      savings: 'Save ₹3,000',
       benefits: ['Cash Flow Friendly', 'Easy on Budget', 'No Hidden Fees'],
       popular: false
     }
@@ -228,14 +228,14 @@ const OffensiveMasteryLandingPage = () => {
                   <div className="text-lg text-gray-300 mb-1 line-through">₹12,999</div>
                   <div className="text-indigo-400 font-semibold">Save ₹5,000 with full payment</div>
                 </div>
-                
+
                 <div>
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-200">Elite Seats Taken</span>
                     <span className="text-white font-semibold">{currentEnrolled}/15</span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-red-500 to-orange-500 h-4 rounded-full transition-all duration-1000"
                       style={{ width: `${progressPercentage}%` }}
                     />
@@ -340,7 +340,7 @@ const OffensiveMasteryLandingPage = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Modules Covered This Week */}
                 {week.modules && week.modules.length > 0 && (
                   <div className="mb-4 bg-slate-800/50 rounded-lg p-4 border border-red-600/30">
@@ -420,8 +420,8 @@ const OffensiveMasteryLandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 className={`relative bg-gray-800 rounded-xl p-6 border-2 cursor-pointer transition-all duration-300 ${
-                  selectedPaymentPlan === plan.id 
-                    ? 'border-red-500 bg-red-900 bg-opacity-20' 
+                  selectedPaymentPlan === plan.id
+                    ? 'border-red-500 bg-red-900 bg-opacity-20'
                     : 'border-gray-600 hover:border-gray-500'
                 } ${plan.popular ? 'ring-2 ring-red-500 ring-opacity-50' : ''}`}
                 onClick={() => setSelectedPaymentPlan(plan.id)}
@@ -431,7 +431,7 @@ const OffensiveMasteryLandingPage = () => {
                     Best Value
                   </div>
                 )}
-                
+
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
                   <div className="text-3xl font-bold text-red-300 mb-1">{plan.price}</div>
@@ -458,8 +458,8 @@ const OffensiveMasteryLandingPage = () => {
                     className="sr-only"
                   />
                   <div className={`w-6 h-6 rounded-full border-2 mx-auto ${
-                    selectedPaymentPlan === plan.id 
-                      ? 'bg-red-500 border-red-500' 
+                    selectedPaymentPlan === plan.id
+                      ? 'bg-red-500 border-red-500'
                       : 'border-gray-400'
                   }`}>
                     {selectedPaymentPlan === plan.id && (
@@ -489,14 +489,13 @@ const OffensiveMasteryLandingPage = () => {
         </div>
       </div>
 
-      {/* Enhanced Enrollment Modal - centralized pricing */}
-      <EnhancedEnrollmentModal
+      {/* Modern Enrollment Modal */}
+      <ModernEnrollmentModal
         isOpen={isEnrollmentModalOpen}
         onClose={() => setIsEnrollmentModalOpen(false)}
-        courseType="offensive-mastery"
-        courseName="Offensive Security Mastery"
+        courseData={{ title: 'Offensive Security Mastery', price: '₹7,999', duration: '8 Weeks' }}
       />
-      
+
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
     </div>

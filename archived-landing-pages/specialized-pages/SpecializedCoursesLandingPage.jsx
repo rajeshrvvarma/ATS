@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -1027,11 +1027,14 @@ const SpecializedCoursesLandingPage = () => {
       )}
 
       {/* Enrollment Modal */}
-      <EnhancedEnrollmentModal
+      <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.courseName}
+        courseData={enrollmentModal.course || {
+          title: enrollmentModal.courseName || '',
+          price: enrollmentModal.coursePrice || undefined,
+          duration: enrollmentModal.courseDuration || undefined
+        }}
       />
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
