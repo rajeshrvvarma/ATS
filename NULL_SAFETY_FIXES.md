@@ -1,4 +1,19 @@
+# ---
 # 🔧 Null Safety Fixes for Firestore Events
+#
+# ## [UPDATE LOG: 2025-10-17]
+# Recent changes:
+# - Merged Firestore events with hardcoded arrays for batches, bootcamps, workshops
+# - Added null checks for all optional fields (trainer, features, topics, etc.)
+# - Fallback logic for date, description, registrationLink
+# - Validated build and error-free rendering
+#
+# ## TODO for tomorrow:
+# - Banner events not clickable (should link to details/enroll)
+# - Data double population (events appear twice)
+# - Upcoming batches not populated from Firestore
+#
+# Refactor event merging logic, fix banner click, deduplicate events, ensure batches tab is populated.
 
 ## ✅ Issue Fixed: TypeError - Cannot read properties of undefined
 

@@ -1,6 +1,19 @@
+// ---
 // Centralized data for all events: batches, bootcamps, and workshops
 // Used by AnnouncementBanner to rotate through all upcoming events
 // Now supports both static data and Firestore data
+//
+// [UPDATE LOG: 2025-10-17]
+// Recent changes:
+// - getAllEvents() now merges Firestore and static data
+// - Null safety for all event fields
+// - Fallback logic for missing fields
+//
+// TODO for tomorrow:
+// - Data double population (events appear twice)
+// - Upcoming batches not populated from Firestore
+//
+// Refactor event merging logic, deduplicate events, ensure batches tab is populated.
 
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import app from '@/config/firebase';

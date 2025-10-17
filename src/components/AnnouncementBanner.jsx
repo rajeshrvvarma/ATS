@@ -1,3 +1,17 @@
+// ---
+// Announcement Banner - Rotates through upcoming events
+//
+// [UPDATE LOG: 2025-10-17]
+// Recent changes:
+// - Banner now fetches events from both static and Firestore sources
+// - Null safety added for all event fields
+// - Rotates through all events
+//
+// TODO for tomorrow:
+// - Banner events not clickable (should link to details/enroll)
+// - Data double population (events appear twice)
+//
+// Refactor event merging logic, make banner events clickable, deduplicate event list.
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
