@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowLeft, User, Mail, Phone, BookOpen, Send, CheckCircle, GraduationCap, Target, Calendar, Users, Clock, Zap } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
-import { courses } from '@/data/courses.js';
+import useCourses from '@/hooks/useCourses.js';
 import { initiatePayment, verifyPayment } from '@/services/phonepe.js';
 import { getBatchById, getActiveBatches, getBatchesByCourse, getUrgencyColor } from '@/data/activeBatches.js';
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
@@ -59,6 +59,8 @@ export default function EnrollUsPage({ onNavigate }) {
 
         // Flatten all modules for selection
         const allModules = moduleCategories.flatMap(cat => cat.modules.map(title => ({ title, category: cat.name })));
+
+    const { courses: remoteCourses, loading: coursesLoading } = useCourses();
 
     const [formData, setFormData] = useState({
                 name: '',
@@ -178,7 +180,7 @@ export default function EnrollUsPage({ onNavigate }) {
             setPaymentMsg('');
 
             // Find selected course and get price
-            const selectedCourse = courses.find(course => course.id === formData.course);
+            const selectedCourse = (remoteCourses || []).find(course => course.id === formData.course);
             if (!selectedCourse) {
                 setPaymentMsg('Please select a course first.');
                 setPaymentLoading(false);
@@ -204,7 +206,7 @@ export default function EnrollUsPage({ onNavigate }) {
             throw new Error('Please use the UPI payment option or contact support for enrollment assistance');
         } catch (e) {
             setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
-            const selectedCourse = courses.find(course => course.id === formData.course);
+            const selectedCourse = (remoteCourses || []).find(course => course.id === formData.course);
             const err = {
                 planName: selectedCourse?.name || 'Selected Course',
                 message: e?.message || 'Payment cancelled or failed'
@@ -379,7 +381,7 @@ export default function EnrollUsPage({ onNavigate }) {
 
                                             {/* Group courses by category */}
                                             <optgroup label="🔥 7-Day Bootcamps (Popular)">
-                                                {courses.filter(course => course.category === '7-Day Bootcamps').map(course => (
+                                                {(remoteCourses || []).filter(course => course.category === '7-Day Bootcamps').map(course => (
                                                     <option key={course.id} value={course.id}>
                                                         {course.name} - {course.price}
                                                     </option>
@@ -387,7 +389,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             </optgroup>
 
                                             <optgroup label="🏆 2-Month Premium Programs">
-                                                {courses.filter(course => course.category === '2-Month Premium Programs').map(course => (
+                                                {(remoteCourses || []).filter(course => course.category === '2-Month Premium Programs').map(course => (
                                                     <option key={course.id} value={course.id}>
                                                         {course.name} - {course.price}
                                                     </option>
@@ -395,7 +397,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             </optgroup>
 
                                             <optgroup label="🎯 Specialized Courses">
-                                                {courses.filter(course => course.category === 'Specialized Courses').map(course => (
+                                                {(remoteCourses || []).filter(course => course.category === 'Specialized Courses').map(course => (
                                                     <option key={course.id} value={course.id}>
                                                         {course.name} - {course.price}
                                                     </option>
@@ -403,7 +405,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             </optgroup>
 
                                             <optgroup label="🚀 Foundation Programs">
-                                                {courses.filter(course => course.category === 'Foundation Programs').map(course => (
+                                                {(remoteCourses || []).filter(course => course.category === 'Foundation Programs').map(course => (
                                                     <option key={course.id} value={course.id}>
                                                         {course.name} - {course.price}
                                                     </option>
@@ -411,7 +413,7 @@ export default function EnrollUsPage({ onNavigate }) {
                                             </optgroup>
 
                                             <optgroup label="🎨 Custom Programs">
-                                                {courses.filter(course => course.category === 'Custom Programs').map(course => (
+                                                {(remoteCourses || []).filter(course => course.category === 'Custom Programs').map(course => (
                                                     <option key={course.id} value={course.id}>
                                                         {course.name} - {course.price}
                                                     </option>

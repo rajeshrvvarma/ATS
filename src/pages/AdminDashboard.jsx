@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, updateDoc, query, where, orderBy, limit } from "firebase/firestore";
 import { Eye, Pencil, Trash2, BarChart2, Settings, BookOpen, Plus, Edit, Trash } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
+import RequireAdmin from '@/components/admin/RequireAdmin.jsx';
 import { useAuth } from "@/context/AuthContext.jsx";
 import app from "@/config/firebase";
 import AdminCoursePricing from "@/components/admin/AdminCoursePricing.jsx";
@@ -12,6 +13,7 @@ import AdminDeletionRequests from "@/components/admin/AdminDeletionRequests.jsx"
 import AdminIndexAlerts from "@/components/admin/AdminIndexAlerts.jsx";
 import IndexAlertBanner from "@/components/IndexAlertBanner.jsx";
 import AdminEventsManagement from "@/components/admin/AdminEventsManagement.jsx";
+import SessionUpload from '@/components/admin/SessionUpload.jsx';
 
 const db = getFirestore(app);
 const statusColors = {
@@ -273,6 +275,8 @@ function AdminDashboard({ onNavigate }) {
     { key: "overview", label: "Overview" },
     { key: "user", label: "User Management" },
     { key: "events", label: "Events Management" },
+    { key: "course-management", label: "Course Management" },
+    { key: "batch-management", label: "Batch Management" },
     { key: "content-management", label: "Content Management" },
   { key: "approval-requests", label: "Deletion Requests" },
   { key: "index-alerts", label: "Index Alerts" },
@@ -284,8 +288,9 @@ function AdminDashboard({ onNavigate }) {
   ];
 
   return (
-    <DashboardLayout user={user} onNavigate={onNavigate}>
-      <div className="p-6">
+    <RequireAdmin>
+      <DashboardLayout user={user} onNavigate={onNavigate}>
+        <div className="p-6">
         <IndexAlertBanner mode="admin" onOpenAdminAlerts={() => setTab('index-alerts')} />
         <div className="flex gap-6 border-b border-slate-700 mb-6">
           {tabs.map(t => (
@@ -300,7 +305,7 @@ function AdminDashboard({ onNavigate }) {
         </div>
 
 
-        {tab === "overview" && (
+  {tab === "overview" && (
           <>
             <h2 className="text-2xl font-bold mb-6">Admin Overview</h2>
             {loading ? (
@@ -451,6 +456,35 @@ function AdminDashboard({ onNavigate }) {
           </>
         )}
 
+        {tab === 'batch-management' && (
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Batch Management</h2>
+            {courseLoading ? (
+              <div>Loading batches...</div>
+            ) : (
+              <div className="space-y-4">
+                {/* Simple selector: choose a batch to upload session to */}
+                <div>
+                  <label className="block text-sm text-slate-400 mb-1">Select Batch</label>
+                  <select className="bg-slate-800 p-2 rounded w-full" onChange={(e) => setCourseRefresh(r => r)}>
+                    <option value="">-- choose batch --</option>
+                    {courses.map(b => (
+                      <option key={b.id} value={b.id}>{b.title || b.name || b.id}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Session upload placeholder (admins can upload recordings) */}
+                <div className="bg-slate-800 rounded-lg p-4">
+                  <div className="mb-2 text-slate-200">Upload a session recording to a batch</div>
+                  {/* For simplicity this demo requires you to select a batch above and then click Upload in the session component */}
+                  <SessionUpload batchId={courses[0]?.id} onUploaded={(info) => alert('Uploaded: ' + info.url)} />
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {tab === "user" && (
           <>
             <h2 className="text-2xl font-bold mb-4">User Management</h2>
@@ -543,6 +577,24 @@ function AdminDashboard({ onNavigate }) {
                             ))}
                           </ul>
                         )}
+
+                                {tab === "course-management" && (
+                                  <div>
+                                    <h2 className="text-2xl font-bold mb-4">Course Management</h2>
+                                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                                      <AdminCourseManager />
+                                    </div>
+                                  </div>
+                                )}
+
+                                {tab === "batch-management" && (
+                                  <div>
+                                    <h2 className="text-2xl font-bold mb-4">Batch & Session Management</h2>
+                                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700">
+                                      <AdminBatchManager />
+                                    </div>
+                                  </div>
+                                )}
                       </div>
                       <div className="mb-4">
                         <div className="font-semibold text-slate-300 mb-1">Progress</div>
@@ -821,8 +873,9 @@ function AdminDashboard({ onNavigate }) {
             </div>
           </>
         )}
-      </div>
-    </DashboardLayout>
+        </div>
+      </DashboardLayout>
+    </RequireAdmin>
   );
 }
 export default AdminDashboard;

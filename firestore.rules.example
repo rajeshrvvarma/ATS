@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public read access for courses and batches (frontend reads allowed)
+    match /courses/{courseId} {
+      allow read: if true;
+      // Writes only allowed for admins
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /batches/{batchId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Session documents nested under batches
+    match /batches/{batchId}/sessions/{sessionId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Orders and enrollments: allow server and admin writes only
+    match /orders/{orderId} {
+      allow read: if isAdmin() || isAuthenticated();
+      allow create, update, delete: if isAdmin() || isServer();
+    }
+
+    match /enrollments/{enrollmentId} {
+      allow read: if isAdmin() || resource.data.userId == request.auth.uid;
+      allow create: if isAdmin() || isServer();
+      allow update, delete: if isAdmin();
+    }
+
+    // userProfiles: users can read their own profile; admins can read/modify all
+    match /userProfiles/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update, delete: if isAdmin();
+    }
+
+    // Default: deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isAdmin() {
+      return request.auth != null && get(/databases/$(database)/documents/userProfiles/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // isServer() is a placeholder: implement by checking a service account UID or auth token
+    function isServer() {
+      return false;
+    }
+  }
+}

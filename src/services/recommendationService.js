@@ -3,24 +3,45 @@
  * Intelligent course recommendations based on user progress, quiz performance, and learning patterns
  */
 
-import { 
-  collection, 
-  doc, 
-  getDoc, 
-  getDocs, 
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
   setDoc,
   addDoc,
   updateDoc,
   deleteDoc,
-  query, 
-  where, 
-  orderBy, 
+  query,
+  where,
+  orderBy,
   limit,
   serverTimestamp,
-  increment 
+  increment
 } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
-import { courses, getCourseById } from '@/data/courses.js';
+
+// Lazy-loaded courses cache (loaded from Firestore)
+let _coursesCache = null;
+const loadCoursesOnce = async () => {
+  if (_coursesCache) return _coursesCache;
+  try {
+    const { collection, getDocs, query, orderBy } = await import('firebase/firestore');
+    const q = query(collection(db, 'courses'), orderBy('title'));
+    const snap = await getDocs(q);
+    _coursesCache = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    return _coursesCache;
+  } catch (err) {
+    console.warn('Failed to load courses for recommendationService, falling back to empty list:', err);
+    _coursesCache = [];
+    return _coursesCache;
+  }
+};
+
+const getCourseById = async (courseId) => {
+  const courses = await loadCoursesOnce();
+  return courses.find(c => c.id === courseId);
+};
 import { getDocsWithIndexFallback } from './firestoreIndexGuard.js';
 
 // Recommendation algorithms
@@ -83,13 +104,13 @@ export const getCourseRecommendations = async (userId, options = {}) => {
     const performanceBasedRecs = await getPerformanceBasedRecommendations(userQuizData, userProgress);
     recommendations.push(...performanceBasedRecs.map(rec => ({ ...rec, algorithm: 'performance-based', weight: algorithmWeights.performanceBased })));
 
-    // 3. Difficulty progression recommendations
-    const difficultyProgressionRecs = getDifficultyProgressionRecommendations(userProgress);
-    recommendations.push(...difficultyProgressionRecs.map(rec => ({ ...rec, algorithm: 'difficulty-progression', weight: algorithmWeights.difficultyProgression })));
+  // 3. Difficulty progression recommendations
+  const difficultyProgressionRecs = await getDifficultyProgressionRecommendations(userProgress);
+  recommendations.push(...difficultyProgressionRecs.map(rec => ({ ...rec, algorithm: 'difficulty-progression', weight: algorithmWeights.difficultyProgression })));
 
-    // 4. Category affinity recommendations
-    const categoryAffinityRecs = getCategoryAffinityRecommendations(userProgress, userQuizData);
-    recommendations.push(...categoryAffinityRecs.map(rec => ({ ...rec, algorithm: 'category-affinity', weight: algorithmWeights.categoryAffinity })));
+  // 4. Category affinity recommendations
+  const categoryAffinityRecs = await getCategoryAffinityRecommendations(userProgress, userQuizData);
+  recommendations.push(...categoryAffinityRecs.map(rec => ({ ...rec, algorithm: 'category-affinity', weight: algorithmWeights.categoryAffinity })));
 
     // 5. Peer collaborative recommendations
     const peerCollaborativeRecs = await getPeerCollaborativeRecommendations(userId, userProfile);
@@ -105,8 +126,8 @@ export const getCourseRecommendations = async (userId, options = {}) => {
     // Filter by focus area if specified
     let filteredRecommendations = scoredRecommendations;
     if (focusArea) {
-      filteredRecommendations = scoredRecommendations.filter(rec => 
-        rec.course.category === focusArea || 
+      filteredRecommendations = scoredRecommendations.filter(rec =>
+        rec.course.category === focusArea ||
         rec.reasons.some(reason => reason.toLowerCase().includes(focusArea.toLowerCase()))
       );
     }
@@ -148,20 +169,19 @@ export const getCourseRecommendations = async (userId, options = {}) => {
  */
 const getSkillBasedRecommendations = async (userProgress, userQuizData) => {
   const recommendations = [];
-  
-  // Identify weak skill areas from quiz performance
   const skillGaps = identifySkillGaps(userQuizData);
-  
+  const courses = await loadCoursesOnce();
+
   skillGaps.forEach(gap => {
-    const relevantCourses = courses.filter(course => 
-      course.category === gap.category || 
-      course.description.toLowerCase().includes(gap.skill.toLowerCase())
+    const relevantCourses = courses.filter(course =>
+      course.category === gap.category ||
+      (course.description || '').toLowerCase().includes(gap.skill.toLowerCase())
     );
-    
+
     relevantCourses.forEach(course => {
       recommendations.push({
         course,
-        score: gap.urgency, // Higher urgency = higher score
+        score: gap.urgency,
         reasons: [`Improve ${gap.skill} skills (current score: ${gap.currentScore}%)`],
         urgency: gap.urgency
       });
@@ -176,13 +196,14 @@ const getSkillBasedRecommendations = async (userProgress, userQuizData) => {
  */
 const getPerformanceBasedRecommendations = async (userQuizData, userProgress) => {
   const recommendations = [];
-  
+  const courses = await loadCoursesOnce();
+
   if (!userQuizData || userQuizData.length === 0) {
     // New user - recommend beginner courses
-    const beginnerCourses = courses.filter(course => 
+    const beginnerCourses = courses.filter(course =>
       course.difficulty === 'Beginner' || course.difficulty === 'Beginner to Intermediate'
     );
-    
+
     beginnerCourses.forEach(course => {
       recommendations.push({
         course,
@@ -194,13 +215,13 @@ const getPerformanceBasedRecommendations = async (userQuizData, userProgress) =>
   } else {
     // Analyze performance patterns
     const avgScore = userQuizData.reduce((sum, quiz) => sum + quiz.percentage, 0) / userQuizData.length;
-    
+
     if (avgScore >= 85) {
       // High performer - recommend advanced courses
-      const advancedCourses = courses.filter(course => 
+      const advancedCourses = courses.filter(course =>
         course.difficulty === 'Advanced' || course.difficulty === 'Intermediate to Advanced'
       );
-      
+
       advancedCourses.forEach(course => {
         recommendations.push({
           course,
@@ -211,10 +232,10 @@ const getPerformanceBasedRecommendations = async (userQuizData, userProgress) =>
       });
     } else if (avgScore >= 70) {
       // Average performer - recommend intermediate courses
-      const intermediateCourses = courses.filter(course => 
+      const intermediateCourses = courses.filter(course =>
         course.difficulty === 'Intermediate' || course.difficulty === 'Beginner to Intermediate'
       );
-      
+
       intermediateCourses.forEach(course => {
         recommendations.push({
           course,
@@ -225,10 +246,10 @@ const getPerformanceBasedRecommendations = async (userQuizData, userProgress) =>
       });
     } else {
       // Struggling performer - recommend review and foundation courses
-      const foundationCourses = courses.filter(course => 
+      const foundationCourses = courses.filter(course =>
         course.difficulty === 'Beginner' && course.category === 'workshop'
       );
-      
+
       foundationCourses.forEach(course => {
         recommendations.push({
           course,
@@ -246,15 +267,16 @@ const getPerformanceBasedRecommendations = async (userQuizData, userProgress) =>
 /**
  * Difficulty progression recommendations
  */
-const getDifficultyProgressionRecommendations = (userProgress) => {
+const getDifficultyProgressionRecommendations = async (userProgress) => {
   const recommendations = [];
-  
+  const courses = await loadCoursesOnce();
+
   if (!userProgress || userProgress.length === 0) {
     // Start with workshop/beginner courses
-    const starterCourses = courses.filter(course => 
+    const starterCourses = courses.filter(course =>
       course.category === 'workshop' || course.difficulty === 'Beginner'
     );
-    
+
     starterCourses.forEach(course => {
       recommendations.push({
         course,
@@ -266,15 +288,21 @@ const getDifficultyProgressionRecommendations = (userProgress) => {
   } else {
     // Find current difficulty level and recommend next level
     const completedCourses = userProgress.filter(p => p.completed);
-    const currentMaxDifficulty = Math.max(...completedCourses.map(p => 
-      DIFFICULTY_WEIGHTS[getCourseById(p.courseId)?.difficulty] || 1
-    ));
-    
+
+    // Load course documents for completed courses in parallel and compute difficulty
+    let currentMaxDifficulty = 1;
+    if (completedCourses.length > 0) {
+      const courseIds = completedCourses.map(p => p.courseId);
+      const courseLookups = await Promise.all(courseIds.map(id => getCourseById(id)));
+      const weights = courseLookups.map(c => DIFFICULTY_WEIGHTS[c?.difficulty] || 1);
+      currentMaxDifficulty = Math.max(...weights);
+    }
+
     const nextLevelCourses = courses.filter(course => {
       const courseWeight = DIFFICULTY_WEIGHTS[course.difficulty] || 1;
       return courseWeight === currentMaxDifficulty + 1 || courseWeight === currentMaxDifficulty;
     });
-    
+
     nextLevelCourses.forEach(course => {
       recommendations.push({
         course,
@@ -291,43 +319,42 @@ const getDifficultyProgressionRecommendations = (userProgress) => {
 /**
  * Category affinity recommendations based on user preferences
  */
-const getCategoryAffinityRecommendations = (userProgress, userQuizData) => {
+const getCategoryAffinityRecommendations = async (userProgress, userQuizData) => {
   const recommendations = [];
-  
-  // Calculate category preferences
+  const courses = await loadCoursesOnce();
+
   const categoryScores = {};
-  
+
   // From course progress
-  userProgress.forEach(progress => {
-    const course = getCourseById(progress.courseId);
+  for (const progress of userProgress) {
+    const course = await getCourseById(progress.courseId);
     if (course) {
-      categoryScores[course.category] = (categoryScores[course.category] || 0) + 
+      categoryScores[course.category] = (categoryScores[course.category] || 0) +
         (progress.completed ? 1 : progress.progress / 100);
     }
-  });
-  
+  }
+
   // From quiz performance
   userQuizData.forEach(quiz => {
     if (quiz.category) {
-      categoryScores[quiz.category] = (categoryScores[quiz.category] || 0) + 
+      categoryScores[quiz.category] = (categoryScores[quiz.category] || 0) +
         (quiz.percentage / 100);
     }
   });
-  
-  // Find preferred categories
+
   const sortedCategories = Object.entries(categoryScores)
     .sort(([,a], [,b]) => b - a)
     .slice(0, 2);
-  
+
   sortedCategories.forEach(([category, score]) => {
-    const categoryCourses = courses.filter(course => 
+    const categoryCourses = courses.filter(course =>
       course.category === category
     );
-    
+
     categoryCourses.forEach(course => {
       recommendations.push({
         course,
-        score: Math.min(score / 3, 1), // Normalize score
+        score: Math.min(score / 3, 1),
         reasons: [`Matches your strong interest in ${category} cybersecurity`],
         urgency: 'low'
       });
@@ -345,7 +372,7 @@ const getPeerCollaborativeRecommendations = async (userId, userProfile) => {
     // Find similar users based on level, interests, and progress
     const similarsRef = collection(db, 'userProgress');
     const similarsSnapshot = await getDocs(similarsRef);
-    
+
     const similarUsers = [];
     similarsSnapshot.forEach(doc => {
       const data = doc.data();
@@ -353,7 +380,7 @@ const getPeerCollaborativeRecommendations = async (userId, userProfile) => {
         similarUsers.push(data);
       }
     });
-    
+
     // Get popular courses among similar users
     const popularCourses = {};
     similarUsers.forEach(user => {
@@ -361,7 +388,7 @@ const getPeerCollaborativeRecommendations = async (userId, userProfile) => {
         popularCourses[courseId] = (popularCourses[courseId] || 0) + 1;
       });
     });
-    
+
     const recommendations = [];
     Object.entries(popularCourses)
       .sort(([,a], [,b]) => b - a)
@@ -377,7 +404,7 @@ const getPeerCollaborativeRecommendations = async (userId, userProfile) => {
           });
         }
       });
-    
+
     return recommendations;
   } catch (error) {
     console.error('Error getting peer recommendations:', error);
@@ -392,26 +419,26 @@ const getAIPersonalizedRecommendations = async (userId, userProfile, userProgres
   try {
     // Generate AI recommendations based on comprehensive user analysis
     const { callGeminiAPI } = await import('@/api/gemini.js');
-    
+
     const userContext = {
       level: getUserLevel(userProgress),
       completedCourses: userProgress.filter(p => p.completed).length,
-      averageQuizScore: userQuizData.length > 0 ? 
+      averageQuizScore: userQuizData.length > 0 ?
         userQuizData.reduce((sum, q) => sum + q.percentage, 0) / userQuizData.length : 0,
       strongestCategory: getStrongestCategory(userQuizData),
       weakestCategory: getWeakestCategory(userQuizData),
       learningPattern: analyzeLearningPattern(userProgress, userQuizData)
     };
-    
-    const prompt = `Based on this cybersecurity student profile: ${JSON.stringify(userContext)}, 
-    recommend 2-3 specific courses from these available options: ${courses.map(c => c.title).join(', ')}. 
-    Consider their learning pattern, strengths, and areas for improvement. 
+
+    const prompt = `Based on this cybersecurity student profile: ${JSON.stringify(userContext)},
+    recommend 2-3 specific courses from these available options: ${courses.map(c => c.title).join(', ')}.
+    Consider their learning pattern, strengths, and areas for improvement.
     Provide brief reasoning for each recommendation.`;
-    
+
     const systemPrompt = "You are an AI learning advisor specializing in cybersecurity education. Provide personalized course recommendations with clear reasoning.";
-    
+
     const aiResponse = await callGeminiAPI(prompt, systemPrompt);
-    
+
     // Parse AI response and match to actual courses
     const recommendations = [];
     courses.forEach(course => {
@@ -424,7 +451,7 @@ const getAIPersonalizedRecommendations = async (userId, userProfile, userProgres
         });
       }
     });
-    
+
     return recommendations.slice(0, 3); // Limit to top 3 AI recommendations
   } catch (error) {
     console.error('Error getting AI recommendations:', error);
@@ -440,12 +467,12 @@ const getUserCourseProgress = async (userId) => {
     const progressRef = collection(db, 'userProgress');
     const q = query(progressRef, where('userId', '==', userId));
     const snapshot = await getDocs(q);
-    
+
     const progress = [];
     snapshot.forEach(doc => {
       progress.push({ id: doc.id, ...doc.data() });
     });
-    
+
     return progress;
   } catch (error) {
     console.error('Error fetching user progress:', error);
@@ -474,7 +501,7 @@ const getUserProfile = async (userId) => {
   try {
     const profileRef = doc(db, 'userProfiles', userId);
     const profileDoc = await getDoc(profileRef);
-    
+
     if (profileDoc.exists()) {
       return { id: profileDoc.id, ...profileDoc.data() };
     }
@@ -487,7 +514,7 @@ const getUserProfile = async (userId) => {
 
 const identifySkillGaps = (userQuizData) => {
   const categoryPerformance = {};
-  
+
   userQuizData.forEach(quiz => {
     const category = quiz.category || 'general';
     if (!categoryPerformance[category]) {
@@ -496,7 +523,7 @@ const identifySkillGaps = (userQuizData) => {
     categoryPerformance[category].scores.push(quiz.percentage);
     categoryPerformance[category].total++;
   });
-  
+
   const skillGaps = [];
   Object.entries(categoryPerformance).forEach(([category, data]) => {
     const avgScore = data.scores.reduce((sum, score) => sum + score, 0) / data.scores.length;
@@ -509,7 +536,7 @@ const identifySkillGaps = (userQuizData) => {
       });
     }
   });
-  
+
   return skillGaps.sort((a, b) => b.urgency - a.urgency);
 };
 
@@ -517,12 +544,12 @@ const scoreRecommendations = (recommendations, userProgress, includeCompleted) =
   const completedCourseIds = userProgress
     .filter(p => p.completed)
     .map(p => p.courseId);
-  
+
   return recommendations
     .filter(rec => includeCompleted || !completedCourseIds.includes(rec.course.id))
     .reduce((acc, rec) => {
       const existingIndex = acc.findIndex(existing => existing.course.id === rec.course.id);
-      
+
       if (existingIndex >= 0) {
         // Combine scores and reasons for duplicate courses
         acc[existingIndex].score = Math.max(acc[existingIndex].score, rec.score);
@@ -533,7 +560,7 @@ const scoreRecommendations = (recommendations, userProgress, includeCompleted) =
           reasons: Array.isArray(rec.reasons) ? rec.reasons : [rec.reasons]
         });
       }
-      
+
       return acc;
     }, [])
     .sort((a, b) => b.score - a.score);
@@ -553,10 +580,10 @@ const getStrongestCategory = (userQuizData) => {
     if (!categoryScores[category]) categoryScores[category] = [];
     categoryScores[category].push(quiz.percentage);
   });
-  
+
   let bestCategory = 'general';
   let bestScore = 0;
-  
+
   Object.entries(categoryScores).forEach(([category, scores]) => {
     const avgScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
     if (avgScore > bestScore) {
@@ -564,7 +591,7 @@ const getStrongestCategory = (userQuizData) => {
       bestCategory = category;
     }
   });
-  
+
   return bestCategory;
 };
 
@@ -575,10 +602,10 @@ const getWeakestCategory = (userQuizData) => {
     if (!categoryScores[category]) categoryScores[category] = [];
     categoryScores[category].push(quiz.percentage);
   });
-  
+
   let worstCategory = 'general';
   let worstScore = 100;
-  
+
   Object.entries(categoryScores).forEach(([category, scores]) => {
     const avgScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
     if (avgScore < worstScore) {
@@ -586,27 +613,27 @@ const getWeakestCategory = (userQuizData) => {
       worstCategory = category;
     }
   });
-  
+
   return worstCategory;
 };
 
 const analyzeLearningPattern = (userProgress, userQuizData) => {
   const patterns = [];
-  
+
   if (userProgress.length > 0) {
     const completionRate = userProgress.filter(p => p.completed).length / userProgress.length;
     if (completionRate > 0.8) patterns.push('high-completion');
     else if (completionRate > 0.5) patterns.push('moderate-completion');
     else patterns.push('low-completion');
   }
-  
+
   if (userQuizData.length > 0) {
     const avgScore = userQuizData.reduce((sum, q) => sum + q.percentage, 0) / userQuizData.length;
     if (avgScore > 85) patterns.push('high-performer');
     else if (avgScore > 70) patterns.push('average-performer');
     else patterns.push('struggling-performer');
   }
-  
+
   return patterns.join(', ') || 'new-learner';
 };
 
@@ -620,19 +647,19 @@ const estimateCompletionTime = (course, userProgress) => {
   // Simple estimation based on course duration and user's average completion time
   const courseDuration = course.lessons?.length || 5; // Default to 5 lessons
   const avgUserSpeed = userProgress.length > 0 ? 1.2 : 1.0; // Experienced users are 20% faster
-  
+
   return Math.round(courseDuration * avgUserSpeed);
 };
 
 const getNextMilestone = (userProgress) => {
   const completed = userProgress.filter(p => p.completed).length;
   const milestones = [1, 3, 5, 10, 15];
-  
+
   for (const milestone of milestones) {
     if (completed < milestone) {
       return `Complete ${milestone - completed} more course${milestone - completed > 1 ? 's' : ''} to reach ${milestone} courses milestone`;
     }
   }
-  
+
   return 'Continue your excellent learning journey!';
 };

@@ -38,7 +38,7 @@ npm run build
 2. Use the URL:
 
 ```
-https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook
+https://your-site.netlify.app/.netlify/functions/razorpay-webhook
 ```
 
 3. Set the webhook secret to the same value you put into `RAZORPAY_KEY_SECRET`.
@@ -134,7 +134,7 @@ Purpose: Send a signed Razorpay-style webhook POST to your deployed `/razorpay-w
 Usage (example):
 
 ```powershell
-node scripts/webhook-test.js https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook <your_razorpay_secret>
+`node scripts/webhook-test.js https://your-site.netlify.app/.netlify/functions/razorpay-webhook your_razorpay_secret`
 ```
 
 Output: Logs response HTTP status and body; check Firestore for `orders` and `webhook_logs` entries.
@@ -187,10 +187,10 @@ Follow these steps in order tomorrow after you set the environment variables in 
 ```powershell
 # Replace path with where you keep your real service account JSON locally
 $env:FIREBASE_SERVICE_ACCOUNT = Get-Content -Raw .\service-account.json
-$env:RAZORPAY_KEY_ID = '<your_razorpay_key_id>'
-$env:RAZORPAY_KEY_SECRET = '<your_razorpay_key_secret>'
-$env:ENROLLMENT_API_SECRET = '<a_strong_random_secret>'
-$env:SITE_URL = 'https://<your-site>.netlify.app'
+$env:RAZORPAY_KEY_ID = 'your_razorpay_key_id'
+$env:RAZORPAY_KEY_SECRET = 'your_razorpay_key_secret'
+$env:ENROLLMENT_API_SECRET = 'a_strong_random_secret'
+$env:SITE_URL = 'https://your-site.netlify.app'
 ```
 
 2) Build & deploy
@@ -208,7 +208,7 @@ git push
 3) Configure Razorpay webhook
 
 Use the Razorpay dashboard and set:
-- Webhook URL: `https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook`
+- Webhook URL: `https://your-site.netlify.app/.netlify/functions/razorpay-webhook`
 - Webhook secret: the same value as `RAZORPAY_KEY_SECRET`
 - Events: at minimum `payment.captured`
 
@@ -219,7 +219,7 @@ Use the Razorpay dashboard and set:
 node scripts/format-service-account.js ./service-account.json
 
 # Test webhook against deployed endpoint (use your real secret):
-node scripts/webhook-test.js https://<your-site>.netlify.app/.netlify/functions/razorpay-webhook <your_razorpay_key_secret>
+`node scripts/webhook-test.js https://your-site.netlify.app/.netlify/functions/razorpay-webhook your_razorpay_key_secret`
 ```
 
 5) Verify in Firestore & Admin UI

@@ -2,71 +2,86 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can read/write their own data
+    // Users collection: users can read/write their own data
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
 
-      // Allow reading user notes for admin dashboard
+      // Allow reading user notes for admin dashboard (authenticated)
       match /notes/{noteId} {
         allow read, write: if request.auth != null;
       }
     }
 
-    // Course pricing - public read access, admin write
-    match /course_pricing/{courseId} {
-      allow read: if true;  // Allow public read access
-      allow write: if request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    // Also support older/alternate userProfiles collection used in some services
+    match /userProfiles/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update, delete: if isAdmin();
     }
 
-    // Courses - public read, admin/instructor write
+    // Course pricing - public read access, admin write
+    match /course_pricing/{courseId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Courses - public read, admin or instructor write
     match /courses/{courseId} {
-      allow read: if true;  // Public can browse courses
-      allow write: if request.auth != null &&
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'instructor');
+      allow read: if true;
+      allow create, update, delete: if isAdmin() || isInstructor();
     }
 
     // Lessons - authenticated users can read, admin/instructor can write
     match /lessons/{lessonId} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null &&
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'instructor');
+      allow create, update, delete: if isAdmin() || isInstructor();
+    }
+
+    // Batches - public read, admin write
+    match /batches/{batchId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Session documents nested under batches
+    match /batches/{batchId}/sessions/{sessionId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
     }
 
     // Orders collection (payment data)
     match /orders/{orderId} {
-      allow read, write: if request.auth != null;
+      allow read: if isAdmin() || isAuthenticated();
+      // creation: allow server or authenticated clients (if needed); updates/deletes limited to admin/server
+      allow create: if isAdmin() || isAuthenticated() || isServer();
+      allow update, delete: if isAdmin() || isServer();
     }
 
-    // Webhooks collection (payment callbacks)
+    // Webhooks collection (payment callbacks) - prefer server-only writes
     match /webhooks_phonepe/{webhookId} {
-      allow read, write: if request.auth != null;
+      allow read: if isAdmin();
+      allow create: if isServer() || isAdmin();
+      allow update, delete: if isAdmin();
     }
 
     // Analytics events - users can create, admins can read all
     match /analyticsEvents/{eventId} {
-      allow create: if request.auth != null;
-      allow read: if request.auth != null &&
-        (request.auth.uid == resource.data.userId ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+      allow create: if isAuthenticated();
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.userId);
     }
 
     // Quizzes - public read, admin write
     match /quizzes/{quizId} {
-      allow read: if true;  // Public can view quizzes
-      allow write: if request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
     }
 
     // Quiz attempts - users can read/write their own
     match /quiz_attempts/{attemptId} {
-      allow read, write: if request.auth != null &&
-        request.auth.uid == resource.data.userId;
+      allow read, write: if request.auth != null && request.auth.uid == resource.data.userId;
     }
 
-    // Quiz results - users can read/write their own
+    // Quiz results - authenticated users only
     match /quizResults/{resultId} {
       allow read, write: if request.auth != null;
     }
@@ -78,19 +93,18 @@ service cloud.firestore {
 
     // Forum discussions - authenticated users can read/write
     match /forum_discussions/{discussionId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null;
+      allow read, write: if request.auth != null;
 
       match /replies/{replyId} {
-        allow read: if request.auth != null;
-        allow write: if request.auth != null;
+        allow read, write: if request.auth != null;
       }
     }
 
-    // Student enrollments - users can read/write their own
+    // Student enrollments - allow read for admin or the student; creation allowed for server/admin or when student creates their own
     match /enrollments/{enrollmentId} {
-      allow read, write: if request.auth != null &&
-        request.auth.uid == resource.data.studentId;
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.studentId);
+      allow create: if isAdmin() || isServer() || (request.auth != null && request.auth.uid == request.resource.data.studentId);
+      allow update, delete: if isAdmin();
     }
 
     // Gamification data - users can read/write their own
@@ -100,15 +114,40 @@ service cloud.firestore {
 
     // Events (batches, bootcamps, workshops) - public read, admin write
     match /events/{eventId} {
-      allow read: if true;  // Public can view events for banner and events page
-      allow write: if request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
     }
 
-    // Admin can access everything (catch-all for any other collections)
+    // Default catch-all: only admins can access other collections
     match /{document=**} {
-      allow read, write: if request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow read, write: if isAdmin();
+    }
+
+    // Helper functions
+    function isAdmin() {
+      // Check both 'users' and 'userProfiles' collections for backward compatibility
+      return request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        get(/databases/$(database)/documents/userProfiles/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    function isInstructor() {
+      return request.auth != null && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'instructor' ||
+        get(/databases/$(database)/documents/userProfiles/$(request.auth.uid)).data.role == 'instructor'
+      );
+    }
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // isServer() - checks if the request is coming from a trusted service account
+    // Replace 'SERVICE_ACCOUNT_UID' with the UID of your service account or a dedicated admin user that the server uses.
+    // Example: set SERVICE_ACCOUNT_UID = 'U2vc...'
+    function isServer() {
+      return request.auth != null && request.auth.uid == 'A1GX2UcLg1fsTNGU30AMFsWScH62';
     }
   }
 }
