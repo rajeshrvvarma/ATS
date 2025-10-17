@@ -52,325 +52,47 @@ const EventsBatchesPage = ({ onNavigate }) => {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [eventDetailModal, setEventDetailModal] = useState({ isOpen: false, event: null, type: '' });
 
-  // State for dynamic events from Firestore (will be merged with static data)
-  const [firestoreEvents, setFirestoreEvents] = useState([]);
-  const [loadingFirestore, setLoadingFirestore] = useState(true);
+  // State for all events (static + Firestore, already merged by getAllEvents)
+  const [allEvents, setAllEvents] = useState([]);
+  const [loadingEvents, setLoadingEvents] = useState(true);
 
   const { pricing, loading: pricingLoading } = useCoursePricing();
 
-  // Fetch events from Firestore on component mount
+  // Fetch all events (already merged) from centralized data source
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        setLoadingFirestore(true);
-        const allEvents = await getAllEvents();
-        setFirestoreEvents(allEvents);
+        setLoadingEvents(true);
+        const events = await getAllEvents();
+        setAllEvents(events);
       } catch (error) {
-        console.error('Error fetching events from Firestore:', error);
+        console.error('Error fetching events:', error);
         // Keep empty array if fetch fails
       } finally {
-        setLoadingFirestore(false);
+        setLoadingEvents(false);
       }
     };
 
     fetchEvents();
   }, []);
 
-  // Static/hardcoded data (will be kept until admin adds data through panel)
-  const bootcamps = [
-    {
-      id: 'defensive-bootcamp-jan2025',
-      courseId: 'defensive-bootcamp',
-      title: '7-Day Defensive Security Bootcamp',
-      category: 'defensive',
-      startDate: '2025-01-15',
-      endDate: '2025-01-21',
-      duration: '7 Days',
-      mode: 'Hybrid (Online + Offline)',
-      location: 'Hyderabad & Online',
-      maxStudents: 25,
-      currentEnrolled: 12,
-      trainer: {
-        name: 'Santosh Kumar',
-        experience: '8+ Years',
-        certifications: ['CISSP', 'CEH', 'GCIH'],
-        avatar: '/images/trainer-santosh.jpg'
-      },
-      schedule: [
-        { day: 'Day 1-2', topic: 'SOC Fundamentals & SIEM Tools' },
-        { day: 'Day 3-4', topic: 'Incident Response & Threat Hunting' },
-        { day: 'Day 5-6', topic: 'Log Analysis & Forensics' },
-        { day: 'Day 7', topic: 'Capstone Project & Assessment' }
-      ],
-      price: 'defensive-bootcamp',
-      features: [
-        'Live instructor-led sessions',
-        'Hands-on lab exercises',
-        'Industry tools access',
-        'Certificate of completion',
-        'Job placement assistance',
-        'Lifetime community access'
-      ],
-      highlights: [
-        'Small batch size (max 25 students)',
-        'Experienced industry trainer',
-        'Hybrid learning mode',
-        'Real-world projects'
-      ]
-    },
-    {
-      id: 'offensive-bootcamp-feb2025',
-      courseId: 'offensive-bootcamp',
-      title: '7-Day Ethical Hacking Bootcamp',
-      category: 'offensive',
-      startDate: '2025-02-10',
-      endDate: '2025-02-16',
-      duration: '7 Days',
-      mode: 'Online Live',
-      location: 'Online',
-      maxStudents: 20,
-      currentEnrolled: 8,
-      trainer: {
-        name: 'Rajesh Kumar',
-        experience: '6+ Years',
-        certifications: ['OSCP', 'CEH', 'CISSP'],
-        avatar: '/images/trainer-rajesh.jpg'
-      },
-      schedule: [
-        { day: 'Day 1-2', topic: 'Reconnaissance & Information Gathering' },
-        { day: 'Day 3-4', topic: 'Web Application Security Testing' },
-        { day: 'Day 5-6', topic: 'Network Penetration Testing' },
-        { day: 'Day 7', topic: 'Report Writing & Ethics' }
-      ],
-      price: 'offensive-bootcamp',
-      features: [
-        'Live online sessions',
-        'Virtual lab environment',
-        'Penetration testing tools',
-        'Ethical hacking certification',
-        'Career guidance',
-        'Alumni network access'
-      ],
-      highlights: [
-        'OSCP preparation focused',
-        'Virtual labs included',
-        'Expert-led training',
-        'Interactive sessions'
-      ]
-    }
-  ];
-
-  const upcomingBatches = [
-    {
-      id: 'defensive-mastery-mar2025',
-      courseId: 'defensive-mastery',
-      title: '2-Month Defensive Security Mastery',
-      category: 'defensive',
-      startDate: '2025-03-01',
-      endDate: '2025-04-30',
-      duration: '2 Months',
-      mode: 'Weekend Classes',
-      location: 'Hyderabad & Online',
-      maxStudents: 15,
-      currentEnrolled: 5,
-      trainer: {
-        name: 'Santosh Kumar',
-        experience: '8+ Years',
-        certifications: ['CISSP', 'GCIH', 'GCFA'],
-        avatar: '/images/trainer-santosh.jpg'
-      },
-      schedule: [
-        { day: 'Week 1-2', topic: 'Advanced SOC Operations' },
-        { day: 'Week 3-4', topic: 'Threat Intelligence & Hunting' },
-        { day: 'Week 5-6', topic: 'Digital Forensics & Incident Response' },
-        { day: 'Week 7-8', topic: 'Capstone Project & Industry Exposure' }
-      ],
-      price: 'defensive-mastery',
-      features: [
-        'Weekend-only classes',
-        'In-depth mastery program',
-        'Industry project work',
-        'Advanced certification',
-        'Guaranteed job placement',
-        'Mentorship program'
-      ],
-      highlights: [
-        'Weekend flexibility',
-        'Intensive 2-month program',
-        'Small premium batch',
-        'Job guarantee'
-      ]
-    },
-    {
-      id: 'offensive-mastery-apr2025',
-      courseId: 'offensive-mastery',
-      title: '2-Month Offensive Security Mastery',
-      category: 'offensive',
-      startDate: '2025-04-15',
-      endDate: '2025-06-15',
-      duration: '2 Months',
-      mode: 'Weekday Evenings',
-      location: 'Online Live',
-      maxStudents: 20,
-      currentEnrolled: 8,
-      trainer: {
-        name: 'Rajesh Kumar',
-        experience: '10+ Years',
-        certifications: ['OSCP', 'OSCE', 'CEH'],
-        avatar: '/images/trainer-rajesh.jpg'
-      },
-      schedule: [
-        { day: 'Week 1-2', topic: 'Advanced Penetration Testing' },
-        { day: 'Week 3-4', topic: 'Web App Security & Exploitation' },
-        { day: 'Week 5-6', topic: 'Network & Active Directory Attacks' },
-        { day: 'Week 7-8', topic: 'Red Team Operations & Reporting' }
-      ],
-      price: 'offensive-mastery',
-      features: [
-        'Evening sessions (7-9 PM)',
-        'OSCP preparation focused',
-        'Virtual lab environment',
-        'Real-world penetration testing',
-        'Certification support',
-        'Career mentoring'
-      ],
-      highlights: [
-        'Flexible evening schedule',
-        'OSCP-aligned curriculum',
-        'Hands-on labs',
-        'Industry projects'
-      ]
-    },
-    {
-      id: 'soc-analyst-feb2025',
-      courseId: 'defensive-bootcamp',
-      title: 'SOC Analyst Intensive Training',
-      category: 'defensive',
-      startDate: '2025-02-20',
-      endDate: '2025-03-20',
-      duration: '1 Month',
-      mode: 'Hybrid (Online + Offline)',
-      location: 'Hyderabad & Online',
-      maxStudents: 25,
-      currentEnrolled: 18,
-      trainer: {
-        name: 'Priya Sharma',
-        experience: '7+ Years',
-        certifications: ['GCIA', 'GCIH', 'Security+'],
-        avatar: '/images/trainer-priya.jpg'
-      },
-      schedule: [
-        { day: 'Week 1', topic: 'SIEM Tools & Log Analysis' },
-        { day: 'Week 2', topic: 'Incident Response Fundamentals' },
-        { day: 'Week 3', topic: 'Threat Hunting & Detection' },
-        { day: 'Week 4', topic: 'Capstone: Real SOC Scenarios' }
-      ],
-      price: 'defensive-bootcamp',
-      features: [
-        'Industry-standard SIEM tools',
-        'Real incident response drills',
-        'Job-ready skills',
-        'Certificate of completion',
-        'Placement assistance',
-        'Community support'
-      ],
-      highlights: [
-        'Fast-track to SOC jobs',
-        'Hands-on SIEM training',
-        'Hybrid learning',
-        'Limited seats'
-      ]
-    }
-  ];
-
-  // Placeholder for free workshops
-  const freeWorkshops = [
-    {
-      id: 'free-cyber-workshop-jan2025',
-      title: 'Introduction to Cybersecurity Careers',
-      date: '2025-01-25',
-      time: '6:00 PM - 8:00 PM',
-      location: 'Online (Zoom)',
-      description: 'Discover cybersecurity career paths, required skills, certifications, and how to get started. Open Q&A with industry experts.',
-      registrationLink: '#',
-      instructor: 'Santosh Kumar',
-      topics: ['Career Paths', 'Certifications', 'Skills Required', 'Industry Insights']
-    },
-    {
-      id: 'free-siem-workshop-feb2025',
-      title: 'Free SIEM Workshop: Splunk Basics',
-      date: '2025-02-10',
-      time: '5:00 PM - 7:00 PM',
-      location: 'Online (Zoom)',
-      description: 'Hands-on introduction to SIEM tools using Splunk. Learn log analysis, search queries, and basic threat detection.',
-      registrationLink: '#',
-      instructor: 'Priya Sharma',
-      topics: ['Splunk Basics', 'Log Analysis', 'Search Queries', 'Threat Detection']
-    },
-    {
-      id: 'free-webapp-workshop-mar2025',
-      title: 'Web Application Security 101',
-      date: '2025-03-05',
-      time: '6:30 PM - 8:30 PM',
-      location: 'Online (Zoom)',
-      description: 'Learn common web vulnerabilities (OWASP Top 10), how to identify them, and basic defense techniques.',
-      registrationLink: '#',
-      instructor: 'Rajesh Kumar',
-      topics: ['OWASP Top 10', 'SQL Injection', 'XSS', 'Secure Coding']
-    }
-  ];
-
-  // Merge Firestore events with hardcoded data
-  // Separate Firestore events by type
-  const firestoreBatches = firestoreEvents.filter(event => event.type === 'batch');
-  const firestoreBootcamps = firestoreEvents.filter(event => event.type === 'bootcamp');
-  const firestoreWorkshops = firestoreEvents.filter(event => event.type === 'workshop');
-
-  // Merge and deduplicate (Firestore events take priority over hardcoded if same ID)
-  const mergedBatches = [...upcomingBatches];
-  firestoreBatches.forEach(fbEvent => {
-    const existingIndex = mergedBatches.findIndex(b => b.id === fbEvent.id);
-    if (existingIndex >= 0) {
-      // Replace hardcoded with Firestore version
-      mergedBatches[existingIndex] = { ...mergedBatches[existingIndex], ...fbEvent };
-    } else {
-      // Add new Firestore event
-      mergedBatches.push(fbEvent);
-    }
-  });
-
-  const mergedBootcamps = [...bootcamps];
-  firestoreBootcamps.forEach(fbEvent => {
-    const existingIndex = mergedBootcamps.findIndex(b => b.id === fbEvent.id);
-    if (existingIndex >= 0) {
-      mergedBootcamps[existingIndex] = { ...mergedBootcamps[existingIndex], ...fbEvent };
-    } else {
-      mergedBootcamps.push(fbEvent);
-    }
-  });
-
-  const mergedWorkshops = [...freeWorkshops];
-  firestoreWorkshops.forEach(fbEvent => {
-    const existingIndex = mergedWorkshops.findIndex(w => w.id === fbEvent.id);
-    if (existingIndex >= 0) {
-      mergedWorkshops[existingIndex] = { ...mergedWorkshops[existingIndex], ...fbEvent };
-    } else {
-      mergedWorkshops.push(fbEvent);
-    }
-  });
+  // Separate events by type from the centralized merged data
+  const upcomingBatches = allEvents.filter(event => event.type === 'batch');
+  const bootcamps = allEvents.filter(event => event.type === 'bootcamp');
+  const freeWorkshops = allEvents.filter(event => event.type === 'workshop');
 
   // Filter batches by category
   const filteredBatches = selectedCategory === 'all'
-    ? mergedBatches
-    : mergedBatches.filter(batch => batch.category === selectedCategory);
+    ? upcomingBatches
+    : upcomingBatches.filter(batch => batch.category === selectedCategory);
 
   const categories = [
-    { id: 'all', name: 'All Batches', count: mergedBatches.length },
-    { id: 'defensive', name: 'Defensive Security', count: mergedBatches.filter(b => b.category === 'defensive').length },
-    { id: 'offensive', name: 'Offensive Security', count: mergedBatches.filter(b => b.category === 'offensive').length }
+    { id: 'all', name: 'All Batches', count: upcomingBatches.length },
+    { id: 'defensive', name: 'Defensive Security', count: upcomingBatches.filter(b => b.category === 'defensive').length },
+    { id: 'offensive', name: 'Offensive Security', count: upcomingBatches.filter(b => b.category === 'offensive').length }
   ];
 
-  // Calculate days until start
+  // Helper function to calculate days until start
   const getDaysUntilStart = (startDate) => {
     const start = new Date(startDate);
     const today = new Date();
@@ -623,12 +345,12 @@ const EventsBatchesPage = ({ onNavigate }) => {
             </div>
             {/* Tab 2: Bootcamps */}
             <div>
-              {loadingFirestore && bootcamps.length === 0 ? (
+              {loadingEvents && bootcamps.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
                   <p className="text-slate-400">Loading bootcamps...</p>
                 </div>
-              ) : mergedBootcamps.length === 0 ? (
+              ) : bootcamps.length === 0 ? (
                 <div className="text-center py-16">
                   <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-slate-400 mb-2">No bootcamps scheduled</h3>
@@ -636,7 +358,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-6">
-                  {mergedBootcamps.map((camp, index) => {
+                  {bootcamps.map((camp, index) => {
                     const daysUntilStart = getDaysUntilStart(camp.startDate);
                     const spotsLeft = camp.maxStudents - camp.currentEnrolled;
                     const coursePrice = pricing?.[camp.price];
@@ -766,12 +488,12 @@ const EventsBatchesPage = ({ onNavigate }) => {
             </div>
             {/* Tab 3: Free Workshops */}
             <div>
-              {loadingFirestore && freeWorkshops.length === 0 ? (
+              {loadingEvents && freeWorkshops.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mx-auto mb-4"></div>
                   <p className="text-slate-400">Loading workshops...</p>
                 </div>
-              ) : mergedWorkshops.length === 0 ? (
+              ) : freeWorkshops.length === 0 ? (
                 <div className="text-center py-16">
                   <AlertCircle className="w-16 h-16 text-slate-600 mx-auto mb-4" />
                   <h3 className="text-xl font-semibold text-slate-400 mb-2">No workshops scheduled</h3>
@@ -779,7 +501,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {mergedWorkshops.map((ws, index) => (
+                  {freeWorkshops.map((ws, index) => (
                     <motion.div
                       key={ws.id}
                       initial={{ opacity: 0, y: 20 }}
