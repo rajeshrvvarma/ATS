@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, DollarSign, BookOpen, Globe, Zap, Grid3X3, Layers, Map, Eye, RotateCcw, Laptop, Cloud, Database, TestTube, Search, Filter, Play, BookmarkPlus, ChevronDown, ArrowDown, ArrowDownLeft, ArrowDownRight } from 'lucide-react';
+import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, DollarSign, BookOpen, Globe, Zap, Grid3X3, Layers, Map, Eye, RotateCcw, Laptop, Cloud, Database, TestTube, Search, Filter, Play, BookmarkPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SectionTitle from '@/components/SectionTitle.jsx';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
@@ -221,61 +221,30 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
     );
 };
 
-// Module-Focused Hero Section
-const HeroSection = ({ onNavigate, modules, loading, error }) => {
+// Simplified Hero Section - Premium Courses Focus
+const HeroSection = ({ onNavigate }) => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
-    const [activeHero, setActiveHero] = useState(0); // 0: modular, 1: traditional
-    const categories = ['All', ...new Set(modules.map(module => module.category))];
 
-    if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
-    if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
+    // Single hero message focused on premium courses
+    const heroData = {
+        title: <>
+            <span className="text-red-400">December Batch Starting Soon!</span><br />
+            <span className="text-3xl md:text-5xl text-blue-400">Launch Your Cybersecurity Career</span><br />
+            <span className="text-2xl md:text-3xl text-yellow-400">in Just 8 Weeks</span>
+        </>,
+        description: <>
+            Join <strong className="text-green-400">15+ professionals</strong> who successfully transitioned to
+            <strong className="text-blue-400"> High-Paying Cybersecurity Roles</strong> through our intensive weekend program.<br />
+            <span className="text-yellow-400 font-semibold">₹20,000 only • Weekends • Personal Instruction • Job Assistance</span>
+        </>,
+        features: [
+            { icon: Users, text: 'Only 8 Seats Left' },
+            { icon: Clock, text: 'Weekends Only' },
+            { icon: Star, text: '80% Placement Rate' },
+        ]
+    };
 
-    // Hero panel data - COURSE-FIRST REVENUE STRATEGY
-    const heroPanels = [
-        {
-            title: <>
-                <span className="text-red-400">December Batch Starting Soon!</span><br />
-                <span className="text-3xl md:text-5xl text-blue-400">Launch Your Cybersecurity Career</span><br />
-                <span className="text-2xl md:text-3xl text-yellow-400">in Just 8 Weeks</span>
-            </>,
-            description: <>
-                Join <strong className="text-green-400">15+ professionals</strong> who successfully transitioned to
-                <strong className="text-blue-400"> High-Paying Cybersecurity Roles</strong> through our intensive weekend program.<br />
-                <span className="text-yellow-400 font-semibold">₹20,000 only • Weekends • Personal Instruction • Job Assistance</span>
-            </>,
-            features: [
-                { icon: Users, text: 'Only 8 Seats Left' },
-                { icon: Clock, text: 'Weekends Only' },
-                { icon: Star, text: '80% Placement Rate' },
-            ],
-            label: 'Professional Courses',
-        },
-        {
-            title: <>
-                <span className="text-cyan-400">Can't Commit to Full Course?</span><br />
-                <span className="text-3xl md:text-5xl text-purple-400">Learn Specific Skills</span><br />
-                <span className="text-2xl md:text-3xl text-green-400">₹99 Per Module</span>
-            </>,
-            description: <>
-                Start with <strong className="text-purple-400">Individual Modules</strong> and upgrade to full courses later.
-                Perfect for <strong className="text-green-400">working professionals</strong> who want to test our training quality.<br />
-                <span className="text-cyan-400 font-semibold">Self-paced • Affordable • Upgrade Anytime</span>
-            </>,
-            features: [
-                { icon: BookOpen, text: `${modules.length}+ Modules Available` },
-                { icon: TrendingUp, text: 'Flexible Learning' },
-                { icon: DollarSign, text: 'Upgrade to Course Anytime' },
-            ],
-            label: 'Modular Learning',
-        },
-    ];
 
-    // Custom bounce delay for staggered arrow animation
-    const arrowBounceDelays = [
-        '', // center
-        'animation-delay-300', // left
-        'animation-delay-600', // right
-    ];
 
     return (
         <>
@@ -284,44 +253,33 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                 <section id="home" className="container mx-auto px-4 md:px-6">
                     <div className="text-center mb-6 relative">
                         <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 leading-tight">
-                            {heroPanels[activeHero].title}
+                            {heroData.title}
                         </h1>
                         <p className="text-lg md:text-xl text-slate-300 mb-4 max-w-3xl mx-auto leading-relaxed">
-                            {heroPanels[activeHero].description}
+                            {heroData.description}
                         </p>
                         <div className="flex flex-wrap justify-center gap-6 mb-6 text-center">
-                            {heroPanels[activeHero].features.map((f, i) => (
+                            {heroData.features.map((f, i) => (
                                 <div key={i} className="flex items-center gap-2 bg-slate-800/50 px-6 py-3 rounded-full backdrop-blur-sm border border-slate-700">
-                                    <f.icon className={`w-5 h-5 ${activeHero === 0 ? 'text-blue-400' : 'text-yellow-400'}`} />
+                                    <f.icon className="w-5 h-5 text-blue-400" />
                                     <span className="text-white font-semibold">{f.text}</span>
                                 </div>
                             ))}
                         </div>
-                        {/* Three animated arrows pointing to Section 2 */}
-                        <div className="flex flex-col items-center mt-2">
-                            <ArrowDown className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce`} />
-                            <div className="flex justify-center gap-32 mt-6">
-                                <ArrowDownLeft className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce animation-delay-300`} />
-                                <ArrowDownRight className={`w-16 h-16 ${activeHero === 0 ? 'text-cyan-400' : 'text-yellow-400'} animate-bounce animation-delay-600`} />
-                            </div>
-                        </div>
-                        {/* Left/right arrows for toggle */}
-                        <div className="absolute left-0 top-1/2 transform -translate-y-1/2">
+
+                        {/* Clear Call to Action */}
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <button
-                                aria-label="Previous hero panel"
-                                onClick={() => setActiveHero((activeHero + heroPanels.length - 1) % heroPanels.length)}
-                                className="bg-slate-800 text-white rounded-full p-2 shadow hover:bg-slate-700 transition-all"
+                                onClick={() => onNavigate('enroll')}
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
                             >
-                                <ChevronDown style={{ transform: 'rotate(90deg)' }} className="w-6 h-6" />
+                                🚀 View Courses & Enroll
                             </button>
-                        </div>
-                        <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
                             <button
-                                aria-label="Next hero panel"
-                                onClick={() => setActiveHero((activeHero + 1) % heroPanels.length)}
-                                className="bg-slate-800 text-white rounded-full p-2 shadow hover:bg-slate-700 transition-all"
+                                onClick={() => onNavigate('contact')}
+                                className="border border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300"
                             >
-                                <ChevronDown style={{ transform: 'rotate(-90deg)' }} className="w-6 h-6" />
+                                💬 Book Free Consultation
                             </button>
                         </div>
                     </div>
@@ -1071,24 +1029,7 @@ const Contact = ({ onNavigate }) => {
 
 // Main HomePage Component
 const HomePage = ({ onNavigate }) => {
-    const [modules, setModules] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState('modules');
-    const [expandedCard, setExpandedCard] = useState(null);
-    const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
-    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '', coursePrice: '', courseDuration: '' });
-    // Read filter from URL query param on mount
-    const getInitialFilter = () => {
-        if (typeof window !== 'undefined') {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('filter') || '';
-        }
-        return '';
-    };
-    const [searchFilter, setSearchFilter] = useState(getInitialFilter());
-    const tabbedSectionRef = React.useRef(null);
 
     // --- HIGH-VALUE COURSES (Revenue Focus) ---
     const premiumCourses = [
@@ -1163,64 +1104,12 @@ const HomePage = ({ onNavigate }) => {
         }
     ];
 
-    // Custom onNavigate handler
+    // Simplified navigation handler
     const handleNavigate = (route, params) => {
-        if (route === 'moduleCatalog') {
-            setActiveTab('modules');
-            setSearchFilter(params && params.filter ? params.filter : '');
-            // Wait for state to update, then scroll
-            setTimeout(() => {
-                const el = document.getElementById('courses-tabbed-section');
-                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 200);
-        } else if (typeof onNavigate === 'function') {
+        if (typeof onNavigate === 'function') {
             onNavigate(route, params);
         }
     };
-
-    useEffect(() => {
-        const fetchModules = async () => {
-            try {
-                const response = await fetch('/modules.json', {
-                    cache: 'no-store',
-                    headers: {
-                        'Cache-Control': 'no-cache'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch modules: ${response.status} ${response.statusText}`);
-                }
-                const data = await response.json();
-                console.log('📊 Total modules loaded:', data.length);
-                console.log('🔍 Sample module statuses:', data.slice(0, 5).map(m => ({ id: m.id, status: m.status })));
-
-                // Filter to show only active modules (hide hidden/archived)
-                console.log('🧪 Testing filter logic...');
-                const allStatuses = [...new Set(data.map(m => m.status || 'undefined'))];
-                console.log('📋 All status values found:', allStatuses);
-
-                const activeModules = data.filter(m => {
-                    const isActive = !m.status || m.status === 'active';
-                    if (!isActive) {
-                        console.log('🚫 Filtering out:', m.id, 'status:', m.status);
-                    }
-                    return isActive;
-                });
-
-                const hiddenModules = data.filter(m => m.status === 'hidden');
-                console.log('✅ Active modules:', activeModules.length);
-                console.log('❌ Hidden modules (filtered out):', hiddenModules.length);
-                console.log('📝 Hidden module titles:', hiddenModules.map(m => m.title).slice(0, 5));
-                console.log('📝 Hidden module IDs:', hiddenModules.map(m => m.id).slice(0, 5));
-                setModules(activeModules);
-                setLoading(false);
-            } catch (err) {
-                setError(`Failed to load modules: ${err.message}`);
-                setLoading(false);
-            }
-        };
-        fetchModules();
-    }, []);
 
     useEffect(() => {
         // On mount, if a hash exists, attempt smooth scroll to that section
@@ -1230,28 +1119,12 @@ const HomePage = ({ onNavigate }) => {
                 document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' });
             }, 100);
         }
-        // If filter query param changes (e.g., via navigation), update searchFilter
-        const params = new URLSearchParams(window.location.search);
-        const urlFilter = params.get('filter') || '';
-        setSearchFilter(urlFilter);
-    }, [window.location.search]);
+    }, []);
 
     return (
         <>
-            <HeroSection onNavigate={handleNavigate} modules={modules} loading={loading} error={error} />
+            <HeroSection onNavigate={handleNavigate} />
             <PremiumCoursesSection onNavigate={handleNavigate} premiumCourses={premiumCourses} />
-            <CoursesTabbedSection
-                onNavigate={handleNavigate}
-                modules={modules}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                searchFilter={searchFilter}
-                setSearchFilter={setSearchFilter}
-                expandedCard={expandedCard}
-                setExpandedCard={setExpandedCard}
-                setCourseDetailsModal={setCourseDetailsModal}
-                setEnrollmentModal={setEnrollmentModal}
-            />
             <SuccessMetrics />
             <Testimonials />
             <Contact onNavigate={handleNavigate} />
