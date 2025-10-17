@@ -29,9 +29,12 @@ const TechnologyTrainingLandingPage = () => {
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mr-4 shadow-2xl">
               <Code className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-200 to-green-100 bg-clip-text text-transparent">
-              TechCraft Institute
-            </h1>
+            <div className="text-center">
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-200 to-green-100 bg-clip-text text-transparent">
+                Agnidhra Technologies
+              </h1>
+              <div className="text-lg text-emerald-300 mt-2">Technology Institute</div>
+            </div>
           </div>
 
           <div className="max-w-4xl mx-auto">
@@ -69,14 +72,14 @@ const TechnologyTrainingLandingPage = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">Also Explore Cybersecurity</h3>
-                <p className="text-emerald-300">Premium cybersecurity courses at CyberForge Academy</p>
+                <p className="text-emerald-300">Premium cybersecurity courses at Agnidhra Technologies</p>
               </div>
             </div>
             <button
               onClick={() => window.open('/', '_blank')}
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
             >
-              Visit CyberForge →
+              Visit Cybersecurity Academy →
             </button>
           </div>
         </div>

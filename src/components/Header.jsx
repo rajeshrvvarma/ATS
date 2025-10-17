@@ -167,9 +167,14 @@ export default function Header({ onNavigate, currentPage }) {
                                 />
                             </div>
                             <div className="flex items-center space-x-2 lg:space-x-4">
-                                <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
-                                    CyberForge Academy
-                                </span>
+                                <div>
+                                    <span className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors duration-200">
+                                        Agnidhra Technologies
+                                    </span>
+                                    <div className="text-xs text-slate-300 -mt-1">
+                                        Cybersecurity & Technology Training
+                                    </div>
+                                </div>
                                 {/* Search bar beside Agnidhra Technologies - always show on desktop */}
                                 <div className="block ml-4">
                                 </div>
@@ -218,7 +223,7 @@ export default function Header({ onNavigate, currentPage }) {
                         className="flex items-center space-x-3"
                     >
                         <img src="/logo.png" alt="AT Logo" className="w-10 h-10 rounded-full" />
-                        <span className="text-lg font-bold text-white">CyberForge Academy</span>
+                        <span className="text-lg font-bold text-white">Agnidhra Technologies</span>
                     </button>
 
                     <button
@@ -309,7 +314,7 @@ const SimpleNavigation = ({ onNavigate, currentPage }) => {
 
     const navigationItems = [
         {
-            label: 'Cybersecurity',
+            label: 'Cybersecurity Academy',
             hasDropdown: true,
             isActive: currentPage === 'home',
             action: () => onNavigate('home'),
@@ -320,17 +325,17 @@ const SimpleNavigation = ({ onNavigate, currentPage }) => {
             ]
         },
         {
-            label: 'Events & Batches',
-            hasDropdown: false,
-            isActive: currentPage === 'events-batches',
-            action: () => onNavigate('events-batches')
-        },
-        {
-            label: 'Tech Academy',
+            label: 'Technology Institute',
             hasDropdown: false,
             isActive: currentPage === 'technologyTraining',
             action: () => onNavigate('technologyTraining'),
             highlight: true
+        },
+        {
+            label: 'Events & Batches',
+            hasDropdown: false,
+            isActive: currentPage === 'events-batches',
+            action: () => onNavigate('events-batches')
         }
     ];
 
