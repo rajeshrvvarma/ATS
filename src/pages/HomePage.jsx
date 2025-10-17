@@ -239,14 +239,14 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
                 <span className="text-2xl md:text-3xl text-yellow-400">in Just 8 Weeks</span>
             </>,
             description: <>
-                Join <strong className="text-green-400">50+ professionals</strong> who successfully transitioned to
+                Join <strong className="text-green-400">15+ professionals</strong> who successfully transitioned to
                 <strong className="text-blue-400"> High-Paying Cybersecurity Roles</strong> through our intensive weekend program.<br />
                 <span className="text-yellow-400 font-semibold">₹20,000 only • Weekends • Personal Instruction • Job Assistance</span>
             </>,
             features: [
                 { icon: Users, text: 'Only 8 Seats Left' },
                 { icon: Clock, text: 'Weekends Only' },
-                { icon: Star, text: '95% Placement Rate' },
+                { icon: Star, text: '80% Placement Rate' },
             ],
             label: 'Professional Courses',
         },
@@ -392,78 +392,6 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
         };
         return colorMap[category] || 'slate';
     };
-    // --- HIGH-VALUE COURSES (Revenue Focus) ---
-    const premiumCourses = [
-        {
-            id: 'defensive-security-professional',
-            title: 'Defensive Security Professional',
-            subtitle: 'SOC Analyst to Security Engineer Path',
-            description: 'Master SIEM, incident response, threat hunting, and security operations. Get job-ready in 8 weeks.',
-            originalPrice: '₹35,000',
-            currentPrice: '₹20,000',
-            duration: '8 Weeks',
-            schedule: 'Weekends (Fri-Sun)',
-            level: 'Beginner to Advanced',
-            icon: Shield,
-            color: 'blue',
-            features: ['SIEM Mastery (Splunk/QRadar)', 'Incident Response', 'Threat Hunting', 'Security Tools', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 3,
-            totalSeats: 8,
-            enrolled: '45',
-            placementRate: '95%',
-            avgSalary: '6-12 LPA',
-            nextBatch: 'Dec 15, 2025',
-            action: () => onNavigate('enroll?course=defensive-security-professional'),
-            gradient: 'from-blue-600 to-blue-800',
-            urgency: 'high'
-        },
-        {
-            id: 'offensive-security-mastery',
-            title: 'Offensive Security Mastery',
-            subtitle: 'Ethical Hacker to Penetration Tester',
-            description: 'Learn penetration testing, vulnerability assessment, and red team operations. OSCP preparation included.',
-            originalPrice: '₹40,000',
-            currentPrice: '₹20,000',
-            duration: '8 Weeks',
-            schedule: 'Weekends (Fri-Sun)',
-            level: 'Intermediate to Advanced',
-            icon: Sword,
-            color: 'red',
-            features: ['Web App Penetration Testing', 'Network Security Testing', 'OSCP Preparation', 'Report Writing', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 5,
-            totalSeats: 8,
-            enrolled: '38',
-            placementRate: '92%',
-            avgSalary: '8-15 LPA',
-            nextBatch: 'Jan 5, 2026',
-            action: () => onNavigate('enroll?course=offensive-security-mastery'),
-            gradient: 'from-red-600 to-red-800',
-            urgency: 'medium'
-        },
-        {
-            id: 'cloud-devops-security',
-            title: 'Cloud DevOps Security',
-            subtitle: 'AWS/Azure Security Specialist',
-            description: 'Combine DevOps skills with cloud security. Master AWS/Azure security, container security, and automation.',
-            originalPrice: '₹30,000',
-            currentPrice: '₹20,000',
-            duration: '6 Weeks',
-            schedule: 'Weekends (Sat-Sun)',
-            level: 'Intermediate',
-            icon: Cloud,
-            color: 'cyan',
-            features: ['AWS/Azure Security', 'Container Security', 'Infrastructure as Code', 'DevSecOps', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 6,
-            totalSeats: 10,
-            enrolled: '42',
-            placementRate: '90%',
-            avgSalary: '10-18 LPA',
-            nextBatch: 'Dec 22, 2025',
-            action: () => onNavigate('enroll?course=cloud-devops-security'),
-            gradient: 'from-cyan-600 to-cyan-800',
-            urgency: 'low'
-        }
-    ];
 
     // --- Traditional Courses Logic (Secondary) ---
     const traditionalCourses = [
@@ -480,7 +408,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
             features: ['Cloud Security', 'Digital Forensics', 'GRC & Compliance', 'Expert Mentorship'],
             action: () => onNavigate('specializedCourses'),
             gradient: 'from-purple-600 to-purple-800',
-            enrolled: '200+'
+            enrolled: '25+'
         },
         {
             id: 'technology-training',
@@ -495,7 +423,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
             features: ['Full Stack Development', 'Cloud & DevOps', 'AI & Data Science', 'Software Testing'],
             action: () => onNavigate('technologyTraining'),
             gradient: 'from-indigo-600 to-indigo-800',
-            enrolled: '150+'
+            enrolled: '18+'
         },
         {
             id: 'defensive-mastery',
@@ -507,7 +435,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
             level: 'All Levels',
             icon: Shield,
             color: 'blue',
-            features: ['Personal Mentor', '10+ Projects', 'Job Guarantee', 'Small Batch (20 students)'],
+            features: ['Personal Mentor', '10+ Projects', 'Job Assistance', 'Small Batch (8-15 students)'],
             action: () => onNavigate('defensiveMastery'),
             gradient: 'from-blue-600 to-purple-800',
             enrolled: '18/20'
@@ -531,7 +459,7 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
             id: 'college-training',
             title: 'College Bulk Training',
             subtitle: 'Student Programs',
-            description: 'Specialized cybersecurity training for 100-200 engineering students with placement support.',
+            description: 'Specialized cybersecurity training for 50-100 engineering students with placement support.',
             price: 'Starting ₹299/student',
             duration: '8 Weeks',
             level: 'Beginner Friendly',
@@ -817,16 +745,16 @@ const SuccessMetrics = () => (
                     </span>
                 </h2>
                 <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-                    Join thousands of successful students who have transformed their careers with our training programs
+                    Join dozens of successful students who have transformed their careers with our training programs
                 </p>
             </motion.div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
                 {[
-                    { icon: Users, label: '1000+ Students', value: 'Enrolled', color: 'blue' },
-                    { icon: TrendingUp, label: '85% Placement', value: 'Success Rate', color: 'green' },
-                    { icon: Star, label: '4.8/5 Rating', value: 'Student Reviews', color: 'yellow' },
-                    { icon: Award, label: '200+ Companies', value: 'Hiring Partners', color: 'purple' }
+                    { icon: Users, label: '50+ Students', value: 'Enrolled', color: 'blue' },
+                    { icon: TrendingUp, label: '78% Placement', value: 'Success Rate', color: 'green' },
+                    { icon: Star, label: '4.6/5 Rating', value: 'Student Reviews', color: 'yellow' },
+                    { icon: Award, label: '25+ Companies', value: 'Hiring Partners', color: 'purple' }
                 ].map((metric, index) => (
                     <motion.div
                         key={index}
@@ -925,7 +853,7 @@ const Testimonials = () => {
                 <SectionTitle>What Our Students Say</SectionTitle>
                 <div className="text-center mb-12">
                     <p className="text-slate-300 text-lg">
-                        Over 1000+ students have transformed their careers with us
+                        Over 50+ students have transformed their careers with us
                     </p>
                 </div>
 
@@ -1161,6 +1089,79 @@ const HomePage = ({ onNavigate }) => {
     };
     const [searchFilter, setSearchFilter] = useState(getInitialFilter());
     const tabbedSectionRef = React.useRef(null);
+
+    // --- HIGH-VALUE COURSES (Revenue Focus) ---
+    const premiumCourses = [
+        {
+            id: 'defensive-security-professional',
+            title: 'Defensive Security Professional',
+            subtitle: 'SOC Analyst to Security Engineer Path',
+            description: 'Master SIEM, incident response, threat hunting, and security operations. Get job-ready in 8 weeks.',
+            originalPrice: '₹35,000',
+            currentPrice: '₹20,000',
+            duration: '8 Weeks',
+            schedule: 'Weekends (Fri-Sun)',
+            level: 'Beginner to Advanced',
+            icon: Shield,
+            color: 'blue',
+            features: ['SIEM Mastery (Splunk/QRadar)', 'Incident Response', 'Threat Hunting', 'Security Tools', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 3,
+            totalSeats: 8,
+            enrolled: '12',
+            placementRate: '85%',
+            avgSalary: '4-8 LPA',
+            nextBatch: 'Dec 15, 2025',
+            action: () => handleNavigate('enroll?course=defensive-security-professional'),
+            gradient: 'from-blue-600 to-blue-800',
+            urgency: 'high'
+        },
+        {
+            id: 'offensive-security-mastery',
+            title: 'Offensive Security Mastery',
+            subtitle: 'Ethical Hacker to Penetration Tester',
+            description: 'Learn penetration testing, vulnerability assessment, and red team operations. OSCP preparation included.',
+            originalPrice: '₹40,000',
+            currentPrice: '₹20,000',
+            duration: '8 Weeks',
+            schedule: 'Weekends (Fri-Sun)',
+            level: 'Intermediate to Advanced',
+            icon: Sword,
+            color: 'red',
+            features: ['Web App Penetration Testing', 'Network Security Testing', 'OSCP Preparation', 'Report Writing', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 5,
+            totalSeats: 8,
+            enrolled: '8',
+            placementRate: '80%',
+            avgSalary: '5-10 LPA',
+            nextBatch: 'Jan 5, 2026',
+            action: () => handleNavigate('enroll?course=offensive-security-mastery'),
+            gradient: 'from-red-600 to-red-800',
+            urgency: 'medium'
+        },
+        {
+            id: 'cloud-devops-security',
+            title: 'Cloud DevOps Security',
+            subtitle: 'AWS/Azure Security Specialist',
+            description: 'Combine DevOps skills with cloud security. Master AWS/Azure security, container security, and automation.',
+            originalPrice: '₹30,000',
+            currentPrice: '₹20,000',
+            duration: '6 Weeks',
+            schedule: 'Weekends (Sat-Sun)',
+            level: 'Intermediate',
+            icon: Cloud,
+            color: 'cyan',
+            features: ['AWS/Azure Security', 'Container Security', 'Infrastructure as Code', 'DevSecOps', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 6,
+            totalSeats: 10,
+            enrolled: '15',
+            placementRate: '78%',
+            avgSalary: '6-12 LPA',
+            nextBatch: 'Dec 22, 2025',
+            action: () => handleNavigate('enroll?course=cloud-devops-security'),
+            gradient: 'from-cyan-600 to-cyan-800',
+            urgency: 'low'
+        }
+    ];
 
     // Custom onNavigate handler
     const handleNavigate = (route, params) => {
