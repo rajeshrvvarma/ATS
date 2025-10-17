@@ -66,31 +66,15 @@ async function createEnrollmentFromPayment({ payment, orderData }) {
     updatedAt: new Date().toISOString()
   };
 
-  const docRef = await db.collection('enrollments').add(enrollmentDoc);
-  // After successful enrollment creation, send a Netlify Form to trigger notifications (welcome/email)
+  // Prefer to use the server-side enrollment routine which centralizes business rules
   try {
-    const siteUrl = process.env.SITE_URL || process.env.URL || '';
-    const endpoint = siteUrl ? `${siteUrl}/` : '/';
-    const formData = new URLSearchParams();
-    formData.append('form-name', 'enrollment-notification');
-    formData.append('type', 'welcome-email');
-    formData.append('studentName', enrollmentDoc.studentDetails.name || '');
-    formData.append('studentEmail', enrollmentDoc.studentDetails.email || '');
-    formData.append('studentPhone', enrollmentDoc.studentDetails.phone || '');
-    formData.append('enrollmentId', enrollmentDoc.enrollmentId || '');
-    formData.append('courseType', enrollmentDoc.courseName || enrollmentDoc.courseId || '');
-    formData.append('startDate', enrollmentDoc.enrollment.enrolledAt || new Date().toISOString());
-    // Post to site root to trigger Netlify Forms
-    await fetch(endpoint, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData.toString()
-    });
-  } catch (e) {
-    console.warn('Failed to send Netlify form notification', e.message);
+    const { createEnrollmentServer } = require('./serverEnrollment');
+    return await createEnrollmentServer({ payment, orderData });
+  } catch (err) {
+    console.warn('serverEnrollment not available or failed, falling back to direct write', err.message);
+    const docRef = await db.collection('enrollments').add(enrollmentDoc);
+    return { ok: true, id: docRef.id };
   }
-
-  return { ok: true, id: docRef.id };
 }
 
 module.exports = { createEnrollmentFromPayment, findEnrollmentByPayment };
