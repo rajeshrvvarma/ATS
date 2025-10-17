@@ -103,17 +103,18 @@ const AnnouncementBanner = ({ onNavigate }) => {
 
                 <div className="container mx-auto px-4 py-3 relative z-10">
                     <div className="flex items-center justify-between">
-                        {/* Left Navigation Arrow - Only show if multiple events */}
-                        {allEvents.length > 1 && (
+                        {/* Left Navigation Arrow - Always visible if events exist */}
+                        {allEvents.length > 0 && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handlePrevEvent();
                                 }}
-                                className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20 hover:border-white/40"
+                                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/30 hover:bg-white/50 transition-all duration-200 backdrop-blur-sm border border-white/40 hover:border-white/60 shadow-lg"
                                 aria-label="Previous event"
+                                title="Previous event"
                             >
-                                <ChevronLeft className="w-4 h-4" />
+                                <ChevronLeft className="w-5 h-5 text-white" />
                             </button>
                         )}
 
@@ -224,17 +225,18 @@ const AnnouncementBanner = ({ onNavigate }) => {
                             </div>
                         </div>
 
-                        {/* Right Navigation Arrow - Only show if multiple events */}
-                        {allEvents.length > 1 && (
+                        {/* Right Navigation Arrow - Always visible if events exist */}
+                        {allEvents.length > 0 && (
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleNextEvent();
                                 }}
-                                className="hidden sm:flex items-center justify-center w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20 hover:border-white/40 mr-2"
+                                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/30 hover:bg-white/50 transition-all duration-200 backdrop-blur-sm border border-white/40 hover:border-white/60 shadow-lg mr-2"
                                 aria-label="Next event"
+                                title="Next event"
                             >
-                                <ChevronRight className="w-4 h-4" />
+                                <ChevronRight className="w-5 h-5 text-white" />
                             </button>
                         )}
 
@@ -248,28 +250,30 @@ const AnnouncementBanner = ({ onNavigate }) => {
                         </button>
                     </div>
 
-                    {/* Mobile Navigation Arrows - Only show if multiple events */}
-                    {allEvents.length > 1 && (
-                        <div className="sm:hidden mt-2 flex justify-center gap-4 mb-2">
+                    {/* Mobile Navigation Arrows - Always visible if events exist */}
+                    {allEvents.length > 0 && (
+                        <div className="sm:hidden mt-3 flex justify-center gap-4 mb-3">
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handlePrevEvent();
                                 }}
-                                className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/30 hover:bg-white/50 transition-all duration-200 backdrop-blur-sm border border-white/40 shadow-lg"
                                 aria-label="Previous event"
+                                title="Previous event"
                             >
-                                <ChevronLeft className="w-4 h-4" />
+                                <ChevronLeft className="w-5 h-5 text-white" />
                             </button>
                             <button
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     handleNextEvent();
                                 }}
-                                className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 transition-all duration-200 backdrop-blur-sm border border-white/20"
+                                className="flex items-center justify-center w-10 h-10 rounded-full bg-white/30 hover:bg-white/50 transition-all duration-200 backdrop-blur-sm border border-white/40 shadow-lg"
                                 aria-label="Next event"
+                                title="Next event"
                             >
-                                <ChevronRight className="w-4 h-4" />
+                                <ChevronRight className="w-5 h-5 text-white" />
                             </button>
                         </div>
                     )}
