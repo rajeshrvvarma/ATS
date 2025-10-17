@@ -1,0 +1,28 @@
+name: Reconcile Orders
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # daily at 02:00 UTC
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run reconciliation
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          SITE_URL: ${{ secrets.SITE_URL }}
+          ENROLLMENT_API_SECRET: ${{ secrets.ENROLLMENT_API_SECRET }}
+          CREATE_MISSING: '1'
+        run: node scripts/reconcileOrders.js

@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const { initializeApp, cert, applicationDefault } = require('firebase-admin/app');
+const fetch = require('node-fetch');
 const { getFirestore } = require('firebase-admin/firestore');
 
 let app;
@@ -52,7 +53,7 @@ exports.handler = async function (event) {
       return { statusCode: 200, body: 'No order id' };
     }
 
-    // Update the order document in Firestore
+    // Update the order document in Firestore and dispatch to central processor
     try {
       const orderRef = db.collection('orders').doc(orderId);
       await orderRef.set({
@@ -65,73 +66,27 @@ exports.handler = async function (event) {
       const orderSnap = await orderRef.get();
       const orderData = orderSnap.exists ? orderSnap.data() : null;
 
-      // If payment captured, create enrollment record (idempotency handled below)
+      // If payment captured, dispatch to central enrollment processor
       if (payment && (payment.status === 'captured' || eventType === 'payment.captured' || eventType === 'order.paid')) {
-        const notes = (orderData && (orderData.raw && orderData.raw.notes)) || orderData?.notes || {};
-        const customer = orderData?.customer || {};
-
-        const enrollmentId = `ENR_${Date.now()}_${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
-        const courseId = notes.courseId || notes.course_id || null;
-        const courseName = notes.courseName || notes.course_name || null;
-
-        const studentEmail = (customer && customer.email) || payment.email || notes.email || null;
-        const studentPhone = (customer && customer.phone) || payment.contact || notes.phone || null;
-        const studentName = (customer && customer.name) || notes.name || null;
-
-        const enrollmentDoc = {
-          enrollmentId,
-          courseId,
-          courseName,
-          studentDetails: {
-            id: null,
-            email: studentEmail,
-            name: studentName,
-            phone: studentPhone
-          },
-          payment: {
-            amount: payment.amount || orderData?.amount || null,
-            reference: payment.id || null,
-            method: payment.method || 'razorpay',
-            status: 'captured',
-            raw: payment
-          },
-          enrollment: {
-            status: 'active',
-            enrolledAt: new Date().toISOString(),
-            accessLevel: 'full',
-            progress: 0,
-            completedLessons: [],
-            lastAccessedAt: null
-          },
-          metadata: {
-            source: 'razorpay-webhook',
-            orderId
-          },
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
         try {
-          // Idempotency check: skip if an enrollment already exists for this payment reference
-          if (payment && payment.id) {
-            const existing = await db.collection('enrollments')
-              .where('payment.reference', '==', payment.id)
-              .limit(1)
-              .get();
-            if (!existing.empty) {
-              console.log('Enrollment already exists for payment', payment.id);
-            } else {
-              await db.collection('enrollments').add(enrollmentDoc);
-            }
-          } else {
-            // No payment id available; still try to create but this is less safe
-            await db.collection('enrollments').add(enrollmentDoc);
-          }
+          // Call internal process-enrollment function via HTTP to centralize business logic.
+          // Use ENROLLMENT_API_SECRET for internal auth if set.
+          const secret = process.env.ENROLLMENT_API_SECRET || null;
+          const siteUrl = process.env.SITE_URL || process.env.URL || '';
+          const endpoint = siteUrl ? `${siteUrl}/.netlify/functions/process-enrollment` : `/.netlify/functions/process-enrollment`;
+          const procResp = await fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payment, orderData, secret })
+          });
+          const procData = await procResp.json();
+          console.log('process-enrollment result', procData);
         } catch (e) {
-          console.error('Failed to persist enrollment from webhook', e.message);
+          console.error('Failed to call process-enrollment', e.message);
         }
       }
     } catch (e) {
-      console.error('Failed updating order or creating enrollment', e.message);
+      console.error('Failed updating order or dispatching enrollment', e.message);
     }
 
     return { statusCode: 200, body: JSON.stringify({ ok: true }) };
