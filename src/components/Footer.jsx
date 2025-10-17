@@ -45,112 +45,175 @@ export default function Footer({ onNavigate }) {
 
             <div className="container mx-auto px-6 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-                    {/* Column 1: Company Info */}
-                    <div className="md:col-span-2">
-                        <div className="flex items-center mb-6">
+                    {/* Column 1: About Us */}
+                    <div>
+                        <h4 className="font-bold text-lg text-white mb-6 flex items-center">
+                            <div className="w-1 h-6 bg-blue-500 mr-3"></div>
+                            ABOUT AGNIDHRA
+                        </h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">About Us</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors duration-200 text-left">Our Mission</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors duration-200 text-left">Our Team</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors duration-200 text-left">Contact Us</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors duration-200 text-left">Career Opportunities</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Column 2: Cybersecurity Programs */}
+                    <div>
+                        <h4 className="font-bold text-lg text-white mb-6 flex items-center">
+                            <div className="w-1 h-6 bg-purple-500 mr-3"></div>
+                            CYBERSECURITY ACADEMY
+                        </h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Defensive Security Professional</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Offensive Security Mastery</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">MultiCloud DevOps Mastery</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('events-batches')} className="hover:text-blue-400 transition-colors duration-200 text-left">SOC Analyst Bootcamp</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Specialized Add-ons</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Column 3: Technology Institute */}
+                    <div>
+                        <h4 className="font-bold text-lg text-white mb-6 flex items-center">
+                            <div className="w-1 h-6 bg-green-500 mr-3"></div>
+                            TECHNOLOGY INSTITUTE
+                        </h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">Full Stack Development</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">Cloud & DevOps</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">AI & Data Science</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">Software Testing</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">Mobile Development</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Column 4: Support & Legal */}
+                    <div>
+                        <h4 className="font-bold text-lg text-white mb-6 flex items-center">
+                            <div className="w-1 h-6 bg-orange-500 mr-3"></div>
+                            SUPPORT & POLICIES
+                        </h4>
+                        <ul className="space-y-3">
+                            <li>
+                                <button onClick={() => onNavigate('video-learning')} className="hover:text-blue-400 transition-colors duration-200 text-left">Learning Portal</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('terms')} className="hover:text-blue-400 transition-colors duration-200 text-left">Terms & Conditions</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('privacy')} className="hover:text-blue-400 transition-colors duration-200 text-left">Privacy Policy</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('cancellationRefund')} className="hover:text-blue-400 transition-colors duration-200 text-left">Refund Policy</button>
+                            </li>
+                            <li>
+                                <button onClick={() => onNavigate('disclaimer')} className="hover:text-blue-400 transition-colors duration-200 text-left">Disclaimer</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {/* Centered Company Logo & Branding */}
+                <div className="border-t border-slate-700 pt-8 pb-4">
+                    <div className="text-center mb-6">
+                        <div className="flex items-center justify-center mb-4">
                             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center mr-4">
                                 <img src="/logo.png" alt="AT Logo" className="w-10 h-10 rounded-full"/>
                             </div>
                             <span className="text-2xl font-bold text-white">Agnidhra Technologies</span>
                         </div>
-                        <p className="text-slate-300 leading-relaxed mb-6 max-w-md">
-                            Empowering the next wave of cybersecurity professionals with practical,
-                            hands-on training in high-demand skills.
+                        <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
+                            Empowering careers through professional cybersecurity and technology training.
+                            Building tomorrow's digital defenders and innovators.
+                        </p>
+                    </div>
+
+                    {/* Social Links & Site Stats */}
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                        {/* Left: Copyright */}
+                        <p className="text-slate-500 text-sm">
+                            All Rights Reserved Agnidhra Technologies India Pvt. Ltd.
                         </p>
 
-                        {/* Social Links */}
+                        {/* Center: Social Links */}
                         <div className="flex items-center gap-4">
                             <a
                                 href="https://www.linkedin.com/company/agnidhra-technologies"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="LinkedIn"
-                                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors duration-200"
+                                className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-blue-600 transition-colors duration-200"
                             >
-                                <Linkedin size={20} />
+                                <Linkedin size={16} />
                             </a>
                             <a
                                 href="https://www.youtube.com/@agnidhra-technologies"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="YouTube"
-                                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-red-600 transition-colors duration-200"
+                                className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-red-600 transition-colors duration-200"
                             >
-                                <Youtube size={20} />
+                                <Youtube size={16} />
                             </a>
                             <a
                                 href="https://www.instagram.com/agnidhra_technologies/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label="Instagram"
-                                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
+                                className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center hover:bg-purple-600 transition-colors duration-200"
                             >
-                                <Instagram size={20} />
+                                <Instagram size={16} />
                             </a>
                         </div>
-                    </div>
 
-                    {/* Column 2: Programs */}
-                    <div>
-                        <h4 className="font-bold text-lg text-white mb-6 flex items-center">
-                            <div className="w-1 h-6 bg-blue-500 mr-3"></div>
-                            Training Programs
-                        </h4>
-                        <ul className="space-y-3">
-                            <li>
-                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Cybersecurity Academy</button>
-                            </li>
-                            <li>
-                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">Technology Institute</button>
-                            </li>
-                            <li>
-                                <button onClick={() => onNavigate('events-batches')} className="hover:text-blue-400 transition-colors duration-200 text-left">Events & Batches</button>
-                            </li>
-                            <li>
-                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Premium Courses (₹20K)</button>
-                            </li>
-                            <li>
-                                <button onClick={() => onNavigate('video-learning')} className="hover:text-blue-400 transition-colors duration-200 text-left">Learning Portal</button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Column 3: Legal & Support */}
-                    <div>
-                        <h4 className="font-bold text-lg text-white mb-6 flex items-center">
-                            <div className="w-1 h-6 bg-purple-500 mr-3"></div>
-                            Legal & Support
-                        </h4>
-                        <ul className="space-y-3">
-                           <li>
-                               <button onClick={() => onNavigate('terms')} className="hover:text-blue-400 transition-colors duration-200 text-left">Terms & Conditions</button>
-                           </li>
-                           <li>
-                               <button onClick={() => onNavigate('privacy')} className="hover:text-blue-400 transition-colors duration-200 text-left">Privacy Policy</button>
-                           </li>
-                           <li>
-                               <button onClick={() => onNavigate('cancellationRefund')} className="hover:text-blue-400 transition-colors duration-200 text-left">Refund Policy</button>
-                           </li>
-                           <li>
-                               <button onClick={() => onNavigate('contact')} className="hover:text-blue-400 transition-colors duration-200 text-left">Contact Us</button>
-                           </li>
-                           <li>
-                               <button onClick={() => onNavigate('disclaimer')} className="hover:text-blue-400 transition-colors duration-200 text-left">Disclaimer</button>
-                           </li>
-                        </ul>
-                    </div>
-                </div>
-
-                {/* Bottom Bar */}
-                <div className="border-t border-slate-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-slate-500">
-                        &copy; {new Date().getFullYear()} Agnidhra Technologies. All Rights Reserved.
-                    </p>
-                    <div className="flex items-center gap-2 text-slate-500">
-                        <div className="flex items-center gap-2">
+                        {/* Right: Site Visitors */}
+                        <div className="flex items-center gap-2 text-slate-500">
                             <span className="animate-pulse inline-flex h-2 w-2 rounded-full bg-green-500"></span>
                             <span className="text-sm">Site Visitors: {visitCount}</span>
                         </div>
+                    </div>
+
+                    {/* Additional Footer Note */}
+                    <div className="text-center mt-4 pt-4 border-t border-slate-800">
+                        <p className="text-xs text-slate-600">
+                            *Note: The certification names and logos are the trademarks of their respective owners.{' '}
+                            <button onClick={() => onNavigate('disclaimer')} className="hover:text-blue-400 transition-colors duration-200">
+                                View Disclaimer
+                            </button>
+                        </p>
                     </div>
                 </div>
             </div>
