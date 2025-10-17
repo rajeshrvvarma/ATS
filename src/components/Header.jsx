@@ -33,7 +33,7 @@ export default function Header({ onNavigate, currentPage }) {
     // Mobile navigation items - dynamic based on user status
     const mobileNavItems = [
     { name: "Events & Batches", action: () => onNavigate('events-batches') },
-        { name: "All Modules Catalog", action: () => onNavigate('moduleCatalog') },
+        // Module catalog archived - premium courses only
         { name: "About Us", action: () => scrollToSection('about') },
         ...(user && user.enrolledCourses && user.enrolledCourses.length > 0
             ? [{ name: "My Learning", action: () => onNavigate('dashboard') }]

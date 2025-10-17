@@ -31,8 +31,7 @@ const OffensiveMasteryLandingPage = React.lazy(() => import('@/pages/OffensiveMa
 const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/SpecializedCoursesLandingPage.jsx'));
 const TechnologyTrainingLandingPage = React.lazy(() => import('@/pages/TechnologyTrainingLandingPage.jsx'));
 const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrainingLandingPage.jsx'));
-const ModuleCatalog = React.lazy(() => import('@/pages/ModuleCatalog.jsx'));
-const ModuleDetailPage = React.lazy(() => import('@/pages/ModuleDetailPage.jsx'));
+// Module pages archived - focusing on premium courses only
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
 const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
@@ -90,8 +89,7 @@ export default function App() {
     admin: '/admin',
     login: '/login',
     'trainer-signup': '/trainer-signup',
-    moduleCatalog: '/module-catalog',
-        moduleDetail: '/module-detail',
+    // Module routes archived
     courseBuilder: '/course-builder',
     }), []);
 
@@ -125,31 +123,14 @@ export default function App() {
     '/admin': 'admin',
     '/login': 'login',
     '/trainer-signup': 'trainer-signup',
-    '/module-catalog': 'moduleCatalog',
-        '/module-detail': 'moduleDetail',
+    // Module routes archived
     '/course-builder': 'courseBuilder',
     }), []);
 
     const currentPage = pathToPage[location.pathname] || 'home';
 
-    // Enhanced go function to support filter param for moduleCatalog
+    // Simplified navigation function
     const go = (pageKey, params = {}) => {
-        // If navigating to moduleCatalog with a filter, add ?filter=...
-        if (pageKey === 'moduleCatalog') {
-            const path = pageToPath[pageKey] || '/module-catalog';
-            const filter = params.filter || '';
-            const url = filter ? `${path}?filter=${encodeURIComponent(filter)}` : path;
-            navigate(url);
-            return;
-        }
-            // If navigating to moduleDetail with a moduleId, add ?id=...
-            if (pageKey === 'moduleDetail') {
-                const path = pageToPath[pageKey] || '/module-detail';
-                const moduleId = params.moduleId || '';
-                const url = moduleId ? `${path}?id=${encodeURIComponent(moduleId)}` : path;
-                navigate(url);
-                return;
-            }
         // Handle navigation with query parameters (e.g., "video-learning?course=xyz")
         if (typeof pageKey === 'string' && pageKey.includes('?')) {
             const [key, queryString] = pageKey.split('?');
@@ -218,8 +199,7 @@ export default function App() {
                             <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
                             <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
                             <Route path="/trainer-signup" element={<TrainerSignUp onNavigate={go} />} />
-                            <Route path="/module-catalog" element={<ModuleCatalog onNavigate={go} />} />
-                                <Route path="/module-detail" element={<ModuleDetailPage onNavigate={go} />} />
+                            {/* Module routes archived - premium courses only */}
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
                         </motion.div>
