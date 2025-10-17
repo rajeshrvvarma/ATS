@@ -5,7 +5,7 @@ import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
 const CoursePageTemplate = ({ courseData }) => {
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false });
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseData: null });
   const [activeTab, setActiveTab] = useState('overview');
 
   const {
@@ -49,22 +49,14 @@ const CoursePageTemplate = ({ courseData }) => {
   const colors = categoryColors[category] || categoryColors.cybersecurity;
 
   const handleEnrollment = (programType = 'premium') => {
-    console.log('Enrollment button clicked!', { programType, courseData: !!courseData });
     setEnrollmentModal({
-      isOpen: true
+      isOpen: true,
+      courseData: courseData // Pass the full course data to the modal
     });
-    console.log('Enrollment modal state set to open');
   };
 
   return (
     <div className={`min-h-screen text-white ${colors.bg}`}>
-      {/* Debug indicator */}
-      {enrollmentModal.isOpen && (
-        <div className="fixed top-4 right-4 bg-red-500 text-white p-2 rounded z-50">
-          Modal should be open!
-        </div>
-      )}
-
       {/* Hero Section */}
       <section className={`relative py-20 bg-gradient-to-r ${colors.primary}`}>
         <div className="container mx-auto px-6">
@@ -428,8 +420,8 @@ const CoursePageTemplate = ({ courseData }) => {
       {/* Modern Enrollment Modal */}
       <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false })}
-        courseData={courseData}
+        onClose={() => setEnrollmentModal({ isOpen: false, courseData: null })}
+        courseData={enrollmentModal.courseData}
       />
 
       {/* WhatsApp Contact Button - Floating */}
