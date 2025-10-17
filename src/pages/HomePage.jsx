@@ -138,6 +138,13 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
             return matchesSearch && matchesCategory;
         })
         .slice(0, 12);
+
+    // Debug logging
+    if (modules.length > 0) {
+        console.log('🎯 Featured modules section - Total modules:', modules.length);
+        console.log('🔍 Featured modules shown:', featuredModules.length);
+        console.log('📋 Featured module titles:', featuredModules.map(m => m.title));
+    }
     const getCategoryIcon = (category) => {
         const iconMap = {
             'Programming Foundation': Code,
@@ -897,8 +904,13 @@ const HomePage = ({ onNavigate }) => {
                     throw new Error(`Failed to fetch modules: ${response.status} ${response.statusText}`);
                 }
                 const data = await response.json();
+                console.log('📊 Total modules loaded:', data.length);
                 // Filter to show only active modules (hide hidden/archived)
                 const activeModules = data.filter(m => !m.status || m.status === 'active');
+                const hiddenModules = data.filter(m => m.status === 'hidden');
+                console.log('✅ Active modules:', activeModules.length);
+                console.log('❌ Hidden modules (filtered out):', hiddenModules.length);
+                console.log('📝 Hidden module titles:', hiddenModules.map(m => m.title).slice(0, 5));
                 setModules(activeModules);
                 setLoading(false);
             } catch (err) {
