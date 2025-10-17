@@ -188,7 +188,9 @@ Please provide me with enrollment details and next steps.
                       {features.slice(0, 4).map((feature, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                          <span className="text-slate-300">{feature}</span>
+                          <span className="text-slate-300">
+                            {typeof feature === 'string' ? feature : feature.title}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -231,8 +233,8 @@ Please provide me with enrollment details and next steps.
                         <div className="flex items-center gap-4">
                           <IconComponent className="w-8 h-8 group-hover:scale-110 transition-transform" />
                           <div>
-                            <h4 className="font-semibold text-lg">{option.title}</h4>
-                            <p className="opacity-90">{option.description}</p>
+                            <h4 className="font-semibold text-lg">{String(option.title)}</h4>
+                            <p className="opacity-90">{String(option.description)}</p>
                           </div>
                           <ArrowRight className="w-5 h-5 ml-auto group-hover:translate-x-1 transition-transform" />
                         </div>
