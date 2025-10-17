@@ -9,8 +9,8 @@ export default function Footer({ onNavigate }) {
         // Simple local visit counter using localStorage
         const initLocalCounter = () => {
             try {
-                const storageKey = 'agnidhra-site-visits';
-                const sessionKey = 'agnidhra-session-visited';
+                const storageKey = 'cyberforge-site-visits';
+                const sessionKey = 'cyberforge-session-visited';
 
                 // Check if this session has already been counted
                 const hasVisitedThisSession = sessionStorage.getItem(sessionKey);
@@ -51,7 +51,7 @@ export default function Footer({ onNavigate }) {
                             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center mr-4">
                                 <img src="/logo.png" alt="AT Logo" className="w-10 h-10 rounded-full"/>
                             </div>
-                            <span className="text-2xl font-bold text-white">Agnidhra Technologies</span>
+                            <span className="text-2xl font-bold text-white">CyberForge Academy</span>
                         </div>
                         <p className="text-slate-300 leading-relaxed mb-6 max-w-md">
                             Empowering the next wave of cybersecurity professionals with practical,
@@ -144,7 +144,7 @@ export default function Footer({ onNavigate }) {
                 {/* Bottom Bar */}
                 <div className="border-t border-slate-700 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                     <p className="text-slate-500">
-                        &copy; {new Date().getFullYear()} Agnidhra Technologies. All Rights Reserved.
+                        &copy; {new Date().getFullYear()} CyberForge Academy. All Rights Reserved.
                     </p>
                     <div className="flex items-center gap-2 text-slate-500">
                         <div className="flex items-center gap-2">

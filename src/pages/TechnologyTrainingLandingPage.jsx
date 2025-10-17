@@ -11,6 +11,79 @@ const TechnologyTrainingLandingPage = () => {
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
+  // Tech Academy specific header component
+  const TechAcademyHeader = () => (
+    <div className="bg-gradient-to-r from-emerald-900 via-teal-800 to-green-900 text-white py-24 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-emerald-400/10 rounded-full animate-pulse"></div>
+        <div className="absolute top-32 right-20 w-24 h-24 bg-green-400/10 rounded-full animate-bounce delay-100"></div>
+        <div className="absolute bottom-20 left-1/3 w-40 h-40 bg-teal-400/10 rounded-full animate-pulse delay-200"></div>
+        <div className="absolute bottom-10 right-10 w-20 h-20 bg-emerald-400/10 rounded-full animate-bounce delay-300"></div>
+      </div>
+
+      {/* Tech Academy Branding */}
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mr-4 shadow-2xl">
+              <Code className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-emerald-200 to-green-100 bg-clip-text text-transparent">
+              TechCraft Institute
+            </h1>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-emerald-100">
+              Master Technology. Build Your Future.
+            </h2>
+            <p className="text-lg md:text-xl text-emerald-200/90 leading-relaxed mb-8">
+              Comprehensive technology training programs designed to launch your career in the fastest-growing tech fields.
+              From full-stack development to AI and cloud computing - we've got your success covered.
+            </p>
+
+            {/* Key Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+              {[
+                { number: '13+', label: 'Programs' },
+                { number: '500+', label: 'Alumni' },
+                { number: '95%', label: 'Job Rate' },
+                { number: '₹12K+', label: 'Starting Price' }
+              ].map((stat, idx) => (
+                <div key={idx} className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-emerald-300/20">
+                  <div className="text-2xl md:text-3xl font-bold text-emerald-200">{stat.number}</div>
+                  <div className="text-sm text-emerald-300">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Cross-selling to Cybersecurity */}
+        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-emerald-500/20 max-w-4xl mx-auto">
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+                <img src="/logo.png" alt="CyberForge Logo" className="w-8 h-8 rounded-full" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-white">Also Explore Cybersecurity</h3>
+                <p className="text-emerald-300">Premium cybersecurity courses at CyberForge Academy</p>
+              </div>
+            </div>
+            <button
+              onClick={() => window.open('/', '_blank')}
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+            >
+              Visit CyberForge →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const categories = [
     { id: 'all', name: 'All Programs', icon: Target },
     { id: 'fullstack', name: 'Full Stack Development', icon: Code },
@@ -721,49 +794,12 @@ const TechnologyTrainingLandingPage = () => {
   };
 
   return (
-    <div className="min-h-screen text-white">
-      <div className="bg-slate-900">
-      {/* Hero Section */}
-      <section className="relative py-20">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-6xl mx-auto"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              AT-CS Tech Academy
-            </h1>
-            <p className="text-2xl md:text-3xl text-gray-300 mb-8">
-              Master Modern Tech Stack • Launch Your Career • Build the Future
-            </p>
-            <p className="text-xl text-gray-400 mb-12 max-w-4xl mx-auto">
-              Comprehensive technology training programs designed for developers, cloud engineers, data scientists, and IT professionals. Separate from our cybersecurity courses.
-            </p>
+    <div className="min-h-screen">
+      {/* New Tech Academy Header */}
+      <TechAcademyHeader />
 
-            {/* Stats Banner */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold text-white">13+</div>
-                <div className="text-sm text-gray-300">Specializations</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold text-green-400">500+</div>
-                <div className="text-sm text-gray-300">Students Placed</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold text-blue-400">95%</div>
-                <div className="text-sm text-gray-300">Success Rate</div>
-              </div>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4">
-                <div className="text-2xl font-bold text-yellow-400">₹18K-₹35K</div>
-                <div className="text-sm text-gray-300">Price Range</div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      {/* Main Content with Different Background */}
+      <div className="bg-gradient-to-b from-slate-800 to-slate-900 text-white">
 
       {/* Category Filter */}
       <section className="py-8">
