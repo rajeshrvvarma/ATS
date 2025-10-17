@@ -262,7 +262,7 @@
                               "Frontend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "responsive-web-design",
@@ -287,7 +287,7 @@
                               "Frontend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "javascript-dom-apis",
@@ -312,7 +312,7 @@
                               "Frontend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "react-js-development",
@@ -342,7 +342,7 @@
                               "Full Stack Developer",
                               "Mobile Developer (React Native)"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "angular-framework",
@@ -375,7 +375,7 @@
                               "Frontend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "vue-js-framework",
@@ -404,7 +404,7 @@
                               "Frontend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "nodejs-express",
@@ -435,7 +435,7 @@
                               "Full Stack Developer",
                               "DevOps Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "python-web-frameworks",
@@ -466,7 +466,7 @@
                               "Full Stack Developer",
                               "AI/ML Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "java-spring-boot",
@@ -499,7 +499,7 @@
                               "Backend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "php-laravel",
@@ -528,7 +528,7 @@
                               "Backend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "ruby-on-rails",
@@ -557,7 +557,7 @@
                               "Backend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "asp-net-core",
@@ -590,7 +590,7 @@
                               "Backend Developer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "restful-api-design",
@@ -618,7 +618,7 @@
                               "Mobile Developer",
                               "SRE / Systems Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "sql-fundamentals",
@@ -645,7 +645,7 @@
                               "Data Scientist",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "advanced-database-design",
@@ -676,7 +676,7 @@
                               "Data Analyst / BI Developer",
                               "SRE / Systems Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "nosql-databases",
@@ -706,7 +706,7 @@
                               "DevOps Engineer",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "redis-caching",
@@ -733,7 +733,7 @@
                               "DevOps Engineer",
                               "SRE / Systems Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "elasticsearch-search",
@@ -762,7 +762,7 @@
                               "SRE / Systems Engineer",
                               "Backend Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "database-administration",
@@ -791,7 +791,7 @@
                               "DevOps Engineer",
                               "Backend Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "data-warehousing",
@@ -819,7 +819,7 @@
                               "Data Analyst / BI Developer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "graph-databases",
@@ -844,7 +844,7 @@
                               "Data Scientist",
                               "Backend Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "aws-fundamentals",
@@ -1685,7 +1685,7 @@
                               "Data Analyst / BI Developer",
                               "AI/ML Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "data-analysis-with-python",
@@ -1715,7 +1715,7 @@
                               "Data Analyst / BI Developer",
                               "AI/ML Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "data-analysis-with-r",
@@ -1743,7 +1743,7 @@
                               "Data Scientist",
                               "Data Analyst / BI Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "machine-learning-fundamentals",
@@ -1774,7 +1774,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "advanced-machine-learning",
@@ -1806,7 +1806,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "deep-learning-neural-networks",
@@ -1839,7 +1839,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "natural-language-processing",
@@ -1867,7 +1867,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "computer-vision",
@@ -1895,7 +1895,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "big-data-processing",
@@ -1928,7 +1928,7 @@
                               "AI/ML Engineer",
                               "Data Analyst / BI Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "mlops-model-deployment",
@@ -1957,7 +1957,7 @@
                               "Data Scientist",
                               "DevOps Engineer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "ai-fundamentals",
@@ -1983,7 +1983,7 @@
                               "Data Scientist",
                               "Product Manager"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "generative-ai-llms",
@@ -2012,7 +2012,7 @@
                               "Data Scientist",
                               "Full Stack Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "ai-model-development",
@@ -2044,7 +2044,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "ai-integration-apis",
@@ -2070,7 +2070,7 @@
                               "Full Stack Developer",
                               "Backend Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "computer-vision-ai",
@@ -2098,7 +2098,7 @@
                               "AI/ML Engineer",
                               "Data Scientist"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "ai-for-business-applications",
@@ -2124,7 +2124,7 @@
                               "Product Manager",
                               "Data Analyst / BI Developer"
                           ],
-        "status":  "active"
+        "status":  "hidden"
     },
     {
         "id":  "information-security-basics",
