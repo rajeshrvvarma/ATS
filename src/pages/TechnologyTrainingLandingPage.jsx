@@ -203,6 +203,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Beginner to Advanced',
       price: '₹32,000',
       originalPrice: '₹48,000',
+      courseUrl: '/courses/java-fullstack-developer', // Link to dedicated course page
       description: 'Enterprise Java development with Spring Boot and modern frameworks.',
       features: [
         'Core Java & Advanced Concepts',
@@ -308,6 +309,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Intermediate',
       price: '₹27,000',
       originalPrice: '₹40,000',
+      courseUrl: '/courses/devops-engineer-bootcamp', // Link to dedicated course page
       description: 'Complete DevOps pipeline automation and infrastructure management.',
       features: [
         'CI/CD Pipeline Setup',
@@ -359,6 +361,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Intermediate',
       price: '₹24,000',
       originalPrice: '₹36,000',
+      courseUrl: '/courses/azure-cloud-solutions', // Link to dedicated course page
       description: 'Microsoft Azure cloud services and enterprise solutions.',
       features: [
         'Azure Core Services',
@@ -468,6 +471,7 @@ const TechnologyTrainingLandingPage = () => {
       level: 'Intermediate to Advanced',
       price: '₹35,000',
       originalPrice: '₹50,000',
+      courseUrl: '/courses/ai-ml-engineer', // Link to dedicated course page
       description: 'Advanced AI development with deep learning and neural networks.',
       features: [
         'Advanced Machine Learning',

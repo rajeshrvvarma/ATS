@@ -56,6 +56,14 @@ const FullStackPythonDeveloper = React.lazy(() => import('@/pages/courses/FullSt
 const DataScienceAI = React.lazy(() => import('@/pages/courses/DataScienceAI.jsx'));
 const AWSCloudEngineer = React.lazy(() => import('@/pages/courses/AWSCloudEngineer.jsx'));
 const SoftwareTestingQA = React.lazy(() => import('@/pages/courses/SoftwareTestingQA.jsx'));
+const JavaFullStackDeveloper = React.lazy(() => import('@/pages/courses/JavaFullStackDeveloper.jsx'));
+const DevOpsEngineerBootcamp = React.lazy(() => import('@/pages/courses/DevOpsEngineerBootcamp.jsx'));
+const AzureCloudSolutions = React.lazy(() => import('@/pages/courses/AzureCloudSolutions.jsx'));
+const AIMLEngineer = React.lazy(() => import('@/pages/courses/AIMLEngineer.jsx'));
+const BusinessIntelligenceAnalyst = React.lazy(() => import('@/pages/courses/BusinessIntelligenceAnalyst.jsx'));
+const ManualTestingSpecialist = React.lazy(() => import('@/pages/courses/ManualTestingSpecialist.jsx'));
+const ReactNativeDeveloper = React.lazy(() => import('@/pages/courses/ReactNativeDeveloper.jsx'));
+const FlutterAppDeveloper = React.lazy(() => import('@/pages/courses/FlutterAppDeveloper.jsx'));
 
 /**
  * App.jsx is the root component of the application.
@@ -190,6 +198,14 @@ export default function App() {
                             <Route path="/courses/data-science-ai" element={<DataScienceAI onNavigate={go} />} />
                             <Route path="/courses/aws-cloud-engineer" element={<AWSCloudEngineer onNavigate={go} />} />
                             <Route path="/courses/software-testing-qa" element={<SoftwareTestingQA onNavigate={go} />} />
+                            <Route path="/courses/java-fullstack-developer" element={<JavaFullStackDeveloper onNavigate={go} />} />
+                            <Route path="/courses/devops-engineer-bootcamp" element={<DevOpsEngineerBootcamp onNavigate={go} />} />
+                            <Route path="/courses/azure-cloud-solutions" element={<AzureCloudSolutions onNavigate={go} />} />
+                            <Route path="/courses/ai-ml-engineer" element={<AIMLEngineer onNavigate={go} />} />
+                            <Route path="/courses/business-intelligence-analyst" element={<BusinessIntelligenceAnalyst onNavigate={go} />} />
+                            <Route path="/courses/manual-testing-specialist" element={<ManualTestingSpecialist onNavigate={go} />} />
+                            <Route path="/courses/react-native-developer" element={<ReactNativeDeveloper onNavigate={go} />} />
+                            <Route path="/courses/flutter-app-developer" element={<FlutterAppDeveloper onNavigate={go} />} />
 
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
