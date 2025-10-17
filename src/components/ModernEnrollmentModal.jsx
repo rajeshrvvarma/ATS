@@ -47,18 +47,31 @@ export default function ModernEnrollmentModal({
     originalPrice = '₹35,000',
     batchInfo = { date: 'Starting Soon', time: '10:00 AM TO 7:00 PM' },
     features = [],
-    category = 'cybersecurity'
   } = courseData || {};
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Create WhatsApp message with form data
-      const handlePayment = () => {
-    setStep(4); // Go to payment step
+    const message = `
+🎯 *Course Enrollment Inquiry*
+
+*Course:* ${title}
+*Name:* ${formData.name}
+*Email:* ${formData.email}
+*Phone:* ${formData.phone}
+*Preferred Contact:* ${formData.preferredContact}
+*Best Time to Call:* ${formData.timePreference}
+
+*Message:* ${formData.message || 'I would like to enroll in this course.'}
+`;
+
+    const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    onClose();
   };
 
-  // Generate UPI QR data for payment
+  // Generate UPI payment URL
   const generateUPIUrl = (amount, courseName) => {
     const params = new URLSearchParams({
       pa: siteConfig.upiId,
@@ -70,26 +83,30 @@ export default function ModernEnrollmentModal({
     });
 
     return `upi://pay?${params.toString()}`;
-  };trim();
-
-    const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    onClose();
   };
 
   const contactOptions = [
     {
+      id: 'payment',
+      title: 'Pay Now & Enroll',
+      description: `Secure UPI payment - Complete enrollment for ${price}`,
+      icon: CreditCard,
+      color: 'bg-gradient-to-r from-green-600 to-green-700',
+      action: () => setStep(4),
+      priority: true
+    },
+    {
       id: 'whatsapp',
       title: 'WhatsApp Chat',
-      description: 'Instant response - Get details immediately',
+      description: 'Get instant support and payment assistance',
       icon: MessageCircle,
       color: 'bg-green-500',
       action: () => setStep(3)
     },
     {
       id: 'phone',
-      title: 'Schedule Call',
-      description: 'Speak with our course advisor',
+      title: 'Call for Support',
+      description: 'Speak with our enrollment advisor',
       icon: Phone,
       color: 'bg-blue-500',
       action: () => {
@@ -98,8 +115,8 @@ export default function ModernEnrollmentModal({
     },
     {
       id: 'form',
-      title: 'Request Callback',
-      description: 'We will call you back within 2 hours',
+      title: 'Request Information',
+      description: 'Get detailed course info and payment options',
       icon: Calendar,
       color: 'bg-purple-500',
       action: () => setStep(3)
@@ -229,7 +246,7 @@ export default function ModernEnrollmentModal({
                 </div>
 
                 <div className="grid gap-4">
-                  {enrollmentOptions.map((option) => {
+                  {contactOptions.map((option) => {
                     const IconComponent = option.icon;
                     return (
                       <button
