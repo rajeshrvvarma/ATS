@@ -140,6 +140,8 @@ export default function App() {
         // Handle direct URL paths (like '/courses/course-name')
         if (typeof pageKey === 'string' && pageKey.startsWith('/')) {
             navigate(pageKey);
+            // Ensure scroll to top after navigation
+            setTimeout(() => window.scrollTo(0, 0), 100);
             return;
         }
 
@@ -152,7 +154,23 @@ export default function App() {
             const path = pageToPath[pageKey] || '/';
             navigate(path);
         }
+        // Ensure scroll to top after any navigation
+        setTimeout(() => window.scrollTo(0, 0), 100);
     };
+
+    // Scroll to top on route change (handles both programmatic and browser navigation)
+    useEffect(() => {
+        // Scroll to top immediately
+        window.scrollTo(0, 0);
+
+        // Also ensure smooth scroll behavior is reset
+        document.documentElement.style.scrollBehavior = 'auto';
+
+        // Re-enable smooth scrolling after a brief delay
+        setTimeout(() => {
+            document.documentElement.style.scrollBehavior = 'smooth';
+        }, 100);
+    }, [location.pathname]);
 
     return (
         <AuthProvider>
