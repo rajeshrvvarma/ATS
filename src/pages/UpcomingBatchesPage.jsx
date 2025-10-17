@@ -38,6 +38,7 @@ import {
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import EventDetailModal from '@/components/EventDetailModal.jsx';
 import AdvancedTabs from '@/components/AdvancedTabs.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
@@ -49,6 +50,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+  const [eventDetailModal, setEventDetailModal] = useState({ isOpen: false, event: null, type: '' });
 
   // State for dynamic events from Firestore (will be merged with static data)
   const [firestoreEvents, setFirestoreEvents] = useState([]);
@@ -395,6 +397,14 @@ const EventsBatchesPage = ({ onNavigate }) => {
     });
   };
 
+  const handleShowEventDetails = (event, type) => {
+    setEventDetailModal({
+      isOpen: true,
+      event: event,
+      type: type // 'batch', 'bootcamp', or 'workshop'
+    });
+  };
+
   return (
     <div className="min-h-screen text-white pt-20">
       {/* Hero Section - now clickable */}
@@ -487,12 +497,124 @@ const EventsBatchesPage = ({ onNavigate }) => {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
-                        className={`bg-slate-800 rounded-xl border border-slate-700 hover:border-slate-600 transition-all duration-300 overflow-hidden ${
+                        className={`bg-slate-800 rounded-xl border border-slate-700 hover:border-slate-600 transition-all duration-300 overflow-hidden group ${
                           viewMode === 'list' ? 'flex' : ''
                         }`}
                       >
-                        {/* ...existing batch card rendering... */}
-                        {/* ...existing code... */}
+                        {/* Header */}
+                        <div className="bg-gradient-to-r from-slate-700 to-slate-800 p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h3 className="text-xl font-bold text-white mb-1">{batch.title}</h3>
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <Calendar className="w-4 h-4" />
+                                <span>{formatDate(batch.startDate)} - {formatDate(batch.endDate)}</span>
+                              </div>
+                            </div>
+                            {isStartingSoon && (
+                              <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full animate-pulse">
+                                Starting Soon
+                              </span>
+                            )}
+                            {hasStarted && (
+                              <span className="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                                In Progress
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="p-6">
+                          {/* Trainer */}
+                          {batch.trainer && (
+                            <div className="flex items-center gap-3 mb-4 pb-4 border-b border-slate-700">
+                              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-500 rounded-full flex items-center justify-center">
+                                <User className="w-6 h-6 text-white" />
+                              </div>
+                              <div>
+                                <div className="font-semibold text-white">{batch.trainer.name}</div>
+                                <div className="text-sm text-slate-400">{batch.trainer.experience}</div>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Details */}
+                          <div className="space-y-3 mb-4">
+                            {batch.duration && (
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <Clock className="w-4 h-4 text-blue-400" />
+                                <span>{batch.duration}{batch.mode && ` • ${batch.mode}`}</span>
+                              </div>
+                            )}
+                            {batch.location && (
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <MapPin className="w-4 h-4 text-green-400" />
+                                <span>{batch.location}</span>
+                              </div>
+                            )}
+                            {batch.maxStudents && (
+                              <div className="flex items-center gap-2 text-sm text-slate-300">
+                                <Users className="w-4 h-4 text-purple-400" />
+                                <span>{spotsLeft} seats left of {batch.maxStudents}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Features */}
+                          {batch.features && batch.features.length > 0 && (
+                            <div className="mb-4">
+                              <h4 className="text-sm font-semibold text-slate-400 mb-2">What's Included:</h4>
+                              <div className="grid grid-cols-2 gap-2">
+                                {batch.features.slice(0, 4).map((feature, idx) => (
+                                  <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-300">
+                                    <CheckCircle className="w-3 h-3 text-green-400 mt-0.5 flex-shrink-0" />
+                                    <span>{feature}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Price & CTA */}
+                          <div className="pt-4 border-t border-slate-700">
+                            <div className="flex items-center justify-between mb-3">
+                              <div>
+                                {pricingLoading ? (
+                                  <div className="text-lg font-bold text-blue-400">₹...</div>
+                                ) : coursePrice ? (
+                                  <>
+                                    <div className="text-2xl font-bold text-blue-400">
+                                      {formatPrice(coursePrice.finalPrice)}
+                                    </div>
+                                    {coursePrice.originalPrice !== coursePrice.finalPrice && (
+                                      <div className="text-xs text-slate-500 line-through">
+                                        {formatPrice(coursePrice.originalPrice)}
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div className="text-lg font-bold text-blue-400">₹999</div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleShowEventDetails(batch, 'batch')}
+                                className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2"
+                              >
+                                View Details
+                                <BookOpen className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleEnrollment(batch)}
+                                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                              >
+                                Enroll Now
+                                <ArrowRight className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </motion.div>
                     );
                   })}
@@ -597,32 +719,43 @@ const EventsBatchesPage = ({ onNavigate }) => {
                           )}
 
                           {/* Price & CTA */}
-                          <div className="flex items-center justify-between pt-4 border-t border-slate-700">
-                            <div>
-                              {pricingLoading ? (
-                                <div className="text-lg font-bold text-blue-400">₹...</div>
-                              ) : coursePrice ? (
-                                <>
-                                  <div className="text-2xl font-bold text-blue-400">
-                                    {formatPrice(coursePrice.finalPrice)}
-                                  </div>
-                                  {coursePrice.originalPrice !== coursePrice.finalPrice && (
-                                    <div className="text-xs text-slate-500 line-through">
-                                      {formatPrice(coursePrice.originalPrice)}
+                          <div className="pt-4 border-t border-slate-700">
+                            <div className="flex items-center justify-between mb-3">
+                              <div>
+                                {pricingLoading ? (
+                                  <div className="text-lg font-bold text-blue-400">₹...</div>
+                                ) : coursePrice ? (
+                                  <>
+                                    <div className="text-2xl font-bold text-blue-400">
+                                      {formatPrice(coursePrice.finalPrice)}
                                     </div>
-                                  )}
-                                </>
-                              ) : (
-                                <div className="text-lg font-bold text-blue-400">₹999</div>
-                              )}
+                                    {coursePrice.originalPrice !== coursePrice.finalPrice && (
+                                      <div className="text-xs text-slate-500 line-through">
+                                        {formatPrice(coursePrice.originalPrice)}
+                                      </div>
+                                    )}
+                                  </>
+                                ) : (
+                                  <div className="text-lg font-bold text-blue-400">₹999</div>
+                                )}
+                              </div>
                             </div>
-                            <button
-                              onClick={() => handleEnrollment(camp)}
-                              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center gap-2 group-hover:scale-105"
-                            >
-                              Enroll Now
-                              <ArrowRight className="w-4 h-4" />
-                            </button>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleShowEventDetails(camp, 'bootcamp')}
+                                className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2"
+                              >
+                                View Details
+                                <BookOpen className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleEnrollment(camp)}
+                                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                              >
+                                Enroll Now
+                                <ArrowRight className="w-4 h-4" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </motion.div>
@@ -720,12 +853,22 @@ const EventsBatchesPage = ({ onNavigate }) => {
                         )}
 
                         {/* CTA */}
-                        <a
-                          href={ws.registrationLink || '#'}
-                          className="block w-full bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 group-hover:scale-105"
-                        >
-                          Register Free
-                        </a>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleShowEventDetails(ws, 'workshop')}
+                            className="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2.5 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            View Details
+                            <BookOpen className="w-4 h-4" />
+                          </button>
+                          <a
+                            href={ws.registrationLink || '#'}
+                            className="flex-1 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 text-white text-center px-4 py-2.5 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center gap-2"
+                          >
+                            Register Free
+                            <ArrowRight className="w-4 h-4" />
+                          </a>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
@@ -775,11 +918,19 @@ const EventsBatchesPage = ({ onNavigate }) => {
       {/* Enhanced Enrollment Modal */}
       <EnhancedEnrollmentModal
         isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '', batchId: '' })}
+        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
         courseType={enrollmentModal.courseType}
         courseName={enrollmentModal.courseName}
         batchId={enrollmentModal.batchId}
         coursePrice={pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice)}
+      />
+
+      <EventDetailModal
+        isOpen={eventDetailModal.isOpen}
+        onClose={() => setEventDetailModal({ isOpen: false, event: null, type: '' })}
+        event={eventDetailModal.event}
+        type={eventDetailModal.type}
+        onEnroll={handleEnrollment}
       />
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
