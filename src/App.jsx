@@ -135,8 +135,14 @@ export default function App() {
 
     const currentPage = pathToPage[location.pathname] || 'home';
 
-    // Simplified navigation function
+    // Enhanced navigation function - handles both page keys and direct URL paths
     const go = (pageKey, params = {}) => {
+        // Handle direct URL paths (like '/courses/course-name')
+        if (typeof pageKey === 'string' && pageKey.startsWith('/')) {
+            navigate(pageKey);
+            return;
+        }
+
         // Handle navigation with query parameters (e.g., "video-learning?course=xyz")
         if (typeof pageKey === 'string' && pageKey.includes('?')) {
             const [key, queryString] = pageKey.split('?');
