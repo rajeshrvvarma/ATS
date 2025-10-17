@@ -905,12 +905,26 @@ const HomePage = ({ onNavigate }) => {
                 }
                 const data = await response.json();
                 console.log('📊 Total modules loaded:', data.length);
+                console.log('🔍 Sample module statuses:', data.slice(0, 5).map(m => ({ id: m.id, status: m.status })));
+
                 // Filter to show only active modules (hide hidden/archived)
-                const activeModules = data.filter(m => !m.status || m.status === 'active');
+                console.log('🧪 Testing filter logic...');
+                const allStatuses = [...new Set(data.map(m => m.status || 'undefined'))];
+                console.log('📋 All status values found:', allStatuses);
+
+                const activeModules = data.filter(m => {
+                    const isActive = !m.status || m.status === 'active';
+                    if (!isActive) {
+                        console.log('🚫 Filtering out:', m.id, 'status:', m.status);
+                    }
+                    return isActive;
+                });
+
                 const hiddenModules = data.filter(m => m.status === 'hidden');
                 console.log('✅ Active modules:', activeModules.length);
                 console.log('❌ Hidden modules (filtered out):', hiddenModules.length);
                 console.log('📝 Hidden module titles:', hiddenModules.map(m => m.title).slice(0, 5));
+                console.log('📝 Hidden module IDs:', hiddenModules.map(m => m.id).slice(0, 5));
                 setModules(activeModules);
                 setLoading(false);
             } catch (err) {
