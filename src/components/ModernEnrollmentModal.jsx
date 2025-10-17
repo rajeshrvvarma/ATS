@@ -26,6 +26,7 @@ export default function ModernEnrollmentModal({
   onClose,
   courseData
 }) {
+  console.log('ModernEnrollmentModal rendered:', { isOpen, courseData: !!courseData, title: courseData?.title });
   const [step, setStep] = useState(1); // 1: Course Info, 2: Contact Options, 3: Form
   const [formData, setFormData] = useState({
     name: '',
@@ -107,7 +108,7 @@ Please provide me with enrollment details and next steps.
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        className="fixed inset-0 bg-red-500/90 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
         onClick={onClose}
       >
         <motion.div

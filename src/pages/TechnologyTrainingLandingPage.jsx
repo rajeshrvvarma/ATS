@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
-const TechnologyTrainingLandingPage = () => {
+const TechnologyTrainingLandingPage = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseData: null });
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
@@ -790,9 +790,22 @@ const TechnologyTrainingLandingPage = () => {
     ? technologyPrograms
     : technologyPrograms.filter(program => program.category === selectedCategory);
 
-  const handleEnrollment = (courseTitle) => {
-    const courseType = courseTitle.toLowerCase().replace(/\s+/g, '-');
-    setEnrollmentModal({ isOpen: true, courseType, courseName: courseTitle });
+  const handleEnrollment = (program) => {
+    // Convert the program data to match the courseData format expected by ModernEnrollmentModal
+    const courseData = {
+      title: program.title,
+      duration: program.duration,
+      price: program.price,
+      originalPrice: program.originalPrice,
+      batchInfo: {
+        date: 'Starting Soon',
+        time: '10:00 AM TO 7:00 PM'
+      },
+      features: program.features || [],
+      category: 'technology'
+    };
+
+    setEnrollmentModal({ isOpen: true, courseData });
   };
 
   const handleCourseDetails = (course) => {
@@ -969,7 +982,7 @@ const TechnologyTrainingLandingPage = () => {
                       <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
-                        onClick={() => handleEnrollment(program.title)}
+                        onClick={() => handleEnrollment(program)}
                         className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                       >
                         Enroll Now
@@ -1233,7 +1246,7 @@ const TechnologyTrainingLandingPage = () => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
                   setCourseDetailsModal({ isOpen: false, course: null });
-                  handleEnrollment(courseDetailsModal.course?.title);
+                  handleEnrollment(courseDetailsModal.course);
                 }}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300"
               >
@@ -1244,11 +1257,10 @@ const TechnologyTrainingLandingPage = () => {
         </motion.div>
       )}
 
-      <EnhancedEnrollmentModal
+      <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseType={enrollmentModal.courseType}
-        courseName={enrollmentModal.courseName}
+        onClose={() => setEnrollmentModal({ isOpen: false, courseData: null })}
+        courseData={enrollmentModal.courseData}
       />
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />

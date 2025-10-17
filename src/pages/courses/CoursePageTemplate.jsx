@@ -49,13 +49,22 @@ const CoursePageTemplate = ({ courseData }) => {
   const colors = categoryColors[category] || categoryColors.cybersecurity;
 
   const handleEnrollment = (programType = 'premium') => {
+    console.log('Enrollment button clicked!', { programType, courseData: !!courseData });
     setEnrollmentModal({
       isOpen: true
     });
+    console.log('Enrollment modal state set to open');
   };
 
   return (
     <div className={`min-h-screen text-white ${colors.bg}`}>
+      {/* Debug indicator */}
+      {enrollmentModal.isOpen && (
+        <div className="fixed top-4 right-4 bg-red-500 text-white p-2 rounded z-50">
+          Modal should be open!
+        </div>
+      )}
+
       {/* Hero Section */}
       <section className={`relative py-20 bg-gradient-to-r ${colors.primary}`}>
         <div className="container mx-auto px-6">
