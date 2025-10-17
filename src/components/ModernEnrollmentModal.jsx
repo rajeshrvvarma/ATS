@@ -13,9 +13,13 @@ import {
   Shield,
   ArrowRight,
   MessageCircle,
-  Download
+  Download,
+  QrCode,
+  Smartphone
 } from 'lucide-react';
 import WhatsAppContactButton from './WhatsAppContactButton.jsx';
+import UPIQRCode from './UPIQRCode.jsx';
+import siteConfig from '../config/site.config.js';
 
 /**
  * Modern Enrollment Modal - Redesigned for better UX
@@ -50,20 +54,23 @@ export default function ModernEnrollmentModal({
     e.preventDefault();
 
     // Create WhatsApp message with form data
-    const message = `
-🎯 *Course Enrollment Inquiry*
+      const handlePayment = () => {
+    setStep(4); // Go to payment step
+  };
 
-*Course:* ${title}
-*Name:* ${formData.name}
-*Email:* ${formData.email}
-*Phone:* ${formData.phone}
-*Preferred Contact:* ${formData.preferredContact}
-*Best Time to Call:* ${formData.timePreference}
+  // Generate UPI QR data for payment
+  const generateUPIUrl = (amount, courseName) => {
+    const params = new URLSearchParams({
+      pa: siteConfig.upiId,
+      pn: siteConfig.upiPayeeName,
+      am: amount.toString(),
+      cu: 'INR',
+      tn: `${courseName} Enrollment`,
+      tr: `TXN_${Date.now()}`
+    });
 
-*Message:* ${formData.message || 'I would like to enroll in this course.'}
-
-Please provide me with enrollment details and next steps.
-    `.trim();
+    return `upi://pay?${params.toString()}`;
+  };trim();
 
     const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -217,18 +224,18 @@ Please provide me with enrollment details and next steps.
                 className="space-y-6"
               >
                 <div className="text-center">
-                  <h3 className="text-xl font-semibold text-white mb-2">Choose Your Preferred Contact Method</h3>
-                  <p className="text-slate-400">Select how you'd like to complete your enrollment</p>
+                  <h3 className="text-xl font-semibold text-white mb-2">How would you like to enroll?</h3>
+                  <p className="text-slate-400">Choose your preferred enrollment method</p>
                 </div>
 
                 <div className="grid gap-4">
-                  {contactOptions.map((option) => {
+                  {enrollmentOptions.map((option) => {
                     const IconComponent = option.icon;
                     return (
                       <button
                         key={option.id}
                         onClick={option.action}
-                        className={`${option.color} hover:opacity-90 text-white p-6 rounded-xl transition-all duration-300 text-left group`}
+                        className={`${option.color} hover:opacity-90 text-white p-6 rounded-xl transition-all duration-300 text-left group ${option.priority ? 'ring-2 ring-green-400 shadow-lg' : ''}`}
                       >
                         <div className="flex items-center gap-4">
                           <IconComponent className="w-8 h-8 group-hover:scale-110 transition-transform" />
@@ -380,6 +387,115 @@ Please provide me with enrollment details and next steps.
                     </button>
                   </div>
                 </form>
+              </motion.div>
+            )}
+
+            {/* Step 4: UPI Payment */}
+            {step === 4 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="space-y-6"
+              >
+                <div className="text-center">
+                  <QrCode className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-white mb-2">Complete Your Payment</h3>
+                  <p className="text-slate-400">Scan QR code or use UPI ID to pay securely</p>
+                </div>
+
+                {/* Payment Details */}
+                <div className="bg-slate-800 rounded-xl p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-slate-300">Course:</span>
+                    <span className="text-white font-medium">{title}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-slate-300">Amount:</span>
+                    <div className="text-right">
+                      <span className="text-green-400 text-2xl font-bold">{price}</span>
+                      {originalPrice && (
+                        <div className="text-slate-400 text-sm line-through">{originalPrice}</div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="border-t border-slate-600 pt-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300">You Save:</span>
+                      <span className="text-green-400 font-bold">
+                        {originalPrice && price ?
+                          `₹${parseInt(originalPrice.replace(/₹|,/g, '')) - parseInt(price.replace(/₹|,/g, ''))}` :
+                          '₹15,000'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* UPI QR Code */}
+                <div className="bg-white rounded-xl p-6 text-center">
+                  <UPIQRCode
+                    upiUrl={generateUPIUrl(
+                      parseInt(price.replace(/₹|,/g, '')),
+                      title
+                    )}
+                    size={200}
+                  />
+                  <div className="mt-4 text-center">
+                    <p className="text-slate-600 text-sm mb-2">UPI ID:</p>
+                    <div className="bg-slate-100 rounded-lg p-3">
+                      <code className="text-slate-800 text-sm font-mono break-all">
+                        {siteConfig.upiId}
+                      </code>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Payment Instructions */}
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <Smartphone className="w-5 h-5 text-blue-500 mt-1 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold text-blue-900 mb-2">How to Pay:</h4>
+                      <ol className="text-blue-800 text-sm space-y-1">
+                        <li>1. Open any UPI app (PayTM, PhonePe, GPay, etc.)</li>
+                        <li>2. Scan the QR code above OR use the UPI ID</li>
+                        <li>3. Enter amount: <strong>{price}</strong></li>
+                        <li>4. Complete the payment</li>
+                        <li>5. Take a screenshot of payment confirmation</li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4">
+                  <button
+                    onClick={() => setStep(2)}
+                    className="border border-slate-600 text-slate-300 py-3 px-6 rounded-lg hover:bg-slate-800 transition-colors"
+                  >
+                    Back
+                  </button>
+                  <button
+                    onClick={() => {
+                      const paymentConfirmMessage = `
+🎉 *Payment Completed for ${title}*
+
+💰 *Amount Paid:* ${price}
+📝 *Course:* ${title}
+⏰ *Batch Starts:* ${batchInfo.date}
+
+Hi! I have completed the payment for the above course. Please confirm my enrollment and provide access details.
+
+Thank you!`;
+
+                      const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(paymentConfirmMessage)}`;
+                      window.open(whatsappUrl, '_blank');
+                    }}
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Confirm Payment
+                  </button>
+                </div>
               </motion.div>
             )}
           </div>
