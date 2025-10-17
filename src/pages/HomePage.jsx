@@ -887,7 +887,12 @@ const HomePage = ({ onNavigate }) => {
     useEffect(() => {
         const fetchModules = async () => {
             try {
-                const response = await fetch('/modules.json');
+                const response = await fetch('/modules.json', {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache'
+                    }
+                });
                 if (!response.ok) {
                     throw new Error(`Failed to fetch modules: ${response.status} ${response.statusText}`);
                 }

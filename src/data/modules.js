@@ -1,13 +1,13 @@
 // Import the complete module data from JSON file
 import modulesData from '../../modules.json';
 
-// Export the modules from the JSON file
-export const modules = modulesData;
+// Export only active modules (filter out hidden/archived)
+export const modules = modulesData.filter(m => !m.status || m.status === 'active');
 
 // Export learning paths (extracted from all modules)
 export const learningPaths = [
   'AWS Cloud Architect',
-  'DevOps Engineer', 
+  'DevOps Engineer',
   'AI/ML Engineer',
   'Data Scientist',
   'Full Stack Developer (Modern)',
