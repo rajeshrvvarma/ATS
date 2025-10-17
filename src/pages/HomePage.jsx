@@ -6,13 +6,11 @@ import { sendContactForm } from '@/services/netlifyFormsService.js';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import AiFaqBot from '@/components/AiFaqBot.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+
 
 
 // PREMIUM COURSES SECTION - Revenue Focus
 const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
-    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
-
     const getUrgencyColor = (urgency) => {
         switch(urgency) {
             case 'high': return 'text-red-400';
@@ -210,13 +208,6 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                     </motion.div>
                 </div>
             </section>
-
-            <EnhancedEnrollmentModal
-                isOpen={enrollmentModal.isOpen}
-                onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-                courseType={enrollmentModal.courseType}
-                courseName={enrollmentModal.courseName}
-            />
         </>
     );
 };
@@ -746,131 +737,6 @@ const HomePage = ({ onNavigate }) => {
             </div>
             <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
             <ScrollNavigation />
-
-            {/* Course Details Modal */}
-            <AnimatePresence>
-                {courseDetailsModal.isOpen && courseDetailsModal.course && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                        onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
-                    >
-                        <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            className="bg-slate-800 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative"
-                            onClick={(e) => e.stopPropagation()}
-                        >
-                            <button
-                                onClick={() => setCourseDetailsModal({ isOpen: false, course: null })}
-                                className="absolute top-4 right-4 text-slate-400 hover:text-white z-10"
-                            >
-                                <X size={24} />
-                            </button>
-
-                            <div className="p-8">
-                                <h2 className="text-3xl font-bold text-white mb-4">{courseDetailsModal.course.title}</h2>
-                                <p className="text-slate-300 mb-6">{courseDetailsModal.course.description}</p>
-
-                                {/* Course Highlights */}
-                                <div className="mb-6">
-                                    <h3 className="text-xl font-bold text-blue-400 mb-3 flex items-center gap-2">
-                                        <BookOpen size={20} />
-                                        Course Highlights
-                                    </h3>
-                                    <ul className="space-y-2">
-                                        {courseDetailsModal.course.highlights?.map((highlight, idx) => (
-                                            <li key={idx} className="flex items-start gap-2 text-slate-300">
-                                                <ArrowRight size={16} className="text-blue-400 mt-1 flex-shrink-0" />
-                                                {highlight}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                {/* Curriculum */}
-                                {courseDetailsModal.course.curriculum && courseDetailsModal.course.curriculum.length > 0 && (
-                                    <div className="mb-6">
-                                        <h3 className="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
-                                            <Play size={20} />
-                                            Curriculum
-                                        </h3>
-                                        <div className="space-y-2">
-                                            {courseDetailsModal.course.curriculum.map((item, idx) => (
-                                                <div key={idx} className="flex items-start gap-2 text-slate-300">
-                                                    <ArrowRight size={16} className="text-purple-400 mt-1 flex-shrink-0" />
-                                                    {item}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Prerequisites */}
-                                {courseDetailsModal.course.prerequisites && (
-                                    <div className="mb-6">
-                                        <h3 className="text-xl font-bold text-green-400 mb-3">Prerequisites</h3>
-                                        <p className="text-slate-300">{courseDetailsModal.course.prerequisites}</p>
-                                    </div>
-                                )}
-
-                                {/* Career Outcomes */}
-                                {courseDetailsModal.course.learningPaths && courseDetailsModal.course.learningPaths.length > 0 && (
-                                    <div className="mb-6">
-                                        <h3 className="text-xl font-bold text-cyan-400 mb-3">Career Outcomes</h3>
-                                        <div className="flex flex-wrap gap-2">
-                                            {courseDetailsModal.course.learningPaths.map((path, idx) => (
-                                                <span key={idx} className="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm">
-                                                    {path}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Footer with Price and Enroll */}
-                                <div className="mt-8 pt-6 border-t border-slate-700 flex flex-col sm:flex-row gap-4 justify-between items-center">
-                                    <div className="text-center sm:text-left">
-                                        <div className="text-2xl font-bold text-blue-400">
-                                            ₹{courseDetailsModal.course.price}
-                                        </div>
-                                        <div className="text-sm text-slate-400">{courseDetailsModal.course.duration}</div>
-                                    </div>
-                                    <button
-                                        onClick={() => {
-                                            setCourseDetailsModal({ isOpen: false, course: null });
-                                            setEnrollmentModal({
-                                                isOpen: true,
-                                                courseType: 'module',
-                                                courseName: courseDetailsModal.course.title,
-                                                coursePrice: courseDetailsModal.course.price,
-                                                courseDuration: courseDetailsModal.course.duration
-                                            });
-                                        }}
-                                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-3 rounded-lg transition-all duration-300 flex items-center gap-2"
-                                    >
-                                        Enroll Now
-                                        <ArrowRight size={20} />
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Enrollment Modal */}
-            <EnhancedEnrollmentModal
-                isOpen={enrollmentModal.isOpen}
-                onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '', coursePrice: '', courseDuration: '' })}
-                courseType={enrollmentModal.courseType}
-                courseName={enrollmentModal.courseName}
-                coursePrice={enrollmentModal.coursePrice}
-                courseDuration={enrollmentModal.courseDuration}
-            />
         </>
     );
 };
