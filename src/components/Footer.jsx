@@ -162,14 +162,9 @@ export default function Footer({ onNavigate }) {
                     </div>
 
                     {/* Social Links & Site Stats */}
-                    <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                        {/* Left: Copyright */}
-                        <p className="text-slate-500 text-sm">
-                            All Rights Reserved Agnidhra Technologies India Pvt. Ltd.
-                        </p>
-
-                        {/* Center: Social Links */}
-                        <div className="flex items-center gap-4">
+                    <div className="text-center">
+                        {/* Social Links - Centered */}
+                        <div className="flex items-center justify-center gap-4 mb-4">
                             <a
                                 href="https://www.linkedin.com/company/agnidhra-technologies"
                                 target="_blank"
@@ -199,10 +194,18 @@ export default function Footer({ onNavigate }) {
                             </a>
                         </div>
 
-                        {/* Right: Site Visitors */}
-                        <div className="flex items-center gap-2 text-slate-500">
-                            <span className="animate-pulse inline-flex h-2 w-2 rounded-full bg-green-500"></span>
-                            <span className="text-sm">Site Visitors: {visitCount}</span>
+                        {/* Bottom Row: Copyright Left, Visitors Right */}
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+                            {/* Left: Copyright */}
+                            <p className="text-slate-500">
+                                All Rights Reserved Agnidhra Technologies India Pvt. Ltd.
+                            </p>
+
+                            {/* Right: Site Visitors */}
+                            <div className="flex items-center gap-2 text-slate-500">
+                                <span className="animate-pulse inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+                                <span>Site Visitors: {visitCount}</span>
+                            </div>
                         </div>
                     </div>
 
