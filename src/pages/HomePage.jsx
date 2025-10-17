@@ -9,6 +9,218 @@ import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 
 
+// PREMIUM COURSES SECTION - Revenue Focus
+const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
+    const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+
+    const getUrgencyColor = (urgency) => {
+        switch(urgency) {
+            case 'high': return 'text-red-400';
+            case 'medium': return 'text-yellow-400';
+            default: return 'text-green-400';
+        }
+    };
+
+    const getUrgencyMessage = (seatsLeft, urgency) => {
+        if (urgency === 'high') return `Only ${seatsLeft} seats left!`;
+        if (urgency === 'medium') return `${seatsLeft} seats available`;
+        return `${seatsLeft} seats available`;
+    };
+
+    return (
+        <>
+            <section className="bg-slate-900 py-20">
+                <div className="container mx-auto px-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-12"
+                    >
+                        <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+                            <span className="text-yellow-400">🚀 Launch Your Career</span><br />
+                            Professional Cybersecurity Courses
+                        </h2>
+                        <p className="text-xl text-slate-300 max-w-4xl mx-auto">
+                            <strong className="text-blue-400">Weekend-only classes</strong> designed for working professionals.
+                            <strong className="text-green-400"> Personal instruction</strong>,
+                            <strong className="text-purple-400"> job assistance</strong>, and
+                            <strong className="text-cyan-400"> industry mentorship</strong> included.
+                        </p>
+                        <div className="mt-6 flex flex-wrap justify-center gap-4">
+                            <div className="bg-red-500/20 border border-red-500 rounded-full px-6 py-2">
+                                <span className="text-red-400 font-bold">🔥 December Batches Filling Fast</span>
+                            </div>
+                            <div className="bg-green-500/20 border border-green-500 rounded-full px-6 py-2">
+                                <span className="text-green-400 font-bold">💰 Early Bird: ₹20,000 (Save ₹15K)</span>
+                            </div>
+                        </div>
+                    </motion.div>
+
+                    <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8">
+                        {premiumCourses.map((course, index) => {
+                            const IconComponent = course.icon;
+                            return (
+                                <motion.div
+                                    key={course.id}
+                                    initial={{ opacity: 0, y: 30 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.6, delay: index * 0.2 }}
+                                    viewport={{ once: true }}
+                                    className="bg-slate-800 rounded-2xl border border-slate-700 hover:border-blue-500 transition-all duration-300 overflow-hidden group relative"
+                                >
+                                    {/* Urgency Banner */}
+                                    <div className={`absolute top-4 left-4 z-10 px-3 py-1 rounded-full text-sm font-bold
+                                        ${course.urgency === 'high' ? 'bg-red-500 text-white animate-pulse' :
+                                          course.urgency === 'medium' ? 'bg-yellow-500 text-black' : 'bg-green-500 text-white'}`}>
+                                        {course.urgency === 'high' && '🔥 FILLING FAST'}
+                                        {course.urgency === 'medium' && '⚡ LIMITED SEATS'}
+                                        {course.urgency === 'low' && '✅ SEATS AVAILABLE'}
+                                    </div>
+
+                                    {/* Course Header */}
+                                    <div className={`bg-gradient-to-br ${course.gradient} p-6 text-white relative`}>
+                                        <IconComponent className="w-12 h-12 mb-4" />
+                                        <h3 className="text-2xl font-bold mb-2">{course.title}</h3>
+                                        <p className="text-lg opacity-90">{course.subtitle}</p>
+                                    </div>
+
+                                    {/* Course Content */}
+                                    <div className="p-6">
+                                        <p className="text-slate-300 mb-6">{course.description}</p>
+
+                                        {/* Key Stats */}
+                                        <div className="grid grid-cols-2 gap-4 mb-6">
+                                            <div className="text-center bg-slate-700/50 rounded-lg p-3">
+                                                <div className="text-2xl font-bold text-green-400">{course.placementRate}</div>
+                                                <div className="text-sm text-slate-400">Placement Rate</div>
+                                            </div>
+                                            <div className="text-center bg-slate-700/50 rounded-lg p-3">
+                                                <div className="text-2xl font-bold text-blue-400">{course.avgSalary}</div>
+                                                <div className="text-sm text-slate-400">Avg Salary</div>
+                                            </div>
+                                        </div>
+
+                                        {/* Course Details */}
+                                        <div className="space-y-3 mb-6">
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-400">Duration:</span>
+                                                <span className="text-white font-semibold">{course.duration}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-400">Schedule:</span>
+                                                <span className="text-white font-semibold">{course.schedule}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-400">Next Batch:</span>
+                                                <span className="text-yellow-400 font-semibold">{course.nextBatch}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="text-slate-400">Enrolled:</span>
+                                                <span className="text-blue-400 font-semibold">{course.enrolled}+ students</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Seats Left */}
+                                        <div className="mb-6">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <span className="text-slate-400">Seats:</span>
+                                                <span className={`font-bold ${getUrgencyColor(course.urgency)}`}>
+                                                    {getUrgencyMessage(course.seatsLeft, course.urgency)}
+                                                </span>
+                                            </div>
+                                            <div className="w-full bg-slate-700 rounded-full h-2">
+                                                <div
+                                                    className={`h-2 rounded-full transition-all duration-300
+                                                        ${course.urgency === 'high' ? 'bg-red-500' :
+                                                          course.urgency === 'medium' ? 'bg-yellow-500' : 'bg-green-500'}`}
+                                                    style={{ width: `${(course.totalSeats - course.seatsLeft) / course.totalSeats * 100}%` }}
+                                                ></div>
+                                            </div>
+                                        </div>
+
+                                        {/* Features */}
+                                        <div className="mb-6">
+                                            <h4 className="text-white font-semibold mb-3">What You'll Learn:</h4>
+                                            <div className="space-y-2">
+                                                {course.features.slice(0, 4).map((feature, idx) => (
+                                                    <div key={idx} className="flex items-center">
+                                                        <CheckCircle className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" />
+                                                        <span className="text-slate-300 text-sm">{feature}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Pricing */}
+                                        <div className="text-center mb-6">
+                                            <div className="mb-2">
+                                                <span className="text-3xl font-bold text-green-400">₹{course.currentPrice.replace('₹', '')}</span>
+                                                <span className="text-lg text-slate-400 line-through ml-2">{course.originalPrice}</span>
+                                            </div>
+                                            <div className="text-red-400 font-semibold">
+                                                Save ₹{parseInt(course.originalPrice.replace('₹', '').replace(',', '')) - parseInt(course.currentPrice.replace('₹', '').replace(',', ''))}
+                                            </div>
+                                        </div>
+
+                                        {/* Action Buttons */}
+                                        <div className="space-y-3">
+                                            <button
+                                                onClick={course.action}
+                                                className={`w-full py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105
+                                                    ${course.urgency === 'high'
+                                                        ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
+                                                        : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
+                                            >
+                                                {course.urgency === 'high' ? '🔥 Grab Last Seats!' : '🚀 Enroll Now'}
+                                            </button>
+                                            <button className="w-full py-3 px-6 rounded-xl border border-slate-600 text-slate-300 hover:border-blue-500 hover:text-blue-400 transition-all duration-300">
+                                                💬 Book Free Consultation
+                                            </button>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Call to Action */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.6 }}
+                        viewport={{ once: true }}
+                        className="text-center mt-12"
+                    >
+                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8">
+                            <h3 className="text-3xl font-bold text-white mb-4">
+                                Not Sure Which Course to Choose?
+                            </h3>
+                            <p className="text-xl text-blue-100 mb-6">
+                                Book a free 30-minute consultation with our cybersecurity expert
+                            </p>
+                            <button
+                                onClick={() => onNavigate('contact')}
+                                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+                            >
+                                📞 Book Free Consultation
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            <EnhancedEnrollmentModal
+                isOpen={enrollmentModal.isOpen}
+                onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
+                courseType={enrollmentModal.courseType}
+                courseName={enrollmentModal.courseName}
+            />
+        </>
+    );
+};
+
 // Module-Focused Hero Section
 const HeroSection = ({ onNavigate, modules, loading, error }) => {
     const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
@@ -18,42 +230,43 @@ const HeroSection = ({ onNavigate, modules, loading, error }) => {
     if (loading) return <div className="text-center text-white py-12">Loading modules...</div>;
     if (error) return <div className="text-center text-red-500 py-12">{error}</div>;
 
-    // Hero panel data
+    // Hero panel data - COURSE-FIRST REVENUE STRATEGY
     const heroPanels = [
         {
             title: <>
-                Learn <span className="text-cyan-400">Any Skill</span><br />
-                <span className="text-3xl md:text-5xl text-blue-400">One Module at a Time</span>
+                <span className="text-red-400">December Batch Starting Soon!</span><br />
+                <span className="text-3xl md:text-5xl text-blue-400">Launch Your Cybersecurity Career</span><br />
+                <span className="text-2xl md:text-3xl text-yellow-400">in Just 8 Weeks</span>
             </>,
             description: <>
-                Choose from <strong className="text-blue-400">{modules.length}+ Expert Modules</strong> across
-                <strong className="text-purple-400"> Technology</strong>, <strong className="text-red-400">Cybersecurity</strong>,
-                and <strong className="text-green-400">Programming</strong>. Build your custom learning path.<br />
-                <span className="text-green-400 font-semibold">Self-paced, flexible, skill-focused.</span>
+                Join <strong className="text-green-400">50+ professionals</strong> who successfully transitioned to
+                <strong className="text-blue-400"> High-Paying Cybersecurity Roles</strong> through our intensive weekend program.<br />
+                <span className="text-yellow-400 font-semibold">₹20,000 only • Weekends • Personal Instruction • Job Assistance</span>
             </>,
             features: [
-                { icon: BookOpen, text: `${modules.length}+ Learning Modules` },
-                { icon: Layers, text: `${categories.length - 1} Categories` },
-                { icon: TrendingUp, text: 'Self-Paced Learning' },
+                { icon: Users, text: 'Only 8 Seats Left' },
+                { icon: Clock, text: 'Weekends Only' },
+                { icon: Star, text: '95% Placement Rate' },
             ],
-            label: 'Modular Learning',
+            label: 'Professional Courses',
         },
         {
             title: <>
-                <span className="text-yellow-400">Traditional Training Programs</span><br />
-                <span className="text-3xl md:text-5xl text-blue-400">Comprehensive Course Paths</span>
+                <span className="text-cyan-400">Can't Commit to Full Course?</span><br />
+                <span className="text-3xl md:text-5xl text-purple-400">Learn Specific Skills</span><br />
+                <span className="text-2xl md:text-3xl text-green-400">₹99 Per Module</span>
             </>,
             description: <>
-                Enroll in <strong className="text-yellow-400">Specialized Security Courses</strong> and
-                <strong className="text-blue-400"> Full-Length Programs</strong> for a guided, instructor-led experience.<br />
-                <span className="text-yellow-400 font-semibold">Structured, cohort-based, certification-ready.</span>
+                Start with <strong className="text-purple-400">Individual Modules</strong> and upgrade to full courses later.
+                Perfect for <strong className="text-green-400">working professionals</strong> who want to test our training quality.<br />
+                <span className="text-cyan-400 font-semibold">Self-paced • Affordable • Upgrade Anytime</span>
             </>,
             features: [
-                { icon: Star, text: 'Instructor-Led Sessions' },
-                { icon: Users, text: 'Cohort-Based Learning' },
-                { icon: Clock, text: 'Fixed Timelines' },
+                { icon: BookOpen, text: `${modules.length}+ Modules Available` },
+                { icon: TrendingUp, text: 'Flexible Learning' },
+                { icon: DollarSign, text: 'Upgrade to Course Anytime' },
             ],
-            label: 'Traditional Courses',
+            label: 'Modular Learning',
         },
     ];
 
@@ -179,7 +392,80 @@ const CoursesTabbedSection = ({ onNavigate, modules, activeTab, setActiveTab, se
         };
         return colorMap[category] || 'slate';
     };
-    // --- Traditional Courses Logic ---
+    // --- HIGH-VALUE COURSES (Revenue Focus) ---
+    const premiumCourses = [
+        {
+            id: 'defensive-security-professional',
+            title: 'Defensive Security Professional',
+            subtitle: 'SOC Analyst to Security Engineer Path',
+            description: 'Master SIEM, incident response, threat hunting, and security operations. Get job-ready in 8 weeks.',
+            originalPrice: '₹35,000',
+            currentPrice: '₹20,000',
+            duration: '8 Weeks',
+            schedule: 'Weekends (Fri-Sun)',
+            level: 'Beginner to Advanced',
+            icon: Shield,
+            color: 'blue',
+            features: ['SIEM Mastery (Splunk/QRadar)', 'Incident Response', 'Threat Hunting', 'Security Tools', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 3,
+            totalSeats: 8,
+            enrolled: '45',
+            placementRate: '95%',
+            avgSalary: '6-12 LPA',
+            nextBatch: 'Dec 15, 2025',
+            action: () => onNavigate('enroll?course=defensive-security-professional'),
+            gradient: 'from-blue-600 to-blue-800',
+            urgency: 'high'
+        },
+        {
+            id: 'offensive-security-mastery',
+            title: 'Offensive Security Mastery',
+            subtitle: 'Ethical Hacker to Penetration Tester',
+            description: 'Learn penetration testing, vulnerability assessment, and red team operations. OSCP preparation included.',
+            originalPrice: '₹40,000',
+            currentPrice: '₹20,000',
+            duration: '8 Weeks',
+            schedule: 'Weekends (Fri-Sun)',
+            level: 'Intermediate to Advanced',
+            icon: Sword,
+            color: 'red',
+            features: ['Web App Penetration Testing', 'Network Security Testing', 'OSCP Preparation', 'Report Writing', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 5,
+            totalSeats: 8,
+            enrolled: '38',
+            placementRate: '92%',
+            avgSalary: '8-15 LPA',
+            nextBatch: 'Jan 5, 2026',
+            action: () => onNavigate('enroll?course=offensive-security-mastery'),
+            gradient: 'from-red-600 to-red-800',
+            urgency: 'medium'
+        },
+        {
+            id: 'cloud-devops-security',
+            title: 'Cloud DevOps Security',
+            subtitle: 'AWS/Azure Security Specialist',
+            description: 'Combine DevOps skills with cloud security. Master AWS/Azure security, container security, and automation.',
+            originalPrice: '₹30,000',
+            currentPrice: '₹20,000',
+            duration: '6 Weeks',
+            schedule: 'Weekends (Sat-Sun)',
+            level: 'Intermediate',
+            icon: Cloud,
+            color: 'cyan',
+            features: ['AWS/Azure Security', 'Container Security', 'Infrastructure as Code', 'DevSecOps', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 6,
+            totalSeats: 10,
+            enrolled: '42',
+            placementRate: '90%',
+            avgSalary: '10-18 LPA',
+            nextBatch: 'Dec 22, 2025',
+            action: () => onNavigate('enroll?course=cloud-devops-security'),
+            gradient: 'from-cyan-600 to-cyan-800',
+            urgency: 'low'
+        }
+    ];
+
+    // --- Traditional Courses Logic (Secondary) ---
     const traditionalCourses = [
         {
             id: 'specialized-courses',
@@ -952,6 +1238,7 @@ const HomePage = ({ onNavigate }) => {
     return (
         <>
             <HeroSection onNavigate={handleNavigate} modules={modules} loading={loading} error={error} />
+            <PremiumCoursesSection onNavigate={handleNavigate} premiumCourses={premiumCourses} />
             <CoursesTabbedSection
                 onNavigate={handleNavigate}
                 modules={modules}
