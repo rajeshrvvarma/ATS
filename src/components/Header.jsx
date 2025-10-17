@@ -52,35 +52,27 @@ export default function Header({ onNavigate, currentPage }) {
                 { name: 'Technology Overview', action: () => onNavigate('technologyOverview') }
             ]
         },
+        premium: {
+            title: '🏆 Premium Courses (₹20K)',
+            courses: [
+                { name: 'Defensive Security Professional', action: () => onNavigate('home') },
+                { name: 'Offensive Security Mastery', action: () => onNavigate('home') },
+                { name: 'MultiCloud DevOps Mastery', action: () => onNavigate('home') }
+            ]
+        },
         bootcamp: {
             title: '⚡ 7-Day Bootcamps',
             courses: [
-                { name: 'SOC Analyst Bootcamp (₹499+)', action: () => onNavigate('defensiveBootcampLanding') },
-                { name: 'Ethical Hacking Bootcamp (₹599+)', action: () => onNavigate('offensiveBootcampLanding') }
+                { name: 'SOC Analyst Bootcamp (₹499+)', action: () => onNavigate('events-batches') },
+                { name: 'Ethical Hacking Bootcamp (₹599+)', action: () => onNavigate('events-batches') }
             ]
         },
-        premium: {
-            title: '🏆 2-Month Programs',
+        addons: {
+            title: '🎯 Specialized Add-ons',
             courses: [
-                { name: 'Defensive Mastery (₹5,999)', action: () => onNavigate('defensiveMastery') },
-                { name: 'Elite Hacker Program (₹7,999)', action: () => onNavigate('offensiveMastery') }
-            ]
-        },
-        specialized: {
-            title: '🎯 Specialized Courses',
-            courses: [
-                { name: 'Cloud Security', action: () => onNavigate('specializedCourses') },
-                { name: 'Digital Forensics', action: () => onNavigate('specializedCourses') },
-                { name: 'GRC & Compliance', action: () => onNavigate('specializedCourses') }
-            ]
-        },
-        technology: {
-            title: '💻 Technology Training',
-            courses: [
-                { name: 'Full Stack Development', action: () => onNavigate('fullStackDevelopment') },
-                { name: 'Cloud & DevOps', action: () => onNavigate('cloudDevOps') },
-                { name: 'AI & Data Science', action: () => onNavigate('aiDataScience') },
-                { name: 'Software Testing', action: () => onNavigate('softwareTesting') }
+                { name: 'Cloud Security Mastery', action: () => onNavigate('home') },
+                { name: 'Digital Forensics & Investigation', action: () => onNavigate('home') },
+                { name: 'Red Team Operations', action: () => onNavigate('home') }
             ]
         },
         college: {
@@ -368,19 +360,20 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
             color: 'blue',
             courses: [
                 {
+                    title: 'Defensive Security Professional',
+                    duration: '8 Weeks',
+                    price: '₹20,000',
+                    description: 'SOC Analyst to Security Engineer Path',
+                    action: () => onNavigate('home'),
+                    popular: true
+                },
+                {
                     title: '7-Day SOC Bootcamp',
                     duration: '1 Week',
                     price: getPrice('defensive-bootcamp', 'Starting ₹499'),
                     description: 'From Zero to SOC Analyst Ready',
-                    action: () => onNavigate('defensiveBootcampLanding'),
-                    popular: true
-                },
-                {
-                    title: '2-Month Mastery Program',
-                    duration: '2 Months',
-                    price: getPrice('defensive-mastery', '₹5,999'),
-                    description: 'Premium certification with mentorship',
-                    action: () => onNavigate('defensiveMastery')
+                    action: () => onNavigate('events-batches'),
+                    badge: 'Bootcamp'
                 }
             ]
         },
@@ -390,72 +383,57 @@ const MegaMenuPrograms = ({ onNavigate, scrollToSection, coursePricing, pricingL
             color: 'red',
             courses: [
                 {
+                    title: 'Offensive Security Mastery',
+                    duration: '8 Weeks',
+                    price: '₹20,000',
+                    description: 'Ethical Hacker to Penetration Tester',
+                    action: () => onNavigate('home'),
+                    popular: true
+                },
+                {
                     title: '7-Day Ethical Hacking Bootcamp',
                     duration: '1 Week',
                     price: getPrice('offensive-bootcamp', 'Starting ₹599'),
                     description: 'Master penetration testing fundamentals',
-                    action: () => onNavigate('offensiveBootcampLanding'),
-                    popular: true
-                },
-                {
-                    title: '2-Month Elite Hacker Program',
-                    duration: '2 Months',
-                    price: getPrice('offensive-mastery', '₹7,999'),
-                    description: 'Advanced red team operations',
-                    action: () => onNavigate('offensiveMastery')
+                    action: () => onNavigate('events-batches'),
+                    badge: 'Bootcamp'
                 }
             ]
         },
-        specialized: {
-            title: 'Specialized Security',
+        multicloud: {
+            title: 'MultiCloud DevOps',
+            icon: Cloud,
+            color: 'cyan',
+            courses: [
+                {
+                    title: 'MultiCloud DevOps Mastery',
+                    duration: '8 Weeks',
+                    price: '₹20,000',
+                    description: 'AWS/Azure/GCP + DevOps Engineer',
+                    action: () => onNavigate('home'),
+                    popular: true
+                },
+                {
+                    title: 'Cloud Security Add-on',
+                    duration: '4 Weeks',
+                    price: '₹8,999',
+                    description: 'Multi-cloud security & compliance',
+                    action: () => onNavigate('home'),
+                    badge: 'Add-on'
+                }
+            ]
+        },
+        addons: {
+            title: 'Specialized Add-ons',
             icon: Target,
             color: 'purple',
             courses: [
-                // Cloud Security
-                { title: 'AWS Security Specialist', duration: '4 Weeks', price: getPrice('aws-security-specialist', '₹3,999'), description: 'AWS security services, IAM & cloud-native tools', action: () => onNavigate('specializedCourses') },
-                { title: 'Azure Security Engineer', duration: '4 Weeks', price: getPrice('azure-security-engineer', '₹3,999'), description: 'Azure security implementation & management', action: () => onNavigate('specializedCourses') },
-                { title: 'Multi-Cloud Security Architect', duration: '6 Weeks', price: getPrice('multi-cloud-security-architect', '₹5,999'), description: 'Advanced multi-cloud security architecture', action: () => onNavigate('specializedCourses') },
-
-                // Digital Forensics & Malware
-                { title: 'Digital Forensics Investigator', duration: '5 Weeks', price: getPrice('digital-forensics-investigator', '₹4,999'), description: 'Digital evidence collection and analysis', action: () => onNavigate('specializedCourses') },
-                { title: 'Advanced Malware Forensics', duration: '4 Weeks', price: getPrice('advanced-malware-forensics', '₹4,499'), description: 'Malware reverse engineering & analysis', action: () => onNavigate('specializedCourses') },
-                { title: 'Malware Analysis Fundamentals', duration: '3 Weeks', price: getPrice('malware-analysis-fundamentals', '₹2,999'), description: 'Intro to malware analysis & tooling', action: () => onNavigate('specializedCourses') },
-                { title: 'Advanced Reverse Engineering', duration: '6 Weeks', price: getPrice('advanced-reverse-engineering', '₹5,499'), description: 'Exploit analysis & advanced RE', action: () => onNavigate('specializedCourses') },
-
-                // Compliance & Incident Response
-                { title: 'ISO 27001 Lead Implementer', duration: '4 Weeks', price: getPrice('iso-27001-lead-implementer', '₹3,499'), description: 'Complete ISO 27001 implementation', action: () => onNavigate('specializedCourses') },
-                { title: 'GRC Analyst Professional', duration: '5 Weeks', price: getPrice('grc-analyst-professional', '₹4,299'), description: 'Governance, risk and compliance', action: () => onNavigate('specializedCourses') },
-                { title: 'Incident Response Specialist', duration: '4 Weeks', price: getPrice('incident-response-specialist', '₹3,999'), description: 'End-to-end incident response', action: () => onNavigate('specializedCourses') },
-                { title: 'Advanced Threat Hunting', duration: '5 Weeks', price: getPrice('advanced-threat-hunting', '₹4,799'), description: 'Proactive detection & hunting', action: () => onNavigate('specializedCourses') }
-            ]
-        },
-        technology: {
-            title: 'Technology Training',
-            icon: Laptop,
-            color: 'indigo',
-            courses: [
-                // Full Stack Development
-                { title: 'MERN Stack Developer', duration: '6 Months', price: getPrice('mern-stack-developer', '₹30,000'), description: 'MongoDB, Express, React, Node', action: () => onNavigate('technologyTraining') },
-                { title: 'Full Stack Python Developer', duration: '6 Months', price: getPrice('full-stack-python-developer', '₹28,000'), description: 'Python, Django/Flask, PostgreSQL', action: () => onNavigate('technologyTraining') },
-                { title: 'Java Full Stack Developer', duration: '7 Months', price: getPrice('java-full-stack-developer', '₹32,000'), description: 'Java, Spring Boot, Angular/React', action: () => onNavigate('technologyTraining') },
-
-                // Cloud & DevOps
-                { title: 'AWS Cloud Architect', duration: '4 Months', price: getPrice('aws-cloud-architect', '₹25,000'), description: 'AWS services & architecture', action: () => onNavigate('technologyTraining') },
-                { title: 'DevOps Engineer Bootcamp', duration: '5 Months', price: getPrice('devops-engineer-bootcamp', '₹27,000'), description: 'CI/CD, Docker, Kubernetes', action: () => onNavigate('technologyTraining') },
-                { title: 'Azure Cloud Solutions', duration: '4 Months', price: getPrice('azure-cloud-solutions', '₹24,000'), description: 'Azure services & enterprise solutions', action: () => onNavigate('technologyTraining') },
-
-                // AI & Data
-                { title: 'Data Science with Python', duration: '5 Months', price: getPrice('data-science-with-python', '₹20,000'), description: 'Data analysis & machine learning', action: () => onNavigate('technologyTraining') },
-                { title: 'AI & Machine Learning Engineer', duration: '6 Months', price: getPrice('ai-ml-engineer', '₹35,000'), description: 'Deep learning & model deployment', action: () => onNavigate('technologyTraining') },
-                { title: 'Business Intelligence Analyst', duration: '3 Months', price: getPrice('business-intelligence-analyst', '₹18,000'), description: 'Power BI, Tableau and SQL', action: () => onNavigate('technologyTraining') },
-
-                // Testing
-                { title: 'Automation Testing Engineer', duration: '4 Months', price: getPrice('automation-testing-engineer', '₹18,000'), description: 'Selenium, API & performance testing', action: () => onNavigate('technologyTraining') },
-                { title: 'Manual Testing Specialist', duration: '2 Months', price: getPrice('manual-testing-specialist', '₹12,000'), description: 'Manual QA foundations', action: () => onNavigate('technologyTraining') },
-
-                // Mobile
-                { title: 'React Native Developer', duration: '4 Months', price: getPrice('react-native-developer', '₹22,000'), description: 'Cross-platform mobile apps', action: () => onNavigate('technologyTraining') },
-                { title: 'Flutter App Developer', duration: '4 Months', price: getPrice('flutter-app-developer', '₹20,000'), description: 'Flutter & Dart mobile apps', action: () => onNavigate('technologyTraining') }
+                { title: 'Cloud Security Mastery', duration: '4 Weeks', price: '₹8,999', description: 'AWS/Azure/GCP security & compliance', action: () => onNavigate('home') },
+                { title: 'Digital Forensics & Investigation', duration: '3 Weeks', price: '₹7,999', description: 'Evidence collection & analysis', action: () => onNavigate('home') },
+                { title: 'Malware Analysis & Reverse Engineering', duration: '4 Weeks', price: '₹9,999', description: 'Dissect malware & understand attacks', action: () => onNavigate('home') },
+                { title: 'GRC & Compliance', duration: '3 Weeks', price: '₹6,999', description: 'Governance, Risk & Compliance', action: () => onNavigate('home') },
+                { title: 'Incident Response & Threat Hunting', duration: '4 Weeks', price: '₹8,999', description: 'Advanced incident response', action: () => onNavigate('home') },
+                { title: 'Red Team Operations', duration: '6 Weeks', price: '₹12,999', description: 'Advanced persistent threat simulation', action: () => onNavigate('home') }
             ]
         },
         college: {

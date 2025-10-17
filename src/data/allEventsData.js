@@ -70,26 +70,167 @@ export const bootcamps = [
     type: 'bootcamp',
     courseId: 'defensive-bootcamp',
     title: '7-Day Defensive Security Bootcamp',
+    subtitle: 'From Zero to SOC Analyst Ready',
+    description: 'Join 100+ aspiring cybersecurity professionals in this intensive bootcamp designed to fast-track your career into defensive security roles',
     startDate: '2025-11-15',
     endDate: '2025-11-21',
     location: 'Hyderabad & Online',
-    maxStudents: 25,
-    currentEnrolled: 12,
+    maxStudents: 100,
+    currentEnrolled: 23,
     price: '₹499',
-    urgency: 'medium'
+    originalPrice: '₹999',
+    urgency: 'medium',
+    duration: '7 days (21+ hours)',
+    schedule: 'Daily 3-4 hours',
+    level: 'Beginner to Intermediate',
+    includes: [
+      'Live interactive sessions (21+ hours)',
+      'All sessions recorded for lifetime access',
+      'Comprehensive course materials (PDFs)',
+      'Hands-on lab exercises and tools',
+      'Industry-recognized certificate of completion',
+      'Resume review and optimization',
+      'Job placement assistance and referrals',
+      'Access to exclusive alumni network',
+      'Monthly career guidance sessions (6 months)',
+      '24/7 doubt clearing support group'
+    ],
+    curriculum: [
+      {
+        day: 1,
+        title: 'Cybersecurity Fundamentals',
+        sessions: ['Threat Landscape Overview', 'Career Paths & Opportunities'],
+        duration: '3 hours',
+        highlights: ['Live Q&A with industry expert', 'Career roadmap session']
+      },
+      {
+        day: 2,
+        title: 'Network Security Essentials',
+        sessions: ['Network Security Basics', 'Hands-on with Security Tools'],
+        duration: '3 hours',
+        highlights: ['Wireshark demonstration', 'Network monitoring setup']
+      },
+      {
+        day: 3,
+        title: 'Incident Response & SIEM',
+        sessions: ['Incident Response Process', 'SIEM Tools Introduction'],
+        duration: '3 hours',
+        highlights: ['Real incident case studies', 'SIEM dashboard walkthrough']
+      },
+      {
+        day: 4,
+        title: 'Vulnerability Management',
+        sessions: ['Vulnerability Assessment', 'Patch Management'],
+        duration: '3 hours',
+        highlights: ['Hands-on vulnerability scanning', 'Remediation planning']
+      },
+      {
+        day: 5,
+        title: 'Security Operations Center',
+        sessions: ['SOC Operations', 'Monitoring & Alerting'],
+        duration: '3 hours',
+        highlights: ['SOC analyst daily routine', 'Alert triage techniques']
+      },
+      {
+        day: 6,
+        title: 'Compliance & Risk Management',
+        sessions: ['Security Frameworks', 'Risk Assessment'],
+        duration: '3 hours',
+        highlights: ['ISO 27001 overview', 'Risk calculation methods']
+      },
+      {
+        day: 7,
+        title: 'Career Launch & Certification',
+        sessions: ['Resume Building', 'Interview Preparation', 'Certification Exam'],
+        duration: '4 hours',
+        highlights: ['Mock interviews', 'Job application strategy', 'Certificate ceremony']
+      }
+    ],
+    outcomes: ['SOC Analyst positions', 'Security consultant roles', 'Cybersecurity career foundation']
   },
   {
     id: 'offensive-bootcamp-dec2025',
     type: 'bootcamp',
     courseId: 'offensive-bootcamp',
     title: '7-Day Ethical Hacking Bootcamp',
+    subtitle: 'Master Penetration Testing & Offensive Security',
+    description: 'Join 80+ aspiring ethical hackers in this intensive bootcamp designed to master penetration testing skills',
     startDate: '2025-12-10',
     endDate: '2025-12-16',
     location: 'Online',
-    maxStudents: 20,
-    currentEnrolled: 8,
+    maxStudents: 80,
+    currentEnrolled: 18,
     price: '₹599',
-    urgency: 'low'
+    originalPrice: '₹999',
+    urgency: 'low',
+    duration: '7 days (23+ hours)',
+    schedule: 'Daily 3-4 hours',
+    level: 'Intermediate',
+    includes: [
+      'Live interactive sessions (23+ hours)',
+      'All sessions recorded for lifetime access',
+      'Kali Linux VM setup and tools',
+      'Hands-on lab exercises with real targets',
+      'Industry-recognized ethical hacker certificate',
+      'Professional penetration testing toolkit',
+      'Resume review for cybersecurity roles',
+      'Job placement assistance in pentesting',
+      'Access to exclusive hacker community',
+      'Monthly advanced technique workshops (6 months)',
+      '24/7 technical support and mentorship'
+    ],
+    curriculum: [
+      {
+        day: 1,
+        title: 'Ethical Hacking Fundamentals',
+        sessions: ['Introduction to Penetration Testing', 'Legal & Ethical Framework'],
+        duration: '3 hours',
+        highlights: ['Hacker mindset development', 'Legal compliance essentials']
+      },
+      {
+        day: 2,
+        title: 'Information Gathering & Reconnaissance',
+        sessions: ['OSINT Techniques', 'Footprinting & Scanning'],
+        duration: '3 hours',
+        highlights: ['Advanced Google dorking', 'Network enumeration techniques']
+      },
+      {
+        day: 3,
+        title: 'Vulnerability Assessment',
+        sessions: ['Vulnerability Scanning', 'Manual Testing Techniques'],
+        duration: '3 hours',
+        highlights: ['Nessus & OpenVAS hands-on', 'Custom vulnerability validation']
+      },
+      {
+        day: 4,
+        title: 'Web Application Penetration Testing',
+        sessions: ['OWASP Top 10', 'SQL Injection & XSS'],
+        duration: '4 hours',
+        highlights: ['Burp Suite mastery', 'Real-world web app exploitation']
+      },
+      {
+        day: 5,
+        title: 'Network Penetration Testing',
+        sessions: ['Network Exploitation', 'Post-Exploitation Techniques'],
+        duration: '4 hours',
+        highlights: ['Metasploit framework', 'Lateral movement strategies']
+      },
+      {
+        day: 6,
+        title: 'Wireless Security & Social Engineering',
+        sessions: ['WiFi Penetration Testing', 'Social Engineering Attacks'],
+        duration: '3 hours',
+        highlights: ['Aircrack-ng usage', 'Phishing campaign creation']
+      },
+      {
+        day: 7,
+        title: 'Report Writing & Career Guidance',
+        sessions: ['Penetration Testing Reports', 'Career in Ethical Hacking'],
+        duration: '3 hours',
+        highlights: ['Professional report templates', 'Industry job opportunities']
+      }
+    ],
+    outcomes: ['Penetration tester roles', 'Ethical hacker positions', 'Security consultant opportunities']
   }
 ];
 

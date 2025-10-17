@@ -206,6 +206,116 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
                             </button>
                         </div>
                     </motion.div>
+
+                    {/* Specialized Courses Add-ons */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.8 }}
+                        viewport={{ once: true }}
+                        className="mt-16"
+                    >
+                        <div className="text-center mb-8">
+                            <h3 className="text-3xl font-bold text-white mb-4">
+                                🎯 Specialized Course Add-ons
+                            </h3>
+                            <p className="text-xl text-slate-300">
+                                Enhance your cybersecurity expertise with specialized skills
+                            </p>
+                        </div>
+
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {[
+                                {
+                                    title: 'Cloud Security Mastery',
+                                    description: 'AWS/Azure/GCP security, compliance & monitoring',
+                                    price: '₹8,999',
+                                    duration: '4 weeks',
+                                    icon: '☁️',
+                                    features: ['Multi-cloud security', 'IAM policies', 'Cloud monitoring', 'Compliance auditing']
+                                },
+                                {
+                                    title: 'Digital Forensics & Investigation',
+                                    description: 'Advanced forensics tools and investigation techniques',
+                                    price: '₹7,999',
+                                    duration: '3 weeks',
+                                    icon: '🔍',
+                                    features: ['Evidence collection', 'Memory analysis', 'Network forensics', 'Court reporting']
+                                },
+                                {
+                                    title: 'Malware Analysis & Reverse Engineering',
+                                    description: 'Dissect malware and understand attack vectors',
+                                    price: '₹9,999',
+                                    duration: '4 weeks',
+                                    icon: '🦠',
+                                    features: ['Static analysis', 'Dynamic analysis', 'Reverse engineering', 'Threat intelligence']
+                                },
+                                {
+                                    title: 'GRC & Compliance',
+                                    description: 'Governance, Risk & Compliance frameworks',
+                                    price: '₹6,999',
+                                    duration: '3 weeks',
+                                    icon: '📋',
+                                    features: ['ISO 27001', 'SOX compliance', 'Risk assessment', 'Audit management']
+                                },
+                                {
+                                    title: 'Incident Response & Threat Hunting',
+                                    description: 'Advanced incident response and proactive hunting',
+                                    price: '₹8,999',
+                                    duration: '4 weeks',
+                                    icon: '🎯',
+                                    features: ['NIST framework', 'Threat hunting', 'Forensic analysis', 'Recovery planning']
+                                },
+                                {
+                                    title: 'Red Team Operations',
+                                    description: 'Advanced persistent threat simulation',
+                                    price: '₹12,999',
+                                    duration: '6 weeks',
+                                    icon: '⚔️',
+                                    features: ['APT simulation', 'Social engineering', 'Evasion techniques', 'Campaign planning']
+                                }
+                            ].map((addon, index) => (
+                                <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    viewport={{ once: true }}
+                                    className="bg-slate-800/50 border border-slate-700 rounded-xl p-6 hover:border-purple-500 transition-all duration-300"
+                                >
+                                    <div className="text-4xl mb-4">{addon.icon}</div>
+                                    <h4 className="text-xl font-bold text-white mb-2">{addon.title}</h4>
+                                    <p className="text-slate-300 mb-4">{addon.description}</p>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-2xl font-bold text-purple-400">{addon.price}</span>
+                                        <span className="text-slate-400">{addon.duration}</span>
+                                    </div>
+                                    <div className="space-y-2 mb-6">
+                                        {addon.features.map((feature, idx) => (
+                                            <div key={idx} className="flex items-center">
+                                                <CheckCircle className="w-4 h-4 text-green-400 mr-2" />
+                                                <span className="text-slate-300 text-sm">{feature}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <button className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-all duration-300">
+                                        Add to Cart
+                                    </button>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        <div className="text-center mt-8">
+                            <p className="text-slate-400 mb-4">
+                                💡 <strong className="text-yellow-400">Bundle Discount:</strong> Add any 2 specializations with your premium course for 30% off
+                            </p>
+                            <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-xl p-4">
+                                <p className="text-purple-300">
+                                    <strong>Pro Tip:</strong> Most of our students add Cloud Security + Incident Response for complete cybersecurity mastery
+                                </p>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
             </section>
         </>
@@ -677,27 +787,27 @@ const HomePage = ({ onNavigate }) => {
             urgency: 'medium'
         },
         {
-            id: 'cloud-devops-security',
-            title: 'Cloud DevOps Security',
-            subtitle: 'AWS/Azure Security Specialist',
-            description: 'Combine DevOps skills with cloud security. Master AWS/Azure security, container security, and automation.',
+            id: 'multicloud-devops-mastery',
+            title: 'MultiCloud DevOps Mastery',
+            subtitle: 'AWS/Azure/GCP + DevOps Engineer',
+            description: 'Master multi-cloud architecture, DevOps automation, and infrastructure as code. Become a cloud-native expert.',
             originalPrice: '₹30,000',
             currentPrice: '₹20,000',
-            duration: '6 Weeks',
+            duration: '8 Weeks',
             schedule: 'Weekends (Sat-Sun)',
-            level: 'Intermediate',
+            level: 'Intermediate to Advanced',
             icon: Cloud,
             color: 'cyan',
-            features: ['AWS/Azure Security', 'Container Security', 'Infrastructure as Code', 'DevSecOps', 'Job Assistance', 'Personal Mentoring'],
-            seatsLeft: 6,
+            features: ['Multi-Cloud Architecture', 'DevOps CI/CD Pipelines', 'Infrastructure as Code', 'Container Orchestration', 'Job Assistance', 'Personal Mentoring'],
+            seatsLeft: 4,
             totalSeats: 10,
-            enrolled: '15',
-            placementRate: '78%',
-            avgSalary: '6-12 LPA',
+            enrolled: '12',
+            placementRate: '82%',
+            avgSalary: '8-15 LPA',
             nextBatch: 'Dec 22, 2025',
-            action: () => handleNavigate('enroll?course=cloud-devops-security'),
+            action: () => handleNavigate('enroll?course=multicloud-devops-mastery'),
             gradient: 'from-cyan-600 to-cyan-800',
-            urgency: 'low'
+            urgency: 'medium'
         }
     ];
 

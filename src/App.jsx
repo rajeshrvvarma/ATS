@@ -24,12 +24,7 @@ import Footer from '@/components/Footer.jsx';
 // Lazy-loaded pages
 const HomePage = React.lazy(() => import('@/pages/HomePage.jsx'));
 const BootcampPage = React.lazy(() => import('@/pages/BootcampPage.jsx'));
-const DefensiveBootcampLandingPage = React.lazy(() => import('@/pages/DefensiveBootcampLandingPage.jsx'));
-const DefensiveMasteryLandingPage = React.lazy(() => import('@/pages/DefensiveMasteryLandingPage.jsx'));
-const OffensiveBootcampLandingPage = React.lazy(() => import('@/pages/OffensiveBootcampLandingPage.jsx'));
-const OffensiveMasteryLandingPage = React.lazy(() => import('@/pages/OffensiveMasteryLandingPage.jsx'));
-const SpecializedCoursesLandingPage = React.lazy(() => import('@/pages/SpecializedCoursesLandingPage.jsx'));
-const TechnologyTrainingLandingPage = React.lazy(() => import('@/pages/TechnologyTrainingLandingPage.jsx'));
+// Landing pages archived - content moved to Events & Batches and Premium Courses
 const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrainingLandingPage.jsx'));
 // Module pages archived - focusing on premium courses only
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
@@ -63,12 +58,7 @@ export default function App() {
         home: '/',
         defensiveBootcamp: '/bootcamp/defensive',
         offensiveBootcamp: '/bootcamp/offensive',
-        defensiveBootcampLanding: '/defensive-security-bootcamp',
-        defensiveMastery: '/defensive-security-mastery',
-        offensiveBootcampLanding: '/ethical-hacking-bootcamp',
-        offensiveMastery: '/offensive-security-mastery',
-        specializedCourses: '/specialized-courses',
-        technologyTraining: '/technology-training',
+        // Landing pages archived - content moved to Events & Batches
         collegeTraining: '/college-bulk-training',
         'upcoming-batches': '/upcoming-batches',
         'events-batches': '/events-batches',
@@ -97,12 +87,7 @@ export default function App() {
         '/': 'home',
         '/bootcamp/defensive': 'defensiveBootcamp',
         '/bootcamp/offensive': 'offensiveBootcamp',
-        '/defensive-security-bootcamp': 'defensiveBootcampLanding',
-        '/defensive-security-mastery': 'defensiveMastery',
-        '/ethical-hacking-bootcamp': 'offensiveBootcampLanding',
-        '/offensive-security-mastery': 'offensiveMastery',
-        '/specialized-courses': 'specializedCourses',
-        '/technology-training': 'technologyTraining',
+        // Landing pages archived - redirecting to events-batches
         '/college-bulk-training': 'collegeTraining',
         '/upcoming-batches': 'upcoming-batches',
         '/events-batches': 'events-batches',
@@ -172,12 +157,13 @@ export default function App() {
                             <Route path="/workshop" element={<Navigate to="/events-batches" replace />} />
                             <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
                             <Route path="/bootcamp/offensive" element={<BootcampPage onNavigate={go} type="offensive" />} />
-                            <Route path="/defensive-security-bootcamp" element={<DefensiveBootcampLandingPage onNavigate={go} />} />
-                            <Route path="/defensive-security-mastery" element={<DefensiveMasteryLandingPage onNavigate={go} />} />
-                            <Route path="/ethical-hacking-bootcamp" element={<OffensiveBootcampLandingPage onNavigate={go} />} />
-                            <Route path="/offensive-security-mastery" element={<OffensiveMasteryLandingPage onNavigate={go} />} />
-                            <Route path="/specialized-courses" element={<SpecializedCoursesLandingPage onNavigate={go} />} />
-                            <Route path="/technology-training" element={<TechnologyTrainingLandingPage onNavigate={go} />} />
+                            {/* Landing pages archived - redirect to events-batches */}
+                            <Route path="/defensive-security-bootcamp" element={<Navigate to="/events-batches" replace />} />
+                            <Route path="/defensive-security-mastery" element={<Navigate to="/" replace />} />
+                            <Route path="/ethical-hacking-bootcamp" element={<Navigate to="/events-batches" replace />} />
+                            <Route path="/offensive-security-mastery" element={<Navigate to="/" replace />} />
+                            <Route path="/specialized-courses" element={<Navigate to="/" replace />} />
+                            <Route path="/technology-training" element={<Navigate to="/" replace />} />
                             <Route path="/college-bulk-training" element={<CollegeTrainingLandingPage onNavigate={go} />} />
                             <Route path="/events-batches" element={<EventsBatchesPage onNavigate={go} />} />
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
