@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
@@ -20,6 +20,9 @@ import {
 import WhatsAppContactButton from './WhatsAppContactButton.jsx';
 import UPIQRCode from './UPIQRCode.jsx';
 import siteConfig from '../config/site.config.js';
+import { useAuth } from '@/context/AuthContext.jsx';
+import { enrollStudentInCourse } from '@/services/studentManagementService.js';
+import { enrollStudent } from '@/services/enrollmentService.js';
 
 /**
  * Modern Enrollment Modal - Redesigned for better UX
@@ -30,15 +33,23 @@ export default function ModernEnrollmentModal({
   onClose,
   courseData
 }) {
-  const [step, setStep] = useState(1); // 1: Course Info, 2: Contact Options, 3: Form
+  const { user, loading: authLoading } = useAuth();
+
+  const [step, setStep] = useState(1); // 1: Course Info, 2: Contact Options, 3: Form, 4: Payment
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     preferredContact: 'whatsapp', // whatsapp, phone, email
     timePreference: 'morning', // morning, afternoon, evening
-    message: ''
+    message: '',
+    courseId: courseData?.courseId || courseData?.id || null,
+    courseName: courseData?.title || ''
   });
+
+  const [paymentMethod, setPaymentMethod] = useState('upi'); // upi | razorpay
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [enrollSuccess, setEnrollSuccess] = useState(null);
 
   const {
     title = 'Course',
@@ -49,26 +60,62 @@ export default function ModernEnrollmentModal({
     features = [],
   } = courseData || {};
 
+  // Prefill form when user is logged in or when courseData changes
+  useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.displayName || prev.name || '',
+        email: user.email || prev.email || '',
+        phone: user.phoneNumber || prev.phone || '',
+        courseId: courseData?.courseId || courseData?.id || prev.courseId,
+        courseName: courseData?.title || prev.courseName
+      }));
+    } else {
+      // If courseData provided (clicked from course card), ensure course fields set for guests
+      setFormData(prev => ({
+        ...prev,
+        courseId: courseData?.courseId || courseData?.id || prev.courseId,
+        courseName: courseData?.title || prev.courseName
+      }));
+    }
+  }, [user, courseData]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    // If user is logged in, use enrollStudent API directly (fast-path)
+    const enrollmentPayload = {
+      courseId: formData.courseId,
+      courseName: formData.courseName || title,
+      studentName: formData.name,
+      studentEmail: formData.email,
+      studentPhone: formData.phone,
+      contactMethod: formData.preferredContact,
+      message: formData.message
+    };
 
-    // Create WhatsApp message with form data
-    const message = `
-🎯 *Course Enrollment Inquiry*
+    const doEnrollment = async () => {
+      setIsProcessing(true);
+      try {
+        if (user) {
+          // server-side enrollment for logged-in user
+          const res = await enrollStudentInCourse({ ...enrollmentPayload, studentId: user.uid });
+          setEnrollSuccess(res);
+          // Optionally refresh access control elsewhere
+        } else {
+          // For guest, create a lead/enrollment record (non-verified) using enrollStudent
+          const res = await enrollStudent(enrollmentPayload);
+          setEnrollSuccess(res);
+        }
+      } catch (err) {
+        console.error('Enrollment failed', err);
+        setEnrollSuccess({ success: false, error: err.message || String(err) });
+      } finally {
+        setIsProcessing(false);
+      }
+    };
 
-*Course:* ${title}
-*Name:* ${formData.name}
-*Email:* ${formData.email}
-*Phone:* ${formData.phone}
-*Preferred Contact:* ${formData.preferredContact}
-*Best Time to Call:* ${formData.timePreference}
-
-*Message:* ${formData.message || 'I would like to enroll in this course.'}
-`;
-
-    const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    onClose();
+    doEnrollment();
   };
 
   // Generate UPI payment URL
@@ -342,6 +389,19 @@ export default function ModernEnrollmentModal({
                     </div>
                   </div>
 
+                  {/* If user is not logged in show a compact enroll CTA + payment method selector */}
+                  {!user && (
+                    <div className="bg-slate-800 rounded-xl p-4">
+                      <h4 className="text-sm text-slate-300 mb-2">Choose Payment Method</h4>
+                      <div className="flex gap-2">
+                        <button type="button" onClick={() => setPaymentMethod('upi')} className={`py-2 px-3 rounded-lg ${paymentMethod === 'upi' ? 'bg-green-600 text-white' : 'bg-slate-700 text-slate-300'}`}>UPI / PayTM QR</button>
+                        {import.meta.env.VITE_RAZORPAY_KEY_ID && (
+                          <button type="button" onClick={() => setPaymentMethod('razorpay')} className={`py-2 px-3 rounded-lg ${paymentMethod === 'razorpay' ? 'bg-indigo-600 text-white' : 'bg-slate-700 text-slate-300'}`}>Razorpay</button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-slate-300 mb-2">
@@ -397,10 +457,15 @@ export default function ModernEnrollmentModal({
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                      disabled={isProcessing}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
                     >
-                      <MessageCircle className="w-5 h-5" />
-                      Send via WhatsApp
+                      {isProcessing ? 'Processing...' : (
+                        <>
+                          <MessageCircle className="w-5 h-5" />
+                          {user ? 'Enroll Now' : 'Request & Enroll'}
+                        </>
+                      )}
                     </button>
                   </div>
                 </form>
@@ -447,24 +512,111 @@ export default function ModernEnrollmentModal({
                   </div>
                 </div>
 
-                {/* UPI QR Code */}
-                <div className="bg-white rounded-xl p-6 text-center">
-                  <UPIQRCode
-                    upiUrl={generateUPIUrl(
-                      parseInt(price.replace(/₹|,/g, '')),
-                      title
-                    )}
-                    size={200}
-                  />
-                  <div className="mt-4 text-center">
-                    <p className="text-slate-600 text-sm mb-2">UPI ID:</p>
-                    <div className="bg-slate-100 rounded-lg p-3">
-                      <code className="text-slate-800 text-sm font-mono break-all">
-                        {siteConfig.upiId}
-                      </code>
+                {/* Payment Method UI */}
+                {paymentMethod === 'upi' && (
+                  <div className="bg-white rounded-xl p-6 text-center">
+                    <UPIQRCode
+                      upiUrl={generateUPIUrl(
+                        parseInt(String(price).replace(/₹|,/g, '')) || 0,
+                        title
+                      )}
+                      size={200}
+                    />
+                    <div className="mt-4 text-center">
+                      <p className="text-slate-600 text-sm mb-2">UPI ID:</p>
+                      <div className="bg-slate-100 rounded-lg p-3">
+                        <code className="text-slate-800 text-sm font-mono break-all">
+                          {siteConfig.upiId}
+                        </code>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
+
+                {paymentMethod === 'razorpay' && import.meta.env.VITE_RAZORPAY_KEY_ID && (
+                  <div className="bg-white rounded-xl p-6 text-center">
+                    <h4 className="text-lg font-semibold mb-2">Razorpay Checkout</h4>
+                    <p className="text-slate-500 mb-4">Secure card/UPI checkout using Razorpay</p>
+                    <button
+                      onClick={async () => {
+                        // Dynamically load Razorpay script and open checkout
+                        setIsProcessing(true);
+                        try {
+                          if (!window.Razorpay) {
+                            await new Promise((resolve, reject) => {
+                              const s = document.createElement('script');
+                              s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                              s.onload = resolve;
+                              s.onerror = reject;
+                              document.head.appendChild(s);
+                            });
+                          }
+
+                          // Create order via enhancedPaymentService or backend - simplified here
+                          // For real integration call backend endpoint to create Razorpay orderId
+                          const amount = parseInt(String(price).replace(/₹|,/g, '')) || 0;
+                          // Create server-side order first
+                          const orderResp = await fetch('/.netlify/functions/razorpay-create-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              amount,
+                              currency: 'INR',
+                              receipt: `enroll_${Date.now()}`,
+                              notes: { courseId: formData.courseId, courseName: formData.courseName },
+                              customer: { email: formData.email, phone: formData.phone }
+                            })
+                          });
+                          const orderData = await orderResp.json();
+                          if (!orderResp.ok) throw new Error(orderData.error || 'Failed to create order');
+
+                          const options = {
+                            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+                            amount: orderData.amount,
+                            order_id: orderData.id,
+                            name: siteConfig.siteName || 'Course Enrollment',
+                            description: title,
+                            handler: async function (response) {
+                              // response.razorpay_payment_id
+                              try {
+                                await enrollStudentInCourse({
+                                  courseId: formData.courseId,
+                                  courseName: formData.courseName || title,
+                                  studentName: formData.name,
+                                  studentEmail: formData.email,
+                                  studentPhone: formData.phone,
+                                  paymentMethod: 'razorpay',
+                                  transactionId: response.razorpay_payment_id,
+                                  orderId: orderData.id,
+                                  studentId: user?.uid || null
+                                });
+                                setEnrollSuccess({ success: true, transactionId: response.razorpay_payment_id });
+                              } catch (err) {
+                                console.error('Enrollment after razorpay failed', err);
+                                setEnrollSuccess({ success: false, error: String(err) });
+                              }
+                            },
+                            prefill: {
+                              name: formData.name,
+                              email: formData.email,
+                              contact: formData.phone
+                            }
+                          };
+
+                          const rzp = new window.Razorpay(options);
+                          rzp.open();
+                        } catch (err) {
+                          console.error('Razorpay failed to load or open', err);
+                        } finally {
+                          setIsProcessing(false);
+                        }
+                      }}
+                      className="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-lg"
+                    >
+                      {isProcessing ? 'Opening...' : 'Open Razorpay Checkout'}
+                    </button>
+                  </div>
+                )}
 
                 {/* Payment Instructions */}
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
@@ -491,27 +643,32 @@ export default function ModernEnrollmentModal({
                   >
                     Back
                   </button>
-                  <button
-                    onClick={() => {
-                      const paymentConfirmMessage = `
-🎉 *Payment Completed for ${title}*
 
-💰 *Amount Paid:* ${price}
-📝 *Course:* ${title}
-⏰ *Batch Starts:* ${batchInfo.date}
+                  {paymentMethod === 'upi' && (
+                    <button
+                      onClick={() => {
+                        const paymentConfirmMessage = `\n🎉 *Payment Completed for ${title}*\n\n💰 *Amount Paid:* ${price}\n📝 *Course:* ${title}\n\nHi! I have completed the payment for the above course. Please confirm my enrollment and provide access details.`;
+                        const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(paymentConfirmMessage)}`;
+                        window.open(whatsappUrl, '_blank');
+                      }}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                      Confirm Payment (I paid via UPI)
+                    </button>
+                  )}
 
-Hi! I have completed the payment for the above course. Please confirm my enrollment and provide access details.
-
-Thank you!`;
-
-                      const whatsappUrl = `https://wa.me/919160813700?text=${encodeURIComponent(paymentConfirmMessage)}`;
-                      window.open(whatsappUrl, '_blank');
-                    }}
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    Confirm Payment
-                  </button>
+                  {paymentMethod === 'razorpay' && (
+                    <button
+                      onClick={() => {
+                        // Open Razorpay button above handles flow; here just show a help action
+                        setPaymentMethod('razorpay');
+                      }}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors"
+                    >
+                      Open Razorpay Checkout
+                    </button>
+                  )}
                 </div>
               </motion.div>
             )}

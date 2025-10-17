@@ -20,12 +20,14 @@ The Access Control System has been successfully implemented, providing comprehen
 - **Authentication Integration**: Firebase authentication integration
 - **HOC Protection**: Higher-order component for content protection
 
-### 3. **Enhanced Enrollment Button** (`src/components/EnhancedEnrollmentButton.jsx`)
-- **Smart Enrollment**: Handles free and paid course enrollment
-- **Payment Integration**: Ready for Razorpay/PhonePe integration
-- **Status Management**: Real-time enrollment status updates
-- **User Feedback**: Clear success/error messaging
-- **UI States**: Loading, success, and error states
+### 3. Enrollment UI & Buttons
+The legacy `EnhancedEnrollmentButton.jsx` has been retired. Enrollment actions now use the centralized `ModernEnrollmentModal` and enrollment services:
+
+- `src/components/ModernEnrollmentModal.jsx` — multi-step enrollment and payment UI (UPI, PhonePe, manual verification)
+- `src/services/enrollmentService.js` — handles enrollment creation, verification and access grants
+- `src/services/enhancedPaymentService.js` — payment routing and processing logic
+
+These changes centralize enrollment logic and simplify integration with the Access Control Context.
 
 ### 4. **Secure Content Viewer Updates** (`src/components/SecureContentViewer.jsx`)
 - **Access Verification**: Enrollment-based content access
@@ -162,13 +164,13 @@ Progress Tracking (Firebase/Local Storage)
 
 ## 🎉 **Success Metrics**
 
-✅ **Complete Access Control**: Only enrolled students can access course content  
-✅ **Real-time Enrollment**: Instant access upon successful enrollment  
-✅ **Secure Content Delivery**: Google Cloud Storage with signed URLs  
-✅ **Progress Tracking**: Real-time lesson progress and completion tracking  
-✅ **Payment Integration**: Ready for production payment gateway integration  
-✅ **Error Handling**: Comprehensive error management and user feedback  
-✅ **Performance Optimized**: Cached access control for smooth user experience  
+✅ **Complete Access Control**: Only enrolled students can access course content
+✅ **Real-time Enrollment**: Instant access upon successful enrollment
+✅ **Secure Content Delivery**: Google Cloud Storage with signed URLs
+✅ **Progress Tracking**: Real-time lesson progress and completion tracking
+✅ **Payment Integration**: Ready for production payment gateway integration
+✅ **Error Handling**: Comprehensive error management and user feedback
+✅ **Performance Optimized**: Cached access control for smooth user experience
 
 ## 🔮 **Next Steps**
 

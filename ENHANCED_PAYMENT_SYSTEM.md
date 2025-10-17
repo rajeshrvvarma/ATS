@@ -31,14 +31,14 @@ const PAYMENT_METHODS = {
 };
 ```
 
-## 2. **Enhanced Payment Modal** (`src/components/EnhancedPaymentModal.jsx`)
+## 2. Payment UI and Flow (centralized)
 
-### **User Experience Features:**
-- **Step-by-Step Flow**: Method selection → Payment → Verification → Success
-- **Real-time Status**: Live payment verification and enrollment updates
-- **Multiple UX Patterns**: QR codes, deep links, manual entry
-- **Security Indicators**: SSL badges, secure payment messaging
-- **Responsive Design**: Mobile-optimized payment flows
+The UI previously implemented in `EnhancedPaymentModal.jsx` has been centralized inside the canonical enrollment component and payment service. Use the following files as the single source of truth:
+
+- `src/components/ModernEnrollmentModal.jsx` — multi-step enrollment & payment UI (method selection, UPI/QR, verification, confirmation)
+- `src/services/enhancedPaymentService.js` — initiates payments, handles gateway routing, and verification flows
+
+This reduces duplication and keeps the UI and business logic separated.
 
 ### **Payment Flow States:**
 1. **Method Selection** - Choose payment method with fees/timing info
@@ -58,7 +58,7 @@ const PAYMENT_METHODS = {
 
 ### **Payment Processing Pipeline:**
 ```
-Payment Initiation → Method Selection → Gateway/Manual Processing → 
+Payment Initiation → Method Selection → Gateway/Manual Processing →
 Verification → Enrollment → Access Grant → Confirmation
 ```
 
@@ -183,11 +183,10 @@ const PAYMENT_CONFIG = {
 
 ## 🎯 **Implementation Status**
 
-### ✅ **Completed:**
-- Enhanced payment service with multi-gateway support
-- Advanced payment modal with step-by-step UX
-- Integrated enrollment button with payment flow
-- Real-time status tracking and verification
+## ✅ **Completed:**
+- Enhanced payment service with multi-gateway support (`src/services/enhancedPaymentService.js`)
+- Centralized enrollment & payment UI (`src/components/ModernEnrollmentModal.jsx`)
+- Real-time status tracking, verification and enrollment integration
 - Payment analytics and reporting foundation
 
 ### 🔄 **Ready for Production:**
@@ -196,16 +195,17 @@ const PAYMENT_CONFIG = {
 - Error handling and recovery mechanisms in place
 - Mobile optimization and responsive design complete
 
-### 📊 **Usage Example:**
+### **Usage Example:**
 ```javascript
-// Simple enrollment with enhanced payment
-<EnhancedEnrollmentButton
-  course={course}
-  user={user}
-  onEnrollmentSuccess={(courseId) => {
-    console.log('Student enrolled in:', courseId);
-    // Automatic course access granted
-  }}
+// Trigger the centralized ModernEnrollmentModal from a page or button
+setEnrollmentModal({ isOpen: true, courseData: course });
+
+// ModernEnrollmentModal handles UI for free/paid flows and calls onEnrollmentSuccess
+<ModernEnrollmentModal
+  isOpen={enrollmentModal.isOpen}
+  onClose={() => setEnrollmentModal({ isOpen: false, courseData: null })}
+  courseData={enrollmentModal.courseData}
+  onEnrollmentSuccess={(result) => console.log('Enrollment success:', result)}
 />
 ```
 

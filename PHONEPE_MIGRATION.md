@@ -19,10 +19,11 @@ This document summarizes the migration from Razorpay to PhonePe payment integrat
 - **Removed**: `src/services/razorpay.js`
 
 #### Payment Components
-- **Modified**: `src/components/EnhancedEnrollmentModal.jsx`
-  - Default payment method changed to PhonePe
-  - Implements redirect-based payment flow
-  - Updated UI labels and instructions
+Note: legacy `EnhancedEnrollmentModal.jsx` has been replaced by the canonical `ModernEnrollmentModal.jsx`.
+The modern modal consolidates enrollment and payment UI, including UPI/PhonePe steps and deep-link/QR support.
+Files to inspect:
+- `src/components/ModernEnrollmentModal.jsx` (canonical enrollment UI)
+- `src/components/UPIQRCode.jsx` (UPI QR rendering helper)
 
 #### Payment Pages
 - **Modified**: `src/pages/PaymentSuccessPage.jsx`

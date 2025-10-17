@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
-// Legacy enhanced modal kept as fallback - prefer ModernEnrollmentModal
-// import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';

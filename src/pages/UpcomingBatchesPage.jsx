@@ -38,8 +38,7 @@ import {
   Zap
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
-// Legacy enhanced modal kept as fallback - prefer ModernEnrollmentModal
-// import EnhancedEnrollmentModal from '@/components/EnhancedEnrollmentModal.jsx';
+// ModernEnrollmentModal used for enrollment flows
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 import EventDetailModal from '@/components/EventDetailModal.jsx';
 import AdvancedTabs from '@/components/AdvancedTabs.jsx';
@@ -640,7 +639,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
         </section>
       </div>
 
-      {/* Modern Enrollment Modal (replaces EnhancedEnrollmentModal) */}
+  {/* Modern Enrollment Modal */}
       <ModernEnrollmentModal
         isOpen={enrollmentModal.isOpen}
         onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
