@@ -49,8 +49,8 @@ export default function Header({ onNavigate, currentPage }) {
         foundation: {
             title: '🎯 Foundation Programs (₹99)',
             courses: [
-                { name: 'Cybersecurity Fundamentals', action: () => onNavigate('cybersecurityFundamentals') },
-                { name: 'Technology Overview', action: () => onNavigate('technologyOverview') }
+                { name: 'Cybersecurity Fundamentals', action: () => onNavigate('events-batches') },
+                { name: 'Technology Overview', action: () => onNavigate('events-batches') }
             ]
         },
         premium: {

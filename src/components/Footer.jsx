@@ -94,20 +94,20 @@ export default function Footer({ onNavigate }) {
                     <div>
                         <h4 className="font-bold text-lg text-white mb-6 flex items-center">
                             <div className="w-1 h-6 bg-blue-500 mr-3"></div>
-                            Programs
+                            Training Programs
                         </h4>
                         <ul className="space-y-3">
                             <li>
-                                <button onClick={() => onNavigate('defensiveMastery')} className="hover:text-blue-400 transition-colors duration-200 text-left">Defensive Security</button>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Cybersecurity Academy</button>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('offensiveMastery')} className="hover:text-blue-400 transition-colors duration-200 text-left">Offensive Security</button>
+                                <button onClick={() => onNavigate('technologyTraining')} className="hover:text-blue-400 transition-colors duration-200 text-left">Technology Institute</button>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('specializedCourses')} className="hover:text-blue-400 transition-colors duration-200 text-left">Cloud Security</button>
+                                <button onClick={() => onNavigate('events-batches')} className="hover:text-blue-400 transition-colors duration-200 text-left">Events & Batches</button>
                             </li>
                             <li>
-                                <button onClick={() => onNavigate('workshop')} className="hover:text-blue-400 transition-colors duration-200 text-left">Free Workshop</button>
+                                <button onClick={() => onNavigate('home')} className="hover:text-blue-400 transition-colors duration-200 text-left">Premium Courses (₹20K)</button>
                             </li>
                             <li>
                                 <button onClick={() => onNavigate('video-learning')} className="hover:text-blue-400 transition-colors duration-200 text-left">Learning Portal</button>
