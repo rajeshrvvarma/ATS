@@ -14,10 +14,28 @@ let _initialized = false;
 function lazyInit() {
   if (_initialized) return;
   if (SERVICE_ACCOUNT) {
-    initializeApp({ credential: cert(SERVICE_ACCOUNT), storageBucket: BUCKET });
-    storage = new Storage({ credentials: SERVICE_ACCOUNT, projectId: SERVICE_ACCOUNT && SERVICE_ACCOUNT.project_id });
-    db = getFirestore();
-    authAdmin = getAuth();
+    try {
+      // only attempt to initialize with a service account that contains a valid-looking private_key
+      if (SERVICE_ACCOUNT.private_key && SERVICE_ACCOUNT.private_key.includes('BEGIN')) {
+        initializeApp({ credential: cert(SERVICE_ACCOUNT), storageBucket: BUCKET });
+        storage = new Storage({ credentials: SERVICE_ACCOUNT, projectId: SERVICE_ACCOUNT && SERVICE_ACCOUNT.project_id });
+        db = getFirestore();
+        authAdmin = getAuth();
+      } else {
+        // service account provided but private key looks fake; attempt to initialize default app for emulator use
+        console.warn('Service account present but missing valid private_key; attempting default initializeApp for emulator');
+        try {
+          try { initializeApp(); } catch (e) { /* ignore if already initialized */ }
+          db = getFirestore();
+          authAdmin = getAuth();
+          storage = new Storage();
+        } catch (e) {
+          console.warn('Failed to initialize emulator clients', e && e.message);
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to initialize admin SDK with provided service account, falling back to emulator mode', e && e.message);
+    }
   } else {
     // When running in emulator/test, initializeApp may be done externally or not needed.
     try {
@@ -45,11 +63,18 @@ exports.handler = async function (event) {
     if (!tokenMatch) return { statusCode: 401, body: 'invalid authorization format' };
     const idToken = tokenMatch[1];
 
-    // verify ID token
+    // verify ID token (allow tests to override by setting module.exports.__verifyIdToken)
     lazyInit();
     let decoded;
     try {
-      decoded = await authAdmin.verifyIdToken(idToken);
+      if (typeof module.exports.__verifyIdToken === 'function') {
+        decoded = await module.exports.__verifyIdToken(idToken);
+      } else if (authAdmin && typeof authAdmin.verifyIdToken === 'function') {
+        decoded = await authAdmin.verifyIdToken(idToken);
+      } else {
+        console.warn('No auth verifier available - rejecting token');
+        return { statusCode: 401, body: 'invalid token' };
+      }
     } catch (err) {
       console.error('Token verify failed', err);
       return { statusCode: 401, body: 'invalid token' };
@@ -87,6 +112,14 @@ exports.handler = async function (event) {
 
     // log the allowed request
     await db.collection('signed_download_logs').add({ uid, path, createdAt: new Date(), blocked: false });
+
+    // If running against storage emulator, prefer returning an emulator-style download URL
+    if (process.env.STORAGE_EMULATOR_HOST || process.env.FIREBASE_STORAGE_EMULATOR_HOST) {
+      const host = process.env.STORAGE_EMULATOR_HOST || process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+      const base = host.replace(/https?:\/\//, 'http://');
+      const emulatorUrl = `${base}/v0/b/${encodeURIComponent(process.env.FIREBASE_STORAGE_BUCKET || 'test-bucket')}/o/${encodeURIComponent(path)}?alt=media`;
+      return { statusCode: 200, body: JSON.stringify({ url: emulatorUrl }) };
+    }
 
     // If storage client isn't initialized, construct an emulator-style download URL
     if (!storage || !BUCKET) {
