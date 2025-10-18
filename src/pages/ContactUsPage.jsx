@@ -55,7 +55,6 @@ export default function ContactUsPage({ onNavigate }) {
             }
         } catch (error) {
             console.error('Contact form submission error:', error);
-            console.warn('Failed to send message. Please try again or contact us directly.');
         } finally {
             setSubmitting(false);
         }
