@@ -567,7 +567,7 @@ const DefensiveMasteryLandingPage = () => {
 
               <div className="text-center text-sm text-gray-400">
                 <p>🔒 Secure payment • 💯 Money-back guarantee • 🎯 Job placement guarantee</p>
-                <p>📧 You'll receive priority confirmation and mentor assignment details</p>
+                <p>📧 You will receive priority confirmation and mentor assignment details</p>
               </div>
             </form>
           </div>

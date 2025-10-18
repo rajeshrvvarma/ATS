@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext.jsx';
 import { getFirestore, doc, getDoc, updateDoc, collection, getDocs } from 'firebase/firestore';
 import app from '@/config/firebase';
 
 const db = getFirestore(app);
 
 export default function Profile({ onNavigate }) {
-  const { user } = useAuth();
+  // AuthContext was removed from the project. Use a local placeholder
+  // so the page does not import the deleted module. This keeps the
+  // component buildable; when no user is present the form is disabled.
+  const user = null;
   const [profile, setProfile] = useState(null);
   const [adminNotes, setAdminNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -42,6 +44,11 @@ export default function Profile({ onNavigate }) {
     setSaving(true);
     setError('');
     setSuccess('');
+    if (!user?.uid) {
+      setError('You are not logged in.');
+      setSaving(false);
+      return;
+    }
     try {
       const ref = doc(db, 'users', user.uid);
       await updateDoc(ref, profile);

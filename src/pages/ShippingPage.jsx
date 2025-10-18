@@ -170,7 +170,7 @@ export default function ShippingPage({ onNavigate }) {
                                 </div>
                                 <h3 className="font-semibold text-white mb-2">Payment Confirmation</h3>
                                 <p className="text-slate-300 text-sm">
-                                    Once payment is confirmed, you'll receive an immediate email confirmation with next steps.
+                                    Once payment is confirmed, you will receive an immediate email confirmation with next steps.
                                 </p>
                             </div>
 

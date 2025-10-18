@@ -157,7 +157,7 @@ export default function Footer({ onNavigate }) {
                         </div>
                         <p className="text-slate-400 max-w-2xl mx-auto leading-relaxed">
                             Empowering careers through professional cybersecurity and technology training.
-                            Building tomorrow's digital defenders and innovators.
+                            Building tomorrow is digital defenders and innovators.
                         </p>
                     </div>
 

@@ -74,7 +74,7 @@ const CoursePageTemplate = ({ courseData }) => {
 
               {/* Key Benefits */}
               <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4 text-slate-200">What You'll Master:</h3>
+                <h3 className="text-lg font-semibold mb-4 text-slate-200">What You will Master:</h3>
                 <ul className="space-y-2">
                   {keyBenefits.map((benefit, index) => (
                     <li key={index} className="flex items-center text-slate-200">

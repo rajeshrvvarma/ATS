@@ -1096,7 +1096,7 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsAdvisorOpen(true)}
+                onClick={() => window.open('https://wa.me/919160813700?text=' + encodeURIComponent('Hi, I need career guidance for technology programs.'), '_blank')}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
               >
                 Get Career Guidance

@@ -9,10 +9,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 export default function WhatsAppWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [showQuickOptions, setShowQuickOptions] = useState(false);
-  
+
   // Your WhatsApp Business number (from ContactUsPage.jsx)
   const whatsappNumber = "919160813700";
-  
+
   // Pre-defined message templates for different inquiries
   const messageTemplates = {
     courseInquiry: "Hi! I'm interested in learning more about your cybersecurity courses. Can you help me choose the right program?",
@@ -70,12 +70,13 @@ export default function WhatsAppWidget() {
     window.open(whatsappURL, '_blank');
     setIsOpen(false);
     setShowQuickOptions(false);
-    
+
     // Track usage analytics (optional)
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'whatsapp_click', {
-        'event_category': 'engagement',
-        'event_label': action.id
+    // Track usage analytics (optional) - guard against missing global gtag
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', 'whatsapp_click', {
+        event_category: 'engagement',
+        event_label: action.id
       });
     }
   };
@@ -85,13 +86,13 @@ export default function WhatsAppWidget() {
     // Use matchMedia to avoid early layout calculation
     const isMobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches;
     const hasSeenWidget = localStorage.getItem('whatsapp_widget_seen');
-    
+
     if (isMobile && !hasSeenWidget) {
       const timer = setTimeout(() => {
         setShowQuickOptions(true);
         localStorage.setItem('whatsapp_widget_seen', 'true');
       }, 3000);
-      
+
       return () => clearTimeout(timer);
     }
   }, []);
@@ -125,7 +126,7 @@ export default function WhatsAppWidget() {
                   <X className="w-4 h-4" />
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-2 gap-2">
                 {quickActions.map((action) => {
                   const IconComponent = action.icon;
@@ -144,7 +145,7 @@ export default function WhatsAppWidget() {
                   );
                 })}
               </div>
-              
+
               <button
                 onClick={() => window.open(generateWhatsAppURL(), '_blank')}
                 className="w-full mt-3 bg-green-500 hover:bg-green-600 text-white rounded-xl py-2 px-4 text-sm font-medium transition-colors duration-200"
@@ -164,10 +165,10 @@ export default function WhatsAppWidget() {
           title="Chat with us on WhatsApp"
         >
           <MessageCircle className="w-6 h-6" />
-          
+
           {/* Pulsing notification dot */}
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-          
+
           {/* Hover tooltip */}
           <div className="absolute bottom-full right-0 mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
             <div className="bg-slate-800 text-white text-xs rounded-lg py-1 px-2 whitespace-nowrap">

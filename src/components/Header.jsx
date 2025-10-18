@@ -3,7 +3,6 @@ import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Clou
 // Removed framer-motion to eliminate header animations
 // NotificationBell removed
 import UserMenu from '@/components/UserMenu.jsx';
-import { useAuth } from '@/context/AuthContext.jsx';
 
 // Clean header background - no gradients
 const headerBackground = 'bg-slate-900';
@@ -14,8 +13,10 @@ export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
 
-    // Get authentication state
-    const { user, logout } = useAuth();
+    // Auth context was removed; avoid importing missing file.
+    // Use a local placeholder so header renders without auth.
+    const user = null;
+    const logout = () => {};
 
     // Centralized pricing hook removed
 

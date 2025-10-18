@@ -717,7 +717,7 @@ const SpecializedCoursesLandingPage = () => {
 
                   {/* Features */}
                   <div className="mb-6">
-                    <h4 className="font-semibold text-gray-300 mb-3">What You'll Learn:</h4>
+                    <h4 className="font-semibold text-gray-300 mb-3">What You will Learn:</h4>
                     <ul className="space-y-2">
                       {course.features.slice(0, 3).map((feature, idx) => (
                         <li key={idx} className="flex items-start text-gray-400 text-sm">

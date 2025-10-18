@@ -405,7 +405,7 @@ const DefensiveBootcampLandingPage = () => {
 
               <div className="text-center text-sm text-gray-400">
                 <p>🔒 Secure payment • 💯 Money-back guarantee if not satisfied</p>
-                <p>📧 You'll receive confirmation email with batch details</p>
+                <p>📧 You will receive confirmation email with batch details</p>
               </div>
             </form>
           </div>
@@ -415,7 +415,7 @@ const DefensiveBootcampLandingPage = () => {
       {/* Footer CTA */}
       <div className="bg-slate-900 py-12">
         <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl font-bold mb-4">Don't Miss This Opportunity!</h2>
+          <h2 className="text-3xl font-bold mb-4">Do not Miss This Opportunity!</h2>
           <p className="text-xl text-gray-200 mb-6">
             Only {seatsLeft} seats left • Registration closes in {timeLeft.days} days
           </p>

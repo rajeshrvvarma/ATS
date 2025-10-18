@@ -332,7 +332,7 @@ const OffensiveBootcampLandingPage = () => {
       {/* Tools & Technologies */}
       <div className="bg-slate-900 py-16">
         <div className="container mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">Tools You'll Master</h2>
+          <h2 className="text-4xl font-bold text-center mb-12">Tools You will Master</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
             {[
               'Kali Linux', 'Metasploit', 'Burp Suite', 'Nmap',

@@ -65,9 +65,9 @@ export default function BootcampPage({ onNavigate, type }) {
                             </div>
                          </div>
 
-                         {submitted && (
-                           <div className="mb-3 p-3 rounded bg-green-900/30 border border-green-700 text-green-200 text-sm">We'll contact you with more details shortly.</div>
-                         )}
+                                                 {submitted && (
+                                                     <div className="mb-3 p-3 rounded bg-green-900/30 border border-green-700 text-green-200 text-sm">We will contact you with more details shortly.</div>
+                                                 )}
                          <form onSubmit={handleSubmit} className="space-y-4">
                             <div><label htmlFor="bc-name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label><input type="text" id="bc-name" name="name" required value={formData.name} onChange={handleChange} className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div>
                             <div><label htmlFor="bc-email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" id="bc-email" name="email" required value={formData.email} onChange={handleChange} className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div>
@@ -92,7 +92,7 @@ export default function BootcampPage({ onNavigate, type }) {
                         </form>
                     </div>
                     <div className="text-slate-300">
-                        <h3 className="text-2xl font-bold text-white mb-4">What You'll Achieve in 7 Days:</h3>
+                        <h3 className="text-2xl font-bold text-white mb-4">What You will Achieve in 7 Days:</h3>
                         <ul className="space-y-3">{current.dailyPlan.map((day, index) => <li key={index} className="flex items-start"><Target size={16} className={`text-${current.accentColor}-400 mr-3 mt-1 flex-shrink-0`} /><span><span className="font-bold text-white">Day {index + 1}:</span> {day}</span></li>)}</ul>
                     </div>
                 </div>

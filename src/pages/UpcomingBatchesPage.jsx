@@ -64,7 +64,26 @@ const EventsBatchesPage = ({ onNavigate }) => {
     const fetchEvents = async () => {
       try {
         setLoadingEvents(true);
-        const events = await getAllEvents();
+        let events = [];
+
+        // If a centralized getAllEvents function exists on the global scope, use it. Otherwise fallback to /modules.json
+        if (typeof globalThis.getAllEvents === 'function') {
+          events = await globalThis.getAllEvents();
+        } else {
+          try {
+            const resp = await fetch('/modules.json');
+            if (resp.ok) {
+              const data = await resp.json();
+              events = data.events || data.modules || [];
+            } else {
+              events = [];
+            }
+          } catch (fetchErr) {
+            console.warn('Could not fetch /modules.json fallback:', fetchErr);
+            events = [];
+          }
+        }
+
         setAllEvents(events);
       } catch (error) {
         console.error('Error fetching events:', error);
@@ -208,7 +227,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                     const isStartingSoon = daysUntilStart <= 7 && daysUntilStart > 0;
                     const hasStarted = daysUntilStart < 0;
                     const spotsLeft = batch.maxStudents - batch.currentEnrolled;
-                    // coursePrice removed - centralized pricing hook deleted
+                    // Pricing removed - centralized pricing hook deleted
 
                     return (
                       <motion.div
@@ -296,26 +315,11 @@ const EventsBatchesPage = ({ onNavigate }) => {
 
                           {/* Price & CTA */}
                           <div className="pt-4 border-t border-slate-700">
-                            <div className="flex items-center justify-between mb-3">
-                              <div>
-                                {pricingLoading ? (
-                                  <div className="text-lg font-bold text-blue-400">₹...</div>
-                                ) : coursePrice ? (
-                                  <>
-                                    <div className="text-2xl font-bold text-blue-400">
-                                      {/* price removed */}
-                                    </div>
-                                    {coursePrice.originalPrice !== coursePrice.finalPrice && (
-                                      <div className="text-xs text-slate-500 line-through">
-                                        {/* original price removed */}
-                                      </div>
-                                    )}
-                                  </>
-                                ) : (
-                                  <div className="text-lg font-bold text-blue-400">₹999</div>
-                                )}
+                              <div className="flex items-center justify-between mb-3">
+                                <div>
+                                  <div className="text-lg font-bold text-blue-400">Contact for pricing</div>
+                                </div>
                               </div>
-                            </div>
                             <div className="flex gap-2">
                               <button
                                 onClick={() => handleShowEventDetails(batch, 'batch')}
@@ -358,7 +362,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                   {bootcamps.map((camp, index) => {
                     const daysUntilStart = getDaysUntilStart(camp.startDate);
                     const spotsLeft = camp.maxStudents - camp.currentEnrolled;
-                    const coursePrice = pricing?.[camp.price];
+                    // Pricing lookup removed (pricing service/hook deleted)
 
                     return (
                       <motion.div
@@ -441,22 +445,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                           <div className="pt-4 border-t border-slate-700">
                             <div className="flex items-center justify-between mb-3">
                               <div>
-                                {pricingLoading ? (
-                                  <div className="text-lg font-bold text-blue-400">₹...</div>
-                                ) : coursePrice ? (
-                                  <>
-                                    <div className="text-2xl font-bold text-blue-400">
-                                      {/* price removed */}
-                                    </div>
-                                    {coursePrice.originalPrice !== coursePrice.finalPrice && (
-                                      <div className="text-xs text-slate-500 line-through">
-                                        {/* original price removed */}
-                                      </div>
-                                    )}
-                                  </>
-                                ) : (
-                                  <div className="text-lg font-bold text-blue-400">₹999</div>
-                                )}
+                                <div className="text-lg font-bold text-blue-400">Contact for pricing</div>
                               </div>
                             </div>
                             <div className="flex gap-2">

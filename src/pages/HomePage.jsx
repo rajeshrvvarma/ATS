@@ -84,7 +84,7 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
 
                                         {/* Features Preview */}
                                         <div className="mb-6">
-                                            <h4 className="text-white font-semibold mb-3">What You'll Learn:</h4>
+                                            <h4 className="text-white font-semibold mb-3">What You will Learn:</h4>
                                             <div className="space-y-2">
                                                 {course.features.map((feature, idx) => (
                                                     <div key={idx} className="flex items-center">
@@ -361,7 +361,7 @@ const Testimonials = () => {
                         transition={{ duration: 0.5 }}
                         className="bg-gradient-to-br from-slate-900/90 via-purple-900/20 to-blue-900/30 backdrop-blur-sm p-8 rounded-xl border border-purple-500/30 relative shadow-2xl hover:border-purple-400/50 transition-all duration-300"
                     >
-                        <p className="text-slate-300 italic mb-6 text-lg">"{current.quote}"</p>
+                        <p className="text-slate-300 italic mb-6 text-lg">&ldquo;{current.quote}&rdquo;</p>
                         <div className="flex items-center">
                             <img src={current.img} alt={current.name} className="w-12 h-12 rounded-full mr-4"/>
                             <div>
@@ -488,7 +488,7 @@ const Contact = ({ onNavigate }) => {
                                 <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
                                 <h3 className="text-2xl font-bold text-white mb-4">Thank You!</h3>
                                 <p className="text-slate-300">
-                                    We've received your message and will get back to you soon.
+                                    We have received your message and will get back to you soon.
                                 </p>
                             </div>
                         ) : (
@@ -645,16 +645,7 @@ const HomePage = ({ onNavigate }) => {
             <Testimonials />
             <Contact onNavigate={handleNavigate} />
 
-            <div className="fixed bottom-6 right-6 z-40">
-                <button
-                    onClick={() => setIsFaqBotOpen(true)}
-                    className="bg-sky-600 text-white rounded-full p-4 shadow-lg hover:bg-sky-500 transition-all duration-300 transform hover:scale-110"
-                    aria-label="Open AI Admissions Advisor"
-                >
-                    <MessageCircle size={28} />
-                </button>
-            </div>
-            <AiFaqBot isOpen={isFaqBotOpen} onClose={() => setIsFaqBotOpen(false)} />
+            {/* AI Admissions Advisor removed; use WhatsApp contact instead */}
             <ScrollNavigation />
 
             {/* WhatsApp Contact Button - Floating */}

@@ -367,7 +367,7 @@ export default function ContactUsPage({ onNavigate }) {
 
                         <div className="text-center mt-6">
                             <p className="text-slate-400 text-sm">
-                                Can't find what you're looking for?
+                                Cannot find what you are looking for?
                                 <button
                                     onClick={() => document.getElementById('message').focus()}
                                     className="text-sky-400 hover:text-sky-300 ml-1"
@@ -382,7 +382,7 @@ export default function ContactUsPage({ onNavigate }) {
                     <div className="bg-gradient-to-r from-green-600 to-teal-600 p-8 rounded-lg text-center">
                         <h2 className="text-2xl font-bold mb-4">Our Response Commitment</h2>
                         <p className="text-green-100 mb-6">
-                            We're committed to providing timely and helpful responses to all your queries.
+                            We are committed to providing timely and helpful responses to all your queries.
                         </p>
 
                         <div className="grid md:grid-cols-3 gap-4">

@@ -58,8 +58,8 @@ export default function CancellationRefundPage({ onNavigate }) {
     return (
         <div className="bg-slate-900 min-h-screen text-white">
             <div className="container mx-auto px-6 py-12 md:py-20">
-                <motion.button 
-                    onClick={() => onNavigate('home')} 
+                <motion.button
+                    onClick={() => onNavigate('home')}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="flex items-center text-white hover:text-slate-200 transition-colors mb-8"
@@ -86,7 +86,7 @@ export default function CancellationRefundPage({ onNavigate }) {
                             <RefreshCw size={24} className="mr-3 text-sky-400" />
                             Refund Timeline & Amounts
                         </h2>
-                        
+
                         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {refundTimeline.map((item, index) => {
                                 const IconComponent = item.icon;
@@ -96,7 +96,7 @@ export default function CancellationRefundPage({ onNavigate }) {
                                     orange: "bg-orange-600 text-orange-100 border-orange-500",
                                     red: "bg-red-600 text-red-100 border-red-500"
                                 };
-                                
+
                                 return (
                                     <div key={index} className={`p-6 rounded-lg border-2 ${colorClasses[item.color]}`}>
                                         <div className="text-center mb-4">
@@ -118,7 +118,7 @@ export default function CancellationRefundPage({ onNavigate }) {
                     <div className="grid lg:grid-cols-2 gap-8">
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6">How to Request a Refund</h2>
-                            
+
                             <div className="space-y-4">
                                 <div className="flex items-start">
                                     <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1">1</div>
@@ -127,7 +127,7 @@ export default function CancellationRefundPage({ onNavigate }) {
                                         <p className="text-slate-300 text-sm">Email us at <strong>refunds@agnidhra.com</strong> with your cancellation request.</p>
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex items-start">
                                     <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1">2</div>
                                     <div>
@@ -135,15 +135,15 @@ export default function CancellationRefundPage({ onNavigate }) {
                                         <p className="text-slate-300 text-sm">Include full name, course name, payment ID, and reason for cancellation.</p>
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex items-start">
                                     <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1">3</div>
                                     <div>
                                         <h4 className="font-semibold text-white mb-1">Await Confirmation</h4>
-                                        <p className="text-slate-300 text-sm">We'll review and confirm your refund eligibility within 48 hours.</p>
+                                        <p className="text-slate-300 text-sm">We will review and confirm your refund eligibility within 48 hours.</p>
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex items-start">
                                     <div className="bg-sky-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4 mt-1">4</div>
                                     <div>
@@ -156,7 +156,7 @@ export default function CancellationRefundPage({ onNavigate }) {
 
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6">Eligibility Criteria</h2>
-                            
+
                             <ul className="space-y-3">
                                 {eligibilityCriteria.map((criteria, index) => (
                                     <li key={index} className="flex items-start">
@@ -172,7 +172,7 @@ export default function CancellationRefundPage({ onNavigate }) {
                     <div className="grid lg:grid-cols-2 gap-8">
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6">Non-Refundable Items</h2>
-                            
+
                             <ul className="space-y-3">
                                 {nonRefundableItems.map((item, index) => (
                                     <li key={index} className="flex items-start">
@@ -185,18 +185,18 @@ export default function CancellationRefundPage({ onNavigate }) {
 
                         <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                             <h2 className="text-2xl font-bold text-white mb-6">Special Circumstances</h2>
-                            
+
                             <div className="space-y-4">
                                 <div className="p-4 bg-blue-900/30 rounded-lg border border-blue-700">
                                     <h4 className="font-semibold text-blue-300 mb-2">Medical Emergency</h4>
                                     <p className="text-slate-300 text-sm">Full refund available with valid medical documentation, regardless of timing.</p>
                                 </div>
-                                
+
                                 <div className="p-4 bg-purple-900/30 rounded-lg border border-purple-700">
                                     <h4 className="font-semibold text-purple-300 mb-2">Technical Issues</h4>
                                     <p className="text-slate-300 text-sm">If we cannot provide course access due to technical problems, full refund guaranteed.</p>
                                 </div>
-                                
+
                                 <div className="p-4 bg-green-900/30 rounded-lg border border-green-700">
                                     <h4 className="font-semibold text-green-300 mb-2">Course Cancellation</h4>
                                     <p className="text-slate-300 text-sm">If we cancel or postpone a course, 100% refund or free transfer to next batch.</p>
@@ -211,20 +211,20 @@ export default function CancellationRefundPage({ onNavigate }) {
                         <p className="text-sky-100 mb-6">
                             Our dedicated refund team is here to assist you with any questions or concerns.
                         </p>
-                        
+
                         <div className="grid md:grid-cols-3 gap-4">
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <h4 className="font-semibold mb-2">Email</h4>
                                 <p className="text-sm">refunds@agnidhra.com</p>
                                 <p className="text-xs text-sky-200">Response within 24 hours</p>
                             </div>
-                            
+
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <h4 className="font-semibold mb-2">Phone</h4>
                                 <p className="text-sm">+91-9876543210</p>
                                 <p className="text-xs text-sky-200">Mon-Fri, 9 AM - 6 PM IST</p>
                             </div>
-                            
+
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <h4 className="font-semibold mb-2">WhatsApp</h4>
                                 <p className="text-sm">+91-9876543210</p>

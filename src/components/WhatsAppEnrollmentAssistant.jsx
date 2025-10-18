@@ -15,7 +15,7 @@ export default function WhatsAppEnrollmentAssistant({ courseName, batchName, cla
 
   // Create contextual message based on course and batch
   const createContextualMessage = () => {
-    let message = `Hi! I'm interested in enrolling in the ${courseName || 'cybersecurity course'}`;
+    let message = `Hi! I am interested in enrolling in the ${courseName || 'cybersecurity course'}`;
     if (batchName) {
       message += ` for the ${batchName} batch`;
     }
@@ -48,7 +48,7 @@ export default function WhatsAppEnrollmentAssistant({ courseName, batchName, cla
             Need Help with Enrollment?
           </h3>
           <p className="text-slate-300 text-sm mb-4">
-            Get instant assistance from our enrollment specialists. We're here to help you choose the right program and complete your enrollment smoothly.
+            Get instant assistance from our enrollment specialists. We are here to help you choose the right program and complete your enrollment smoothly.
           </p>
 
           {/* Benefits */}
@@ -72,7 +72,7 @@ export default function WhatsAppEnrollmentAssistant({ courseName, batchName, cla
               <MessageCircle className="w-5 h-5" />
               Chat on WhatsApp
             </button>
-            
+
             <button
               onClick={handleCallClick}
               className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200 border border-slate-600"
@@ -119,7 +119,7 @@ export function WhatsAppAssistanceBanner({ message, className = "" }) {
             <p className="text-xs text-green-200">Chat with our experts on WhatsApp</p>
           </div>
         </div>
-        
+
         <button
           onClick={handleClick}
           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200"
