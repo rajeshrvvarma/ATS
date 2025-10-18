@@ -150,6 +150,8 @@ function AdminDashboard({ onNavigate }) {
   // System state
   const [logs, setLogs] = useState([]);
   const [settings, setSettings] = useState({ maintenance: false });
+  const [orders, setOrders] = useState([]);
+  const [ordersLoading, setOrdersLoading] = useState(true);
 
   // Fetch users from Firestore (for all tabs)
   useEffect(() => {
@@ -216,6 +218,23 @@ function AdminDashboard({ onNavigate }) {
     }
     fetchAnalytics();
   }, [users, courses]);
+
+  // Fetch recent orders (unprocessed)
+  useEffect(() => {
+    async function fetchOrders() {
+      setOrdersLoading(true);
+      try {
+        const ordersCol = collection(db, 'orders');
+        const q = query(ordersCol, orderBy('createdAt', 'desc'), limit(50));
+        const snap = await getDocs(q);
+        setOrders(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (err) {
+        console.error('Failed to load orders', err);
+      }
+      setOrdersLoading(false);
+    }
+    fetchOrders();
+  }, [refresh]);
 
   // Fetch system logs/settings (mocked for now, structure ready for Firestore)
   useEffect(() => {
@@ -284,6 +303,7 @@ function AdminDashboard({ onNavigate }) {
     { key: "cloud-pricing", label: "Cloud Cost Calculator" },
     { key: "upi", label: "UPI References" },
     { key: "analytics", label: "Analytics" },
+    { key: "orders", label: "Orders" },
     { key: "system", label: "System" },
   ];
 
@@ -454,6 +474,39 @@ function AdminDashboard({ onNavigate }) {
               </div>
             )}
           </>
+        )}
+
+        {tab === 'orders' && (
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Orders</h2>
+            {ordersLoading && <div className="text-slate-400">Loading orders...</div>}
+            {!ordersLoading && orders.length === 0 && <div className="text-slate-400">No orders available.</div>}
+            <div className="space-y-3">
+              {orders.map(o => (
+                <div key={o.id} className="bg-slate-800 p-3 rounded border border-slate-700 flex items-center justify-between">
+                  <div>
+                    <div className="text-sm text-slate-300">{o.gateway || 'gateway'} • {o.amount ? (o.amount/100) + ' ' + (o.currency || 'INR') : ''}</div>
+                    <div className="text-white font-medium">{o.notes?.courseName || o.notes?.course_name || ''} — Order: {o.id} {o.processed ? <span className="text-green-300 ml-2">(Processed)</span> : <span className="text-yellow-300 ml-2">(Pending)</span>}</div>
+                    <div className="text-xs text-slate-400">Customer: {o.customer?.email || o.notes?.email || o.customer?.contact || ''}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button onClick={async () => {
+                      if (!confirm('Reprocess this order?')) return;
+                      try {
+                        const resp = await fetch('/.netlify/functions/admin-reprocess-order', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json', 'x-enrollment-secret': (import.meta.env.VITE_ENROLLMENT_API_SECRET || '') },
+                          body: JSON.stringify({ orderId: o.id })
+                        });
+                        const data = await resp.json();
+                        alert('Reprocess result: ' + JSON.stringify(data));
+                      } catch (err) { console.error(err); alert('Reprocess failed'); }
+                    }} className="px-3 py-2 bg-sky-600 rounded text-white">Reprocess</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {tab === 'batch-management' && (

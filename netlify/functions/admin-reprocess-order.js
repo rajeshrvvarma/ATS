@@ -8,8 +8,16 @@ const db = getFirestore();
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
   const payload = JSON.parse(event.body || '{}');
-  const secret = event.headers['x-enrollment-secret'] || payload.secret;
-  if (process.env.ENROLLMENT_API_SECRET && process.env.ENROLLMENT_API_SECRET !== secret) return { statusCode: 401, body: 'Unauthorized' };
+  // Prefer explicit header for the enrollment secret to avoid accidental splicing from payloads
+  const headerSecret = event.headers['x-enrollment-secret'] || event.headers['X-Enrollment-Secret'];
+  const secret = headerSecret || payload.secret || null;
+  if (process.env.ENROLLMENT_API_SECRET) {
+    if (!headerSecret) {
+      console.warn('admin-reprocess-order: missing x-enrollment-secret header');
+      return { statusCode: 401, body: 'Missing enrollment secret header' };
+    }
+    if (process.env.ENROLLMENT_API_SECRET !== headerSecret) return { statusCode: 401, body: 'Unauthorized' };
+  }
 
   const { orderId } = payload;
   if (!orderId) return { statusCode: 400, body: 'orderId required' };
@@ -26,9 +34,21 @@ exports.handler = async function(event) {
       body: JSON.stringify({ payment: orderData.payment || {}, orderData, secret: process.env.ENROLLMENT_API_SECRET || null })
     });
     const result = await procResp.json();
+    try {
+      const requester = (event.requestContext && event.requestContext.authorizer) || { headers: event.headers };
+      await db.collection('reprocess_logs').add({
+        orderId,
+        requestedAt: new Date().toISOString(),
+        requester,
+        result,
+      });
+    } catch (logErr) {
+      console.warn('Failed to write reprocess log', logErr && logErr.message);
+    }
     return { statusCode: 200, body: JSON.stringify({ result }) };
   } catch (err) {
     console.error('admin-reprocess-order', err);
+  try { await db.collection('reprocess_logs').add({ orderId, requestedAt: new Date().toISOString(), error: err && err.message, requester: { headers: event.headers } }); } catch(e) {}
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };

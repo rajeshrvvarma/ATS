@@ -5,6 +5,11 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { uploadFile } from '@/services/uploadService.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
+// small id generator for client-side temporary ids and normalization
+function generateId(prefix = 'id') {
+  return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,8)}`;
+}
+
 export default function AdminCourseManager() {
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,12 +37,35 @@ export default function AdminCourseManager() {
 
   async function save() {
     try {
+      // basic validation
+      if (!form.title || form.title.trim() === '') {
+        alert('Course title is required');
+        return;
+      }
+
+      // normalize modules and lessons: ensure arrays and ids, drop _tmpId
+      const modules = (Array.isArray(form.modules) ? form.modules : []).map((m) => {
+        const mod = { ...(m || {}) };
+        // ensure id
+        if (!mod.id) mod.id = mod._tmpId ? mod._tmpId : generateId('mod');
+        // normalize lessons
+        mod.lessons = (Array.isArray(mod.lessons) ? mod.lessons : []).map((ls) => {
+          const l = { ...(ls || {}) };
+          if (!l.id) l.id = l._tmpId ? l._tmpId : generateId('les');
+          // remove temporary marker
+          delete l._tmpId;
+          return l;
+        });
+        delete mod._tmpId;
+        return mod;
+      });
+
       const payload = {
         title: form.title,
         slug: form.slug,
         price: form.price,
         category: form.category,
-        modules: Array.isArray(form.modules) ? form.modules : [],
+        modules,
         thumbnailUrl: form.thumbnailUrl || ''
       };
 
@@ -51,7 +79,9 @@ export default function AdminCourseManager() {
       } else {
         await addDoc(collection(db, 'courses'), payload);
       }
+
       setShowAdd(false);
+      setForm({ title: '', slug: '', price: 'Free', category: 'general', modules: [], thumbnailUrl: '' });
       await load();
     } catch (err) {
       console.error('Failed to save course:', err);
@@ -112,8 +142,29 @@ export default function AdminCourseManager() {
                   const slug = form.slug || form.title || 'course';
                   const safeSlug = slug.toString().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
                   const path = `thumbnails/courses/${safeSlug}-${Date.now()}_${f.name}`;
-                  const url = await uploadFile(path, f, (p) => setThumbProgress(p));
-                  setForm(prev => ({ ...prev, thumbnailUrl: url }));
+
+                  // request signed URL from server
+                  const res = await fetch('/.netlify/functions/generate-upload-url', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ path, contentType: f.type, ttlSeconds: 600 })
+                  });
+                  if (!res.ok) throw new Error('Failed to get upload URL');
+                  const signed = await res.json();
+
+                  // upload via XHR to track progress
+                  await new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('PUT', signed.uploadUrl, true);
+                    xhr.setRequestHeader('Content-Type', f.type);
+                    xhr.upload.onprogress = (ev) => {
+                      if (ev.lengthComputable) setThumbProgress(Math.round((ev.loaded / ev.total) * 100));
+                    };
+                    xhr.onload = () => { if (xhr.status >= 200 && xhr.status < 300) resolve(); else reject(new Error('Upload failed')) };
+                    xhr.onerror = () => reject(new Error('Network error'));
+                    xhr.send(f);
+                  });
+
+                  setForm(prev => ({ ...prev, thumbnailUrl: signed.downloadUrl }));
                 } catch (err) {
                   console.error('Thumbnail upload failed', err);
                   alert('Thumbnail upload failed: ' + err.message);

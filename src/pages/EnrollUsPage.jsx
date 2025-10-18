@@ -225,8 +225,76 @@ export default function EnrollUsPage({ onNavigate }) {
             const batchInfo = selectedBatch || (formData.batchId ? getBatchById(formData.batchId) : null);
             const description = batchInfo ? `${selectedCourse.name} - ${batchInfo.batchName}` : `Payment for ${selectedCourse.name}`;
 
-            // UPI-first mode: redirect to payment failed page to inform user about UPI option
-            throw new Error('Please use the UPI payment option or contact support for enrollment assistance');
+                        // Create order on server
+                        const amount = Number(selectedCourse.razorpayPrice || selectedCourse.price || 0);
+                        if (!amount || amount <= 0) {
+                            setPaymentMsg('Invalid course amount');
+                            setPaymentLoading(false);
+                            return;
+                        }
+
+                        const orderRes = await fetch('/.netlify/functions/razorpay-create-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                amount,
+                                currency: 'INR',
+                                receipt: `rcpt_${Date.now()}`,
+                                notes: { courseId: selectedCourse.id, courseName: selectedCourse.name }
+                            })
+                        });
+                        if (!orderRes.ok) {
+                            const err = await orderRes.text();
+                            throw new Error('Failed to create order: ' + err);
+                        }
+                        const orderData = await orderRes.json();
+
+                        // Load Razorpay script if not present
+                        const loadRazorpay = () => new Promise((resolve, reject) => {
+                            if (window.Razorpay) return resolve();
+                            const s = document.createElement('script');
+                            s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+                            s.async = true;
+                            s.onload = () => resolve();
+                            s.onerror = () => reject(new Error('Failed to load Razorpay checkout'));
+                            document.head.appendChild(s);
+                        });
+
+                        await loadRazorpay();
+
+                        const options = {
+                            key: import.meta.env.VITE_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID,
+                            amount: orderData.amount, // amount in paise from server
+                            currency: orderData.currency || 'INR',
+                            name: selectedCourse.name || selectedCourse.title || 'Course Enrollment',
+                            description: description,
+                            order_id: orderData.id,
+                            prefill: {
+                                name: formData.name || '',
+                                email: formData.email || '',
+                                contact: formData.phone || ''
+                            },
+                            handler: async function (response) {
+                                // response contains razorpay_payment_id, razorpay_order_id, razorpay_signature
+                                setPaymentMsg('Payment successful. Verifying...');
+                                setLastOrderId(response.razorpay_order_id || orderData.id);
+                                // Optionally notify server to accelerate enrollment processing
+                                try {
+                                    await fetch('/.netlify/functions/process-enrollment', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ payment: response, orderData })
+                                    });
+                                } catch (e) {
+                                    console.warn('process-enrollment call failed', e.message);
+                                }
+                                alert('Payment successful. Enrollment will be completed shortly.');
+                            },
+                            theme: { color: '#2563eb' }
+                        };
+
+                        const rzp = new window.Razorpay(options);
+                        rzp.open();
         } catch (e) {
             setPaymentMsg(e?.message || 'Payment was cancelled or failed.');
             const selectedCourse = (remoteCourses || []).find(course => course.id === formData.course);

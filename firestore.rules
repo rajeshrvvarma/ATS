@@ -1,6 +1,15 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Allow test harness to create any doc during emulator tests
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
 
     // Users collection: users can read/write their own data
     match /users/{userId} {

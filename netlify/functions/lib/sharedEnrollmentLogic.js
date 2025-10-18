@@ -49,8 +49,30 @@ async function buildEnrollmentPayload({ payment, orderData }) {
 }
 
 async function persistEnrollment(payload) {
-  const docRef = await db.collection('enrollments').add(payload);
-  return { ok: true, id: docRef.id };
+  // If we have an orderId in metadata, prefer transactional write to avoid duplicates
+  const orderId = payload.metadata && payload.metadata.orderId;
+  if (!orderId) {
+    const docRef = await db.collection('enrollments').add(payload);
+    return { ok: true, id: docRef.id };
+  }
+
+  const orderRef = db.collection('orders').doc(orderId);
+  // Run transaction: ensure order not already processed, then create enrollment and mark order processed
+  const res = await db.runTransaction(async (tx) => {
+    const orderSnap = await tx.get(orderRef);
+    const orderData = orderSnap.exists ? orderSnap.data() : null;
+    if (orderData && orderData.processed) {
+      // Already processed; return info
+      return { ok: false, alreadyProcessed: true, orderData };
+    }
+
+    const enrollRef = db.collection('enrollments').doc();
+    await tx.set(enrollRef, payload);
+    await tx.set(orderRef, { processed: true, processedAt: new Date().toISOString(), enrollmentId: enrollRef.id }, { merge: true });
+    return { ok: true, id: enrollRef.id };
+  });
+
+  return res;
 }
 
 module.exports = { buildEnrollmentPayload, persistEnrollment };

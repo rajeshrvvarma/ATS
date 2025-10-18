@@ -2,12 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/config/firebase.js';
 import { Plus, Calendar, Edit, Trash2 } from 'lucide-react';
+import SessionUpload from './SessionUpload.jsx';
+import { collection as collRef, getDocs as getDocsRef, deleteDoc as deleteDocRef, doc as docRef, updateDoc as updateDocRef } from 'firebase/firestore';
 
 export default function AdminBatchManager() {
   const [batches, setBatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
   const [form, setForm] = useState({ courseId: '', title: '', startDate: '', seats: 30, price: '' });
+  const [selectedBatch, setSelectedBatch] = useState(null);
+  const [sessions, setSessions] = useState([]);
+  const [sessionsLoading, setSessionsLoading] = useState(false);
 
   useEffect(() => { load(); }, []);
 
@@ -40,15 +45,88 @@ export default function AdminBatchManager() {
 
       <div className="grid gap-3">
         {batches.map(b => (
-          <div key={b.id} className="bg-slate-800 p-3 rounded-md border border-slate-700 flex items-center justify-between">
-            <div>
-              <div className="text-white font-medium">{b.title}</div>
-              <div className="text-slate-400 text-sm">Starts: {b.startDate} • Seats: {b.seatsLeft}/{b.seats}</div>
+          <div key={b.id} className="bg-slate-800 p-3 rounded-md border border-slate-700">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="text-white font-medium">{b.title}</div>
+                <div className="text-slate-400 text-sm">Starts: {b.startDate} • Seats: {b.seatsLeft}/{b.seats}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={() => alert('Edit not implemented yet')} className="px-3 py-2 bg-slate-700 rounded-md"><Edit size={16} /></button>
+                <button onClick={() => removeBatch(b.id)} className="px-3 py-2 bg-red-700 rounded-md"><Trash2 size={16} /></button>
+                <button onClick={async () => {
+                  if (selectedBatch === b.id) { setSelectedBatch(null); setSessions([]); return; }
+                  setSelectedBatch(b.id);
+                  // load sessions
+                  setSessionsLoading(true);
+                  try {
+                    const snap = await getDocsRef(collRef(db, 'batches', b.id, 'sessions'));
+                    setSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+                  } catch (err) { console.error('Failed to load sessions', err); alert('Failed to load sessions'); }
+                  setSessionsLoading(false);
+                }} className="px-3 py-2 bg-slate-600 rounded-md">Manage Sessions</button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <button onClick={() => alert('Edit not implemented yet')} className="px-3 py-2 bg-slate-700 rounded-md"><Edit size={16} /></button>
-              <button onClick={() => removeBatch(b.id)} className="px-3 py-2 bg-red-700 rounded-md"><Trash2 size={16} /></button>
-            </div>
+
+            {selectedBatch === b.id && (
+              <div className="mt-3 bg-slate-900 p-3 rounded-md border border-slate-700">
+                <h4 className="text-sm font-semibold text-white mb-2">Sessions for {b.title}</h4>
+                <div className="space-y-2">
+                  {sessionsLoading && <div className="text-slate-400">Loading sessions...</div>}
+                  {(!sessionsLoading && sessions.length === 0) && <div className="text-slate-400">No sessions yet. Upload below.</div>}
+                  {sessions.map(s => (
+                    <div key={s.id} className="bg-slate-800 p-2 rounded-md border border-slate-700 flex items-start gap-3">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between">
+                          <div className="text-white font-medium">{s.title || 'Untitled session'}</div>
+                          <div className="text-slate-400 text-xs">{s.size ? Math.round(s.size/1024) + ' KB' : ''}</div>
+                        </div>
+                        {s.recordingUrl && (
+                          <div className="mt-2">
+                            <video controls className="w-full max-h-48 bg-black rounded">
+                              <source src={s.recordingUrl} />
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        )}
+                        <div className="mt-2 flex items-center gap-2">
+                          <button onClick={async () => {
+                            const newTitle = prompt('Edit session title', s.title || '');
+                            if (newTitle === null) return;
+                            try {
+                              await updateDocRef(docRef(db, 'batches', b.id, 'sessions', s.id), { title: newTitle });
+                              setSessions(prev => prev.map(x => x.id === s.id ? { ...x, title: newTitle } : x));
+                            } catch (err) { console.error('Failed to update session', err); alert('Failed to update session'); }
+                          }} className="px-2 py-1 bg-slate-700 rounded">Edit</button>
+                          <button onClick={async () => {
+                            if (!confirm('Delete this session?')) return;
+                            try {
+                              await deleteDocRef(docRef(db, 'batches', b.id, 'sessions', s.id));
+                              setSessions(prev => prev.filter(x => x.id !== s.id));
+                            } catch (err) { console.error('Failed to delete session', err); alert('Failed to delete'); }
+                          }} className="px-2 py-1 bg-red-700 rounded">Delete</button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-3">
+                  <h5 className="text-sm text-slate-300 mb-2">Upload new session recording</h5>
+                  <SessionUpload batchId={b.id} onUploaded={(info) => {
+                    // reload sessions after upload
+                    (async () => {
+                      setSessionsLoading(true);
+                      try {
+                        const snap = await getDocsRef(collRef(db, 'batches', b.id, 'sessions'));
+                        setSessions(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+                      } catch (err) { console.error(err); }
+                      setSessionsLoading(false);
+                    })();
+                  }} />
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>

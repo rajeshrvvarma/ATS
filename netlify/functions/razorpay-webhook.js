@@ -22,13 +22,41 @@ exports.handler = async function (event) {
   const signature = event.headers['x-razorpay-signature'] || event.headers['X-Razorpay-Signature'];
   const body = event.body || '';
 
+  // Create an initial webhook log entry to aid debugging and reconciliation
+  let webhookLogRef;
   try {
-    // Verify signature
-    const expected = crypto.createHmac('sha256', secret).update(body).digest('hex');
-    if (!signature || signature !== expected) {
-      console.warn('Invalid razorpay signature', { signature, expected });
-      return { statusCode: 400, body: 'Invalid signature' };
-    }
+    webhookLogRef = db.collection('webhook_logs').doc();
+    await webhookLogRef.set({
+      provider: 'razorpay',
+      receivedAt: new Date().toISOString(),
+      rawBody: body,
+      headers: event.headers || {},
+      signature: signature || null,
+      verification: 'pending'
+    });
+  } catch (logErr) {
+    console.warn('Failed to create initial webhook log', logErr && logErr.message);
+  }
+
+    try {
+      // Verify signature
+      const expected = crypto.createHmac('sha256', secret).update(body).digest('hex');
+      if (!signature || signature !== expected) {
+        console.warn('Invalid razorpay signature', { signature, expected });
+        try {
+          if (webhookLogRef) await webhookLogRef.set({ verification: 'failed', expected, note: 'Invalid signature' }, { merge: true });
+        } catch (e) {
+          console.warn('Failed updating webhook log for invalid signature', e && e.message);
+        }
+        return { statusCode: 400, body: 'Invalid signature' };
+      }
+
+      // mark verification success in log
+      try {
+        if (webhookLogRef) await webhookLogRef.set({ verification: 'success' }, { merge: true });
+      } catch (e) {
+        console.warn('Failed updating webhook log verification', e && e.message);
+      }
 
     const payload = JSON.parse(body);
     const eventType = payload.event;
@@ -49,18 +77,30 @@ exports.handler = async function (event) {
 
     if (!orderId) {
       console.warn('No order id found in webhook payload');
+      try {
+        if (webhookLogRef) await webhookLogRef.set({ eventType: eventType || null, orderId: null, note: 'No order id found' }, { merge: true });
+      } catch (e) {
+        console.warn('Failed updating webhook log for missing order id', e && e.message);
+      }
       // Still respond 200 to prevent retries, but log the event
       return { statusCode: 200, body: 'No order id' };
     }
 
     // Update the order document in Firestore and dispatch to central processor
-    try {
-      const orderRef = db.collection('orders').doc(orderId);
-      await orderRef.set({
-        status: eventType || 'payment_event',
-        payment: payment || null,
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
+      try {
+        const orderRef = db.collection('orders').doc(orderId);
+        await orderRef.set({
+          status: eventType || 'payment_event',
+          payment: payment || null,
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+
+        // update webhook log with event and orderId for easier tracing
+        try {
+          if (webhookLogRef) await webhookLogRef.set({ eventType: eventType || null, orderId }, { merge: true });
+        } catch (e) {
+          console.warn('Failed updating webhook log with order id', e && e.message);
+        }
 
       // Read stored order to get notes/customer info we saved during order creation
       const orderSnap = await orderRef.get();
@@ -81,12 +121,27 @@ exports.handler = async function (event) {
           });
           const procData = await procResp.json();
           console.log('process-enrollment result', procData);
+          try {
+            if (webhookLogRef) await webhookLogRef.set({ processed: true, processResult: procData }, { merge: true });
+          } catch (e) {
+            console.warn('Failed updating webhook log with process result', e && e.message);
+          }
         } catch (e) {
           console.error('Failed to call process-enrollment', e.message);
+          try {
+            if (webhookLogRef) await webhookLogRef.set({ processed: false, processError: e && e.message }, { merge: true });
+          } catch (ee) {
+            console.warn('Failed updating webhook log with process error', ee && ee.message);
+          }
         }
       }
     } catch (e) {
       console.error('Failed updating order or dispatching enrollment', e.message);
+      try {
+        if (webhookLogRef) await webhookLogRef.set({ error: e && e.message }, { merge: true });
+      } catch (ee) {
+        console.warn('Failed updating webhook log with error', ee && ee.message);
+      }
     }
 
     return { statusCode: 200, body: JSON.stringify({ ok: true }) };
