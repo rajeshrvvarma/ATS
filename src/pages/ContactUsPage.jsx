@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ArrowLeft, Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
-import { useToasts } from '@/components/ui/ToastConfirm.jsx';
 
 export default function ContactUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -15,7 +14,6 @@ export default function ContactUsPage({ onNavigate }) {
     });
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const toasts = useToasts();
 
     const handleInputChange = (e) => {
         setFormData({
@@ -57,7 +55,7 @@ export default function ContactUsPage({ onNavigate }) {
             }
         } catch (error) {
             console.error('Contact form submission error:', error);
-            toasts.error('Failed to send message. Please try again or contact us directly.');
+            console.warn('Failed to send message. Please try again or contact us directly.');
         } finally {
             setSubmitting(false);
         }

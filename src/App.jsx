@@ -2,7 +2,6 @@ import React, { Suspense, useMemo, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 // Auth and SafeCourseAccessContext removed for static site simplification
-import ToastConfirmProvider from '@/components/ui/ToastConfirm.jsx';
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
 import { SettingsProvider } from '@/context/SettingsContext.jsx';
 import SettingsDrawer from '@/components/SettingsDrawer.jsx';
@@ -153,7 +152,6 @@ export default function App() {
     return (
         <ThemeProvider>
         <SettingsProvider>
-    <ToastConfirmProvider>
         <div className="min-h-screen bg-slate-900 antialiased">
                 {/* Initialize notification service for authenticated users */}
                 <NotificationInitializer />
@@ -226,7 +224,6 @@ export default function App() {
                 <SettingsDrawer />
                 {/* WhatsApp widget temporarily removed - will be repositioned per page */}
         </div>
-    </ToastConfirmProvider>
     </SettingsProvider>
     </ThemeProvider>
     );

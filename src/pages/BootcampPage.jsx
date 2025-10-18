@@ -2,13 +2,11 @@ import React, { useState } from 'react';
 import { ArrowLeft, Target } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
-import { useToasts } from '@/components/ui/ToastConfirm.jsx';
 
 export default function BootcampPage({ onNavigate, type }) {
     const [formData, setFormData] = useState({ name: '', email: '' });
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
-    const toasts = useToasts();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -34,7 +32,6 @@ export default function BootcampPage({ onNavigate, type }) {
             }
         } catch (err) {
             console.error('Bootcamp inquiry failed:', err);
-            toasts.error('Could not submit your request. Please try again later.');
         } finally {
             setSubmitting(false);
         }
