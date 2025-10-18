@@ -90,10 +90,7 @@ export default function AdminBatchManager() {
                         </div>
                         {s.recordingUrl && (
                           <div className="mt-2">
-                            <video controls className="w-full max-h-48 bg-black rounded">
-                              <source src={s.recordingUrl} />
-                              Your browser does not support the video tag.
-                            </video>
+                            <SignedVideo srcPath={s.recordingUrl} />
                           </div>
                         )}
                         <div className="mt-2 flex items-center gap-2">
@@ -154,5 +151,39 @@ export default function AdminBatchManager() {
         </div>
       )}
     </div>
+  );
+}
+
+function SignedVideo({ srcPath }) {
+  const [src, setSrc] = React.useState(null);
+
+  React.useEffect(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        // request signed URL from server function
+        const user = (await import('firebase/auth')).getAuth();
+        const current = user.currentUser;
+        let idToken = null;
+        if (current) idToken = await current.getIdToken();
+
+        const url = '/.netlify/functions/generate-signed-download?path=' + encodeURIComponent(srcPath);
+        const res = await fetch(url, { headers: { ...(idToken ? { Authorization: `Bearer ${idToken}` } : {}) } });
+        if (!res.ok) throw new Error('Failed to get signed download url');
+        const body = await res.json();
+        if (mounted) setSrc(body.url);
+      } catch (err) {
+        console.error('Failed to get signed URL', err);
+      }
+    })();
+    return () => { mounted = false; };
+  }, [srcPath]);
+
+  if (!src) return <div className="text-slate-400">Preparing playback...</div>;
+  return (
+    <video controls className="w-full max-h-48 bg-black rounded">
+      <source src={src} />
+      Your browser does not support the video tag.
+    </video>
   );
 }

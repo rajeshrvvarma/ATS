@@ -1,15 +1,6 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow test harness to create any doc during emulator tests
-    match /{document=**} {
-      allow read, write: if true;
-    }
-  }
-}
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
 
     // Users collection: users can read/write their own data
     match /users/{userId} {
@@ -112,7 +103,8 @@ service cloud.firestore {
     // Student enrollments - allow read for admin or the student; creation allowed for server/admin or when student creates their own
     match /enrollments/{enrollmentId} {
       allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.studentId);
-      allow create: if isAdmin() || isServer() || (request.auth != null && request.auth.uid == request.resource.data.studentId);
+      // allow admin by token claim OR admin lookup, server, or when the student creates their own
+      allow create: if isAdmin() || isServer() || (request.auth != null && request.auth.token.admin == true) || (request.auth != null && request.auth.uid == request.resource.data.studentId);
       allow update, delete: if isAdmin();
     }
 
