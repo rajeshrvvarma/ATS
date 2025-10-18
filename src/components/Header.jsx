@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star, Users, BrainCircuit } from 'lucide-react';
 // Removed framer-motion to eliminate header animations
-import NotificationBell from '@/components/NotificationBell.jsx';
+// NotificationBell removed
 import UserMenu from '@/components/UserMenu.jsx';
 import { useAuth } from '@/context/AuthContext.jsx';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 // Clean header background - no gradients
 const headerBackground = 'bg-slate-900';
@@ -15,13 +14,10 @@ export default function Header({ onNavigate, currentPage }) {
     const [isOpen, setIsOpen] = useState(false);
     const [activeLink, setActiveLink] = useState('');
 
-    // Get authentication state for notification bell
+    // Get authentication state
     const { user, logout } = useAuth();
 
-    // Load centralized pricing
-    const coursePricingData = useCoursePricing();
-    const coursePricing = coursePricingData?.pricing || {};
-    const pricingLoading = coursePricingData?.loading || false;
+    // Centralized pricing hook removed
 
     // Production debugging
     React.useEffect(() => {

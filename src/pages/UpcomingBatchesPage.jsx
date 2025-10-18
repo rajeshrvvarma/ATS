@@ -37,13 +37,13 @@ import {
   Sparkles,
   Zap
 } from 'lucide-react';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
+// useCoursePricing hook removed — pricing data currently not available
 // ModernEnrollmentModal removed — enrollment now funnels to WhatsApp contact
 import EventDetailModal from '@/components/EventDetailModal.jsx';
 import AdvancedTabs from '@/components/AdvancedTabs.jsx';
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import { getAllEvents } from '@/data/allEventsData.js';
+
 
 const EventsBatchesPage = ({ onNavigate }) => {
   // Tab state handled by AdvancedTabs; category filter defaults to 'all'
@@ -57,7 +57,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
   const [allEvents, setAllEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
 
-  const { pricing, loading: pricingLoading } = useCoursePricing();
+  // Pricing not loaded (hook removed). Pricing displays are omitted.
 
   // Fetch all events (already merged) from centralized data source
   useEffect(() => {
@@ -208,7 +208,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                     const isStartingSoon = daysUntilStart <= 7 && daysUntilStart > 0;
                     const hasStarted = daysUntilStart < 0;
                     const spotsLeft = batch.maxStudents - batch.currentEnrolled;
-                    const coursePrice = pricing?.[batch.price];
+                    // coursePrice removed - centralized pricing hook deleted
 
                     return (
                       <motion.div
@@ -303,11 +303,11 @@ const EventsBatchesPage = ({ onNavigate }) => {
                                 ) : coursePrice ? (
                                   <>
                                     <div className="text-2xl font-bold text-blue-400">
-                                      {formatPrice(coursePrice.finalPrice)}
+                                      {/* price removed */}
                                     </div>
                                     {coursePrice.originalPrice !== coursePrice.finalPrice && (
                                       <div className="text-xs text-slate-500 line-through">
-                                        {formatPrice(coursePrice.originalPrice)}
+                                        {/* original price removed */}
                                       </div>
                                     )}
                                   </>
@@ -446,11 +446,11 @@ const EventsBatchesPage = ({ onNavigate }) => {
                                 ) : coursePrice ? (
                                   <>
                                     <div className="text-2xl font-bold text-blue-400">
-                                      {formatPrice(coursePrice.finalPrice)}
+                                      {/* price removed */}
                                     </div>
                                     {coursePrice.originalPrice !== coursePrice.finalPrice && (
                                       <div className="text-xs text-slate-500 line-through">
-                                        {formatPrice(coursePrice.originalPrice)}
+                                        {/* original price removed */}
                                       </div>
                                     )}
                                   </>
@@ -624,7 +624,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
               </button>
 
               <button
-                onClick={() => setIsAdvisorOpen(true)}
+                onClick={() => window.open('https://wa.me/919160813700?text=' + encodeURIComponent('Hi, I need career guidance and program recommendations.'), '_blank')}
                 className="border border-slate-600 hover:border-blue-500 px-8 py-4 rounded-lg font-semibold transition-colors"
               >
                 Get Career Guidance
@@ -644,7 +644,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
         onEnroll={handleEnrollment}
       />
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+  <ScrollNavigation />
       <ScrollNavigation />
     </div>
   );

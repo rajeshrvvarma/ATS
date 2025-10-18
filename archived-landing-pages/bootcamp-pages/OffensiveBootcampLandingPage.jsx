@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target, Sword, Zap, Shield } from 'lucide-react';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+// AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const OffensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(18); // Dynamic counter
@@ -12,10 +11,7 @@ const OffensiveBootcampLandingPage = () => {
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
-  // Get centralized pricing
-  const coursePricingData = useCoursePricing();
-  const coursePricing = coursePricingData?.pricing || {};
-  const pricingLoading = coursePricingData?.loading || false;
+  // Centralized pricing removed; using local tiered pricing fallback below
 
   // Simulate real-time enrollment updates
   useEffect(() => {
@@ -107,18 +103,6 @@ const OffensiveBootcampLandingPage = () => {
   ];
 
   const getCurrentPrice = () => {
-    // Use centralized pricing if available, otherwise fallback to tiered pricing
-    const offensiveBootcampPrice = coursePricing?.['offensive-bootcamp'];
-
-    if (offensiveBootcampPrice && !pricingLoading) {
-      return {
-        price: formatPrice(offensiveBootcampPrice.finalPrice),
-        label: 'Current Price',
-        savings: `Save ${formatPrice(offensiveBootcampPrice.originalPrice - offensiveBootcampPrice.finalPrice)}!`,
-        originalPrice: formatPrice(offensiveBootcampPrice.originalPrice)
-      };
-    }
-
     // Fallback to tiered pricing logic
     if (currentEnrolled < 40) return { price: '₹599', label: 'Early Bird Special', savings: 'Save ₹400!' };
     if (currentEnrolled < 70) return { price: '₹899', label: 'Regular Price', savings: 'Save ₹200!' };
@@ -392,7 +376,7 @@ const OffensiveBootcampLandingPage = () => {
         courseData={{ title: '7-Day Ethical Hacking Bootcamp', price: pricing.price || undefined, duration: '7 Days' }}
       />
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+
       <ScrollNavigation />
     </div>
   );

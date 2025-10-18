@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+// AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 
@@ -597,7 +597,7 @@ const DefensiveMasteryLandingPage = () => {
         courseData={{ title: 'Defensive Security Mastery', price: '₹5,999', duration: '8 Weeks' }}
       />
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+
       <ScrollNavigation />
     </div>
   );

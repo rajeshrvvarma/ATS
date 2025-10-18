@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+// AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
 const SpecializedCoursesLandingPage = () => {
@@ -1037,7 +1037,7 @@ const SpecializedCoursesLandingPage = () => {
         }}
       />
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+
       <ScrollNavigation />
     </div>
   );

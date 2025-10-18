@@ -3,9 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+// AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const DefensiveBootcampLandingPage = () => {
   // ...existing code...
@@ -14,10 +13,7 @@ const DefensiveBootcampLandingPage = () => {
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
-  // Get centralized pricing
-  const coursePricingData = useCoursePricing();
-  const coursePricing = coursePricingData?.pricing || {};
-  const pricingLoading = coursePricingData?.loading || false;
+  // Centralized pricing removed; using local tiered pricing fallback below
 
   // Simulate real-time enrollment updates
   useEffect(() => {
@@ -108,18 +104,6 @@ const DefensiveBootcampLandingPage = () => {
   ];
 
   const getCurrentPrice = () => {
-    // Use centralized pricing if available, otherwise fallback to tiered pricing
-    const defensiveBootcampPrice = coursePricing?.['defensive-bootcamp'];
-
-    if (defensiveBootcampPrice && !pricingLoading) {
-      return {
-        price: formatPrice(defensiveBootcampPrice.finalPrice),
-        label: 'Current Price',
-        savings: `Save ${formatPrice(defensiveBootcampPrice.originalPrice - defensiveBootcampPrice.finalPrice)}!`,
-        originalPrice: formatPrice(defensiveBootcampPrice.originalPrice)
-      };
-    }
-
     // Fallback to tiered pricing logic
     if (currentEnrolled < 50) return { price: '₹499', label: 'Early Bird Special', savings: 'Save ₹500!' };
     if (currentEnrolled < 90) return { price: '₹799', label: 'Regular Price', savings: 'Save ₹200!' };
@@ -456,7 +440,7 @@ const DefensiveBootcampLandingPage = () => {
         }}
       />
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+
       <ScrollNavigation />
     </div>
   );

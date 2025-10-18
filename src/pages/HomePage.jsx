@@ -3,8 +3,7 @@ import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCirc
 import { motion, AnimatePresence } from 'framer-motion';
 import SectionTitle from '@/components/SectionTitle.jsx';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
-import AiFaqBot from '@/components/AiFaqBot.jsx';
+// AiCareerAdvisor and AiFaqBot removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
@@ -180,7 +179,7 @@ const HeroSection = ({ onNavigate }) => {
 
     return (
         <>
-            <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+            {/* AiCareerAdvisor removed */}
             <div className="min-h-[45vh] flex items-center justify-center bg-slate-900 bg-fixed py-3 md:py-07 relative">
                 <section id="home" className="container mx-auto px-4 md:px-6">
                     <div className="text-center mb-6 relative">

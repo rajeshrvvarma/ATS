@@ -15,14 +15,8 @@ import {
   Globe,
   ArrowRight
 } from 'lucide-react';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
-
 const EventDetailModal = ({ isOpen, onClose, event, type, onEnroll }) => {
-  const { pricing } = useCoursePricing();
-
   if (!event) return null;
-
-  const coursePrice = pricing?.[event.price];
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -260,17 +254,6 @@ const EventDetailModal = ({ isOpen, onClose, event, type, onEnroll }) => {
                 <div className="text-center sm:text-left">
                   {type === 'workshop' ? (
                     <div className="text-2xl font-bold text-green-400">Free Workshop</div>
-                  ) : coursePrice ? (
-                    <>
-                      <div className="text-3xl font-bold text-blue-400">
-                        {formatPrice(coursePrice.finalPrice)}
-                      </div>
-                      {coursePrice.originalPrice !== coursePrice.finalPrice && (
-                        <div className="text-slate-500 line-through">
-                          {formatPrice(coursePrice.originalPrice)}
-                        </div>
-                      )}
-                    </>
                   ) : (
                     <div className="text-2xl font-bold text-blue-400">₹999</div>
                   )}

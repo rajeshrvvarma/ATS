@@ -3,11 +3,7 @@ import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-
 import { AnimatePresence, motion } from 'framer-motion';
 // Auth and SafeCourseAccessContext removed for static site simplification
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
-import { SettingsProvider } from '@/context/SettingsContext.jsx';
-import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import WhatsAppWidget from '@/components/WhatsAppWidget.jsx';
-import notificationService from '@/services/notificationService.js';
-import NotificationInitializer from '@/components/NotificationInitializer.jsx';
 
 // Layout
 import AnnouncementBanner from '@/components/AnnouncementBanner.jsx';
@@ -151,10 +147,8 @@ export default function App() {
 
     return (
         <ThemeProvider>
-        <SettingsProvider>
-        <div className="min-h-screen bg-slate-900 antialiased">
-                {/* Initialize notification service for authenticated users */}
-                <NotificationInitializer />
+    <div className="min-h-screen bg-slate-900 antialiased">
+                {/* Notification system removed */}
 
                 <AnnouncementBanner onNavigate={go} />
                 <Header onNavigate={go} currentPage={currentPage} />
@@ -221,10 +215,8 @@ export default function App() {
                     </Suspense>
             </main>
                 <Footer onNavigate={go} />
-                <SettingsDrawer />
                 {/* WhatsApp widget temporarily removed - will be repositioned per page */}
         </div>
-    </SettingsProvider>
     </ThemeProvider>
     );
 }

@@ -2,35 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 // ModernEnrollmentModal removed — replaced with WhatsApp CTA
-import AiCareerAdvisor from '../components/AiCareerAdvisor';
+
 import ScrollNavigation from '../components/ScrollNavigation';
-import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
 
 const CollegeTrainingLandingPage = () => {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [visitorCount, setVisitorCount] = useState(2847);
   const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
-
-  // Load centralized pricing with simpler pattern
-  const coursePricingData = useCoursePricing();
-  const coursePricing = coursePricingData?.pricing || {};
-  const pricingLoading = coursePricingData?.loading || false;
-
-  // Helper function to get pricing for college programs
-  const getCollegePricing = (courseId) => {
-    if (pricingLoading) {
-      return { finalPrice: '...', originalPrice: '...' };
-    }
-    if (coursePricing && coursePricing[courseId]) {
-      return {
-        finalPrice: formatPrice(coursePricing[courseId].finalPrice),
-        originalPrice: formatPrice(coursePricing[courseId].originalPrice)
-      };
-    }
-    // Fallback to hardcoded prices if not found
-    return null;
-  };
 
   useEffect(() => {
     // Simulate visitor count updates
@@ -158,8 +136,8 @@ const CollegeTrainingLandingPage = () => {
         name: "Standard Batch",
         students: "50-99 Students",
         courseId: "college-cybersecurity-standard",
-        price: getCollegePricing('college-cybersecurity-standard')?.finalPrice || "₹399",
-        originalPrice: getCollegePricing('college-cybersecurity-standard')?.originalPrice || "₹599",
+        price: "₹399",
+        originalPrice: "₹599",
         features: [
           "8-week comprehensive training",
           "Cybersecurity curriculum",
@@ -172,8 +150,8 @@ const CollegeTrainingLandingPage = () => {
         name: "Premium Batch",
         students: "100-149 Students",
         courseId: "college-cybersecurity-premium",
-        price: getCollegePricing('college-cybersecurity-premium')?.finalPrice || "₹299",
-        originalPrice: getCollegePricing('college-cybersecurity-premium')?.originalPrice || "₹499",
+        price: "₹299",
+        originalPrice: "₹499",
         popular: true,
         features: [
           "8-week intensive training",
@@ -188,8 +166,8 @@ const CollegeTrainingLandingPage = () => {
         name: "Elite Batch",
         students: "150+ Students",
         courseId: "college-cybersecurity-elite",
-        price: getCollegePricing('college-cybersecurity-elite')?.finalPrice || "₹199",
-        originalPrice: getCollegePricing('college-cybersecurity-elite')?.originalPrice || "₹399",
+        price: "₹199",
+        originalPrice: "₹399",
         features: [
           "8-week comprehensive program",
           "Real-world project assignments",
@@ -206,8 +184,8 @@ const CollegeTrainingLandingPage = () => {
         name: "Standard Batch",
         students: "50-99 Students",
         courseId: "college-technology-standard",
-        price: getCollegePricing('college-technology-standard')?.finalPrice || "₹599",
-        originalPrice: getCollegePricing('college-technology-standard')?.originalPrice || "₹899",
+        price: "₹599",
+        originalPrice: "₹899",
         features: [
           "12-week comprehensive training",
           "Multi-technology curriculum",
@@ -220,8 +198,8 @@ const CollegeTrainingLandingPage = () => {
         name: "Premium Batch",
         students: "100-149 Students",
         courseId: "college-technology-premium",
-        price: getCollegePricing('college-technology-premium')?.finalPrice || "₹499",
-        originalPrice: getCollegePricing('college-technology-premium')?.originalPrice || "₹799",
+        price: "₹499",
+        originalPrice: "₹799",
         popular: true,
         features: [
           "12-week intensive training",
@@ -237,8 +215,8 @@ const CollegeTrainingLandingPage = () => {
         name: "Elite Batch",
         students: "150+ Students",
         courseId: "college-technology-elite",
-        price: getCollegePricing('college-technology-elite')?.finalPrice || "₹399",
-        originalPrice: getCollegePricing('college-technology-elite')?.originalPrice || "₹699",
+        price: "₹399",
+        originalPrice: "₹699",
         features: [
           "12-week comprehensive program",
           "Real-world industry projects",
@@ -449,11 +427,7 @@ const CollegeTrainingLandingPage = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setEnrollmentModal({
-                    isOpen: true,
-                    courseType: tier.courseId,
-                    courseName: `${currentProgram.title} - ${tier.name}`
-                  })}
+                  onClick={() => window.open('https://wa.me/919160813700?text=' + encodeURIComponent(`Hi, I need a quote for ${currentProgram.title} - ${tier.name} (${tier.courseId}). Please share details.`), '_blank')}
                   className={`w-full py-3 rounded-lg font-semibold transition-colors ${
                     tier.popular
                       ? 'bg-blue-600 hover:bg-blue-700 text-white'
@@ -559,11 +533,7 @@ const CollegeTrainingLandingPage = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setEnrollmentModal({
-                  isOpen: true,
-                  courseType: 'college-training',
-                  courseName: `${currentProgram.title} - College Training Program`
-                })}
+                onClick={() => window.open('https://wa.me/919160813700?text=' + encodeURIComponent(`Hi, I'm interested in ${currentProgram.title} - College Training Program. Please share pricing and next steps.`), '_blank')}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
               >
                 Start Your Program Today
@@ -587,8 +557,7 @@ const CollegeTrainingLandingPage = () => {
 
       {/* Enrollment flow replaced by WhatsApp contact CTA - modal removed */}
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
-      <ScrollNavigation />
+  <ScrollNavigation />
     </div>
   );
 };

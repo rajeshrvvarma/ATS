@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
 // ModernEnrollmentModal removed — enrollment funnels to WhatsApp contact
-import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
+// AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
@@ -10,7 +10,7 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   // enrollment modal removed; use WhatsApp contact instead
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+  // Advisor removed
 
   // Tech Academy specific header component
   const TechAcademyHeader = () => (
@@ -1260,7 +1260,7 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
 
       {/* Enrollment modal removed; use WhatsApp for enrollments */}
 
-      <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+
       <ScrollNavigation />
 
       {/* WhatsApp Contact Button - Floating */}
