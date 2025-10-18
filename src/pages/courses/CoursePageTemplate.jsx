@@ -349,7 +349,7 @@ const CoursePageTemplate = ({ courseData }) => {
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-slate-300 mb-4 italic">"{testimonial.content}"</p>
+                <p className="text-slate-300 mb-4 italic">&ldquo;{testimonial.content}&rdquo;</p>
                 <div className="flex items-center">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mr-3">
                     <span className="text-white font-semibold">{testimonial.name[0]}</span>

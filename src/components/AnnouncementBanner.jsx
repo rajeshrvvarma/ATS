@@ -22,7 +22,38 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getUpcomingEventsSync, getUpcomingEvents, getSeatsLeft, calculateUrgency } from '@/data/allEventsData.js';
+// Data utilities file was removed. Provide tiny safe helpers here that
+// prefer a global loader if available, otherwise attempt to fetch
+// /modules.json. These keep the banner buildable without reintroducing
+// the original data module.
+async function loadEventsFallback() {
+    if (typeof globalThis.getAllEvents === 'function') {
+        try {
+            return globalThis.getAllEvents() || [];
+        } catch (e) {
+            console.error('global getAllEvents error', e);
+        }
+    }
+    try {
+        const res = await fetch('/modules.json');
+        const json = await res.json();
+        // Expect modules.json to contain an events array; adapt if different
+        return json.events || [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function getSeatsLeft(event) {
+    // Best-effort seats left
+    return event?.seatsLeft ?? event?.seats_available ?? 0;
+}
+
+function calculateUrgency(event) {
+    const seats = getSeatsLeft(event);
+    if (seats <= 3 && seats > 0) return 'high';
+    return 'low';
+}
 import EventDetailModal from './EventDetailModal.jsx';
 
 const AnnouncementBanner = ({ onNavigate }) => {

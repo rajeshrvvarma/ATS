@@ -44,7 +44,7 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
             </h2>
             <p className="text-lg md:text-xl text-emerald-200/90 leading-relaxed mb-8">
               Comprehensive technology training programs designed to launch your career in the fastest-growing tech fields.
-              From full-stack development to AI and cloud computing - we've got your success covered.
+              From full-stack development to AI and cloud computing - we have your success covered.
             </p>
 
             {/* Key Stats */}
@@ -910,7 +910,7 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
 
                 {/* Features List */}
                 <div className="mb-4">
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">What You'll Learn:</h4>
+                  <h4 className="text-sm font-medium text-gray-300 mb-2">What You will Learn:</h4>
                   <ul className="space-y-1">
                     {program.features.slice(0, 4).map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-start gap-2 text-sm text-gray-400">

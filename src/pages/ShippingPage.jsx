@@ -73,10 +73,10 @@ export default function ShippingPage({ onNavigate }) {
                             <div>
                                 <h3 className="text-blue-300 font-semibold mb-2">Digital-First Education</h3>
                                 <p className="text-blue-100 text-sm">
-                                    Our courses are primarily delivered digitally. All essential materials, certificates, and course access
-                                    are provided online for immediate access. Physical shipping applies only to optional hardware kits
-                                    and premium add-ons.
-                                </p>
+                                        Our courses are primarily delivered digitally. All essential materials, certificates, and course access
+                                        are provided online for immediate access. Physical shipping applies only to optional hardware kits
+                                        and premium add-ons.
+                                    </p>
                             </div>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ export default function ShippingPage({ onNavigate }) {
                                         </div>
                                     </div>
 
-                                    <h4 className="font-semibold text-white mb-3">What's Included:</h4>
+                                    <h4 className="font-semibold text-white mb-3">What is Included:</h4>
                                     <ul className="space-y-2">
                                         {method.items.map((item, itemIndex) => (
                                             <li key={itemIndex} className="flex items-center text-sm text-slate-300">

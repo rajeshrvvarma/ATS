@@ -301,7 +301,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                           {/* Features */}
                           {batch.features && batch.features.length > 0 && (
                             <div className="mb-4">
-                              <h4 className="text-sm font-semibold text-slate-400 mb-2">What's Included:</h4>
+                              <h4 className="text-sm font-semibold text-slate-400 mb-2">What is Included:</h4>
                               <div className="grid grid-cols-2 gap-2">
                                 {batch.features.slice(0, 4).map((feature, idx) => (
                                   <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-300">
@@ -429,7 +429,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
                           {/* Features */}
                           {camp.features && camp.features.length > 0 && (
                             <div className="mb-4">
-                              <h4 className="text-sm font-semibold text-slate-400 mb-2">What's Included:</h4>
+                              <h4 className="text-sm font-semibold text-slate-400 mb-2">What is Included:</h4>
                               <div className="grid grid-cols-2 gap-2">
                                 {camp.features.slice(0, 4).map((feature, idx) => (
                                   <div key={idx} className="flex items-start gap-1.5 text-xs text-slate-300">
@@ -597,7 +597,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
             className="max-w-3xl mx-auto"
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Don't See Your Preferred Batch?
+              Do not See Your Preferred Batch?
             </h2>
             <p className="text-slate-300 text-lg mb-8">
               Contact us to get notified about upcoming batches or discuss custom training schedules for your needs.
