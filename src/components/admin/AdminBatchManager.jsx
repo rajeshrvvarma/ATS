@@ -27,8 +27,15 @@ export default function AdminBatchManager() {
 
   async function save() {
     try {
-      await addDoc(collection(db, 'batches'), { ...form, seatsLeft: form.seats });
-      setShowAdd(false); await load();
+      if (form.id) {
+        // update existing batch
+        await updateDoc(doc(db, 'batches', form.id), { ...form, seatsLeft: form.seats });
+      } else {
+        await addDoc(collection(db, 'batches'), { ...form, seatsLeft: form.seats });
+      }
+      setForm({ courseId: '', title: '', startDate: '', seats: 30, price: '' });
+      setShowAdd(false);
+      await load();
     } catch (err) { console.error('Failed to save batch:', err); }
   }
 
@@ -52,7 +59,7 @@ export default function AdminBatchManager() {
                 <div className="text-slate-400 text-sm">Starts: {b.startDate} • Seats: {b.seatsLeft}/{b.seats}</div>
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => alert('Edit not implemented yet')} className="px-3 py-2 bg-slate-700 rounded-md"><Edit size={16} /></button>
+                <button onClick={() => setForm({ ...b, id: b.id }) || setShowAdd(true)} className="px-3 py-2 bg-slate-700 rounded-md"><Edit size={16} /></button>
                 <button onClick={() => removeBatch(b.id)} className="px-3 py-2 bg-red-700 rounded-md"><Trash2 size={16} /></button>
                 <button onClick={async () => {
                   if (selectedBatch === b.id) { setSelectedBatch(null); setSessions([]); return; }

@@ -28,6 +28,17 @@ For emulator-only runs, `FIREBASE_SERVICE_ACCOUNT` is not required when using th
 
 Acceptance criteria: build completes without fatal errors.
 
+## NOTE: Disabled / removed local test files
+
+During the coding phase we added some local test harness and helper scripts (emulator-based storage/rules tests, enrollment idempotency test, and webhook simulation helpers). Per current project plan those files have been disabled/removed from the main branch and all verification steps are preserved in this document.
+
+If you want to re-enable the test harness later:
+- Restore the test files from Git history (they were committed earlier) or re-create them from the sections below.
+- Install `@firebase/rules-unit-testing` as a devDependency and add the test script back into `package.json` as described in earlier drafts.
+- Start the Firestore/Storage emulators and run the harness as described in the relevant sections.
+
+This document is the single source of truth for what to run and when — run the tests only after all coding is complete and the environment variables listed in the Quick setup section are configured.
+
 ## 2) Storage rules verification (emulator)
 
 Purpose: ensure recordings cannot be uploaded client-side, and students enrolled in a batch can read recordings. Also verify admin thumbnail writes.
