@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Code, Coffee, Database, Globe, Server, Layers, Zap, Users } from 'lucide-react';
+import { Code, Coffee, Database, Globe, Layers } from 'lucide-react';
 
 const JavaFullStackDeveloper = () => {
   const courseData = {

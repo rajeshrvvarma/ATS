@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Code, Database, Globe, Server, Smartphone, Target, Users, BookOpen } from 'lucide-react';
+import { Code, Database, Globe, Server } from 'lucide-react';
 
 const MERNStackDeveloper = () => {
   const courseData = {

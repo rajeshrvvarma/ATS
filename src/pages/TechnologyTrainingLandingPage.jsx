@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
+import { CheckCircle, ArrowRight, Clock, Users, Target, Code, Cloud, Smartphone, TestTube, BrainCircuit, Info, X, BookOpen, Play } from 'lucide-react';
 // ModernEnrollmentModal removed — enrollment funnels to WhatsApp contact
 // AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';

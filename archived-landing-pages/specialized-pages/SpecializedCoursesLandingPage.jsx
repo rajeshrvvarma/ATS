@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
-import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
+import { CheckCircle, ArrowRight, Clock, Users, Target, Shield, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Award, Play } from 'lucide-react';
 // AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 
@@ -1025,16 +1024,26 @@ const SpecializedCoursesLandingPage = () => {
         </motion.div>
       )}
 
-      {/* Enrollment Modal */}
-      <ModernEnrollmentModal
-        isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseData={enrollmentModal.course || {
-          title: enrollmentModal.courseName || '',
-          price: enrollmentModal.coursePrice || undefined,
-          duration: enrollmentModal.courseDuration || undefined
-        }}
-      />
+      {/* Enrollment modal removed — fallback to WhatsApp contact */}
+      {enrollmentModal.isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="bg-gray-900 text-white rounded-xl p-6 border border-gray-700 max-w-md text-center">
+            <h3 className="text-xl font-bold mb-2">Enrollment</h3>
+            <p className="mb-4">To enroll in {enrollmentModal.courseName}, please contact our team via WhatsApp.</p>
+            <a
+              href={`https://wa.me/919160813700?text=${encodeURIComponent(`I want to enroll in ${enrollmentModal.courseName} (${enrollmentModal.courseType})`)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-block bg-green-600 px-4 py-2 rounded-lg font-semibold"
+            >
+              Message on WhatsApp
+            </a>
+            <div className="mt-4">
+              <button onClick={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })} className="text-sm text-gray-300">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
       <ScrollNavigation />

@@ -28,7 +28,7 @@ const CoursePageTemplate = ({ courseData }) => {
     faqs,
     batchInfo,
     category, // 'cybersecurity' or 'technology'
-    courseId
+    courseId: _courseId
   } = courseData;
 
   const categoryColors = {
