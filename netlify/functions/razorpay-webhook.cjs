@@ -30,6 +30,8 @@ function lazyInitAdmin() {
   try { db = getFirestore(); } catch (e) { db = null; }
 }
 
+const handler = require('./razorpay-webhook.js');
+module.exports = handler;
 exports.handler = async function (event) {
   // ensure admin DB is initialized (or injected by tests)
   lazyInitAdmin();
