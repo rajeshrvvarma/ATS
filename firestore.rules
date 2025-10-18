@@ -2,13 +2,30 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users collection: users can read/write their own data
+    // Users collection: users can read their own data; role/status changes restricted
     match /users/{userId} {
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // Read: authenticated users can read user documents (for admin dashboards this is acceptable)
+      allow read: if request.auth != null;
 
-      // Allow reading user notes for admin dashboard (authenticated)
+      // Update role/status: only admins can modify other users' role/status fields
+      allow update: if request.auth != null && (
+        // Admins can update any user's role/status
+        isAdmin() ||
+        // Or users can update other personal fields on their own profile, but not role/status
+        (request.auth.uid == userId && !('role' in request.resource.data) && !('status' in request.resource.data))
+      );
+
+      // Create: only server or admin should create user records (keep conservative)
+      allow create: if isAdmin() || isServer();
+
+      // Delete: only admins can delete users
+      allow delete: if isAdmin();
+
+      // Notes subcollection: authenticated users can add notes, admins can read all
       match /notes/{noteId} {
-        allow read, write: if request.auth != null;
+        allow read: if isAdmin() || (request.auth != null && request.auth.uid == userId);
+        allow create: if request.auth != null;
+        allow update, delete: if isAdmin() || (request.auth != null && request.auth.uid == userId);
       }
     }
 
@@ -117,6 +134,13 @@ service cloud.firestore {
     match /events/{eventId} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
+    }
+
+    // Admin logs - only admins can write/read logs
+    match /adminLogs/{logId} {
+      allow create: if isAdmin();
+      allow read: if isAdmin();
+      allow update, delete: if false; // immutable logs
     }
 
     // Default catch-all: only admins can access other collections
