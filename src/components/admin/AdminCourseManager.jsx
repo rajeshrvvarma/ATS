@@ -3,6 +3,7 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase
 import { db } from '@/config/firebase.js';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { uploadFile } from '@/services/uploadService.js';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 export default function AdminCourseManager() {
   const [courses, setCourses] = useState([]);
@@ -125,23 +126,102 @@ export default function AdminCourseManager() {
             </div>
           </div>
 
-          {/* Modules list editor */}
+          {/* Modules list editor (draggable) */}
           <div className="mt-4">
-            <label className="block text-sm text-slate-300 mb-2">Modules (order matters)</label>
+            <label className="block text-sm text-slate-300 mb-2">Modules (drag to reorder)</label>
             <div className="space-y-2">
-              {(form.modules || []).map((m, idx) => (
-                <div key={idx} className="flex gap-2 items-center">
-                  <input value={m.title || ''} onChange={e => {
-                    const arr = [...form.modules]; arr[idx] = { ...arr[idx], title: e.target.value }; setForm({ ...form, modules: arr });
-                  }} placeholder="Module title" className="p-2 bg-slate-900 border-slate-700 rounded-md flex-1" />
-                  <input value={m.duration || ''} onChange={e => {
-                    const arr = [...form.modules]; arr[idx] = { ...arr[idx], duration: e.target.value }; setForm({ ...form, modules: arr });
-                  }} placeholder="Duration (e.g., 2h)" className="p-2 bg-slate-900 border-slate-700 rounded-md w-40" />
-                  <button onClick={() => { const arr = [...form.modules]; arr.splice(idx,1); setForm({ ...form, modules: arr }); }} className="px-2 py-1 bg-red-700 rounded-md"><Trash2 size={14} /></button>
-                </div>
-              ))}
-              <div>
-                <button onClick={() => setForm({ ...form, modules: [...(form.modules||[]), { title: '', duration: '' }] })} className="px-3 py-2 bg-slate-700 rounded-md flex items-center gap-2"><Plus size={14} /> Add Module</button>
+              <DragDropContext onDragEnd={result => {
+                const { source, destination, type } = result;
+                if (!destination) return;
+                // Reorder modules
+                if (type === 'MODULE') {
+                  const srcIdx = source.index;
+                  const destIdx = destination.index;
+                  const arr = Array.from(form.modules || []);
+                  const [m] = arr.splice(srcIdx, 1);
+                  arr.splice(destIdx, 0, m);
+                  setForm({ ...form, modules: arr });
+                }
+                // Reorder lessons within a module
+                if (type === 'LESSON') {
+                  const moduleId = source.droppableId.split(':')[1];
+                  const targetModuleId = destination.droppableId.split(':')[1];
+                  const arr = Array.from(form.modules || []);
+                  const srcModuleIndex = arr.findIndex(x => x._tmpId === moduleId || x.id === moduleId);
+                  const destModuleIndex = arr.findIndex(x => x._tmpId === targetModuleId || x.id === targetModuleId);
+                  if (srcModuleIndex < 0 || destModuleIndex < 0) return;
+                  const srcLessons = Array.from(arr[srcModuleIndex].lessons || []);
+                  const [lesson] = srcLessons.splice(source.index, 1);
+                  if (srcModuleIndex === destModuleIndex) {
+                    srcLessons.splice(destination.index, 0, lesson);
+                    arr[srcModuleIndex].lessons = srcLessons;
+                  } else {
+                    const destLessons = Array.from(arr[destModuleIndex].lessons || []);
+                    destLessons.splice(destination.index, 0, lesson);
+                    arr[srcModuleIndex].lessons = srcLessons;
+                    arr[destModuleIndex].lessons = destLessons;
+                  }
+                  setForm({ ...form, modules: arr });
+                }
+              }}>
+                <Droppable droppableId="modules-droppable" type="MODULE">
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.droppableProps} className="space-y-2">
+                      {(form.modules || []).map((m, idx) => (
+                        <Draggable key={m._tmpId || m.id || idx} draggableId={(m._tmpId || m.id || `m-${idx}`).toString()} index={idx}>
+                          {(prov) => (
+                            <div ref={prov.innerRef} {...prov.draggableProps} {...prov.dragHandleProps} className="bg-slate-900 p-3 rounded-md border border-slate-700">
+                              <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-3">
+                                  <div className="font-semibold text-white">{m.title || 'Untitled Module'}</div>
+                                  <div className="text-sm text-slate-400">{m.duration || ''}</div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <button onClick={() => {
+                                    // remove module
+                                    const arr = [...(form.modules||[])]; arr.splice(idx,1); setForm({ ...form, modules: arr });
+                                  }} className="px-2 py-1 bg-red-700 rounded-md"><Trash2 size={14} /></button>
+                                </div>
+                              </div>
+
+                              {/* Lessons droppable */}
+                              <Droppable droppableId={`lessons:${m._tmpId || m.id || idx}`} type="LESSON">
+                                {(p2) => (
+                                  <div ref={p2.innerRef} {...p2.droppableProps} className="space-y-2">
+                                    {(m.lessons || []).map((lesson, lidx) => (
+                                      <Draggable key={lesson._tmpId || lesson.id || lidx} draggableId={(lesson._tmpId || lesson.id || `l-${idx}-${lidx}`).toString()} index={lidx}>
+                                        {(p3) => (
+                                          <div ref={p3.innerRef} {...p3.draggableProps} {...p3.dragHandleProps} className="flex gap-2 items-center bg-slate-800 p-2 rounded-md border border-slate-700">
+                                            <input value={lesson.title || ''} onChange={e => {
+                                              const arr = [...(form.modules||[])]; arr[idx].lessons = arr[idx].lessons || []; arr[idx].lessons[lidx] = { ...(arr[idx].lessons[lidx]||{}), title: e.target.value }; setForm({ ...form, modules: arr });
+                                            }} placeholder="Lesson title" className="flex-1 p-2 bg-slate-900 rounded-md" />
+                                            <input value={lesson.duration || ''} onChange={e => {
+                                              const arr = [...(form.modules||[])]; arr[idx].lessons = arr[idx].lessons || []; arr[idx].lessons[lidx] = { ...(arr[idx].lessons[lidx]||{}), duration: e.target.value }; setForm({ ...form, modules: arr });
+                                            }} placeholder="Duration" className="w-28 p-2 bg-slate-900 rounded-md" />
+                                          </div>
+                                        )}
+                                      </Draggable>
+                                    ))}
+                                    {p2.placeholder}
+                                    <div>
+                                      <button onClick={() => {
+                                        const arr = [...(form.modules||[])]; arr[idx].lessons = arr[idx].lessons || []; arr[idx].lessons.push({ title: '', duration: '', _tmpId: `tmp-${Date.now()}-${Math.random().toString(36).slice(2,6)}` }); setForm({ ...form, modules: arr });
+                                      }} className="px-3 py-2 bg-slate-700 rounded-md mt-2">Add Lesson</button>
+                                    </div>
+                                  </div>
+                                )}
+                              </Droppable>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              </DragDropContext>
+              <div className="mt-3">
+                <button onClick={() => setForm({ ...form, modules: [...(form.modules||[]), { title: '', duration: '', lessons: [], _tmpId: `tmp-${Date.now()}-${Math.random().toString(36).slice(2,6)}` }] })} className="px-3 py-2 bg-slate-700 rounded-md flex items-center gap-2"><Plus size={14} /> Add Module</button>
               </div>
             </div>
           </div>
