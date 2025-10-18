@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, Users, Award, Target, BookOpen, Play, CheckCircle, ArrowRight, Phone, Calendar, Download, Star, Shield, Code, Database } from 'lucide-react';
-import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
+// ModernEnrollmentModal removed — enrollment uses WhatsApp contact
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
 const CoursePageTemplate = ({ courseData }) => {
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseData: null });
+  // enrollment modal removed; use WhatsApp contact instead
   const [activeTab, setActiveTab] = useState('overview');
 
   const {
@@ -49,10 +49,8 @@ const CoursePageTemplate = ({ courseData }) => {
   const colors = categoryColors[category] || categoryColors.cybersecurity;
 
   const handleEnrollment = (programType = 'premium') => {
-    setEnrollmentModal({
-      isOpen: true,
-      courseData: courseData // Pass the full course data to the modal
-    });
+    const msg = `Hi, I want to enroll in ${title}. Please share pricing and next steps.`;
+    window.open('https://wa.me/919160813700?text=' + encodeURIComponent(msg), '_blank');
   };
 
   return (
@@ -418,11 +416,7 @@ const CoursePageTemplate = ({ courseData }) => {
       </section>
 
       {/* Modern Enrollment Modal */}
-      <ModernEnrollmentModal
-        isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseData: null })}
-        courseData={enrollmentModal.courseData}
-      />
+      {/* Enrollment modal removed; use WhatsApp for enrollments */}
 
       {/* WhatsApp Contact Button - Floating */}
       <WhatsAppContactButton

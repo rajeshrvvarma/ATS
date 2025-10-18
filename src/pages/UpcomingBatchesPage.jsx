@@ -38,8 +38,7 @@ import {
   Zap
 } from 'lucide-react';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
-// ModernEnrollmentModal used for enrollment flows
-import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
+// ModernEnrollmentModal removed — enrollment now funnels to WhatsApp contact
 import EventDetailModal from '@/components/EventDetailModal.jsx';
 import AdvancedTabs from '@/components/AdvancedTabs.jsx';
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
@@ -50,7 +49,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
   // Tab state handled by AdvancedTabs; category filter defaults to 'all'
   const [selectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
+  // enrollment modal removed; enrollment handled via WhatsApp CTA
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [eventDetailModal, setEventDetailModal] = useState({ isOpen: false, event: null, type: '' });
 
@@ -113,12 +112,8 @@ const EventsBatchesPage = ({ onNavigate }) => {
   };
 
   const handleEnrollment = (batch) => {
-    setEnrollmentModal({
-      isOpen: true,
-      courseType: batch.courseId,
-      courseName: batch.title,
-      batchId: batch.id
-    });
+    const msg = `Hi, I want to enroll in ${batch.title}${batch.id ? ' (batch: ' + batch.id + ')' : ''}. Please share details and next steps.`;
+    window.open('https://wa.me/919160813700?text=' + encodeURIComponent(msg), '_blank');
   };
 
   const handleShowEventDetails = (event, type) => {
@@ -639,19 +634,7 @@ const EventsBatchesPage = ({ onNavigate }) => {
         </section>
       </div>
 
-  {/* Modern Enrollment Modal */}
-      <ModernEnrollmentModal
-        isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseData={enrollmentModal.isOpen ? {
-          title: enrollmentModal.courseName,
-          courseId: enrollmentModal.courseType,
-          duration: '',
-          price: pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.finalPrice ? `₹${pricing?.[enrollmentModal.courseType]?.finalPrice}` : undefined),
-          originalPrice: pricingLoading ? undefined : (pricing?.[enrollmentModal.courseType]?.originalPrice ? `₹${pricing?.[enrollmentModal.courseType]?.originalPrice}` : undefined),
-          batchInfo: { date: '', time: '' }
-        } : null}
-      />
+      {/* Enrollment modal removed — contact via WhatsApp CTA instead */}
 
       <EventDetailModal
         isOpen={eventDetailModal.isOpen}

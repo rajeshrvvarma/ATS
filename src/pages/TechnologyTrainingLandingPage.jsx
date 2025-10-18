@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Code, Database, Server, Cloud, Monitor, Smartphone, Globe, TestTube, BrainCircuit, Layers, Info, X, BookOpen, Play } from 'lucide-react';
-import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
+// ModernEnrollmentModal removed — enrollment funnels to WhatsApp contact
 import AiCareerAdvisor from '@/components/AiCareerAdvisor.jsx';
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
 const TechnologyTrainingLandingPage = ({ onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseData: null });
+  // enrollment modal removed; use WhatsApp contact instead
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
@@ -805,7 +805,8 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
       category: 'technology'
     };
 
-    setEnrollmentModal({ isOpen: true, courseData });
+    const msg = `Hi, I'm interested in ${program.title}. Please share pricing and enrollment steps.`;
+    window.open('https://wa.me/919160813700?text=' + encodeURIComponent(msg), '_blank');
   };
 
   const handleCourseDetails = (course) => {
@@ -1257,11 +1258,7 @@ const TechnologyTrainingLandingPage = ({ onNavigate }) => {
         </motion.div>
       )}
 
-      <ModernEnrollmentModal
-        isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseData: null })}
-        courseData={enrollmentModal.courseData}
-      />
+      {/* Enrollment modal removed; use WhatsApp for enrollments */}
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />

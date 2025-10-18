@@ -1,19 +1,12 @@
-const CourseBuilder = React.lazy(() => import('@/pages/CourseBuilder.jsx'));
 import React, { Suspense, useMemo, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AuthProvider, useAuth } from '@/context/AuthContext.jsx';
-import { CourseAccessProvider } from '@/context/SafeCourseAccessContext.jsx';
-import { AccessControlProvider } from '@/context/AccessControlContext.jsx';
-import { ToastProvider } from '@/context/ToastContext.jsx';
-import ToastContainer from '@/components/ToastContainer.jsx';
+// Auth and SafeCourseAccessContext removed for static site simplification
 import ToastConfirmProvider from '@/components/ui/ToastConfirm.jsx';
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
 import { SettingsProvider } from '@/context/SettingsContext.jsx';
 import SettingsDrawer from '@/components/SettingsDrawer.jsx';
 import WhatsAppWidget from '@/components/WhatsAppWidget.jsx';
-import ProtectedRoute from '@/components/ProtectedRoute.jsx';
-import DashboardRouter from '@/components/DashboardRouter.jsx';
 import notificationService from '@/services/notificationService.js';
 import NotificationInitializer from '@/components/NotificationInitializer.jsx';
 
@@ -31,17 +24,12 @@ const CollegeTrainingLandingPage = React.lazy(() => import('@/pages/CollegeTrain
 // Module pages archived - focusing on premium courses only
 const TermsPage = React.lazy(() => import('@/pages/TermsPage.jsx'));
 const DisclaimerPage = React.lazy(() => import('@/pages/DisclaimerPage.jsx'));
-const AccountActivationPage = React.lazy(() => import('@/pages/AccountActivationPage.jsx'));
-const PaymentSuccessPage = React.lazy(() => import('@/pages/PaymentSuccessPage.jsx'));
-const PaymentFailedPage = React.lazy(() => import('@/pages/PaymentFailedPage.jsx'));
 const CancellationRefundPage = React.lazy(() => import('@/pages/CancellationRefundPage.jsx'));
 const ShippingPage = React.lazy(() => import('@/pages/ShippingPage.jsx'));
 const PrivacyPage = React.lazy(() => import('@/pages/PrivacyPage.jsx'));
 const ContactUsPage = React.lazy(() => import('@/pages/ContactUsPage.jsx'));
-const EnrollUsPage = React.lazy(() => import('@/pages/EnrollUsPage.jsx'));
 // Removed LMS and auth/dashboard pages per request
 const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
-const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
 const EventsBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
 
 // Course Pages
@@ -163,12 +151,8 @@ export default function App() {
     }, [location.pathname]);
 
     return (
-        <AuthProvider>
-        <AccessControlProvider>
-        <CourseAccessProvider>
         <ThemeProvider>
         <SettingsProvider>
-    <ToastProvider>
     <ToastConfirmProvider>
         <div className="min-h-screen bg-slate-900 antialiased">
                 {/* Initialize notification service for authenticated users */}
@@ -188,7 +172,7 @@ export default function App() {
                         <AnimatePresence mode="wait">
                         <motion.div key={location.pathname} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.18 }}>
                         <Routes>
-                            <Route path="/course-builder" element={<CourseBuilder />} />
+                            {/* Course builder removed */}
                             <Route path="/" element={<HomePage onNavigate={go} />} />
                             <Route path="/workshop" element={<Navigate to="/events-batches" replace />} />
                             <Route path="/bootcamp/defensive" element={<BootcampPage onNavigate={go} type="defensive" />} />
@@ -224,16 +208,12 @@ export default function App() {
 
                             <Route path="/terms" element={<TermsPage onNavigate={go} />} />
                             <Route path="/disclaimer" element={<DisclaimerPage onNavigate={go} />} />
-                            <Route path="/activate/defensive" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
-                            <Route path="/activate/offensive" element={<AccountActivationPage onNavigate={go} planType="offensiveBootcamp" />} />
-                            <Route path="/activate" element={<AccountActivationPage onNavigate={go} planType="defensiveBootcamp" />} />
-                            <Route path="/payment/success" element={<PaymentSuccessPage onNavigate={go} />} />
-                            <Route path="/payment/failed" element={<PaymentFailedPage onNavigate={go} />} />
+                            {/* Account activation and payment pages removed */}
                             <Route path="/cancellation-refund" element={<CancellationRefundPage onNavigate={go} />} />
                             <Route path="/shipping" element={<ShippingPage onNavigate={go} />} />
                             <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
-                            <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
+                            {/* Enroll page removed */}
                             <Route path="/profile" element={<Profile onNavigate={go} />} />
                             {/* Module routes archived - premium courses only */}
                             <Route path="*" element={<Navigate to="/" replace />} />
@@ -243,17 +223,12 @@ export default function App() {
                     </Suspense>
             </main>
                 <Footer onNavigate={go} />
-                <ToastContainer />
                 <SettingsDrawer />
                 {/* WhatsApp widget temporarily removed - will be repositioned per page */}
         </div>
     </ToastConfirmProvider>
-    </ToastProvider>
-        </SettingsProvider>
-        </ThemeProvider>
-        </CourseAccessProvider>
-        </AccessControlProvider>
-        </AuthProvider>
+    </SettingsProvider>
+    </ThemeProvider>
     );
 }
 

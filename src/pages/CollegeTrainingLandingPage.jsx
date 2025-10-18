@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
-import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
+// ModernEnrollmentModal removed — replaced with WhatsApp CTA
 import AiCareerAdvisor from '../components/AiCareerAdvisor';
 import ScrollNavigation from '../components/ScrollNavigation';
 import { useCoursePricing, formatPrice } from '@/hooks/useCoursePricing.js';
@@ -314,11 +314,7 @@ const CollegeTrainingLandingPage = () => {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <motion.button
-                onClick={() => setEnrollmentModal({
-                  isOpen: true,
-                  courseType: 'college-training',
-                  courseName: `${currentProgram.title} - Bulk Training Program`
-                })}
+                onClick={() => window.open('https://wa.me/919160813700?text=' + encodeURIComponent('Hi, I\'m interested in bulk training for colleges. Please share pricing and next steps.'), '_blank')}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 px-8 py-4 rounded-lg font-semibold flex items-center justify-center gap-2 transition-all duration-300"
@@ -589,18 +585,7 @@ const CollegeTrainingLandingPage = () => {
         </section>
       </div>
 
-      <ModernEnrollmentModal
-        isOpen={enrollmentModal.isOpen}
-        onClose={() => setEnrollmentModal({ isOpen: false, courseType: '', courseName: '' })}
-        courseData={enrollmentModal.isOpen ? {
-          title: enrollmentModal.courseName,
-          courseId: enrollmentModal.courseType,
-          duration: '',
-          price: pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.finalPrice ? `₹${coursePricing?.[enrollmentModal.courseType]?.finalPrice}` : undefined),
-          originalPrice: pricingLoading ? undefined : (coursePricing?.[enrollmentModal.courseType]?.originalPrice ? `₹${coursePricing?.[enrollmentModal.courseType]?.originalPrice}` : undefined),
-          batchInfo: { date: '', time: '' }
-        } : null}
-      />
+      {/* Enrollment flow replaced by WhatsApp contact CTA - modal removed */}
 
       <AiCareerAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
       <ScrollNavigation />
