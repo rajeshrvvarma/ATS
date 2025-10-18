@@ -1,17 +1,38 @@
 const crypto = require('crypto');
 const { initializeApp, cert, applicationDefault } = require('firebase-admin/app');
 const fetch = require('node-fetch');
+const SKIP_PROCESS = process.env.DISABLE_PROCESS_ENROLLMENT === '1';
 const { getFirestore } = require('firebase-admin/firestore');
 
-let app;
-try {
-  app = initializeApp({
-    credential: process.env.FIREBASE_SERVICE_ACCOUNT ? cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)) : applicationDefault(),
-  });
-} catch (e) {}
-const db = getFirestore();
+let db = null;
+function lazyInitAdmin() {
+  if (db) return;
+  // allow tests to inject a Firestore instance: module.exports.__db
+  try { if (exports && exports.__db) { db = exports.__db; return; } } catch (e) {}
+  try {
+    if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+      try {
+        const sa = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+        if (sa && sa.private_key && sa.private_key.includes('BEGIN')) {
+          initializeApp({ credential: cert(sa) });
+        } else {
+          try { initializeApp(); } catch (e) { /* ignore */ }
+        }
+      } catch (e) {
+        try { initializeApp(); } catch (ee) { /* ignore */ }
+      }
+    } else {
+      try { initializeApp(); } catch (e) { /* ignore */ }
+    }
+  } catch (e) {
+    // ignore initialization errors
+  }
+  try { db = getFirestore(); } catch (e) { db = null; }
+}
 
 exports.handler = async function (event) {
+  // ensure admin DB is initialized (or injected by tests)
+  lazyInitAdmin();
   // Razorpay webhooks are POST requests with raw body and signature header
   if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
@@ -107,18 +128,22 @@ exports.handler = async function (event) {
         try {
           const secret2 = process.env.ENROLLMENT_API_SECRET || null;
           const siteUrl = process.env.SITE_URL || process.env.URL || '';
-          const endpoint = siteUrl ? `${siteUrl}/.netlify/functions/process-enrollment` : `/.netlify/functions/process-enrollment`;
-          const procResp = await fetch(endpoint, {
+          if (SKIP_PROCESS) {
+            console.log('Skipping process-enrollment due to DISABLE_PROCESS_ENROLLMENT');
+          } else {
+            const endpoint = siteUrl ? `${siteUrl}/.netlify/functions/process-enrollment` : `/.netlify/functions/process-enrollment`;
+            const procResp = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ payment, orderData, secret: secret2 })
-          });
-          const procData = await procResp.json();
-          console.log('process-enrollment result', procData);
-          try {
-            if (webhookLogRef) await webhookLogRef.set({ processed: true, processResult: procData }, { merge: true });
-          } catch (e) {
-            console.warn('Failed updating webhook log with process result', e && e.message);
+            });
+            const procData = await procResp.json();
+            console.log('process-enrollment result', procData);
+            try {
+              if (webhookLogRef) await webhookLogRef.set({ processed: true, processResult: procData }, { merge: true });
+            } catch (e) {
+              console.warn('Failed updating webhook log with process result', e && e.message);
+            }
           }
         } catch (e) {
           console.error('Failed to call process-enrollment', e.message);
@@ -144,4 +169,4 @@ exports.handler = async function (event) {
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
-module.exports = require('./razorpay-webhook.js');
+// CommonJS wrapper exports the handler above. No further export required.

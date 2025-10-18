@@ -2,10 +2,13 @@ import { initializeTestEnvironment, assertSucceeds } from '@firebase/rules-unit-
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import admin from 'firebase-admin';
 
 const projectId = 'ats-emulator-webhook';
 
 async function main() {
+  // ensure webhook handler skips calling process-enrollment during emulator test
+  process.env.DISABLE_PROCESS_ENROLLMENT = '1';
   const testEnv = await initializeTestEnvironment({
     projectId,
     firestore: { rules: fs.readFileSync(path.resolve('firestore.rules'), 'utf8'), host: 'localhost', port: 8080 }
@@ -13,8 +16,10 @@ async function main() {
 
   try {
     // Seed an order that the webhook will reference
-    const adminCtx = testEnv.authenticatedContext('system', { admin: true });
-    const db = adminCtx.firestore();
+  // create an admin SDK instance pointing to the emulator and inject it into the handler
+  process.env.FIRESTORE_EMULATOR_HOST = 'localhost:8080';
+  const adminApp = admin.initializeApp({ projectId });
+  const db = adminApp.firestore();
     const orderId = 'order_test_1';
     await db.collection('orders').doc(orderId).set({ status: 'created', createdAt: Date.now() });
 
@@ -41,9 +46,12 @@ async function main() {
     const signature = crypto.createHmac('sha256', secret).update(body).digest('hex');
 
     // require the handler module and invoke directly
-  const { createRequire } = await import('module');
-  const require = createRequire(import.meta.url);
-  const handler = require('../../netlify/functions/razorpay-webhook.cjs').handler;
+    const { createRequire } = await import('module');
+    const require = createRequire(import.meta.url);
+  const mod = require('../../netlify/functions/razorpay-webhook.cjs');
+  // inject the emulator admin DB so the function uses emulator admin access
+  mod.__db = db;
+    const handler = mod.handler;
 
     const event = { httpMethod: 'POST', headers: { 'x-razorpay-signature': signature }, body };
     const res = await handler(event);
@@ -61,6 +69,7 @@ async function main() {
     console.log('Razorpay webhook simulation test passed.');
   } finally {
     await testEnv.cleanup();
+    try { await admin.app().delete(); } catch (e) { /* ignore */ }
   }
 }
 
