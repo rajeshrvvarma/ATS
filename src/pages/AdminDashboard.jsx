@@ -5,13 +5,7 @@ import DashboardLayout from "@/components/DashboardLayout";
 import RequireAdmin from '@/components/admin/RequireAdmin.jsx';
 import { useAuth } from "@/context/AuthContext.jsx";
 import app from "@/config/firebase";
-import AdminCoursePricing from "@/components/admin/AdminCoursePricing.jsx";
-import AdminUPIReferences from "@/components/admin/AdminUPIReferences.jsx";
-import PricingCalculator from "@/components/PricingCalculator.jsx";
-import InstructorContentManagement from "@/components/InstructorContentManagement.jsx";
-import AdminDeletionRequests from "@/components/admin/AdminDeletionRequests.jsx";
-import AdminIndexAlerts from "@/components/admin/AdminIndexAlerts.jsx";
-import IndexAlertBanner from "@/components/IndexAlertBanner.jsx";
+// ...existing code...
 import AdminEventsManagement from "@/components/admin/AdminEventsManagement.jsx";
 import SessionUpload from '@/components/admin/SessionUpload.jsx';
 
@@ -211,12 +205,6 @@ function AdminDashboard({ onNavigate }) {
     { key: "events", label: "Events Management" },
     { key: "course-management", label: "Course Management" },
     { key: "batch-management", label: "Batch Management" },
-    { key: "content-management", label: "Content Management" },
-  { key: "approval-requests", label: "Deletion Requests" },
-  { key: "index-alerts", label: "Index Alerts" },
-    { key: "pricing", label: "Course Pricing" },
-    { key: "cloud-pricing", label: "Cloud Cost Calculator" },
-    { key: "upi", label: "UPI References" },
     { key: "analytics", label: "Analytics" },
     { key: "orders", label: "Orders" },
     { key: "system", label: "System" },
@@ -751,21 +739,7 @@ function AdminDashboard({ onNavigate }) {
 
         {tab === "events" && <AdminEventsManagement />}
 
-        {tab === "pricing" && <AdminCoursePricing />}
-
-        {tab === "content-management" && <InstructorContentManagement />}
-
-        {tab === "approval-requests" && <AdminDeletionRequests />}
-
-        {tab === "index-alerts" && (
-          <div className="bg-slate-800 rounded-lg p-6">
-            <AdminIndexAlerts />
-          </div>
-        )}
-
-        {tab === "cloud-pricing" && <PricingCalculator />}
-
-        {tab === "upi" && <AdminUPIReferences />}
+        {/* Removed pricing, content-management, approval-requests, index-alerts, cloud-pricing, upi tabs as part of cleanup */}
 
         {tab === "analytics" && (
           <>
