@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Code, Database, Server, Globe, Target, Users, BookOpen, Smartphone } from 'lucide-react';
+import { Code, Database, Server, Globe } from 'lucide-react';
 
 const FullStackPythonDeveloper = () => {
   const courseData = {

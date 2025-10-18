@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Users, BookOpen, Trophy, Target, CheckCircle, Star, Clock, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
+import { ArrowRight, Users, Target, CheckCircle, Award, TrendingUp, Briefcase, Shield } from 'lucide-react';
 import { motion } from 'framer-motion';
 // ModernEnrollmentModal removed — replaced with WhatsApp CTA
 
 import ScrollNavigation from '../components/ScrollNavigation';
 
 const CollegeTrainingLandingPage = () => {
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
+  // advisor removed; use contact CTA
   const [visitorCount, setVisitorCount] = useState(2847);
   const [selectedProgram, setSelectedProgram] = useState('cybersecurity');
 

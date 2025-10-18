@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
+import { Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp } from 'lucide-react';
 // AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
@@ -9,7 +9,6 @@ const DefensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(7); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -186,7 +185,7 @@ const DefensiveMasteryLandingPage = () => {
   ];
 
   const seatsLeft = 20 - currentEnrolled;
-  const progressPercentage = (currentEnrolled / 20) * 100;
+  const _progressPercentage = (currentEnrolled / 20) * 100;
 
   return (
     <div className="min-h-screen text-white">

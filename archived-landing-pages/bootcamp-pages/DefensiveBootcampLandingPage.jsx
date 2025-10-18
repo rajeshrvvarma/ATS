@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // ...existing code...
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
+import { Clock, Users, Star, CheckCircle, ArrowRight, Timer, Award, Target } from 'lucide-react';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 // AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
@@ -11,7 +11,6 @@ const DefensiveBootcampLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(23); // Dynamic counter
   const [timeLeft, setTimeLeft] = useState({ days: 15, hours: 8, minutes: 42 });
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Centralized pricing removed; using local tiered pricing fallback below
 

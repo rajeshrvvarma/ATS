@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Code, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
+import { CheckCircle, ArrowRight, Clock, Users, Award, Target, Shield, Server, BrainCircuit, Zap, Eye, Info, X, BookOpen, Play } from 'lucide-react';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 // AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
@@ -9,7 +9,6 @@ const SpecializedCoursesLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [enrollmentModal, setEnrollmentModal] = useState({ isOpen: false, courseType: '', courseName: '' });
   const [courseDetailsModal, setCourseDetailsModal] = useState({ isOpen: false, course: null });
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   const categories = [
     { id: 'all', name: 'All Courses', icon: Target },
@@ -864,7 +863,7 @@ const SpecializedCoursesLandingPage = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsAdvisorOpen(true)}
+                onClick={() => { window.location.href = '/contact'; }}
                 className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-4 rounded-lg font-semibold text-white transition-all duration-300"
               >
                 Get Career Guidance

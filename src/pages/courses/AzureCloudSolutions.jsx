@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Cloud, Shield, Users, Settings, Database, Globe, Zap, Server } from 'lucide-react';
+import { Cloud, Shield, Settings, Database } from 'lucide-react';
 
 const AzureCloudSolutions = () => {
   const courseData = {

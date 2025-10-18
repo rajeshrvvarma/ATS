@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Database, BarChart, Brain, Target, Code, Globe, TrendingUp, Users } from 'lucide-react';
+import { Database, BarChart, Brain, TrendingUp } from 'lucide-react';
 
 const DataScienceAI = () => {
   const courseData = {

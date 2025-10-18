@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { LogOut, User, Shield, GraduationCap, Home } from 'lucide-react';
+import { LogOut, User, Shield, GraduationCap } from 'lucide-react';
 
-export default function UserMenu({ user, onLogout, onProfile, onDashboard, roleLabel = 'User' }) {
+export default function UserMenu({ user, onLogout, onProfile, roleLabel = 'User' }) {
   const [open, setOpen] = useState(false);
   const menuRef = useRef();
 

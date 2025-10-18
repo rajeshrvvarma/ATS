@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Briefcase, TrendingUp, Sword, Zap, Code2 } from 'lucide-react';
+import { Clock, Users, Star, CheckCircle, ArrowRight, BookOpen, Award, Target, Zap, Code2, Sword } from 'lucide-react';
 import ModernEnrollmentModal from '@/components/ModernEnrollmentModal.jsx';
 // AiCareerAdvisor removed
 import ScrollNavigation from '@/components/ScrollNavigation.jsx';
@@ -9,7 +9,6 @@ const OffensiveMasteryLandingPage = () => {
   const [currentEnrolled, setCurrentEnrolled] = useState(4); // Dynamic counter for small batch
   const [selectedPaymentPlan, setSelectedPaymentPlan] = useState('full');
   const [isEnrollmentModalOpen, setIsEnrollmentModalOpen] = useState(false);
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
   // Simulate real-time enrollment updates (slower for premium)
   useEffect(() => {
@@ -188,7 +187,7 @@ const OffensiveMasteryLandingPage = () => {
   ];
 
   const seatsLeft = 15 - currentEnrolled;
-  const progressPercentage = (currentEnrolled / 15) * 100;
+  const _progressPercentage = (currentEnrolled / 15) * 100;
 
   return (
     <div className="min-h-screen text-white">
@@ -237,7 +236,7 @@ const OffensiveMasteryLandingPage = () => {
                   <div className="w-full bg-gray-700 rounded-full h-4 mb-4">
                     <div
                       className="bg-gradient-to-r from-red-500 to-orange-500 h-4 rounded-full transition-all duration-1000"
-                      style={{ width: `${progressPercentage}%` }}
+                      style={{ width: `${_progressPercentage}%` }}
                     />
                   </div>
                   {seatsLeft <= 3 ? (

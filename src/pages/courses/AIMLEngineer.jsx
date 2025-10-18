@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Brain, Cpu, Eye, MessageCircle, BarChart, Code, Zap, Target } from 'lucide-react';
+import { Brain, Cpu, Eye, MessageCircle } from 'lucide-react';
 
 const AIMLEngineer = () => {
   const courseData = {

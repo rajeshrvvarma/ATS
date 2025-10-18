@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle } from 'lucide-react';
-import SectionTitle from '../components/SectionTitle';
+// SectionTitle not used here
 import { sendContactForm } from '@/services/netlifyFormsService.js';
 
 export default function ContactUsPage({ onNavigate }) {

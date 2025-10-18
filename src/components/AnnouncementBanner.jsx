@@ -20,7 +20,7 @@
 // - ✅ Urgency-based styling and messaging
 // - ✅ Proper event type handling (batch/bootcamp/workshop)
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Users, Sparkles, ArrowRight, Clock, Zap, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Calendar, Users, Sparkles, ArrowRight, Zap, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 // Data utilities file was removed. Provide tiny safe helpers here that
 // prefer a global loader if available, otherwise attempt to fetch
@@ -62,23 +62,32 @@ const AnnouncementBanner = ({ onNavigate }) => {
     const [allEvents, setAllEvents] = useState([]);
     const [eventDetailModal, setEventDetailModal] = useState({ isOpen: false, event: null, type: '' });
 
-    // Load events (static first, then Firestore)
+    // Load events (try global/static fallback loader)
     useEffect(() => {
-        // Start with static data for immediate display
-        const staticEvents = getUpcomingEventsSync();
-        setAllEvents(staticEvents);
-
-        // Then fetch from Firestore to get latest data
-        const loadFirestoreEvents = async () => {
-            try {
-                const events = await getUpcomingEvents();
-                setAllEvents(events);
-            } catch (error) {
-                console.error('Error loading Firestore events:', error);
-                // Keep using static data if Firestore fails
+        let mounted = true;
+        // Attempt to load events from a synchronous global provider if present
+        try {
+            if (typeof globalThis.getUpcomingEventsSync === 'function') {
+                const staticEvents = globalThis.getUpcomingEventsSync();
+                if (mounted) setAllEvents(staticEvents || []);
             }
-        };
-        loadFirestoreEvents();
+        } catch (e) {
+            // ignore
+        }
+
+        // Then try the async loader (Firestore or remote JSON)
+        (async () => {
+            try {
+                const events = await (typeof globalThis.getUpcomingEvents === 'function'
+                    ? globalThis.getUpcomingEvents()
+                    : loadEventsFallback());
+                if (mounted && events && events.length) setAllEvents(events);
+            } catch (error) {
+                console.error('Error loading events:', error);
+            }
+        })();
+
+        return () => { mounted = false; };
     }, []);
 
     // Rotate between all events every 6 seconds

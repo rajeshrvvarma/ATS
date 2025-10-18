@@ -24,7 +24,7 @@
   "plugins": ["react", "react-hooks"],
   "rules": {
     "react/react-in-jsx-scope": "off",
-    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+  "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
     "react/prop-types": "off"
   }
 }

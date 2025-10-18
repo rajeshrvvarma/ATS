@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Menu, ChevronDown, Home, Shield, Sword, Sparkles, Target, Code, Cloud, Database, Globe, Laptop, TestTube, BookOpen, Clock, Star, Users, BrainCircuit } from 'lucide-react';
+import { X, Menu, ChevronDown } from 'lucide-react';
 // Removed framer-motion to eliminate header animations
 // NotificationBell removed
 import UserMenu from '@/components/UserMenu.jsx';
@@ -11,7 +11,7 @@ export default function Header({ onNavigate, currentPage }) {
   // Use clean header background
   const gradientClass = headerBackground;
     const [isOpen, setIsOpen] = useState(false);
-    const [activeLink, setActiveLink] = useState('');
+    // activeLink state removed — navigation highlights simplified
 
     // Auth context was removed; avoid importing missing file.
     // Use a local placeholder so header renders without auth.
@@ -79,7 +79,7 @@ export default function Header({ onNavigate, currentPage }) {
 
     const scrollToSection = (id) => {
         try {
-            setActiveLink(id);
+            // navigation triggered; active link highlighting removed
 
             // Handle different navigation scenarios
             const targetId = id.toLowerCase().replace(/\s+/g, '-');
@@ -108,29 +108,7 @@ export default function Header({ onNavigate, currentPage }) {
         }
     };
 
-    const isLinkActive = (link) => {
-        // Map page routes to human-readable labels
-        const routeMap = {
-            'video-learning': 'Learning Portal',
-            'dashboard': 'Dashboard',
-            'admin': 'Admin',
-            'login': 'Login',
-            'contact': 'Contact Us',
-            'home': ''
-        };
 
-        // If we are on a routed page, highlight the matching nav item
-        if (routeMap[currentPage] && routeMap[currentPage] === link) {
-            return true;
-        }
-
-        // When on the home page, use the last selected section as active
-        if (currentPage === 'home' && activeLink === link) {
-            return true;
-        }
-
-        return false;
-    };
 
     return (
         <header

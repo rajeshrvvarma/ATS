@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Server, GitBranch, Container, Monitor, Settings, Zap, Cloud, Layers } from 'lucide-react';
+import { GitBranch, Container, Monitor, Settings } from 'lucide-react';
 
 const DevOpsEngineerBootcamp = () => {
   const courseData = {

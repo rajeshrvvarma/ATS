@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
  * Free WhatsApp Business integration for instant customer support
  */
 export default function WhatsAppWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  // isOpen removed; widget only uses showQuickOptions
   const [showQuickOptions, setShowQuickOptions] = useState(false);
 
   // Your WhatsApp Business number (from ContactUsPage.jsx)
@@ -68,7 +68,6 @@ export default function WhatsAppWidget() {
   const handleQuickAction = (action) => {
     const whatsappURL = generateWhatsAppURL(action.message);
     window.open(whatsappURL, '_blank');
-    setIsOpen(false);
     setShowQuickOptions(false);
 
     // Track usage analytics (optional)

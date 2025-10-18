@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { BarChart, Database, TrendingUp, Eye, PieChart, Filter, Globe, Target } from 'lucide-react';
+import { BarChart, Database, TrendingUp, Eye } from 'lucide-react';
 
 const BusinessIntelligenceAnalyst = () => {
   const courseData = {

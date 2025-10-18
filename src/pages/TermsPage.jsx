@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
-import SectionTitle from '../components/SectionTitle';
+// SectionTitle not used here
 
 const LegalPage = ({ onNavigate, title, children }) => (
     <div className="bg-slate-900 text-white min-h-screen">

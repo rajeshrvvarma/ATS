@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Cloud, Server, Shield, Database, Settings, GitBranch, Layers, Zap } from 'lucide-react';
+import { Cloud, Server, Shield, Database, Settings } from 'lucide-react';
 
 const AWSCloudEngineer = () => {
   const courseData = {

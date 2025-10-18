@@ -25,17 +25,12 @@ import {
   Video,
   CheckCircle,
   ArrowRight,
-  Star,
   User,
   BookOpen,
   Target,
   Award,
   AlertCircle,
-  Filter,
-  Grid,
-  List,
-  Sparkles,
-  Zap
+  Sparkles
 } from 'lucide-react';
 // useCoursePricing hook removed — pricing data currently not available
 // ModernEnrollmentModal removed — enrollment now funnels to WhatsApp contact
@@ -50,7 +45,6 @@ const EventsBatchesPage = ({ onNavigate }) => {
   const [selectedCategory] = useState('all');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   // enrollment modal removed; enrollment handled via WhatsApp CTA
-  const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [eventDetailModal, setEventDetailModal] = useState({ isOpen: false, event: null, type: '' });
 
   // State for all events (static + Firestore, already merged by getAllEvents)
@@ -633,7 +627,6 @@ const EventsBatchesPage = ({ onNavigate }) => {
         onEnroll={handleEnrollment}
       />
 
-  <ScrollNavigation />
       <ScrollNavigation />
     </div>
   );

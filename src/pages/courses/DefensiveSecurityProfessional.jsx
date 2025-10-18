@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Shield, Target, Users, BookOpen, Code, Database, Lock, Eye } from 'lucide-react';
+import { Shield, Target, Users, BookOpen } from 'lucide-react';
 
 const DefensiveSecurityProfessional = () => {
   const courseData = {

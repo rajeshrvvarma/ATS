@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-
 import { AnimatePresence, motion } from 'framer-motion';
 // Auth and SafeCourseAccessContext removed for static site simplification
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
-import WhatsAppWidget from '@/components/WhatsAppWidget.jsx';
+// WhatsAppWidget removed from global layout; use per-page floating button instead
 
 // Layout
 import AnnouncementBanner from '@/components/AnnouncementBanner.jsx';
@@ -109,7 +109,7 @@ export default function App() {
     const currentPage = pathToPage[location.pathname] || 'home';
 
     // Enhanced navigation function - handles both page keys and direct URL paths
-    const go = (pageKey, params = {}) => {
+    const go = (pageKey, _params = {}) => {
         // Handle direct URL paths (like '/courses/course-name')
         if (typeof pageKey === 'string' && pageKey.startsWith('/')) {
             navigate(pageKey);

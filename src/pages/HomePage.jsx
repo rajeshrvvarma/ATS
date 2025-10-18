@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Users, Target, Code, Sparkles, X, Briefcase, Award, MessageCircle, Server, BrainCircuit, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, DollarSign, BookOpen, Globe, Zap, Grid3X3, Layers, Map, Eye, RotateCcw, Laptop, Cloud, Database, TestTube, Search, Filter, Play, BookmarkPlus } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Shield, Users, Briefcase, Award, MessageCircle, Sword, CheckCircle, ArrowRight, Star, TrendingUp, Clock, Cloud } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SectionTitle from '@/components/SectionTitle.jsx';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
 // AiCareerAdvisor and AiFaqBot removed
@@ -154,7 +154,6 @@ const PremiumCoursesSection = ({ onNavigate, premiumCourses }) => {
 
 // Simplified Hero Section - Premium Courses Focus
 const HeroSection = ({ onNavigate }) => {
-    const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
 
     // Single hero message focused on premium courses
     const heroData = {
@@ -566,7 +565,6 @@ const Contact = ({ onNavigate }) => {
 
 // Main HomePage Component
 const HomePage = ({ onNavigate }) => {
-    const [isFaqBotOpen, setIsFaqBotOpen] = useState(false);
 
     // --- HIGH-VALUE COURSES (Revenue Focus) ---
     const premiumCourses = [

@@ -1,6 +1,6 @@
 import React from 'react';
 import CoursePageTemplate from './CoursePageTemplate.jsx';
-import { Smartphone, Palette, Code, Zap, Layers, Settings, Globe, Target } from 'lucide-react';
+import { Palette, Code, Zap, Globe } from 'lucide-react';
 
 const FlutterAppDeveloper = () => {
   const courseData = {

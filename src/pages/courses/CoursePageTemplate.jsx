@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Users, Award, Target, BookOpen, Play, CheckCircle, ArrowRight, Phone, Calendar, Download, Star, Shield, Code, Database } from 'lucide-react';
+import { Clock, CheckCircle, ArrowRight, Phone, Calendar, Star } from 'lucide-react';
 // ModernEnrollmentModal removed — enrollment uses WhatsApp contact
 import WhatsAppContactButton from '@/components/WhatsAppContactButton.jsx';
 
@@ -408,7 +408,7 @@ const CoursePageTemplate = ({ courseData }) => {
               <ArrowRight className="ml-2 w-5 h-5" />
             </button>
             <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:text-gray-900 transition-colors duration-200 inline-flex items-center justify-center">
-              <Download className="mr-2 w-5 h-5" />
+              <ArrowRight className="mr-2 w-5 h-5" />
               Download Curriculum
             </button>
           </div>
