@@ -28,91 +28,6 @@ const roleColors = {
 
 
 // Component to show user replies to admin notes
-function UserRepliesSection() {
-  const [replies, setReplies] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadUserReplies();
-  }, []);
-
-  const loadUserReplies = async () => {
-    try {
-      // Get all users
-      const usersCol = collection(db, "users");
-      const usersSnapshot = await getDocs(usersCol);
-
-      const allReplies = [];
-
-      // For each user, check for replies to notes
-      for (const userDoc of usersSnapshot.docs) {
-        const userId = userDoc.id;
-        const userData = userDoc.data();
-
-        // Get notes for this user
-        const notesCol = collection(db, 'users', userId, 'notes');
-        const notesSnapshot = await getDocs(notesCol);
-
-        // For each note, check for replies
-        for (const noteDoc of notesSnapshot.docs) {
-          const noteId = noteDoc.id;
-          const noteData = noteDoc.data();
-
-          const repliesCol = collection(db, 'users', userId, 'notes', noteId, 'replies');
-          const repliesQuery = query(repliesCol, orderBy('createdAt', 'desc'));
-          const repliesSnapshot = await getDocs(repliesQuery);
-
-          repliesSnapshot.docs.forEach(replyDoc => {
-            const replyData = replyDoc.data();
-            allReplies.push({
-              id: replyDoc.id,
-              ...replyData,
-              noteId,
-              noteText: noteData.note,
-              userId,
-              userName: userData.displayName || userData.email || 'Unknown User'
-            });
-          });
-        }
-      }
-
-      // Sort by creation date (newest first)
-      allReplies.sort((a, b) => (b.createdAt?.toMillis?.() || 0) - (a.createdAt?.toMillis?.() || 0));
-
-      setReplies(allReplies.slice(0, 10)); // Show only recent 10 replies
-    } catch (err) {
-      console.error('Failed to load user replies:', err);
-    }
-    setLoading(false);
-  };
-
-  if (loading) return <div className="text-slate-400">Loading replies...</div>;
-
-  if (replies.length === 0) {
-    return <div className="text-slate-400">No user replies yet.</div>;
-  }
-
-  return (
-    <div className="space-y-4 max-h-60 overflow-y-auto">
-      {replies.map(reply => (
-        <div key={`${reply.userId}-${reply.noteId}-${reply.id}`} className="bg-slate-700 rounded-lg p-4 border border-slate-600">
-          <div className="flex justify-between items-start mb-2">
-            <div className="text-sm font-medium text-white">{reply.userName}</div>
-            {reply.createdAt && (
-              <div className="text-xs text-slate-400">
-                {reply.createdAt.toDate ? reply.createdAt.toDate().toLocaleString() : ''}
-              </div>
-            )}
-          </div>
-          <div className="text-xs text-slate-400 mb-2">
-            Replying to: "{reply.noteText?.substring(0, 50)}..."
-          </div>
-          <div className="text-slate-200">{reply.reply}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
 
 
 function AdminDashboard({ onNavigate }) {
@@ -354,11 +269,6 @@ function AdminDashboard({ onNavigate }) {
                   </div>
                 </div>
 
-                {/* Recent User Replies to Admin Notes */}
-                <div className="bg-slate-800 rounded-lg p-6 mb-8">
-                  <div className="text-lg font-semibold mb-4 text-white">Recent User Replies</div>
-                  <UserRepliesSection />
-                </div>
 
                 {/* Recent activity */}
                 <div className="bg-slate-800 rounded-lg p-6">
@@ -634,18 +544,12 @@ function AdminDashboard({ onNavigate }) {
                                 {tab === "course-management" && (
                                   <div>
                                     <h2 className="text-2xl font-bold mb-4">Course Management</h2>
-                                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700">
-                                      <AdminCourseManager />
-                                    </div>
                                   </div>
                                 )}
 
                                 {tab === "batch-management" && (
                                   <div>
                                     <h2 className="text-2xl font-bold mb-4">Batch & Session Management</h2>
-                                    <div className="bg-slate-800 p-6 rounded-lg border border-slate-700">
-                                      <AdminBatchManager />
-                                    </div>
                                   </div>
                                 )}
                       </div>
