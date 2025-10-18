@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ArrowLeft, Phone, Mail, MapPin, Clock, MessageSquare, Send, CheckCircle } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { sendContactForm } from '@/services/netlifyFormsService.js';
+import { useToasts } from '@/components/ui/ToastConfirm.jsx';
 
 export default function ContactUsPage({ onNavigate }) {
     const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ export default function ContactUsPage({ onNavigate }) {
     });
     const [submitted, setSubmitted] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const toasts = useToasts();
 
     const handleInputChange = (e) => {
         setFormData({
@@ -55,7 +57,7 @@ export default function ContactUsPage({ onNavigate }) {
             }
         } catch (error) {
             console.error('Contact form submission error:', error);
-            alert('Failed to send message. Please try again or contact us directly.');
+            toasts.error('Failed to send message. Please try again or contact us directly.');
         } finally {
             setSubmitting(false);
         }
@@ -134,8 +136,8 @@ export default function ContactUsPage({ onNavigate }) {
     return (
         <div className="bg-slate-900 text-white min-h-screen">
             <div className="container mx-auto px-6 py-12 md:py-20">
-                <button 
-                    onClick={() => onNavigate('home')} 
+                <button
+                    onClick={() => onNavigate('home')}
                     className="flex items-center text-white hover:text-teal-200 transition-colors mb-8"
                 >
                     <ArrowLeft size={20} className="mr-2" />
@@ -173,7 +175,7 @@ export default function ContactUsPage({ onNavigate }) {
                                 <Send size={24} className="mr-3 text-green-400" />
                                 Send us a Message
                             </h2>
-                            
+
                             {submitted && (
                                 <div className="mb-6 p-4 bg-green-900/30 border border-green-700 rounded-lg flex items-center">
                                     <CheckCircle size={20} className="text-green-400 mr-3" />
@@ -295,7 +297,7 @@ export default function ContactUsPage({ onNavigate }) {
                         <div className="space-y-8">
                             <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                                 <h2 className="text-2xl font-bold text-white mb-6">Department Contacts</h2>
-                                
+
                                 <div className="space-y-4">
                                     {departments.map((dept, index) => (
                                         <div key={index} className="p-4 bg-slate-900 rounded-lg border border-slate-600">
@@ -322,7 +324,7 @@ export default function ContactUsPage({ onNavigate }) {
                                     <MapPin size={24} className="mr-3 text-sky-400" />
                                     Office Location
                                 </h2>
-                                
+
                                 <div className="space-y-4">
                                     <div>
                                         <h3 className="font-semibold text-white mb-2">Agnidhra Technologies</h3>
@@ -333,17 +335,17 @@ export default function ContactUsPage({ onNavigate }) {
                                             Andhra Pradesh, India
                                         </p>
                                     </div>
-                                    
+
                                     <div className="flex items-center text-slate-400 text-sm">
                                         <Clock size={16} className="mr-2" />
                                         <span>Monday - Friday: 9:00 AM - 6:00 PM IST</span>
                                     </div>
-                                    
+
                                     <div className="flex items-center text-slate-400 text-sm">
                                         <Clock size={16} className="mr-2" />
                                         <span>Saturday: 10:00 AM - 4:00 PM IST</span>
                                     </div>
-                                    
+
                                     <div className="flex items-center text-slate-400 text-sm">
                                         <Clock size={16} className="mr-2" />
                                         <span>Sunday: Closed</span>
@@ -356,7 +358,7 @@ export default function ContactUsPage({ onNavigate }) {
                     {/* FAQ Section */}
                     <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                         <h2 className="text-2xl font-bold text-white mb-8">Frequently Asked Questions</h2>
-                        
+
                         <div className="grid md:grid-cols-2 gap-6">
                             {faqs.map((faq, index) => (
                                 <div key={index} className="p-6 bg-slate-900 rounded-lg border border-slate-600">
@@ -365,11 +367,11 @@ export default function ContactUsPage({ onNavigate }) {
                                 </div>
                             ))}
                         </div>
-                        
+
                         <div className="text-center mt-6">
                             <p className="text-slate-400 text-sm">
-                                Can't find what you're looking for? 
-                                <button 
+                                Can't find what you're looking for?
+                                <button
                                     onClick={() => document.getElementById('message').focus()}
                                     className="text-sky-400 hover:text-sky-300 ml-1"
                                 >
@@ -385,7 +387,7 @@ export default function ContactUsPage({ onNavigate }) {
                         <p className="text-green-100 mb-6">
                             We're committed to providing timely and helpful responses to all your queries.
                         </p>
-                        
+
                         <div className="grid md:grid-cols-3 gap-4">
                             <div className="bg-white/10 p-4 rounded-lg">
                                 <div className="text-2xl font-bold mb-1">&lt; 1 Hour</div>

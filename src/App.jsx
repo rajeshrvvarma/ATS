@@ -7,6 +7,7 @@ import { CourseAccessProvider } from '@/context/SafeCourseAccessContext.jsx';
 import { AccessControlProvider } from '@/context/AccessControlContext.jsx';
 import { ToastProvider } from '@/context/ToastContext.jsx';
 import ToastContainer from '@/components/ToastContainer.jsx';
+import ToastConfirmProvider from '@/components/ui/ToastConfirm.jsx';
 import { ThemeProvider } from '@/context/ThemeContext.jsx';
 import { SettingsProvider } from '@/context/SettingsContext.jsx';
 import SettingsDrawer from '@/components/SettingsDrawer.jsx';
@@ -38,11 +39,7 @@ const ShippingPage = React.lazy(() => import('@/pages/ShippingPage.jsx'));
 const PrivacyPage = React.lazy(() => import('@/pages/PrivacyPage.jsx'));
 const ContactUsPage = React.lazy(() => import('@/pages/ContactUsPage.jsx'));
 const EnrollUsPage = React.lazy(() => import('@/pages/EnrollUsPage.jsx'));
-const LearningManagementSystemPage = React.lazy(() => import('@/pages/LearningManagementSystemPage.jsx'));
-const StudentDashboard = React.lazy(() => import('@/pages/StudentDashboard.jsx'));
-const AdminDashboard = React.lazy(() => import('@/pages/AdminDashboard.jsx'));
-const LoginPage = React.lazy(() => import('@/pages/LoginPage.jsx'));
-const TrainerSignUp = React.lazy(() => import('@/pages/TrainerSignUp.jsx'));
+// Removed LMS and auth/dashboard pages per request
 const Profile = React.lazy(() => import('@/pages/Profile.jsx'));
 const QuizLibrary = React.lazy(() => import('@/components/QuizLibrary.jsx'));
 const EventsBatchesPage = React.lazy(() => import('@/pages/UpcomingBatchesPage.jsx'));
@@ -95,10 +92,7 @@ export default function App() {
         contact: '/contact',
         enroll: '/enroll',
     profile: '/profile',
-    dashboard: '/dashboard',
-    admin: '/admin',
-    login: '/login',
-    'trainer-signup': '/trainer-signup',
+    // removed dashboard/login routes
     // Module routes archived
     courseBuilder: '/course-builder',
     }), []);
@@ -125,10 +119,6 @@ export default function App() {
         '/contact': 'contact',
     '/enroll': 'enroll',
     '/profile': 'profile',
-    '/dashboard': 'dashboard',
-    '/admin': 'admin',
-    '/login': 'login',
-    '/trainer-signup': 'trainer-signup',
     // Module routes archived
     '/course-builder': 'courseBuilder',
     }), []);
@@ -178,7 +168,8 @@ export default function App() {
         <CourseAccessProvider>
         <ThemeProvider>
         <SettingsProvider>
-        <ToastProvider>
+    <ToastProvider>
+    <ToastConfirmProvider>
         <div className="min-h-screen bg-slate-900 antialiased">
                 {/* Initialize notification service for authenticated users */}
                 <NotificationInitializer />
@@ -243,13 +234,7 @@ export default function App() {
                             <Route path="/privacy" element={<PrivacyPage onNavigate={go} />} />
                             <Route path="/contact" element={<ContactUsPage onNavigate={go} />} />
                             <Route path="/enroll" element={<EnrollUsPage onNavigate={go} />} />
-                            <Route path="/video-learning" element={<Navigate to="/dashboard" replace />} />
-                            <Route path="/profile" element={<ProtectedRoute roles={['student','instructor','admin']}><Profile onNavigate={go} /></ProtectedRoute>} />
-                            <Route path="/quiz-library" element={<QuizLibrary onClose={() => go('/dashboard')} />} />
-                            <Route path="/dashboard" element={<DashboardRouter onNavigate={go} />} />
-                            <Route path="/admin" element={<ProtectedRoute roles={['admin']}><AdminDashboard onNavigate={go} /></ProtectedRoute>} />
-                            <Route path="/login" element={<LoginPage onNavigate={go} onLogin={() => {}} />} />
-                            <Route path="/trainer-signup" element={<TrainerSignUp onNavigate={go} />} />
+                            <Route path="/profile" element={<Profile onNavigate={go} />} />
                             {/* Module routes archived - premium courses only */}
                             <Route path="*" element={<Navigate to="/" replace />} />
                         </Routes>
@@ -262,7 +247,8 @@ export default function App() {
                 <SettingsDrawer />
                 {/* WhatsApp widget temporarily removed - will be repositioned per page */}
         </div>
-        </ToastProvider>
+    </ToastConfirmProvider>
+    </ToastProvider>
         </SettingsProvider>
         </ThemeProvider>
         </CourseAccessProvider>

@@ -44,12 +44,7 @@ export default function UserMenu({ user, onLogout, onProfile, onDashboard, roleL
       </button>
       {open && (
         <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-50">
-          <button
-            className="w-full text-left px-4 py-2 hover:bg-slate-700 text-slate-200 flex items-center gap-2"
-            onClick={() => { setOpen(false); onDashboard && onDashboard(); }}
-          >
-            <Home className="w-4 h-4" /> Dashboard
-          </button>
+          {/* Dashboard removed - direct navigation to dashboards is disabled */}
           <button
             className="w-full text-left px-4 py-2 hover:bg-slate-700 text-slate-200 flex items-center gap-2"
             onClick={() => { setOpen(false); onProfile && onProfile(); }}

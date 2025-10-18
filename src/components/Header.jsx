@@ -32,16 +32,11 @@ export default function Header({ onNavigate, currentPage }) {
 
     // Mobile navigation items - dynamic based on user status
     const mobileNavItems = [
-    { name: "Events & Batches", action: () => onNavigate('events-batches') },
-    { name: "Tech Academy", action: () => onNavigate('technologyTraining') },
+        { name: "Events & Batches", action: () => onNavigate('events-batches') },
+        { name: "Tech Academy", action: () => onNavigate('technologyTraining') },
         // Module catalog archived - premium courses only
         { name: "About Us", action: () => scrollToSection('about') },
-        ...(user && user.enrolledCourses && user.enrolledCourses.length > 0
-            ? [{ name: "My Learning", action: () => onNavigate('dashboard') }]
-            : []
-        ),
-        { name: "Contact Us", action: () => onNavigate('contact') },
-        { name: "Login", action: () => onNavigate('login') }
+        { name: "Contact Us", action: () => onNavigate('contact') }
     ];
 
     // Mobile program categories (simplified from mega menu)
@@ -194,22 +189,15 @@ export default function Header({ onNavigate, currentPage }) {
                             <UserMenu
                                 user={user}
                                 onProfile={() => onNavigate('profile')}
-                                onDashboard={() => onNavigate('dashboard')}
                                 onLogout={logout}
                             />
                         ) : (
                             <>
                                 <button
-                                    onClick={() => onNavigate('trainer-signup')}
-                                    className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-green-700 hover:to-blue-700 transition-all duration-200 shadow-lg"
-                                >
-                                    Trainer Sign Up
-                                </button>
-                                <button
-                                    onClick={() => onNavigate('login')}
+                                    onClick={() => onNavigate('contact')}
                                     className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-200 shadow-lg"
                                 >
-                                    Login
+                                    Contact Us
                                 </button>
                             </>
                         )}

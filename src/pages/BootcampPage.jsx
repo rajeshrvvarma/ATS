@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { ArrowLeft, Target } from 'lucide-react';
 import SectionTitle from '../components/SectionTitle';
 import { sendEnrollmentInquiry } from '@/services/netlifyFormsService.js';
+import { useToasts } from '@/components/ui/ToastConfirm.jsx';
 
 export default function BootcampPage({ onNavigate, type }) {
     const [formData, setFormData] = useState({ name: '', email: '' });
     const [submitting, setSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const toasts = useToasts();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -32,7 +34,7 @@ export default function BootcampPage({ onNavigate, type }) {
             }
         } catch (err) {
             console.error('Bootcamp inquiry failed:', err);
-            alert('Could not submit your request. Please try again later.');
+            toasts.error('Could not submit your request. Please try again later.');
         } finally {
             setSubmitting(false);
         }
@@ -52,7 +54,7 @@ export default function BootcampPage({ onNavigate, type }) {
                 <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 items-center">
                     <div className="bg-slate-800 p-8 rounded-lg border border-slate-700">
                          <h3 className="text-2xl font-bold text-white mb-6 text-center">Enroll Now</h3>
-                         
+
                          {/* Pricing Information */}
                          <div className="text-center mb-6">
                             <div className="text-3xl font-bold text-sky-400 mb-2">
@@ -72,18 +74,18 @@ export default function BootcampPage({ onNavigate, type }) {
                          <form onSubmit={handleSubmit} className="space-y-4">
                             <div><label htmlFor="bc-name" className="block text-sm font-medium text-slate-300 mb-1">Full Name</label><input type="text" id="bc-name" name="name" required value={formData.name} onChange={handleChange} className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div>
                             <div><label htmlFor="bc-email" className="block text-sm font-medium text-slate-300 mb-1">Email Address</label><input type="email" id="bc-email" name="email" required value={formData.email} onChange={handleChange} className="block w-full bg-slate-900 border border-slate-600 rounded-md p-3 text-white focus:ring-sky-500 focus:border-sky-500" /></div>
-                            
+
                             <div className="space-y-3">
-                                <button 
-                                    type="button" 
+                                <button
+                                    type="button"
                                     onClick={() => onNavigate(`accountActivation-${type}`)}
                                     className={`w-full bg-${current.accentColor}-600 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-${current.accentColor}-700 transition-colors duration-300`}
                                 >
                                     Pay Now & Secure Your Spot
                                 </button>
-                                
-                                <button 
-                                    type="submit" 
+
+                                <button
+                                    type="submit"
                                     disabled={submitting}
                                     className="w-full bg-slate-700 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-slate-600 transition-colors duration-300"
                                 >
